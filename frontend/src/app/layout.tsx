@@ -1,20 +1,9 @@
+// layout.tsx - Updated version with fixed footer spacing
 import { Providers } from '@/app/providers';
 import { Navigation } from '@/components/layout/Navigation';
 import { Footer } from '@/components/layout/Footer';
 import './globals.css';
 import type { Metadata } from "next";
-// import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
-
-// const geistSans = Geist({
-//   variable: "--font-geist-sans",
-//   subsets: ["latin"],
-// });
-
-// const geistMono = Geist_Mono({
-//   variable: "--font-geist-mono",
-//   subsets: ["latin"],
-// });
 
 export const metadata: Metadata = {
   title: "OSRS DPS Calculator",
@@ -31,7 +20,7 @@ export default function RootLayout({
       <body className="min-h-screen flex flex-col">
         <Providers>
           <Navigation />
-          <div className="flex-grow">
+          <div className="flex-grow mb-24"> {/* Added sufficient bottom margin to prevent footer overlap */}
             {children}
           </div>
           <Footer />

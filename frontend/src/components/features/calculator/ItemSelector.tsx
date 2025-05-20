@@ -78,19 +78,10 @@ export function ItemSelector({ slot, onSelectItem }: ItemSelectorProps) {
     const { attack_bonuses, other_bonuses } = item.combat_stats;
     
     if (combatStyle === 'melee') {
-      // For melee, find the highest attack bonus (stab/slash/crush)
-      const attackBonuses = [
-        attack_bonuses.stab || 0,
-        attack_bonuses.slash || 0,
-        attack_bonuses.crush || 0
-      ];
-      const highestAttackBonus = Math.max(...attackBonuses);
-      
       setParams({
-        melee_attack_bonus: highestAttackBonus,
         melee_strength_bonus: other_bonuses.strength || 0
       });
-    } 
+    }
     else if (combatStyle === 'ranged') {
       setParams({
         ranged_attack_bonus: attack_bonuses.ranged || 0,

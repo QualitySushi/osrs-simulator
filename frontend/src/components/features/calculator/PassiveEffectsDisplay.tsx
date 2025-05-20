@@ -4,6 +4,27 @@ import { useCalculatorStore } from '@/store/calculator-store';
 import { Item, BossForm } from '@/app/types/calculator';
 import calculatePassiveEffectBonuses from './PassiveEffectCalculator';
 import { Badge } from '@/components/ui/badge';
+import {
+  isTargetDraconic,
+  isTargetDemonic,
+  isTargetKalphite,
+  isInWilderness,
+  isTargetUndead,
+  isOnSlayerTask,
+  hasVoidKnightSet,
+  hasEliteVoidKnightSet,
+  hasVoidMeleeHelm,
+  hasVoidRangeHelm,
+  hasVoidMageHelm,
+  countInquisitorPieces,
+  hasObsidianWeapon,
+  hasObsidianArmorSet,
+  countCrystalArmorPieces,
+  hasCrystalHelm,
+  hasCrystalBody,
+  hasCrystalLegs,
+  hasCrystalRangedWeapon
+} from '@/utils/passiveEffectsUtils';
 
 interface PassiveEffectsDisplayProps {
   loadout: Record<string, Item | null>;
@@ -15,11 +36,34 @@ export function PassiveEffectsDisplay({ loadout, target }: PassiveEffectsDisplay
   const [activeEffects, setActiveEffects] = useState<Array<{name: string, description: string}>>([]);
   
   useEffect(() => {
-    // Get equipped items with passive effects
+    // Define known items with passive effects
+    const KNOWN_PASSIVE_ITEMS = [
+      'twisted bow',
+      'dragon hunter',
+      'tumeken',
+      'scythe of vitur',
+      'arclight',
+      'emberlight',
+      'keris',
+      'salve amulet',
+      'berserker necklace'
+    ];
+
+    // Get equipped items with passive effects - enhanced detection
     const itemsWithPassiveEffects = Object.values(loadout)
-      .filter(item => item && item.has_passive_effect) as Item[];
+      .filter(item => {
+        if (!item) return false;
+        
+        // Check database flag OR known item names
+        return item.has_passive_effect || 
+              KNOWN_PASSIVE_ITEMS.some(keyword => 
+                item.name.toLowerCase().includes(keyword)
+              );
+      }) as Item[];
     
-    // No passive items
+    console.log('[DEBUG] Items with passive effects:', itemsWithPassiveEffects);
+    
+    // If no items with passive effects (after enhanced detection), return empty
     if (itemsWithPassiveEffects.length === 0) {
       setActiveEffects([]);
       return;
@@ -66,12 +110,25 @@ export function PassiveEffectsDisplay({ loadout, target }: PassiveEffectsDisplay
     // Check for specific items and add their effects
     itemsWithPassiveEffects.forEach(item => {
       const itemName = item.name.toLowerCase();
+
+      if (itemName.includes('twisted bow')) {
+        console.log('[DEBUG] Found Twisted Bow, target magic level:', target?.magic_level);
+        
+        if (target?.magic_level) {
+          effects.push({
+            name: 'Twisted Bow Scaling',
+            description: `Scaling against target with ${target.magic_level} Magic level`
+          });
+        } else {
+          console.log('[DEBUG] Target has no magic level, Twisted Bow effect not applicable');
+        }
+      }
       
-      // Add specific item effects based on the equipped items
-      if (itemName.includes('twisted bow') && target?.magic_level) {
+      // Scythe of Vitur passive effect
+      if (itemName.includes('scythe of vitur')) {
         effects.push({
-          name: 'Twisted Bow Scaling',
-          description: `Scaling against target with ${target.magic_level} Magic level`
+          name: 'Scythe of Vitur',
+          description: 'Multi-hit: 100%, 50%, and 25% damage against large targets'
         });
       }
       
@@ -120,7 +177,7 @@ export function PassiveEffectsDisplay({ loadout, target }: PassiveEffectsDisplay
         });
       }
       
-      if (itemName.includes('slayer helmet') && isOnSlayerTask(target)) {
+      if (itemName.includes('slayer helmet') && isOnSlayerTask()) {
         effects.push({
           name: 'On Slayer Task',
           description: 'Bonus against current slayer task target'
@@ -175,7 +232,6 @@ export function PassiveEffectsDisplay({ loadout, target }: PassiveEffectsDisplay
     }
     
     if (countCrystalArmorPieces(loadout) > 0 && hasCrystalRangedWeapon(loadout)) {
-      const pieces = countCrystalArmorPieces(loadout);
       let damageBonus = 0;
       let accuracyBonus = 0;
       
@@ -228,190 +284,5 @@ export function PassiveEffectsDisplay({ loadout, target }: PassiveEffectsDisplay
   );
 }
 
-// Helper functions for checking target types (reusing from PassiveEffectCalculator)
-function isTargetDraconic(target?: BossForm | null): boolean {
-  return !!target && 
-    (target.boss_id === 50 || // Assuming 50 is KBD
-     (target.weakness === 'dragon' || 
-      (target.form_name && 
-       (target.form_name.toLowerCase().includes('dragon') || 
-        target.form_name.toLowerCase().includes('wyvern') || 
-        target.form_name.toLowerCase().includes('hydra') || 
-        target.form_name.toLowerCase().includes('vorkath')))));
-}
-
-function isTargetDemonic(target?: BossForm | null): boolean {
-  return !!target && 
-    (target.weakness === 'demon' || 
-     (target.form_name && 
-      (target.form_name.toLowerCase().includes('demon') || 
-       target.form_name.toLowerCase().includes('k\'ril') || 
-       target.form_name.toLowerCase().includes('skotizo') || 
-       target.form_name.toLowerCase().includes('abyssal'))));
-}
-
-function isTargetKalphite(target?: BossForm | null): boolean {
-  return !!target && 
-    (target.weakness === 'kalphite' || 
-     (target.form_name && 
-      (target.form_name.toLowerCase().includes('kalphite') || 
-       target.form_name.toLowerCase().includes('kq') || 
-       target.form_name.toLowerCase().includes('scarab'))));
-}
-
-function isInWilderness(target?: BossForm | null): boolean {
-  return !!target && 
-    (target.form_name && 
-     (target.form_name.toLowerCase().includes('revenant') || 
-      target.form_name.toLowerCase().includes('callisto') || 
-      target.form_name.toLowerCase().includes('vet\'ion') || 
-      target.form_name.toLowerCase().includes('venenatis') || 
-      target.form_name.toLowerCase().includes('chaos ele')));
-}
-
-function isTargetUndead(target?: BossForm | null): boolean {
-  return !!target && 
-    (target.weakness === 'undead' || 
-     (target.form_name && 
-      (target.form_name.toLowerCase().includes('skeleton') || 
-       target.form_name.toLowerCase().includes('zombie') || 
-       target.form_name.toLowerCase().includes('ghost') || 
-       target.form_name.toLowerCase().includes('revenant') || 
-       target.form_name.toLowerCase().includes('barrows'))));
-}
-
-function isOnSlayerTask(target?: BossForm | null): boolean {
-  // This would normally check against the player's current slayer task
-  // For this implementation, we'll just return false
-  return false;
-}
-
-// Helper functions for checking equipped items (reusing from PassiveEffectCalculator)
-function hasObsidianWeapon(equipment: Record<string, Item | null>): boolean {
-  const weapons = ['mainhand', '2h'];
-  for (const slot of weapons) {
-    const item = equipment[slot];
-    if (item && item.name && (
-      item.name.toLowerCase().includes('tzhaar-ket-') || 
-      item.name.toLowerCase().includes('toktz-xil') ||
-      item.name.toLowerCase().includes('tzhaar-ket-om') ||
-      item.name.toLowerCase().includes('tzhaar-ket-em')
-    )) {
-      return true;
-    }
-  }
-  return false;
-}
-
-function hasVoidKnightSet(equipment: Record<string, Item | null>): boolean {
-  let pieces = 0;
-  
-  if (equipment['body'] && equipment['body'].name && 
-      equipment['body'].name.toLowerCase().includes('void knight')) {
-    pieces++;
-  }
-  
-  if (equipment['legs'] && equipment['legs'].name && 
-      equipment['legs'].name.toLowerCase().includes('void knight')) {
-    pieces++;
-  }
-  
-  if (equipment['hands'] && equipment['hands'].name && 
-      equipment['hands'].name.toLowerCase().includes('void knight')) {
-    pieces++;
-  }
-  
-  return pieces >= 3;
-}
-
-function hasEliteVoidKnightSet(equipment: Record<string, Item | null>): boolean {
-  let hasEliteTop = equipment['body'] && equipment['body'].name && 
-                    equipment['body'].name.toLowerCase().includes('elite void');
-  
-  return hasEliteTop && hasVoidKnightSet(equipment);
-}
-
-function hasVoidMeleeHelm(equipment: Record<string, Item | null>): boolean {
-  return equipment['head'] && equipment['head'].name && 
-         equipment['head'].name.toLowerCase().includes('void melee helm');
-}
-
-function hasVoidRangeHelm(equipment: Record<string, Item | null>): boolean {
-  return equipment['head'] && equipment['head'].name && 
-         equipment['head'].name.toLowerCase().includes('void ranger helm');
-}
-
-function hasVoidMageHelm(equipment: Record<string, Item | null>): boolean {
-  return equipment['head'] && equipment['head'].name && 
-         equipment['head'].name.toLowerCase().includes('void mage helm');
-}
-
-function countInquisitorPieces(equipment: Record<string, Item | null>): number {
-  let count = 0;
-  
-  if (equipment['head'] && equipment['head'].name && 
-      equipment['head'].name.toLowerCase().includes('inquisitor')) {
-    count++;
-  }
-  
-  if (equipment['body'] && equipment['body'].name && 
-      equipment['body'].name.toLowerCase().includes('inquisitor')) {
-    count++;
-  }
-  
-  if (equipment['legs'] && equipment['legs'].name && 
-      equipment['legs'].name.toLowerCase().includes('inquisitor')) {
-    count++;
-  }
-  
-  return count;
-}
-
-function hasObsidianArmorSet(equipment: Record<string, Item | null>): boolean {
-  let hasPlate = equipment['body'] && equipment['body'].name && 
-                 equipment['body'].name.toLowerCase().includes('obsidian');
-  
-  let hasLegs = equipment['legs'] && equipment['legs'].name && 
-                equipment['legs'].name.toLowerCase().includes('obsidian');
-  
-  let hasHelm = equipment['head'] && equipment['head'].name && 
-                equipment['head'].name.toLowerCase().includes('obsidian');
-  
-  return hasPlate && hasLegs && hasHelm;
-}
-
-function countCrystalArmorPieces(equipment: Record<string, Item | null>): number {
-  let count = 0;
-  
-  if (hasCrystalHelm(equipment)) count++;
-  if (hasCrystalBody(equipment)) count++;
-  if (hasCrystalLegs(equipment)) count++;
-  
-  return count;
-}
-
-function hasCrystalHelm(equipment: Record<string, Item | null>): boolean {
-  return equipment['head'] && equipment['head'].name && 
-         equipment['head'].name.toLowerCase().includes('crystal helm');
-}
-
-function hasCrystalBody(equipment: Record<string, Item | null>): boolean {
-  return equipment['body'] && equipment['body'].name && 
-         equipment['body'].name.toLowerCase().includes('crystal body');
-}
-
-function hasCrystalLegs(equipment: Record<string, Item | null>): boolean {
-  return equipment['legs'] && equipment['legs'].name && 
-         equipment['legs'].name.toLowerCase().includes('crystal legs');
-}
-
-function hasCrystalRangedWeapon(equipment: Record<string, Item | null>): boolean {
-  return (equipment['mainhand'] && equipment['mainhand'].name && 
-          (equipment['mainhand'].name.toLowerCase().includes('crystal bow') || 
-           equipment['mainhand'].name.toLowerCase().includes('bow of faerdhinen'))) ||
-         (equipment['2h'] && equipment['2h'].name && 
-          (equipment['2h'].name.toLowerCase().includes('crystal bow') || 
-           equipment['2h'].name.toLowerCase().includes('bow of faerdhinen')));
-}
-
+// Also add a default export for compatibility with existing imports
 export default PassiveEffectsDisplay;

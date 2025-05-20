@@ -1,4 +1,28 @@
-import { CalculatorParams, Item, Boss, BossForm } from '@/app/types/calculator';
+import { CalculatorParams, Item, BossForm } from '@/app/types/calculator';
+import {
+  isTargetDraconic,
+  isTargetDemonic,
+  isTargetKalphite,
+  isTargetTurothKurask,
+  isInWilderness,
+  isTargetUndead,
+  isOnSlayerTask,
+  hasObsidianWeapon,
+  hasVoidKnightSet,
+  hasEliteVoidKnightSet,
+  hasVoidMeleeHelm,
+  hasVoidRangeHelm,
+  hasVoidMageHelm,
+  countInquisitorPieces,
+  hasInquisitorsMace,
+  countVirtusPieces,
+  hasObsidianArmorSet,
+  countCrystalArmorPieces,
+  hasCrystalHelm,
+  hasCrystalBody,
+  hasCrystalLegs,
+  hasCrystalRangedWeapon
+} from '@/utils/passiveEffectsUtils';
 
 // Define types for passive effect bonuses
 interface PassiveEffectBonus {
@@ -7,6 +31,8 @@ interface PassiveEffectBonus {
   maxHit?: number;   // Flat addition to max hit
   isApplicable: boolean; // Whether this effect applies in the current situation
 }
+
+const effects: Array<{ name: string; description: string }> = [];
 
 /**
  * Calculate passive effect bonuses based on equipped items and target
@@ -40,8 +66,6 @@ export function calculatePassiveEffectBonuses(
     const itemName = item.name.toLowerCase();
     console.log('[DEBUG] Checking item:', itemName);
     console.log('[DEBUG] Target form:', target?.form_name);
-    console.log('[DEBUG] Target weakness:', target?.weakness);
-    console.log('[DEBUG] isTargetDemonic:', isTargetDemonic(target));
     
     // === WEAPONS ===
     
@@ -157,7 +181,7 @@ export function calculatePassiveEffectBonuses(
     // === ARMOR AND JEWELRY ===
     
     // Slayer helmet/Black mask on task
-    if ((itemName.includes('slayer helmet (i)') || itemName.includes('black mask (i)')) && isOnSlayerTask(target)) {
+    if ((itemName.includes('slayer helmet (i)') || itemName.includes('black mask (i)')) && isOnSlayerTask()) {
       bonus.isApplicable = true;
       
       // Apply bonuses based on combat style
@@ -170,7 +194,7 @@ export function calculatePassiveEffectBonuses(
       }
     } else if ((itemName.includes('slayer helmet') || itemName.includes('black mask')) && 
               !itemName.includes('(i)') && 
-              isOnSlayerTask(target) && 
+              isOnSlayerTask() && 
               combatStyle === 'melee') {
       bonus.isApplicable = true;
       
@@ -208,6 +232,27 @@ export function calculatePassiveEffectBonuses(
       }
     }
     
+    // Scythe of Vitur multi-hit effect
+    if (itemName.includes('scythe of vitur')) {
+      // Note: This is a special case that depends on target size
+      // Since we don't have target size data yet, we'll just show info about the effect
+      const effectApplicable = target && target.hitpoints && target.hitpoints > 0;
+      
+      if (effectApplicable) {
+        bonus.isApplicable = true;
+        
+        // The actual damage calculation for Scythe is complex and depends on max hit:
+        // 1st hit: 100% damage
+        // 2nd hit: 50% damage
+        // 3rd hit: 25% damage
+        // This is handled in the DPS calculator, but we'll flag that it's active
+        effects.push({
+          name: 'Scythe of Vitur',
+          description: 'Multi-hit weapon: Hits 3 times with 100%, 50%, and 25% damage against large targets'
+        });
+      }
+    }
+    
     // Berserker necklace with obsidian weapons
     if (itemName.includes('berserker necklace') && hasObsidianWeapon(equipment) && combatStyle === 'melee') {
       bonus.isApplicable = true;
@@ -215,363 +260,148 @@ export function calculatePassiveEffectBonuses(
       // 20% damage boost
       bonus.damage = (bonus.damage || 1.0) * 1.2;
     }
-    
-    // Dizana's quiver with ranged
-    if ((itemName.includes('dizana\'s quiver') || itemName.includes('blessed dizana\'s quiver')) && 
-        combatStyle === 'ranged') {
-      bonus.isApplicable = true;
-      
-      // Add +1 to ranged strength, this is done in max hit calculation
-      bonus.maxHit = (bonus.maxHit || 0) + 1;
-      // +10 accuracy is added directly to the ranged attack bonus in equipment bonuses
-    }
-    
-    // === SET EFFECTS ===
-    
-    // Void Knight set effects
-    const hasVoidSet = hasVoidKnightSet(equipment);
-    const hasEliteVoidSet = hasEliteVoidKnightSet(equipment);
-    
-    if (hasVoidSet || hasEliteVoidSet) {
-      if (combatStyle === 'melee' && hasVoidMeleeHelm(equipment)) {
-        bonus.isApplicable = true;
-        
-        // 10% accuracy and strength
-        bonus.accuracy = (bonus.accuracy || 1.0) * 1.1;
-        bonus.damage = (bonus.damage || 1.0) * 1.1;
-      } else if (combatStyle === 'ranged' && hasVoidRangeHelm(equipment)) {
-        bonus.isApplicable = true;
-        
-        // 10% accuracy and strength
-        bonus.accuracy = (bonus.accuracy || 1.0) * 1.1;
-        bonus.damage = (bonus.damage || 1.0) * 1.1;
-      } else if (combatStyle === 'magic' && hasVoidMageHelm(equipment)) {
-        bonus.isApplicable = true;
-        
-        // 45% accuracy
-        bonus.accuracy = (bonus.accuracy || 1.0) * 1.45;
-        
-        // Elite gives 2.5% damage
-        if (hasEliteVoidSet) {
-          bonus.damage = (bonus.damage || 1.0) * 1.025;
-        }
-      }
-    }
-    
-    // Inquisitor's set with crush weapons
-    const inquisitorPieces = countInquisitorPieces(equipment);
-    const usingCrushStyle = params.combat_style === 'melee' && 
-                           (params as any).attack_type === 'crush';
-    
-    if (inquisitorPieces > 0 && usingCrushStyle) {
-      bonus.isApplicable = true;
-      
-      // 0.5% per piece plus 1.0% set bonus if all 3 pieces
-      const pieceBonus = 0.005 * inquisitorPieces;
-      const setBonus = (inquisitorPieces === 3) ? 0.01 : 0;
-      const totalBonus = pieceBonus + setBonus;
-      
-      bonus.accuracy = (bonus.accuracy || 1.0) * (1 + totalBonus);
-      bonus.damage = (bonus.damage || 1.0) * (1 + totalBonus);
-      
-      // Special interaction with Inquisitor's mace
-      if (hasInquisitorsMace(equipment)) {
-        // 2.5% per piece instead of 0.5%, but no set bonus
-        const maceBonus = 0.025 * inquisitorPieces;
-        
-        // Replace previous calculation
-        bonus.accuracy = (bonus.accuracy || 1.0) / (1 + totalBonus) * (1 + maceBonus);
-        bonus.damage = (bonus.damage || 1.0) / (1 + totalBonus) * (1 + maceBonus);
-      }
-    }
-    
-    // Virtus set with Ancient Magicks
-    const virtusPieces = countVirtusPieces(equipment);
-    const usingAncientMagicks = combatStyle === 'magic' && 
-                               (params as any).spellbook === 'ancient';
-    
-    if (virtusPieces > 0 && usingAncientMagicks) {
-      bonus.isApplicable = true;
-      
-      // 3% per piece to Ancient Magicks damage
-      const virtusBonus = 0.03 * virtusPieces;
-      bonus.damage = (bonus.damage || 1.0) * (1 + virtusBonus);
-    }
-    
-    // Obsidian armor with obsidian weapons
-    const hasObsidianArmor = hasObsidianArmorSet(equipment);
-    
-    if (hasObsidianArmor && hasObsidianWeapon(equipment) && combatStyle === 'melee') {
-      bonus.isApplicable = true;
-      
-      // 10% accuracy and damage
-      bonus.accuracy = (bonus.accuracy || 1.0) * 1.1;
-      bonus.damage = (bonus.damage || 1.0) * 1.1;
-    }
-    
-    // Crystal armor with crystal bow/Bow of faerdhinen
-    const crystalPieces = countCrystalArmorPieces(equipment);
-    const hasCrystalBow = hasCrystalRangedWeapon(equipment);
-    
-    if (crystalPieces > 0 && hasCrystalBow && combatStyle === 'ranged') {
-      bonus.isApplicable = true;
-      
-      let damageBonus = 0;
-      let accuracyBonus = 0;
-      
-      // Apply bonuses based on worn pieces
-      if (hasCrystalHelm(equipment)) {
-        damageBonus += 0.025;
-        accuracyBonus += 0.05;
-      }
-      
-      if (hasCrystalBody(equipment)) {
-        damageBonus += 0.075;
-        accuracyBonus += 0.15;
-      }
-      
-      if (hasCrystalLegs(equipment)) {
-        damageBonus += 0.05;
-        accuracyBonus += 0.1;
-      }
-      
-      bonus.accuracy = (bonus.accuracy || 1.0) * (1 + accuracyBonus);
-      bonus.damage = (bonus.damage || 1.0) * (1 + damageBonus);
-    }
   });
   
-  return bonus;
-}
-
-// Helper functions for checking target types
-function isTargetDraconic(target?: BossForm | null): boolean {
-  // Simplified - in a real implementation, would check against a database of draconic NPCs
-  return !!target && 
-    (target.boss_id === 50 || // Assuming 50 is KBD
-     (target.weakness === 'dragon' || 
-      (target.form_name && 
-       (target.form_name.toLowerCase().includes('dragon') || 
-        target.form_name.toLowerCase().includes('wyvern') || 
-        target.form_name.toLowerCase().includes('hydra') || 
-        target.form_name.toLowerCase().includes('vorkath')))));
-}
-
-function isTargetDemonic(target?: BossForm | null): boolean {
-  // Simplified - in a real implementation, would check against a database of demonic NPCs
-  return !!target && 
-    (target.weakness === 'demon' || 
-     (target.form_name && 
-      (target.form_name.toLowerCase().includes('demon') || 
-       target.form_name.toLowerCase().includes('k\'ril') || 
-       target.form_name.toLowerCase().includes('skotizo') || 
-       target.form_name.toLowerCase().includes('abyssal'))));
-}
-
-function isTargetKalphite(target?: BossForm | null): boolean {
-  // Simplified for kalphites
-  return !!target && 
-    (target.weakness === 'kalphite' || 
-     (target.form_name && 
-      (target.form_name.toLowerCase().includes('kalphite') || 
-       target.form_name.toLowerCase().includes('kq') || 
-       target.form_name.toLowerCase().includes('scarab'))));
-}
-
-function isTargetTurothKurask(target?: BossForm | null): boolean {
-  // Simplified
-  return !!target && 
-    (target.form_name && 
-     (target.form_name.toLowerCase().includes('turoth') || 
-      target.form_name.toLowerCase().includes('kurask')));
-}
-
-function isInWilderness(target?: BossForm | null): boolean {
-  // Simplified - would normally check if the boss is in the wilderness
-  return !!target && 
-    (target.form_name && 
-     (target.form_name.toLowerCase().includes('revenant') || 
-      target.form_name.toLowerCase().includes('callisto') || 
-      target.form_name.toLowerCase().includes('vet\'ion') || 
-      target.form_name.toLowerCase().includes('venenatis') || 
-      target.form_name.toLowerCase().includes('chaos ele')));
-}
-
-function isTargetUndead(target?: BossForm | null): boolean {
-  // Simplified
-  return !!target && 
-    (target.weakness === 'undead' || 
-     (target.form_name && 
-      (target.form_name.toLowerCase().includes('skeleton') || 
-       target.form_name.toLowerCase().includes('zombie') || 
-       target.form_name.toLowerCase().includes('ghost') || 
-       target.form_name.toLowerCase().includes('revenant') || 
-       target.form_name.toLowerCase().includes('barrows'))));
-}
-
-function isOnSlayerTask(target?: BossForm | null): boolean {
-  // This would normally check against the player's current slayer task
-  // For this implementation, we'll just return false
-  return false;
-}
-
-// Helper functions for checking equipped items
-function hasObsidianWeapon(equipment: Record<string, Item | null>): boolean {
-  const weapons = ['mainhand', '2h'];
-  for (const slot of weapons) {
-    const item = equipment[slot];
-    if (item && item.name && (
-      item.name.toLowerCase().includes('tzhaar-ket-') || 
-      item.name.toLowerCase().includes('toktz-xil') ||
-      item.name.toLowerCase().includes('tzhaar-ket-om') ||
-      item.name.toLowerCase().includes('tzhaar-ket-em')
-    )) {
-      return true;
+  // === SET EFFECTS ===
+  
+  // Void Knight set effects
+  const hasVoidSet = hasVoidKnightSet(equipment);
+  const hasEliteVoidSet = hasEliteVoidKnightSet(equipment);
+  
+  if (hasVoidSet || hasEliteVoidSet) {
+    if (combatStyle === 'melee' && hasVoidMeleeHelm(equipment)) {
+      bonus.isApplicable = true;
+      
+      // 10% accuracy and strength
+      bonus.accuracy = (bonus.accuracy || 1.0) * 1.1;
+      bonus.damage = (bonus.damage || 1.0) * 1.1;
+    } else if (combatStyle === 'ranged' && hasVoidRangeHelm(equipment)) {
+      bonus.isApplicable = true;
+      
+      // 10% accuracy and strength
+      bonus.accuracy = (bonus.accuracy || 1.0) * 1.1;
+      bonus.damage = (bonus.damage || 1.0) * 1.1;
+    } else if (combatStyle === 'magic' && hasVoidMageHelm(equipment)) {
+      bonus.isApplicable = true;
+      
+      // 45% accuracy
+      bonus.accuracy = (bonus.accuracy || 1.0) * 1.45;
+      
+      // Elite gives 2.5% damage
+      if (hasEliteVoidSet) {
+        bonus.damage = (bonus.damage || 1.0) * 1.025;
+      }
     }
   }
-  return false;
-}
-
-function hasVoidKnightSet(equipment: Record<string, Item | null>): boolean {
-  // Check for void knight gear (non-elite)
-  let pieces = 0;
   
-  if (equipment['body'] && equipment['body'].name && 
-      equipment['body'].name.toLowerCase().includes('void knight')) {
-    pieces++;
+  // Inquisitor's set with crush weapons
+  const inquisitorPieces = countInquisitorPieces(equipment);
+  
+  // Use type guard to safely check attack_type
+  interface WithAttackType {
+    attack_type: string;
   }
   
-  if (equipment['legs'] && equipment['legs'].name && 
-      equipment['legs'].name.toLowerCase().includes('void knight')) {
-    pieces++;
+  function hasAttackType(obj: unknown): obj is WithAttackType {
+    return obj !== null && 
+           typeof obj === 'object' && 
+           'attack_type' in obj && 
+           typeof (obj as WithAttackType).attack_type === 'string';
   }
   
-  if (equipment['hands'] && equipment['hands'].name && 
-      equipment['hands'].name.toLowerCase().includes('void knight')) {
-    pieces++;
+  const usingCrushStyle = params.combat_style === 'melee' && 
+                         hasAttackType(params) && params.attack_type === 'crush';
+  
+  if (inquisitorPieces > 0 && usingCrushStyle) {
+    bonus.isApplicable = true;
+    
+    // 0.5% per piece plus 1.0% set bonus if all 3 pieces
+    const pieceBonus = 0.005 * inquisitorPieces;
+    const setBonus = (inquisitorPieces === 3) ? 0.01 : 0;
+    const totalBonus = pieceBonus + setBonus;
+    
+    bonus.accuracy = (bonus.accuracy || 1.0) * (1 + totalBonus);
+    bonus.damage = (bonus.damage || 1.0) * (1 + totalBonus);
+    
+    // Special interaction with Inquisitor's mace
+    if (hasInquisitorsMace(equipment)) {
+      // 2.5% per piece instead of 0.5%, but no set bonus
+      const maceBonus = 0.025 * inquisitorPieces;
+      
+      // Replace previous calculation
+      bonus.accuracy = (bonus.accuracy || 1.0) / (1 + totalBonus) * (1 + maceBonus);
+      bonus.damage = (bonus.damage || 1.0) / (1 + totalBonus) * (1 + maceBonus);
+    }
   }
   
-  return pieces >= 3; // Full set requires top, bottom, and gloves
-}
-
-function hasEliteVoidKnightSet(equipment: Record<string, Item | null>): boolean {
-  // Check for elite void knight gear
-  let hasEliteTop = equipment['body'] && equipment['body'].name && 
-                    equipment['body'].name.toLowerCase().includes('elite void');
+  // Virtus set with Ancient Magicks
+  const virtusPieces = countVirtusPieces(equipment);
   
-  // Must have void gloves, legs and elite top
-  return hasEliteTop && hasVoidKnightSet(equipment);
-}
-
-function hasVoidMeleeHelm(equipment: Record<string, Item | null>): boolean {
-  return equipment['head'] && equipment['head'].name && 
-         equipment['head'].name.toLowerCase().includes('void melee helm');
-}
-
-function hasVoidRangeHelm(equipment: Record<string, Item | null>): boolean {
-  return equipment['head'] && equipment['head'].name && 
-         equipment['head'].name.toLowerCase().includes('void ranger helm');
-}
-
-function hasVoidMageHelm(equipment: Record<string, Item | null>): boolean {
-  return equipment['head'] && equipment['head'].name && 
-         equipment['head'].name.toLowerCase().includes('void mage helm');
-}
-
-function countInquisitorPieces(equipment: Record<string, Item | null>): number {
-  let count = 0;
-  
-  if (equipment['head'] && equipment['head'].name && 
-      equipment['head'].name.toLowerCase().includes('inquisitor')) {
-    count++;
+  // Use type guard to safely check spellbook
+  interface WithSpellbook {
+    spellbook: string;
   }
   
-  if (equipment['body'] && equipment['body'].name && 
-      equipment['body'].name.toLowerCase().includes('inquisitor')) {
-    count++;
+  function hasSpellbook(obj: unknown): obj is WithSpellbook {
+    return obj !== null && 
+           typeof obj === 'object' && 
+           'spellbook' in obj && 
+           typeof (obj as WithSpellbook).spellbook === 'string';
   }
   
-  if (equipment['legs'] && equipment['legs'].name && 
-      equipment['legs'].name.toLowerCase().includes('inquisitor')) {
-    count++;
+  const usingAncientMagicks = combatStyle === 'magic' && 
+                             hasSpellbook(params) && params.spellbook === 'ancient';
+  
+  if (virtusPieces > 0 && usingAncientMagicks) {
+    bonus.isApplicable = true;
+    
+    // 3% per piece to Ancient Magicks damage
+    const virtusBonus = 0.03 * virtusPieces;
+    bonus.damage = (bonus.damage || 1.0) * (1 + virtusBonus);
   }
   
-  return count;
-}
-
-function hasInquisitorsMace(equipment: Record<string, Item | null>): boolean {
-  return (equipment['mainhand'] && equipment['mainhand'].name && 
-          equipment['mainhand'].name.toLowerCase().includes('inquisitor\'s mace')) ||
-         (equipment['2h'] && equipment['2h'].name && 
-          equipment['2h'].name.toLowerCase().includes('inquisitor\'s mace'));
-}
-
-function countVirtusPieces(equipment: Record<string, Item | null>): number {
-  let count = 0;
+  // Obsidian armor with obsidian weapons
+  const hasObsidianArmor = hasObsidianArmorSet(equipment);
   
-  if (equipment['head'] && equipment['head'].name && 
-      equipment['head'].name.toLowerCase().includes('virtus mask')) {
-    count++;
+  if (hasObsidianArmor && hasObsidianWeapon(equipment) && combatStyle === 'melee') {
+    bonus.isApplicable = true;
+    
+    // 10% accuracy and damage
+    bonus.accuracy = (bonus.accuracy || 1.0) * 1.1;
+    bonus.damage = (bonus.damage || 1.0) * 1.1;
   }
   
-  if (equipment['body'] && equipment['body'].name && 
-      equipment['body'].name.toLowerCase().includes('virtus')) {
-    count++;
+  // Crystal armor with crystal bow/Bow of faerdhinen
+  const crystalPieces = countCrystalArmorPieces(equipment);
+  const hasCrystalBow = hasCrystalRangedWeapon(equipment);
+  
+  if (crystalPieces > 0 && hasCrystalBow && combatStyle === 'ranged') {
+    bonus.isApplicable = true;
+    
+    let damageBonus = 0;
+    let accuracyBonus = 0;
+    
+    // Apply bonuses based on worn pieces
+    if (hasCrystalHelm(equipment)) {
+      damageBonus += 0.025;
+      accuracyBonus += 0.05;
+    }
+    
+    if (hasCrystalBody(equipment)) {
+      damageBonus += 0.075;
+      accuracyBonus += 0.15;
+    }
+    
+    if (hasCrystalLegs(equipment)) {
+      damageBonus += 0.05;
+      accuracyBonus += 0.1;
+    }
+    
+    bonus.accuracy = (bonus.accuracy || 1.0) * (1 + accuracyBonus);
+    bonus.damage = (bonus.damage || 1.0) * (1 + damageBonus);
   }
   
-  if (equipment['legs'] && equipment['legs'].name && 
-      equipment['legs'].name.toLowerCase().includes('virtus')) {
-    count++;
-  }
-  
-  return count;
-}
-
-function hasObsidianArmorSet(equipment: Record<string, Item | null>): boolean {
-  // Check for obsidian armor set
-  let hasPlate = equipment['body'] && equipment['body'].name && 
-                 equipment['body'].name.toLowerCase().includes('obsidian');
-  
-  let hasLegs = equipment['legs'] && equipment['legs'].name && 
-                equipment['legs'].name.toLowerCase().includes('obsidian');
-  
-  let hasHelm = equipment['head'] && equipment['head'].name && 
-                equipment['head'].name.toLowerCase().includes('obsidian');
-  
-  return hasPlate && hasLegs && hasHelm;
-}
-
-function countCrystalArmorPieces(equipment: Record<string, Item | null>): number {
-  let count = 0;
-  
-  if (hasCrystalHelm(equipment)) count++;
-  if (hasCrystalBody(equipment)) count++;
-  if (hasCrystalLegs(equipment)) count++;
-  
-  return count;
-}
-
-function hasCrystalHelm(equipment: Record<string, Item | null>): boolean {
-  return equipment['head'] && equipment['head'].name && 
-         equipment['head'].name.toLowerCase().includes('crystal helm');
-}
-
-function hasCrystalBody(equipment: Record<string, Item | null>): boolean {
-  return equipment['body'] && equipment['body'].name && 
-         equipment['body'].name.toLowerCase().includes('crystal body');
-}
-
-function hasCrystalLegs(equipment: Record<string, Item | null>): boolean {
-  return equipment['legs'] && equipment['legs'].name && 
-         equipment['legs'].name.toLowerCase().includes('crystal legs');
-}
-
-function hasCrystalRangedWeapon(equipment: Record<string, Item | null>): boolean {
-  return (equipment['mainhand'] && equipment['mainhand'].name && 
-          (equipment['mainhand'].name.toLowerCase().includes('crystal bow') || 
-           equipment['mainhand'].name.toLowerCase().includes('bow of faerdhinen'))) ||
-         (equipment['2h'] && equipment['2h'].name && 
-          (equipment['2h'].name.toLowerCase().includes('crystal bow') || 
-           equipment['2h'].name.toLowerCase().includes('bow of faerdhinen')));
+  return bonus;
 }
 
 export default calculatePassiveEffectBonuses;

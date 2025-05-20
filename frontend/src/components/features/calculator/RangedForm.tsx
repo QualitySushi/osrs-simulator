@@ -1,8 +1,5 @@
 'use client';
 
-import { useEffect } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { 
   Form, 
@@ -15,10 +12,10 @@ import {
 import { Input } from '@/components/ui/input';
 import { Slider } from '@/components/ui/slider';
 import { Switch } from '@/components/ui/switch';
-import { useCalculatorStore } from '@/store/calculator-store';
+import { useCombatForm } from '@/hooks/useCombatForm';
 import { RangedCalculatorParams } from '@/app/types/calculator';
 
-// Zod schema for validation
+// Zod schema for ranged form validation
 const rangedFormSchema = z.object({
   ranged_level: z.number().min(1).max(99),
   ranged_boost: z.number().min(0).max(20),
@@ -31,91 +28,45 @@ const rangedFormSchema = z.object({
   gear_multiplier: z.number().min(1).max(2),
   special_multiplier: z.number().min(1).max(2),
   target_defence_level: z.number().min(0).max(500),
-  target_ranged_defence_bonus: z.number().min(0).max(500),
+  target_defence_bonus: z.number().min(0).max(500),
   attack_speed: z.number().min(1).max(10),
 });
 
 type RangedFormValues = z.infer<typeof rangedFormSchema>;
 
 export function RangedForm() {
-  const { params, setParams, gearLocked, bossLocked } = useCalculatorStore();
-  const rangedParams = params as RangedCalculatorParams;
+  // Create default values from the initial store state
+  const defaultValues: RangedFormValues = {
+    ranged_level: 99,
+    ranged_boost: 0,
+    ranged_prayer: 1.0,
+    ranged_strength_bonus: 0,
+    ranged_attack_bonus: 0,
+    attack_style_bonus_attack: 0,
+    attack_style_bonus_strength: 0,
+    void_ranged: false,
+    gear_multiplier: 1.0,
+    special_multiplier: 1.0,
+    target_defence_level: 1,
+    target_defence_bonus: 0,
+    attack_speed: 2.4,
+  };
 
-  // Initialize form with current store values
-  const form = useForm<RangedFormValues>({
-    resolver: zodResolver(rangedFormSchema),
-    defaultValues: {
-      ranged_level: rangedParams.ranged_level,
-      ranged_boost: rangedParams.ranged_boost,
-      ranged_prayer: rangedParams.ranged_prayer,
-      ranged_strength_bonus: rangedParams.ranged_strength_bonus,
-      ranged_attack_bonus: rangedParams.ranged_attack_bonus,
-      attack_style_bonus_attack: rangedParams.attack_style_bonus_attack,
-      attack_style_bonus_strength: rangedParams.attack_style_bonus_strength,
-      void_ranged: rangedParams.void_ranged || false,
-      gear_multiplier: rangedParams.gear_multiplier || 1.0,
-      special_multiplier: rangedParams.special_multiplier || 1.0,
-      target_defence_level: rangedParams.target_defence_level,
-      target_ranged_defence_bonus: rangedParams.target_ranged_defence_bonus,
-      attack_speed: rangedParams.attack_speed,
-    },
+  // Use the shared form hook
+  const {
+    form,
+    onValueChange,
+    isFieldDisabled,
+    params
+  } = useCombatForm<RangedFormValues>({
+    combatStyle: 'ranged',
+    formSchema: rangedFormSchema,
+    defaultValues,
+    gearLockedFields: ['ranged_strength_bonus', 'ranged_attack_bonus'],
+    bossLockedFields: ['target_defence_level', 'target_defence_bonus'],
   });
 
-  // Update form values when store changes (e.g., when a boss is selected or gear is added)
-  useEffect(() => {
-    form.reset({
-      ...form.getValues(),
-      ranged_strength_bonus: rangedParams.ranged_strength_bonus,
-      ranged_attack_bonus: rangedParams.ranged_attack_bonus,
-      target_defence_level: rangedParams.target_defence_level,
-      target_ranged_defence_bonus: rangedParams.target_ranged_defence_bonus,
-    });
-  }, [
-    rangedParams.ranged_strength_bonus,
-    rangedParams.ranged_attack_bonus,
-    rangedParams.target_defence_level,
-    rangedParams.target_ranged_defence_bonus,
-    form,
-    rangedParams
-  ]);
-
-  // Update store when form values change (but only if not locked)
-  const onValueChange = (values: Partial<RangedFormValues>) => {
-    // Determine which values to update based on lock status
-    const updatedValues: Partial<RangedFormValues> = { ...values };
-    
-    // Don't update gear stats if gear is locked
-    if (gearLocked) {
-      delete updatedValues.ranged_strength_bonus;
-      delete updatedValues.ranged_attack_bonus;
-    }
-    
-    // Don't update target stats if boss is locked
-    if (bossLocked) {
-      delete updatedValues.target_defence_level;
-      delete updatedValues.target_ranged_defence_bonus;
-    }
-    
-    // Only update the store with non-locked values
-    if (Object.keys(updatedValues).length > 0) {
-      setParams(updatedValues);
-    }
-  };
-
-  // Helper to check if field should be disabled
-  const isFieldDisabled = (fieldName: string) => {
-    // Equipment stat fields should be disabled when gear is locked
-    if (gearLocked && ['ranged_strength_bonus', 'ranged_attack_bonus'].includes(fieldName)) {
-      return true;
-    }
-    
-    // Target stat fields should be disabled when boss is locked
-    if (bossLocked && ['target_defence_level', 'target_ranged_defence_bonus'].includes(fieldName)) {
-      return true;
-    }
-    
-    return false;
-  };
+  const rangedParams = params as RangedCalculatorParams;
 
   return (
     <Form {...form}>
@@ -249,11 +200,11 @@ export function RangedForm() {
                         }
                       }}
                       disabled={isFieldDisabled('ranged_strength_bonus')}
-                      className={gearLocked ? "opacity-50" : ""}
+                      className={isFieldDisabled('ranged_strength_bonus') ? "opacity-50" : ""}
                       value={rangedParams.ranged_strength_bonus} // Ensure we display the actual store value
                     />
                   </FormControl>
-                  {gearLocked && <FormDescription className="text-amber-500">Using equipment bonuses</FormDescription>}
+                  {isFieldDisabled('ranged_strength_bonus') && <FormDescription className="text-amber-500">Using equipment bonuses</FormDescription>}
                 </FormItem>
               )}
             />
@@ -278,57 +229,57 @@ export function RangedForm() {
                         }
                       }}
                       disabled={isFieldDisabled('ranged_attack_bonus')}
-                      className={gearLocked ? "opacity-50" : ""}
+                      className={isFieldDisabled('ranged_attack_bonus') ? "opacity-50" : ""}
                       value={rangedParams.ranged_attack_bonus} // Ensure we display the actual store value
                     />
                   </FormControl>
-                  {gearLocked && <FormDescription className="text-amber-500">Using equipment bonuses</FormDescription>}
+                  {isFieldDisabled('ranged_attack_bonus') && <FormDescription className="text-amber-500">Using equipment bonuses</FormDescription>}
                 </FormItem>
               )}
             />
 
             <FormField
-            control={form.control}
-            name="attack_style_bonus_attack"
-            render={({ field }) => (
+              control={form.control}
+              name="attack_style_bonus_attack"
+              render={({ field }) => (
                 <FormItem>
-                <FormLabel>Attack Style Bonus (Attack): {field.value}</FormLabel>
-                <FormControl>
+                  <FormLabel>Attack Style Bonus (Attack): {field.value}</FormLabel>
+                  <FormControl>
                     <Slider
-                    min={0}
-                    max={3}
-                    step={1}
-                    value={[field.value]}
-                    onValueChange={(values) => {
+                      min={0}
+                      max={3}
+                      step={1}
+                      value={[field.value]}
+                      onValueChange={(values) => {
                         field.onChange(values[0]);
                         onValueChange({ attack_style_bonus_attack: values[0] });
-                    }}
+                      }}
                     />
-                </FormControl>
+                  </FormControl>
                 </FormItem>
-            )}
+              )}
             />
 
             <FormField
-            control={form.control}
-            name="attack_style_bonus_strength"
-            render={({ field }) => (
+              control={form.control}
+              name="attack_style_bonus_strength"
+              render={({ field }) => (
                 <FormItem>
-                <FormLabel>Attack Style Bonus (Strength): {field.value}</FormLabel>
-                <FormControl>
+                  <FormLabel>Attack Style Bonus (Strength): {field.value}</FormLabel>
+                  <FormControl>
                     <Slider
-                    min={0}
-                    max={3}
-                    step={1}
-                    value={[field.value]}
-                    onValueChange={(values) => {
+                      min={0}
+                      max={3}
+                      step={1}
+                      value={[field.value]}
+                      onValueChange={(values) => {
                         field.onChange(values[0]);
                         onValueChange({ attack_style_bonus_strength: values[0] });
-                    }}
+                      }}
                     />
-                </FormControl>
+                  </FormControl>
                 </FormItem>
-            )}
+              )}
             />
             
             <FormField
@@ -351,31 +302,6 @@ export function RangedForm() {
                       }}
                     />
                   </FormControl>
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="gear_multiplier"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Gear Multiplier: {field.value}x</FormLabel>
-                  <FormControl>
-                    <Slider
-                      min={1}
-                      max={1.25}
-                      step={0.01}
-                      value={[field.value]}
-                      onValueChange={(values) => {
-                        field.onChange(values[0]);
-                        onValueChange({ gear_multiplier: values[0] });
-                      }}
-                    />
-                  </FormControl>
-                  <FormDescription>
-                    Slayer Helm: 1.1667x, Salve (e): 1.16x, Salve (ei): 1.2x
-                  </FormDescription>
                 </FormItem>
               )}
             />
@@ -407,18 +333,18 @@ export function RangedForm() {
                         }
                       }}
                       disabled={isFieldDisabled('target_defence_level')}
-                      className={bossLocked ? "opacity-50" : ""}
+                      className={isFieldDisabled('target_defence_level') ? "opacity-50" : ""}
                       value={rangedParams.target_defence_level} // Ensure we display the actual store value
                     />
                   </FormControl>
-                  {bossLocked && <FormDescription className="text-amber-500">Using target stats from boss</FormDescription>}
+                  {isFieldDisabled('target_defence_level') && <FormDescription className="text-amber-500">Using target stats from boss</FormDescription>}
                 </FormItem>
               )}
             />
 
             <FormField
               control={form.control}
-              name="target_ranged_defence_bonus"
+              name="target_defence_bonus"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Target Ranged Defence Bonus</FormLabel>
@@ -429,18 +355,18 @@ export function RangedForm() {
                       max={500}
                       {...field}
                       onChange={(e) => {
-                        if (!isFieldDisabled('target_ranged_defence_bonus')) {
+                        if (!isFieldDisabled('target_defence_bonus')) {
                           const value = parseInt(e.target.value);
                           field.onChange(value);
-                          onValueChange({ target_ranged_defence_bonus: value });
+                          onValueChange({ target_defence_bonus: value });
                         }
                       }}
-                      disabled={isFieldDisabled('target_ranged_defence_bonus')}
-                      className={bossLocked ? "opacity-50" : ""}
-                      value={rangedParams.target_ranged_defence_bonus} // Ensure we display the actual store value
+                      disabled={isFieldDisabled('target_defence_bonus')}
+                      className={isFieldDisabled('target_defence_bonus') ? "opacity-50" : ""}
+                      value={rangedParams.target_defence_bonus} // Ensure we display the actual store value
                     />
                   </FormControl>
-                  {bossLocked && <FormDescription className="text-amber-500">Using target stats from boss</FormDescription>}
+                  {isFieldDisabled('target_defence_bonus') && <FormDescription className="text-amber-500">Using target stats from boss</FormDescription>}
                 </FormItem>
               )}
             />

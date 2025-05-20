@@ -1,8 +1,5 @@
 'use client';
 
-import { useEffect } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { 
   Form, 
@@ -15,10 +12,10 @@ import {
 import { Input } from '@/components/ui/input';
 import { Slider } from '@/components/ui/slider';
 import { Switch } from '@/components/ui/switch';
-import { useCalculatorStore } from '@/store/calculator-store';
+import { useCombatForm } from '@/hooks/useCombatForm';
 import { MeleeCalculatorParams } from '@/app/types/calculator';
 
-// Zod schema for validation
+// Zod schema for melee form validation
 const meleeFormSchema = z.object({
   strength_level: z.number().min(1).max(99),
   strength_boost: z.number().min(0).max(20),
@@ -41,87 +38,41 @@ const meleeFormSchema = z.object({
 type MeleeFormValues = z.infer<typeof meleeFormSchema>;
 
 export function MeleeForm() {
-  const { params, setParams, gearLocked, bossLocked } = useCalculatorStore();
-  const meleeParams = params as MeleeCalculatorParams;
+  // Create default values from the initial store state
+  const defaultValues: MeleeFormValues = {
+    strength_level: 99,
+    strength_boost: 0,
+    strength_prayer: 1.0,
+    attack_level: 99,
+    attack_boost: 0,
+    attack_prayer: 1.0,
+    melee_strength_bonus: 0,
+    melee_attack_bonus: 0,
+    attack_style_bonus_attack: 0,
+    attack_style_bonus_strength: 0,
+    void_melee: false,
+    gear_multiplier: 1.0,
+    special_multiplier: 1.0,
+    target_defence_level: 1,
+    target_defence_bonus: 0,
+    attack_speed: 2.4,
+  };
 
-  // Initialize form with current store values
-  const form = useForm<MeleeFormValues>({
-    resolver: zodResolver(meleeFormSchema),
-    defaultValues: {
-      strength_level: meleeParams.strength_level,
-      strength_boost: meleeParams.strength_boost,
-      strength_prayer: meleeParams.strength_prayer,
-      attack_level: meleeParams.attack_level,
-      attack_boost: meleeParams.attack_boost,
-      attack_prayer: meleeParams.attack_prayer,
-      melee_strength_bonus: meleeParams.melee_strength_bonus,
-      melee_attack_bonus: meleeParams.melee_attack_bonus,
-      attack_style_bonus_attack: meleeParams.attack_style_bonus_attack,
-      attack_style_bonus_strength: meleeParams.attack_style_bonus_strength,
-      void_melee: meleeParams.void_melee || false,
-      gear_multiplier: meleeParams.gear_multiplier || 1.0,
-      special_multiplier: meleeParams.special_multiplier || 1.0,
-      target_defence_level: meleeParams.target_defence_level,
-      target_defence_bonus: meleeParams.target_defence_bonus,
-      attack_speed: meleeParams.attack_speed,
-    },
+  // Use the shared form hook
+  const {
+    form,
+    onValueChange,
+    isFieldDisabled,
+    params
+  } = useCombatForm<MeleeFormValues>({
+    combatStyle: 'melee',
+    formSchema: meleeFormSchema,
+    defaultValues,
+    gearLockedFields: ['melee_strength_bonus', 'melee_attack_bonus'],
+    bossLockedFields: ['target_defence_level', 'target_defence_bonus'],
   });
 
-  // Update form values when store changes (e.g., when a boss is selected or gear is added)
-  useEffect(() => {
-    form.reset({
-      ...form.getValues(),
-      melee_strength_bonus: meleeParams.melee_strength_bonus,
-      melee_attack_bonus: meleeParams.melee_attack_bonus,
-      target_defence_level: meleeParams.target_defence_level,
-      target_defence_bonus: meleeParams.target_defence_bonus,
-    });
-  }, [
-    meleeParams.melee_strength_bonus, 
-    meleeParams.melee_attack_bonus, 
-    meleeParams.target_defence_level, 
-    meleeParams.target_defence_bonus,
-    form,
-    meleeParams
-  ]);
-
-  // Update store when form values change (but only if not locked)
-  const onValueChange = (values: Partial<MeleeFormValues>) => {
-    // Determine which values to update based on lock status
-    const updatedValues: Partial<MeleeFormValues> = { ...values };
-    
-    // Don't update gear stats if gear is locked
-    if (gearLocked) {
-      delete updatedValues.melee_strength_bonus;
-      delete updatedValues.melee_attack_bonus;
-    }
-    
-    // Don't update target stats if boss is locked
-    if (bossLocked) {
-      delete updatedValues.target_defence_level;
-      delete updatedValues.target_defence_bonus;
-    }
-    
-    // Only update the store with non-locked values
-    if (Object.keys(updatedValues).length > 0) {
-      setParams(updatedValues);
-    }
-  };
-
-  // Helper to check if field should be disabled
-  const isFieldDisabled = (fieldName: string) => {
-    // Equipment stat fields should be disabled when gear is locked
-    if (gearLocked && ['melee_strength_bonus', 'melee_attack_bonus'].includes(fieldName)) {
-      return true;
-    }
-    
-    // Target stat fields should be disabled when boss is locked
-    if (bossLocked && ['target_defence_level', 'target_defence_bonus'].includes(fieldName)) {
-      return true;
-    }
-    
-    return false;
-  };
+  const meleeParams = params as MeleeCalculatorParams;
 
   return (
     <Form {...form}>
@@ -250,11 +201,11 @@ export function MeleeForm() {
                         }
                       }}
                       disabled={isFieldDisabled('melee_strength_bonus')}
-                      className={gearLocked ? "opacity-50" : ""}
+                      className={isFieldDisabled('melee_strength_bonus') ? "opacity-50" : ""}
                       value={meleeParams.melee_strength_bonus} // Ensure we display the actual store value
                     />
                   </FormControl>
-                  {gearLocked && <FormDescription className="text-amber-500">Using equipment bonuses</FormDescription>}
+                  {isFieldDisabled('melee_strength_bonus') && <FormDescription className="text-amber-500">Using equipment bonuses</FormDescription>}
                 </FormItem>
               )}
             />
@@ -279,11 +230,11 @@ export function MeleeForm() {
                         }
                       }}
                       disabled={isFieldDisabled('melee_attack_bonus')}
-                      className={gearLocked ? "opacity-50" : ""}
+                      className={isFieldDisabled('melee_attack_bonus') ? "opacity-50" : ""}
                       value={meleeParams.melee_attack_bonus} // Ensure we display the actual store value
                     />
                   </FormControl>
-                  {gearLocked && <FormDescription className="text-amber-500">Using equipment bonuses</FormDescription>}
+                  {isFieldDisabled('melee_attack_bonus') && <FormDescription className="text-amber-500">Using equipment bonuses</FormDescription>}
                 </FormItem>
               )}
             />
@@ -339,11 +290,11 @@ export function MeleeForm() {
                         }
                       }}
                       disabled={isFieldDisabled('target_defence_level')}
-                      className={bossLocked ? "opacity-50" : ""}
+                      className={isFieldDisabled('target_defence_level') ? "opacity-50" : ""}
                       value={meleeParams.target_defence_level} // Ensure we display the actual store value
                     />
                   </FormControl>
-                  {bossLocked && <FormDescription className="text-amber-500">Using target stats from boss</FormDescription>}
+                  {isFieldDisabled('target_defence_level') && <FormDescription className="text-amber-500">Using target stats from boss</FormDescription>}
                 </FormItem>
               )}
             />
@@ -368,11 +319,11 @@ export function MeleeForm() {
                         }
                       }}
                       disabled={isFieldDisabled('target_defence_bonus')}
-                      className={bossLocked ? "opacity-50" : ""}
+                      className={isFieldDisabled('target_defence_bonus') ? "opacity-50" : ""}
                       value={meleeParams.target_defence_bonus} // Ensure we display the actual store value
                     />
                   </FormControl>
-                  {bossLocked && <FormDescription className="text-amber-500">Using target stats from boss</FormDescription>}
+                  {isFieldDisabled('target_defence_bonus') && <FormDescription className="text-amber-500">Using target stats from boss</FormDescription>}
                 </FormItem>
               )}
             />

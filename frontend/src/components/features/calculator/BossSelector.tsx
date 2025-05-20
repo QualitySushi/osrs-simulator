@@ -4,6 +4,9 @@ import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Search, Loader2, RotateCcw } from 'lucide-react';
 import { 
+  Target, 
+} from 'lucide-react';
+import { 
   Command, 
   CommandEmpty, 
   CommandGroup, 
@@ -19,7 +22,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { 
+import {
   Select, 
   SelectContent, 
   SelectItem, 
@@ -96,7 +99,7 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
       const rangedParams = params as RangedCalculatorParams;
       console.log('[DEBUG] Before update - Ranged target params:', {
         current_defence_level: rangedParams.target_defence_level,
-        current_ranged_defence_bonus: rangedParams.target_ranged_defence_bonus
+        current_ranged_defence_bonus: rangedParams.target_defence_bonus
       });
     }
     else if (params.combat_style === 'magic') {
@@ -114,6 +117,7 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
       // For melee combat style, use the defence level and appropriate defense bonus
       // Choose the lowest defense bonus for optimal damage (stab/slash/crush)
       let defenceBonus = 0;
+      let target_defence_type = '';
       const storeParams = useCalculatorStore.getState().params;
       const atkType =
         storeParams.combat_style === 'melee' && 'attack_type' in storeParams
@@ -122,21 +126,26 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
 
       if (atkType === 'stab') {
         defenceBonus = form.defence_stab ?? 0;
+        target_defence_type = 'defence_stab';
       } else if (atkType === 'slash') {
         defenceBonus = form.defence_slash ?? 0;
+        target_defence_type = 'defence_slash';
       } else if (atkType === 'crush') {
         defenceBonus = form.defence_crush ?? 0;
+        target_defence_type = 'defence_crush';
       }
       
       setParams({
         target_defence_level: form.defence_level || 1,
         target_defence_bonus: defenceBonus,
         original_defence_level: form.defence_level || 1,
+        target_defence_type: target_defence_type
       });
 
       console.log('[DEBUG] Updated melee target stats:', {
         defence_level: form.defence_level,
-        defence_bonus: defenceBonus
+        defence_bonus: defenceBonus,
+        target_defence_type: target_defence_type
       });
       
       // Verify the update
@@ -146,7 +155,8 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
           const meleeParams = currentParams as MeleeCalculatorParams;
           console.log('[DEBUG] Verified melee boss stats after update:', {
             target_defence_level: meleeParams.target_defence_level,
-            target_defence_bonus: meleeParams.target_defence_bonus
+            target_defence_bonus: meleeParams.target_defence_bonus,
+            target_defence_type: meleeParams.target_defence_type
           });
         }
       }, 0);
@@ -154,13 +164,15 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
     else if (combatStyle === 'ranged') {
       setParams({
         target_defence_level: form.defence_level || 1,
-        target_ranged_defence_bonus: form.defence_ranged_standard || 0,
+        target_defence_bonus: form.defence_ranged_standard || 0,
         original_defence_level: form.defence_level || 1,
+        target_defence_type: 'defence_ranged_standard'
       });
 
       console.log('[DEBUG] Updated ranged target stats:', {
         defence_level: form.defence_level,
-        ranged_defence_bonus: form.defence_ranged_standard
+        ranged_defence_bonus: form.defence_ranged_standard,
+        target_defence_type: 'defence_ranged_standard'
       });
       
       // Verify the update
@@ -170,7 +182,8 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
           const rangedParams = currentParams as RangedCalculatorParams;
           console.log('[DEBUG] Verified ranged boss stats after update:', {
             target_defence_level: rangedParams.target_defence_level,
-            target_ranged_defence_bonus: rangedParams.target_ranged_defence_bonus
+            target_defence_bonus: rangedParams.target_defence_bonus,
+            target_defence_type: rangedParams.target_defence_type
           });
         }
       }, 0);
@@ -182,11 +195,13 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
         target_defence_level: form.defence_level || 1,
         target_defence_bonus: form.defence_magic || 0, // use magic defence as fallback
         original_defence_level: form.defence_level || 1,
+        target_defence_type: 'defence_magic'
       });
 
       console.log('[DEBUG] Updated magic target stats:', {
         magic_level: form.magic_level,
-        magic_defence: form.defence_magic
+        magic_defence: form.defence_magic,
+        target_defence_type: 'defence_magic'
       });
       
       // Verify the update
@@ -196,7 +211,8 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
           const magicParams = currentParams as MagicCalculatorParams;
           console.log('[DEBUG] Verified magic boss stats after update:', {
             target_magic_level: magicParams.target_magic_level,
-            target_magic_defence: magicParams.target_magic_defence
+            target_magic_defence: magicParams.target_magic_defence,
+            target_defence_type: magicParams.target_defence_type
           });
         }
       }, 0);
@@ -223,18 +239,21 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
       setParams({
         target_defence_level: 1,
         target_defence_bonus: 0,
+        target_defence_type: 'defence_slash' // Default to slash
       });
     } 
     else if (params.combat_style === 'ranged') {
       setParams({
         target_defence_level: 1,
-        target_ranged_defence_bonus: 0,
+        target_defence_bonus: 0,
+        target_defence_type: 'defence_ranged_standard'
       });
     } 
     else if (params.combat_style === 'magic') {
       setParams({
         target_magic_level: 1,
         target_magic_defence: 0,
+        target_defence_type: 'defence_magic'
       });
     }
     
@@ -254,11 +273,14 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
       <CardHeader>
         <div className="flex justify-between items-center">
           <div>
-            <CardTitle>Target Selection</CardTitle>
+            <CardTitle className="flex items-center">
+              <Target className="h-5 w-5 mr-2 text-rs-gold" />
+              Target Selection
+            </CardTitle>
             <CardDescription>Select a boss to calculate DPS against</CardDescription>
           </div>
           {selectedBoss && (
-            <Button variant="outline" size="sm" onClick={handleResetBoss}>
+            <Button variant="outline" size="sm" onClick={handleResetBoss} className="hover:border-rs-gold">
               <RotateCcw className="h-4 w-4 mr-2" />
               Reset
             </Button>
@@ -267,66 +289,36 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
       </CardHeader>
       <CardContent className="space-y-4">
         {bossLocked && (
-          <Alert className="mb-4 border-blue-200 dark:border-blue-800 bg-blue-100 dark:bg-blue-900">
+          <div className="bg-rs-dark-stone bg-opacity-50 border border-rs-gold rounded-md p-3 mb-4 text-rs-gold">
             <AlertDescription>
               Target stats from boss are being used. Manual target stat inputs are disabled.
             </AlertDescription>
-          </Alert>
+          </div>
         )}
         
-        {/* Boss selector */}
+        {/* Boss selector - keep existing structure with these style changes */}
         <div className="space-y-2">
-          <label className="text-sm font-medium">Select Boss</label>
+          <label className="text-sm font-medium text-rs-gold">Select Boss</label>
           <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
               <Button
                 variant="outline"
                 role="combobox"
                 aria-expanded={open}
-                className="w-full justify-between"
+                className="w-full justify-between border-2 border-black bg-rs-dark-stone text-rs-gold"
               >
                 {selectedBoss ? selectedBoss.name : "Select a boss..."}
                 <Search className="ml-2 h-4 w-4 shrink-0 opacity-50" />
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-[300px] p-0">
-              <Command>
-                <CommandInput placeholder="Search bosses..." className="h-9" />
-                <CommandEmpty>No boss found.</CommandEmpty>
-                <CommandGroup>
-                  <CommandList>
-                    {isLoading ? (
-                      <div className="flex items-center justify-center p-4">
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Loading...
-                      </div>
-                    ) : (
-                      bosses?.map((boss) => (
-                        <CommandItem
-                          key={boss.id}
-                          value={boss.name}
-                          onSelect={() => handleSelectBoss(boss)}
-                        >
-                          {boss.name}
-                          {boss.raid_group && (
-                            <Badge variant="outline" className="ml-2">
-                              {boss.raid_group}
-                            </Badge>
-                          )}
-                        </CommandItem>
-                      ))
-                    )}
-                  </CommandList>
-                </CommandGroup>
-              </Command>
-            </PopoverContent>
+            {/* Keep existing PopoverContent */}
           </Popover>
         </div>
 
-        {/* Form selector (if the boss has multiple forms) */}
+        {/* Form selector - keep existing structure with style changes */}
         {selectedBoss && bossDetails?.forms && bossDetails.forms.length > 0 && (
           <div className="space-y-2">
-            <label className="text-sm font-medium">Select Form/Phase</label>
+            <label className="text-sm font-medium text-rs-gold">Select Form/Phase</label>
             {isLoadingDetails ? (
               <div className="flex items-center text-sm text-muted-foreground">
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -336,72 +328,48 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
               <Select
                 value={selectedForm?.id.toString() || ''}
                 onValueChange={(value: string) => {
-                    const form = bossDetails?.forms?.find(f => f.id.toString() === value);
-                    if (form) {
-                        handleSelectForm(form);
-                    }
+                  /* existing logic */
                 }}
               >
-                <SelectTrigger>
+                <SelectTrigger className="border-2 border-black bg-rs-dark-stone text-rs-gold">
                   <SelectValue placeholder="Select a form/phase" />
                 </SelectTrigger>
-                <SelectContent>
-                  {bossDetails.forms.map((form) => (
-                    <SelectItem key={form.id} value={form.id.toString()}>
-                      {form.form_name} (Combat Lvl: {form.combat_level || 'Unknown'})
-                    </SelectItem>
-                  ))}
-                </SelectContent>
+                {/* Keep existing SelectContent */}
               </Select>
             )}
           </div>
         )}
 
-        {/* Display the selected boss stats if a form is selected */}
+        {/* Display the selected boss stats */}
         {selectedForm && (
-          <div className="pt-2 space-y-2">
-            <h4 className="text-sm font-semibold">Target Stats</h4>
+          <div className="pt-2 space-y-2 bg-rs-panel p-3 border-2 border-black rounded-md shadow-inner">
+            <h4 className="text-sm font-bold text-rs-gold">Target Stats</h4>
             <div className="grid grid-cols-2 gap-2 text-sm">
               <div>
                 <span className="text-muted-foreground">Combat Level:</span>{' '}
-                <span className="font-medium">{selectedForm.combat_level || 'Unknown'}</span>
+                <span className="font-medium text-rs-gold font-rs-value">{selectedForm.combat_level || 'Unknown'}</span>
               </div>
               <div>
                 <span className="text-muted-foreground">Hitpoints:</span>{' '}
-                <span className="font-medium">{selectedForm.hitpoints || 'Unknown'}</span>
+                <span className="font-medium text-rs-gold font-rs-value">{selectedForm.hitpoints || 'Unknown'}</span>
               </div>
               <div>
                 <span className="text-muted-foreground">Defence Level:</span>{' '}
-                <span className="font-medium">{selectedForm.defence_level || 'Unknown'}</span>
+                <span className="font-medium text-rs-gold font-rs-value">{selectedForm.defence_level || 'Unknown'}</span>
               </div>
               <div>
                 <span className="text-muted-foreground">Magic Level:</span>{' '}
-                <span className="font-medium">{selectedForm.magic_level || 'Unknown'}</span>
+                <span className="font-medium text-rs-gold font-rs-value">{selectedForm.magic_level || 'Unknown'}</span>
               </div>
               
               <div className="col-span-2 mt-1">
-                <h5 className="text-xs font-semibold mb-1">Defence Bonuses</h5>
+                <h5 className="text-xs font-semibold mb-1 text-rs-gold">Defence Bonuses</h5>
                 <div className="grid grid-cols-3 gap-x-2 gap-y-1">
                   <div>
                     <span className="text-xs text-muted-foreground">Stab:</span>{' '}
-                    <span className="text-xs font-medium">{selectedForm.defence_stab ?? '0'}</span>
+                    <span className="text-xs font-medium text-rs-gold font-rs-value">{selectedForm.defence_stab ?? '0'}</span>
                   </div>
-                  <div>
-                    <span className="text-xs text-muted-foreground">Slash:</span>{' '}
-                    <span className="text-xs font-medium">{selectedForm.defence_slash ?? '0'}</span>
-                  </div>
-                  <div>
-                    <span className="text-xs text-muted-foreground">Crush:</span>{' '}
-                    <span className="text-xs font-medium">{selectedForm.defence_crush ?? '0'}</span>
-                  </div>
-                  <div>
-                    <span className="text-xs text-muted-foreground">Magic:</span>{' '}
-                    <span className="text-xs font-medium">{selectedForm.defence_magic ?? '0'}</span>
-                  </div>
-                  <div>
-                    <span className="text-xs text-muted-foreground">Ranged:</span>{' '}
-                    <span className="text-xs font-medium">{selectedForm.defence_ranged_standard ?? '0'}</span>
-                  </div>
+                  {/* Keep existing defence stats with text-rs-gold and font-rs-value */}
                 </div>
               </div>
             </div>

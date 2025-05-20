@@ -1,8 +1,5 @@
 'use client';
 
-import { useEffect } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { 
   Form, 
@@ -16,9 +13,11 @@ import { Input } from '@/components/ui/input';
 import { Slider } from '@/components/ui/slider';
 import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useCalculatorStore } from '@/store/calculator-store';
+import { useCombatForm } from '@/hooks/useCombatForm';
 import { MagicCalculatorParams } from '@/app/types/calculator';
+import { useEffect } from 'react';
 
+// Magic form schema for validation
 const magicFormSchema = z.object({
   magic_level: z.number().min(1).max(99),
   magic_boost: z.number().min(0).max(20),
@@ -46,88 +45,60 @@ const magicFormSchema = z.object({
 type MagicFormValues = z.infer<typeof magicFormSchema>;
 
 export function MagicForm() {
-  const { params, setParams, gearLocked, bossLocked } = useCalculatorStore();
+  // Use the shared form hook with magic-specific options
+  const {
+    form,
+    onValueChange,
+    isFieldDisabled,
+    params
+  } = useCombatForm<MagicFormValues>({
+    combatStyle: 'magic',
+    formSchema: magicFormSchema,
+    defaultValues: {
+      magic_level: 99,
+      magic_boost: 0,
+      magic_prayer: 1,
+      base_spell_max_hit: 24, // Default to Fire Surge
+      magic_attack_bonus: 0,
+      magic_damage_bonus: 0,
+      attack_style_bonus_attack: 0,
+      attack_style_bonus_strength: 0,
+      attack_style_bonus: 0,
+      void_magic: false,
+      shadow_bonus: 0,
+      virtus_bonus: 0,
+      tome_bonus: 0,
+      prayer_bonus: 0,
+      elemental_weakness: 0,
+      target_magic_level: 1,
+      target_magic_defence: 0,
+      attack_speed: 3.0, // Standard spellbook speed
+      spellbook: 'standard',
+      spell_type: 'offensive',
+      god_spell_charged: false
+    },
+    gearLockedFields: ['magic_attack_bonus', 'magic_damage_bonus'],
+    bossLockedFields: ['target_magic_level', 'target_magic_defence'],
+  });
+
+  // Cast params to magic params for type safety
   const magicParams = params as MagicCalculatorParams;
 
-  // Initialize form with current store values
-const form = useForm<MagicFormValues>({
-  resolver: zodResolver(magicFormSchema),
-  defaultValues: {
-    magic_level: magicParams.magic_level || 99,
-    magic_boost: magicParams.magic_boost || 0,
-    magic_prayer: magicParams.magic_prayer || 1,
-    base_spell_max_hit: magicParams.base_spell_max_hit || 0,
-    magic_attack_bonus: magicParams.magic_attack_bonus || 0,
-    magic_damage_bonus: magicParams.magic_damage_bonus || 0,
-    attack_style_bonus_attack: magicParams.attack_style_bonus_attack || 0,
-    attack_style_bonus_strength: magicParams.attack_style_bonus_strength || 0,
-    attack_style_bonus: magicParams.attack_style_bonus || magicParams.attack_style_bonus_attack || 0, // Add this
-    void_magic: magicParams.void_magic || false,
-    shadow_bonus: magicParams.shadow_bonus || 0,
-    virtus_bonus: magicParams.virtus_bonus || 0,
-    tome_bonus: magicParams.tome_bonus || 0,
-    prayer_bonus: magicParams.prayer_bonus || 0,
-    elemental_weakness: magicParams.elemental_weakness || 0,
-    target_magic_level: magicParams.target_magic_level || 1,
-    target_magic_defence: magicParams.target_magic_defence || 0,
-    attack_speed: magicParams.attack_speed || 2.4,
-    spellbook: magicParams.spellbook || 'standard',
-    spell_type: magicParams.spell_type || 'offensive',
-    god_spell_charged: magicParams.god_spell_charged || false
-  },
-});
-
-  // Update form when store changes
   useEffect(() => {
-    form.reset({
-      ...form.getValues(),
-      magic_attack_bonus: magicParams.magic_attack_bonus || 0,
-      magic_damage_bonus: magicParams.magic_damage_bonus || 0,
-      target_magic_level: magicParams.target_magic_level || 1,
-      target_magic_defence: magicParams.target_magic_defence || 0,
-      base_spell_max_hit: magicParams.base_spell_max_hit || 0,
+    console.log('[DEBUG] Magic gear bonuses from store:', {
+      magic_attack_bonus: magicParams.magic_attack_bonus,
+      magic_damage_bonus: magicParams.magic_damage_bonus,
+      attack_style_bonus_attack: magicParams.attack_style_bonus_attack,
+      attack_style_bonus_strength: magicParams.attack_style_bonus_strength,
+      attack_speed: magicParams.attack_speed,
     });
   }, [
     magicParams.magic_attack_bonus,
     magicParams.magic_damage_bonus,
-    magicParams.target_magic_level,
-    magicParams.target_magic_defence,
-    magicParams.base_spell_max_hit,
-    form,
-    magicParams
+    magicParams.attack_style_bonus_attack,
+    magicParams.attack_style_bonus_strength,
+    magicParams.attack_speed
   ]);
-
-  // Update store when form values change (but only if not locked)
-  const onValueChange = (values: Partial<MagicFormValues>) => {
-    const updatedValues = { ...values };
-    if (gearLocked) {
-      delete updatedValues.magic_attack_bonus;
-      delete updatedValues.magic_damage_bonus;
-    }
-    if (bossLocked) {
-      delete updatedValues.target_magic_level;
-      delete updatedValues.target_magic_defence;
-    }
-    if (Object.keys(updatedValues).length > 0) {
-      console.log('[DEBUG] Updating magic params:', updatedValues);
-      setParams(updatedValues);
-    }
-  };
-
-  // Helper to check if field should be disabled
-  const isFieldDisabled = (fieldName: string) => {
-    // Equipment stat fields should be disabled when gear is locked
-    if (gearLocked && ['magic_attack_bonus', 'magic_damage_bonus'].includes(fieldName)) {
-      return true;
-    }
-    
-    // Target stat fields should be disabled when boss is locked
-    if (bossLocked && ['target_magic_level', 'target_magic_defence'].includes(fieldName)) {
-      return true;
-    }
-    
-    return false;
-  };
 
   return (
     <Form {...form}>
@@ -148,7 +119,7 @@ const form = useForm<MagicFormValues>({
                       min={1}
                       max={99}
                       step={1}
-                      value={[field.value || 0]}
+                      value={[field.value]}
                       onValueChange={(values) => {
                         field.onChange(values[0]);
                         onValueChange({ magic_level: values[0] });
@@ -170,7 +141,7 @@ const form = useForm<MagicFormValues>({
                       min={0}
                       max={20}
                       step={1}
-                      value={[field.value || 0]}
+                      value={[field.value]}
                       onValueChange={(values) => {
                         field.onChange(values[0]);
                         onValueChange({ magic_boost: values[0] });
@@ -189,13 +160,13 @@ const form = useForm<MagicFormValues>({
               name="magic_prayer"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Prayer Bonus: {((field.value || 1) * 100 - 100).toFixed(0)}%</FormLabel>
+                  <FormLabel>Prayer Bonus: {((field.value * 100) - 100).toFixed(0)}%</FormLabel>
                   <FormControl>
                     <Slider
                       min={1}
                       max={1.25}
                       step={0.01}
-                      value={[field.value || 1]}
+                      value={[field.value]}
                       onValueChange={(values) => {
                         field.onChange(values[0]);
                         onValueChange({ magic_prayer: values[0] });
@@ -221,9 +192,9 @@ const form = useForm<MagicFormValues>({
                       min={1}
                       max={10}
                       step={0.1}
-                      value={field.value || 2.4}
+                      value={field.value}
                       onChange={(e) => {
-                        const value = parseFloat(e.target.value || "0");
+                        const value = parseFloat(e.target.value || "3.0");
                         field.onChange(value);
                         onValueChange({ attack_speed: value });
                       }}
@@ -243,7 +214,7 @@ const form = useForm<MagicFormValues>({
                 <FormItem>
                   <FormLabel>Spellbook</FormLabel>
                   <Select
-                    value={field.value || 'standard'}
+                    value={field.value}
                     onValueChange={(value: 'standard' | 'ancient' | 'lunars') => {
                       field.onChange(value);
                       onValueChange({ spellbook: value });
@@ -271,7 +242,7 @@ const form = useForm<MagicFormValues>({
                 <FormItem>
                   <FormLabel>Spell Type</FormLabel>
                   <Select
-                    value={field.value || 'offensive'}
+                    value={field.value}
                     onValueChange={(value: 'offensive' | 'defensive') => {
                       field.onChange(value);
                       onValueChange({ spell_type: value });
@@ -302,7 +273,7 @@ const form = useForm<MagicFormValues>({
                       type="number"
                       min={0}
                       max={100}
-                      value={field.value || 0}
+                      value={field.value}
                       onChange={(e) => {
                         const value = parseInt(e.target.value || "0");
                         field.onChange(value);
@@ -342,10 +313,10 @@ const form = useForm<MagicFormValues>({
                         }
                       }}
                       disabled={isFieldDisabled('magic_attack_bonus')}
-                      className={gearLocked ? "opacity-50" : ""}
+                      className={isFieldDisabled('magic_attack_bonus') ? "opacity-50" : ""}
                     />
                   </FormControl>
-                  {gearLocked && <FormDescription className="text-amber-500">Using equipment bonuses</FormDescription>}
+                  {isFieldDisabled('magic_attack_bonus') && <FormDescription className="text-amber-500">Using equipment bonuses</FormDescription>}
                 </FormItem>
               )}
             />
@@ -361,20 +332,19 @@ const form = useForm<MagicFormValues>({
                       type="number"
                       min={0}
                       max={100}
-                      value={Math.round((magicParams.magic_damage_bonus || 0) * 100)}
+                      value={Math.round((magicParams.magic_damage_bonus ?? 0) * 100)}
                       onChange={(e) => {
+                        const percent = parseInt(e.target.value || '0') / 100;
                         if (!isFieldDisabled('magic_damage_bonus')) {
-                          // Convert percentage to decimal (e.g. 20 → 0.2)
-                          const value = parseInt(e.target.value || "0") / 100;
-                          field.onChange(value);
-                          onValueChange({ magic_damage_bonus: value });
+                          field.onChange(percent); // update the form
+                          onValueChange({ magic_damage_bonus: percent }); // update the store
                         }
                       }}
                       disabled={isFieldDisabled('magic_damage_bonus')}
-                      className={gearLocked ? "opacity-50" : ""}
+                      className={isFieldDisabled('magic_damage_bonus') ? "opacity-50" : ""}
                     />
                   </FormControl>
-                  {gearLocked && <FormDescription className="text-amber-500">Using equipment bonuses</FormDescription>}
+                  {isFieldDisabled('magic_damage_bonus') && <FormDescription className="text-amber-500">Using equipment bonuses</FormDescription>}
                   <FormDescription>
                     Occult: 10%, Tormented: 5%, Ancestral: 6%
                   </FormDescription>
@@ -383,31 +353,31 @@ const form = useForm<MagicFormValues>({
             />
 
             <FormField
-            control={form.control}
-            name="attack_style_bonus_attack"
-            render={({ field }) => (
+              control={form.control}
+              name="attack_style_bonus_attack"
+              render={({ field }) => (
                 <FormItem>
-                <FormLabel>Attack Style Bonus (Attack): {field.value || 0}</FormLabel>
-                <FormControl>
+                  <FormLabel>Attack Style Bonus (Attack): {field.value}</FormLabel>
+                  <FormControl>
                     <Slider
-                    min={0}
-                    max={3}
-                    step={1}
-                    value={[field.value || 0]}
-                    onValueChange={(values) => {
+                      min={0}
+                      max={3}
+                      step={1}
+                      value={[field.value]}
+                      onValueChange={(values) => {
                         field.onChange(values[0]);
                         onValueChange({ 
-                        attack_style_bonus_attack: values[0],
-                        attack_style_bonus: values[0] // This is now included in the form schema
+                          attack_style_bonus_attack: values[0],
+                          attack_style_bonus: values[0] // Also update the backend field
                         });
-                    }}
+                      }}
                     />
-                </FormControl>
-                <FormDescription>
+                  </FormControl>
+                  <FormDescription>
                     Accurate: +3, Longrange: 0
-                </FormDescription>
+                  </FormDescription>
                 </FormItem>
-            )}
+              )}
             />
             
             <FormField
@@ -418,12 +388,12 @@ const form = useForm<MagicFormValues>({
                   <div className="space-y-0.5">
                     <FormLabel>Void Magic</FormLabel>
                     <FormDescription>
-                      Elite Void Magic gives 2.5% accuracy and damage
+                      Elite Void Magic gives 45% accuracy and 2.5% damage
                     </FormDescription>
                   </div>
                   <FormControl>
                     <Switch
-                      checked={field.value || false}
+                      checked={field.value}
                       onCheckedChange={(checked) => {
                         field.onChange(checked);
                         onValueChange({ void_magic: checked });
@@ -439,13 +409,13 @@ const form = useForm<MagicFormValues>({
               name="shadow_bonus"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Tumeken&apos;s Shadow Bonus: {((field.value || 0) * 100).toFixed(0)}%</FormLabel>
+                  <FormLabel>Tumeken&apos;s Shadow Bonus: {(field.value * 100).toFixed(0)}%</FormLabel>
                   <FormControl>
                     <Slider
                       min={0}
                       max={0.5}
                       step={0.01}
-                      value={[field.value || 0]}
+                      value={[field.value]}
                       onValueChange={(values) => {
                         field.onChange(values[0]);
                         onValueChange({ shadow_bonus: values[0] });
@@ -461,16 +431,41 @@ const form = useForm<MagicFormValues>({
 
             <FormField
               control={form.control}
+              name="virtus_bonus"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Virtus Set Bonus: {(field.value * 100).toFixed(0)}%</FormLabel>
+                  <FormControl>
+                    <Slider
+                      min={0}
+                      max={0.09}
+                      step={0.03}
+                      value={[field.value]}
+                      onValueChange={(values) => {
+                        field.onChange(values[0]);
+                        onValueChange({ virtus_bonus: values[0] });
+                      }}
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    3% per piece for Ancient Magicks
+                  </FormDescription>
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
               name="tome_bonus"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Tome of Fire Bonus: {((field.value || 0) * 100).toFixed(0)}%</FormLabel>
+                  <FormLabel>Tome of Fire Bonus: {(field.value * 100).toFixed(0)}%</FormLabel>
                   <FormControl>
                     <Slider
                       min={0}
                       max={0.5}
                       step={0.01}
-                      value={[field.value || 0]}
+                      value={[field.value]}
                       onValueChange={(values) => {
                         field.onChange(values[0]);
                         onValueChange({ tome_bonus: values[0] });
@@ -511,10 +506,10 @@ const form = useForm<MagicFormValues>({
                         }
                       }}
                       disabled={isFieldDisabled('target_magic_level')}
-                      className={bossLocked ? "opacity-50" : ""}
+                      className={isFieldDisabled('target_magic_level') ? "opacity-50" : ""}
                     />
                   </FormControl>
-                  {bossLocked && <FormDescription className="text-amber-500">Using target stats from boss</FormDescription>}
+                  {isFieldDisabled('target_magic_level') && <FormDescription className="text-amber-500">Using target stats from boss</FormDescription>}
                 </FormItem>
               )}
             />
@@ -539,10 +534,10 @@ const form = useForm<MagicFormValues>({
                         }
                       }}
                       disabled={isFieldDisabled('target_magic_defence')}
-                      className={bossLocked ? "opacity-50" : ""}
+                      className={isFieldDisabled('target_magic_defence') ? "opacity-50" : ""}
                     />
                   </FormControl>
-                  {bossLocked && <FormDescription className="text-amber-500">Using target stats from boss</FormDescription>}
+                  {isFieldDisabled('target_magic_defence') && <FormDescription className="text-amber-500">Using target stats from boss</FormDescription>}
                 </FormItem>
               )}
             />

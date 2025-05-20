@@ -5,6 +5,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { useRef } from 'react';
+import { 
+  Shield
+} from 'lucide-react';
 
 export function DefenceReductionPanel() {
   const { params, setParams } = useCalculatorStore();
@@ -66,7 +69,9 @@ export function DefenceReductionPanel() {
         let def = params.original_defence_level ?? params.target_defence_level ?? 0;
 
         for (let i = 0; i < allEffects.dwh_hits; i++) def *= 0.7;
-        if (allEffects.elder_maul_hits > 0) def *= 0.65;
+        for (let i = 0; i < allEffects.elder_maul_hits; i++) {
+          def = Math.floor(def * 0.65);
+        }
         for (let i = 0; i < allEffects.arclight_hits; i++) def *= 0.95;
         for (let i = 0; i < allEffects.emberlight_hits; i++) def *= 0.95;
         for (let i = 0; i < allEffects.tonalztics_hits; i++) def *= 0.9;
@@ -95,9 +100,12 @@ export function DefenceReductionPanel() {
     ]);
 
   return (
-    <Card>
+    <Card className="rs-border h-full">
       <CardHeader>
-        <CardTitle>Defensive Reductions</CardTitle>
+        <CardTitle className="flex items-center">
+          <Shield className="h-5 w-5 mr-2 text-rs-gold" />
+          Defensive Reductions
+        </CardTitle>
         <CardDescription>Track special attack effects on boss defence</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -107,10 +115,10 @@ export function DefenceReductionPanel() {
               type="number"
               value={params[key] ?? 0}
               min={0}
-              className="w-16"
+              className="w-16 border-2 border-black bg-rs-dark-stone text-rs-gold"
               onChange={(e) => setParams({ [key]: parseInt(e.target.value) || 0 })}
             />
-            <Label className="text-sm font-medium whitespace-nowrap">{label}</Label>
+            <Label className="text-sm font-medium whitespace-nowrap text-rs-gold">{label}</Label>
           </div>
         ))}
 
@@ -119,8 +127,9 @@ export function DefenceReductionPanel() {
             <Switch
               checked={!!params[key]}
               onCheckedChange={(value) => setParams({ [key]: value })}
+              className="data-[state=checked]:bg-rs-gold"
             />
-            <Label className="text-sm font-medium whitespace-nowrap">{label}</Label>
+            <Label className="text-sm font-medium whitespace-nowrap text-rs-gold">{label}</Label>
           </div>
         ))}
       </CardContent>

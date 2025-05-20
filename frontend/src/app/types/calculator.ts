@@ -42,6 +42,7 @@ export interface BaseCalculatorParams {
   special_multiplier?: number;
   attack_style_bonus?: number; // Add this field which is in the backend model
   equipment?: EquipmentLoadout;
+  weapon_name?: string;
 }
 
 // Shared fields across styles
@@ -75,6 +76,7 @@ export interface MeleeCalculatorParams extends BaseCalculatorParams, WithDefence
   void_melee?: boolean;
   target_defence_level: number;
   target_defence_bonus: number;
+  target_defence_type?: string;
 }
 
 // Ranged specific parameters
@@ -89,7 +91,8 @@ export interface RangedCalculatorParams extends BaseCalculatorParams, WithDefenc
   attack_style_bonus_strength: number;
   void_ranged?: boolean;
   target_defence_level: number;
-  target_ranged_defence_bonus: number;
+  target_defence_bonus: number;
+  target_defence_type?: string;
 }
 
 // Magic specific parameters
@@ -118,6 +121,7 @@ export interface MagicCalculatorParams extends BaseCalculatorParams, WithDefence
   spell_type: 'offensive' | 'defensive';
   god_spell_charged: boolean;
   selected_spell?: string;
+  target_defence_type?: string;
 }
 
 // Union type for all calculator parameters
@@ -190,7 +194,7 @@ export interface BossForm {
   defence_level?: number;
   magic_level?: number;
   ranged_level?: number;
-  defence_stab?: number;
+  defence_stab?: number;   // <-- Ensure these exist in your boss form
   defence_slash?: number;
   defence_crush?: number;
   defence_magic?: number;
