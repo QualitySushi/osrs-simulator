@@ -4,6 +4,7 @@ node_modules/
 .pnp.js
 
 /backend/db/
+/backend/app/venv
 /backend/webscraper/
 
 # Build output

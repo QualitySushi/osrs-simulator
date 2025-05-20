@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Search, Loader2, RotateCcw } from 'lucide-react';
 import { 
@@ -11,11 +11,6 @@ import {
   CommandItem, 
   CommandList 
 } from '@/components/ui/command';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -32,17 +27,19 @@ import { Boss, BossForm, MeleeCalculatorParams, RangedCalculatorParams, MagicCal
 import { useCalculatorStore } from '@/store/calculator-store';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
-interface BossSelectorProps {
+interface DirectBossSelectorProps {
   onSelectBoss?: (boss: Boss) => void;
   onSelectForm?: (form: BossForm | null) => void;
 }
 
-export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) {
-  const [open, setOpen] = useState(false);
+export function DirectBossSelector({ onSelectBoss, onSelectForm }: DirectBossSelectorProps) {
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const [selectedBoss, setSelectedBoss] = useState<Boss | null>(null);
   const [selectedForm, setSelectedForm] = useState<BossForm | null>(null);
   const { params, setParams, lockBoss, unlockBoss, bossLocked } = useCalculatorStore();
   const { toast } = useToast();
+  const commandRef = useRef<HTMLDivElement>(null);
   
   // Fetch all bosses
   const { data: bosses, isLoading } = useQuery({
@@ -59,6 +56,20 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
     staleTime: Infinity,
   });
 
+  // Handle click outside to close search results
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (commandRef.current && !commandRef.current.contains(event.target as Node)) {
+        setSearchOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   // Effect to clean up when combat style changes or component unmounts
   useEffect(() => {
     return () => {
@@ -73,7 +84,8 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
   const handleSelectBoss = (boss: Boss) => {
     setSelectedBoss(boss);
     setSelectedForm(null);
-    setOpen(false);
+    setSearchOpen(false);
+    setSearchQuery(boss.name);
 
     if (onSelectBoss) {
       onSelectBoss(boss);
@@ -84,35 +96,11 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
   const handleSelectForm = (form: BossForm) => {
     setSelectedForm(form);
 
-    // Log the values before update
-    if (params.combat_style === 'melee') {
-      const meleeParams = params as MeleeCalculatorParams;
-      console.log('[DEBUG] Before update - Melee target params:', {
-        current_defence_level: meleeParams.target_defence_level,
-        current_defence_bonus: meleeParams.target_defence_bonus
-      });
-    }
-    else if (params.combat_style === 'ranged') {
-      const rangedParams = params as RangedCalculatorParams;
-      console.log('[DEBUG] Before update - Ranged target params:', {
-        current_defence_level: rangedParams.target_defence_level,
-        current_ranged_defence_bonus: rangedParams.target_defence_bonus
-      });
-    }
-    else if (params.combat_style === 'magic') {
-      const magicParams = params as MagicCalculatorParams;
-      console.log('[DEBUG] Before update - Magic target params:', {
-        current_magic_level: magicParams.target_magic_level,
-        current_magic_defence: magicParams.target_magic_defence
-      });
-    }
-
     // Update the calculator params with the selected boss's defense stats
     const combatStyle = params.combat_style;
     
     if (combatStyle === 'melee') {
       // For melee combat style, use the defence level and appropriate defense bonus
-      // Choose the lowest defense bonus for optimal damage (stab/slash/crush)
       let defenceBonus = 0;
       let target_defence_type = '';
       const storeParams = useCalculatorStore.getState().params;
@@ -138,25 +126,6 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
         original_defence_level: form.defence_level || 1,
         target_defence_type: target_defence_type
       });
-
-      console.log('[DEBUG] Updated melee target stats:', {
-        defence_level: form.defence_level,
-        defence_bonus: defenceBonus,
-        target_defence_type: target_defence_type
-      });
-      
-      // Verify the update
-      setTimeout(() => {
-        const currentParams = useCalculatorStore.getState().params;
-        if (currentParams.combat_style === 'melee') {
-          const meleeParams = currentParams as MeleeCalculatorParams;
-          console.log('[DEBUG] Verified melee boss stats after update:', {
-            target_defence_level: meleeParams.target_defence_level,
-            target_defence_bonus: meleeParams.target_defence_bonus,
-            target_defence_type: meleeParams.target_defence_type
-          });
-        }
-      }, 0);
     } 
     else if (combatStyle === 'ranged') {
       setParams({
@@ -165,54 +134,16 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
         original_defence_level: form.defence_level || 1,
         target_defence_type: 'defence_ranged_standard'
       });
-
-      console.log('[DEBUG] Updated ranged target stats:', {
-        defence_level: form.defence_level,
-        ranged_defence_bonus: form.defence_ranged_standard,
-        target_defence_type: 'defence_ranged_standard'
-      });
-      
-      // Verify the update
-      setTimeout(() => {
-        const currentParams = useCalculatorStore.getState().params;
-        if (currentParams.combat_style === 'ranged') {
-          const rangedParams = currentParams as RangedCalculatorParams;
-          console.log('[DEBUG] Verified ranged boss stats after update:', {
-            target_defence_level: rangedParams.target_defence_level,
-            target_defence_bonus: rangedParams.target_defence_bonus,
-            target_defence_type: rangedParams.target_defence_type
-          });
-        }
-      }, 0);
     } 
     else if (combatStyle === 'magic') {
       setParams({
         target_magic_level: form.magic_level || 1,
         target_magic_defence: form.defence_magic || 0,
         target_defence_level: form.defence_level || 1,
-        target_defence_bonus: form.defence_magic || 0, // use magic defence as fallback
+        target_defence_bonus: form.defence_magic || 0,
         original_defence_level: form.defence_level || 1,
         target_defence_type: 'defence_magic'
       });
-
-      console.log('[DEBUG] Updated magic target stats:', {
-        magic_level: form.magic_level,
-        magic_defence: form.defence_magic,
-        target_defence_type: 'defence_magic'
-      });
-      
-      // Verify the update
-      setTimeout(() => {
-        const currentParams = useCalculatorStore.getState().params;
-        if (currentParams.combat_style === 'magic') {
-          const magicParams = currentParams as MagicCalculatorParams;
-          console.log('[DEBUG] Verified magic boss stats after update:', {
-            target_magic_level: magicParams.target_magic_level,
-            target_magic_defence: magicParams.target_magic_defence,
-            target_defence_type: magicParams.target_defence_type
-          });
-        }
-      }, 0);
     }
 
     // Lock boss inputs
@@ -230,6 +161,7 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
   const handleResetBoss = () => {
     setSelectedBoss(null);
     setSelectedForm(null);
+    setSearchQuery('');
     
     // Reset the defense parameters to default values based on combat style
     if (params.combat_style === 'melee') {
@@ -283,34 +215,32 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
       </CardHeader>
       <CardContent className="space-y-4">
         {bossLocked && (
-          <Alert className="mb-4 border-blue-200 dark:border-blue-800 bg-blue-100 dark:bg-blue-900">
+          <Alert className="mb-4">
             <AlertDescription>
               Target stats from boss are being used. Manual target stat inputs are disabled.
             </AlertDescription>
           </Alert>
         )}
         
-        {/* Boss selector */}
+        {/* Direct search input without dropdown button */}
         <div className="space-y-2">
           <label className="text-sm font-medium">Select Boss</label>
-          <Popover open={open} onOpenChange={setOpen}>
-            <PopoverTrigger asChild>
-              <Button
-                variant="outline"
-                role="combobox"
-                aria-expanded={open}
-                className="w-full justify-between"
-              >
-                {selectedBoss ? selectedBoss.name : "Select a boss..."}
-                <Search className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-[300px] p-0">
-              <Command>
-                <CommandInput placeholder="Search bosses..." className="h-9" />
-                <CommandEmpty>No boss found.</CommandEmpty>
-                <CommandGroup>
-                  <CommandList>
+          <div className="relative" ref={commandRef}>
+            <Command className="rounded-lg border shadow-md">
+              <CommandInput
+                placeholder="Search bosses..."
+                className="h-9"
+                value={searchQuery}
+                onValueChange={(value) => {
+                  setSearchQuery(value);
+                  setSearchOpen(!!value.trim());
+                }}
+                onFocus={() => setSearchOpen(true)}
+              />
+              {searchOpen && (
+                <CommandList>
+                  <CommandEmpty>No boss found.</CommandEmpty>
+                  <CommandGroup>
                     {isLoading ? (
                       <div className="flex items-center justify-center p-4">
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -322,8 +252,9 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
                           key={boss.id}
                           value={boss.name}
                           onSelect={() => handleSelectBoss(boss)}
+                          className="cursor-pointer"
                         >
-                          {boss.name}
+                          <span>{boss.name}</span>
                           {boss.raid_group && (
                             <Badge variant="outline" className="ml-2">
                               {boss.raid_group}
@@ -332,14 +263,14 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
                         </CommandItem>
                       ))
                     )}
-                  </CommandList>
-                </CommandGroup>
-              </Command>
-            </PopoverContent>
-          </Popover>
+                  </CommandGroup>
+                </CommandList>
+              )}
+            </Command>
+          </div>
         </div>
 
-        {/* Form selector (if the boss has multiple forms) */}
+        {/* Form selector */}
         {selectedBoss && bossDetails?.forms && bossDetails.forms.length > 0 && (
           <div className="space-y-2">
             <label className="text-sm font-medium">Select Form/Phase</label>
@@ -352,10 +283,10 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
               <Select
                 value={selectedForm?.id.toString() || ''}
                 onValueChange={(value: string) => {
-                    const form = bossDetails?.forms?.find(f => f.id.toString() === value);
-                    if (form) {
-                        handleSelectForm(form);
-                    }
+                  const form = bossDetails?.forms?.find(f => f.id.toString() === value);
+                  if (form) {
+                    handleSelectForm(form);
+                  }
                 }}
               >
                 <SelectTrigger>
@@ -364,7 +295,7 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
                 <SelectContent>
                   {bossDetails.forms.map((form) => (
                     <SelectItem key={form.id} value={form.id.toString()}>
-                      {form.form_name} (Combat Lvl: {form.combat_level || 'Unknown'})
+                      {form.form_name || `${bossDetails.name} (${form.combat_level || 'Unknown'})`}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -373,9 +304,9 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
           </div>
         )}
 
-        {/* Display the selected boss stats if a form is selected */}
+        {/* Display the selected boss stats */}
         {selectedForm && (
-          <div className="pt-2 space-y-2">
+          <div className="pt-2 space-y-2 bg-slate-100 dark:bg-slate-800 p-3 rounded-md">
             <h4 className="text-sm font-semibold">Target Stats</h4>
             <div className="grid grid-cols-2 gap-2 text-sm">
               <div>

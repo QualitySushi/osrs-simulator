@@ -106,7 +106,7 @@ export function MagicForm() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Player Stats Section */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Player Stats</h3>
+            <h3 className="text-3xl font-semibold m-6">Player Stats</h3>
             
             <FormField
               control={form.control}
@@ -291,7 +291,7 @@ export function MagicForm() {
 
           {/* Equipment Stats Section */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Equipment Stats</h3>
+            <h3 className="text-3xl font-semibold m-6">Equipment Stats</h3>
             
             <FormField
               control={form.control}
@@ -483,7 +483,7 @@ export function MagicForm() {
 
         {/* Target Stats */}
         <div className="space-y-4">
-          <h3 className="text-lg font-semibold">Target Stats</h3>
+          <h3 className="text-4xl font-semibold m-16">Target Stats</h3>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormField

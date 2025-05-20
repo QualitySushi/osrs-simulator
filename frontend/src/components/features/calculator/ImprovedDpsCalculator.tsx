@@ -19,6 +19,7 @@ import { calculatorApi } from '@/services/api';
 import { useCalculatorStore } from '@/store/calculator-store';
 import { CombatStyle, CalculatorParams, Item, BossForm } from '@/app/types/calculator';
 import { BossSelector } from './BossSelector';
+import { DirectBossSelector } from './DirectBossSelector';
 import { CombinedEquipmentDisplay } from './CombinedEquipmentDisplay';
 import { DpsComparison } from './DpsComparison';
 import { PrayerPotionSelector } from './PrayerPotionSelector'; 
@@ -240,30 +241,24 @@ export function ImprovedDpsCalculator() {
     weapon_id: currentLoadout['2h']?.id || currentLoadout['mainhand']?.id,
   });
 
-  useEffect(() => {
+useEffect(() => {
     if (!params || !currentBossForm || Object.keys(currentLoadout).length === 0) return;
-    const timeout = setTimeout(() => handleCalculate(), 0);
-    return () => clearTimeout(timeout);
-  }, [dpsTriggers, handleCalculate]);
+
+    const shouldAutoCalculate =
+        currentBossForm && currentLoadout && !results;
+
+    if (shouldAutoCalculate) {
+        handleCalculate();
+    }
+    }, [params.combat_style, currentBossForm?.id, Object.keys(currentLoadout).join(','), results]);
+
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto px-4 pb-16"> {/* Added significant bottom padding */}
       {/* Main calculator header card */}
       <Card className="w-full bg-card border border-border shadow-md">
         <CardHeader className="border-b border-border pb-4 flex flex-row justify-between items-center">
-          <div>
-            <CardTitle className="text-2xl flex items-center">
-              <Calculator className="h-6 w-6 mr-2 text-primary" />
-              OSRS DPS Calculator
-            </CardTitle>
-            <CardDescription>
-              Calculate and compare DPS for any combat style and boss
-            </CardDescription>
-          </div>
-          <Button variant="outline" size="sm" onClick={handleReset}>
-            <RotateCcw className="h-4 w-4 mr-2" />
-            Reset All
-          </Button>
+
         </CardHeader>
         
         <CardContent className="pt-6">
@@ -280,7 +275,7 @@ export function ImprovedDpsCalculator() {
             onValueChange={handleTabChange}
             className="w-full mb-6"
           >
-            <TabsList className="grid grid-cols-3 mb-6">
+            <TabsList className="grid grid-cols-4 mb-6">
               <TabsTrigger value="melee" className="flex items-center justify-center">
                 <Sword className="h-4 w-4 mr-2" />
                 Melee
@@ -293,6 +288,10 @@ export function ImprovedDpsCalculator() {
                 <Zap className="h-4 w-4 mr-2" />
                 Magic
               </TabsTrigger>
+            <Button variant="outline" className="flex items-center justify-center" onClick={handleReset}>
+                <RotateCcw className="h-4 w-4 mr-2" />
+                Reset All
+            </Button>
             </TabsList>
 
             <TabsContent value="melee">
@@ -319,7 +318,7 @@ export function ImprovedDpsCalculator() {
           {/* Results Section */}
           {results && (
             <div className="mt-8 space-y-4">
-              <h2 className="text-xl font-bold border-b pb-2 flex items-center">
+              <h2 className="text-xl font-bold border-b pb-2 flex items-center section-heading">
                 <Calculator className="h-5 w-5 mr-2 text-primary" />
                 Calculation Results
               </h2>
@@ -382,12 +381,6 @@ export function ImprovedDpsCalculator() {
 
               {/* Calculation debug info */}
               <Card className="bg-muted/30 border mt-4">
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-base flex items-center">
-                    <Info className="h-4 w-4 mr-2 text-primary" />
-                    Calculation Details
-                  </CardTitle>
-                </CardHeader>
                 <CardContent className="text-sm space-y-1">
                   {params.combat_style === 'melee' && (
                     <>
@@ -565,19 +558,10 @@ export function ImprovedDpsCalculator() {
         {/* Right column */}
         <div className="space-y-6">
           {/* Target selection section */}
-          <BossSelector onSelectForm={handleBossUpdate} />
+          <DirectBossSelector onSelectForm={handleBossUpdate} />
           
           {/* Defensive reductions panel - with contained height */}
           <Card className="w-full border">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-base flex items-center">
-                <Shield className="h-4 w-4 mr-2 text-primary" />
-                Defensive Reductions
-              </CardTitle>
-              <CardDescription>
-                Track special attack effects on boss defence
-              </CardDescription>
-            </CardHeader>
             <CardContent>
               <DefenceReductionPanel />
             </CardContent>
@@ -591,9 +575,9 @@ export function ImprovedDpsCalculator() {
           {/* Preset selector */}
           <PresetSelector onPresetLoad={() => toast.success("Preset loaded successfully!")} />
 
-          {/* Full-width comparison table at the bottom */}
-          <DpsComparison />
         </div>
+           {/* Full-width comparison table at the bottom */}
+          <DpsComparison />
       </div>
       
     </div>

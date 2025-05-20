@@ -48,15 +48,12 @@
 }
 
 :root {
-  /* More subdued color palette with OSRS influence */
   --accent-gold: #c5a64d;
   --deep-brown: #3a3023;
   --stone-gray: #5d5853;
   --dark-stone: #2c2825;
   --light-stone: #a09a94;
   --shadow-black: rgba(0, 0, 0, 0.2);
-  
-  /* Base theme variables */
   --radius: 0.5rem;
   --background: #2c2c2c;
   --foreground: #f1f1f1;
@@ -76,15 +73,11 @@
   --border: #444444;
   --input: #383838;
   --ring: var(--accent-gold);
-  
-  /* Chart colors */
   --chart-1: var(--accent-gold);
   --chart-2: #6e85b2;
   --chart-3: #739e82;
   --chart-4: #a67c52;
   --chart-5: #8e7cc3;
-  
-  /* Sidebar colors */
   --sidebar: #2a2a2a;
   --sidebar-foreground: #f1f1f1;
   --sidebar-primary: var(--accent-gold);
@@ -120,15 +113,14 @@
   * {
     @apply border-border outline-ring/50;
   }
-  
+
   body {
     @apply bg-background text-foreground;
     font-family: var(--font-sans);
     background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h60v60H0V0zm30 54a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm22-22a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm0 22a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM8 54a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm0-22a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm22 0a4 4 0 1 0 0-8 4 4 0 0 0 0 8z' fill='%23333333' fill-opacity='0.08' fill-rule='evenodd'/%3E%3C/svg%3E");
     background-attachment: fixed;
   }
-  
-  /* Professional headings */
+
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-title);
     font-weight: 700;
@@ -136,51 +128,55 @@
     letter-spacing: 0.5px;
   }
 
-  h1 {
-    font-size: 2rem;
-  }
+  h1 { font-size: 2rem; }
+  h2 { font-size: 1.75rem; }
+  h3 { font-size: 1.5rem; }
 
-  h2 {
+  /* Large underlined section headings */
+  .section-heading {
     font-size: 1.5rem;
+    font-weight: 700;
+    text-decoration: underline;
+    color: var(--primary);
+    margin-bottom: 0.5rem;
+    display: inline-block;
   }
 }
 
-/* Modern card styling */
-.card, 
-div[class*="bg-card"] {
-  background-color: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-}
-
-/* Button styling */
+/* Button styling with subtle 3D and texture */
 .btn-primary, 
 button[class*="bg-primary"],
 button {
-  background-color: var(--primary);
+  padding-left: 3px;
+  padding-right: 3px;
+  margin-left: 3px;
+  margin-right: 3px;
+  background: var(--primary);
+  background: linear-gradient(145deg, #d3b866, #b8973c);
   color: var(--primary-foreground);
   border: none;
   border-radius: var(--radius-md);
   font-weight: 600;
   padding: 0.5rem 1rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: all 0.2s ease;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 2px 0 var(--accent), 0 2px 6px rgba(0,0,0,0.2);
+  transition: all 0.2s ease-in-out;
+  background-size: 100% 100%;
+  background-blend-mode: overlay;
 }
 
 .btn-primary:hover,
 button[class*="bg-primary"]:hover,
 button:hover {
-  filter: brightness(1.1);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  filter: brightness(1.05);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 4px 6px rgba(0, 0, 0, 0.25);
+  transform: translateY(-1px);
 }
 
 .btn-primary:active,
 button[class*="bg-primary"]:active,
 button:active {
   transform: translateY(1px);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  box-shadow: inset 0 1px 0 rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.25);
 }
 
 /* Equipment slots styling */
