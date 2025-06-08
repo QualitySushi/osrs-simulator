@@ -63,22 +63,13 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
   // Fetch icons for all bosses when list loads
   useEffect(() => {
     if (!bosses) return;
-    Promise.all(
-      bosses.map(async (b) => {
-        try {
-          const data = await bossesApi.getBossById(b.id);
-          return [b.id, data.forms?.[0]?.icons?.[0] || ''] as [number, string];
-        } catch {
-          return [b.id, ''] as [number, string];
-        }
-      })
-    ).then((items) => {
-      const map: Record<number, string> = {};
-      items.forEach(([id, icon]) => {
-        if (icon) map[id] = icon;
-      });
-      setBossIcons(map);
+    const map: Record<number, string> = {};
+    bosses.forEach((b) => {
+      if (b.icon_url) {
+        map[b.id] = b.icon_url;
+      }
     });
+    setBossIcons(map);
   }, [bosses]);
 
   // Effect to clean up when combat style changes or component unmounts
@@ -433,8 +424,12 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
         {/* Display the selected boss stats if a form is selected */}
         {selectedForm && (
           <div className="pt-2 space-y-2">
-            {selectedForm.icons?.[0] && (
-              <img src={selectedForm.icons[0]} alt="icon" className="w-10 h-10" />
+            {(selectedForm.icons?.[0] || selectedForm.image_url) && (
+              <img
+                src={selectedForm.icons?.[0] || selectedForm.image_url}
+                alt="icon"
+                className="w-10 h-10"
+              />
             )}
             <h4 className="text-sm font-semibold">Target Stats</h4>
             <div className="grid grid-cols-2 gap-2 text-sm">
