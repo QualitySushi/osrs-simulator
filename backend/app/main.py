@@ -1,8 +1,7 @@
-from fastapi import FastAPI, HTTPException, Query, Depends
+from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from typing import Dict, Any, List, Optional, Union
-import json
+from typing import Dict, Any, List
 import os
 
 from .repositories import item_repository, boss_repository
@@ -11,9 +10,8 @@ from .models import (
     Boss, 
     BossSummary, 
     Item, 
-    ItemSummary, 
-    DpsParameters,
-    SearchQuery
+    ItemSummary,
+    DpsParameters
 )
 from .services import calculation_service
 

@@ -81,14 +81,14 @@ const defaultMagicParams: MagicCalculatorParams = {
   magic_damage_bonus: 0.2,
   attack_style_bonus_attack: 0,
   attack_style_bonus_strength: 0,
-  attack_style_bonus: 0, // Add this field that was missing
+  attack_style_bonus: 0,
   void_magic: false,
   shadow_bonus: 0,
   virtus_bonus: 0,
   tome_bonus: 0,
   prayer_bonus: 0,
   elemental_weakness: 0,
-  salve_bonus: 0, // Add this field that's in the backend
+  salve_bonus: 0,
   target_magic_level: 150,
   target_magic_defence: 90,
   target_defence_level: 150,

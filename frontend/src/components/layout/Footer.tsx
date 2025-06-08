@@ -27,8 +27,8 @@ export function Footer() {
               </a>
             </p>
             <p className="mt-1">
-              <a 
-                href="https://github.com/yourusername/osrs-calculator" 
+              <a
+                href="https://github.com/QualitySushi/osrs-simulator"
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="hover:text-primary transition-colors"

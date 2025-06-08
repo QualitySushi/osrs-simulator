@@ -10,7 +10,7 @@ Modular component structure with custom hooks
 
 Technologies Used
 
-Next.js 14 - React framework
+Next.js 15 - React framework
 React Query - Data fetching and cache management
 Zustand - State management
 React Hook Form - Form validation
@@ -20,7 +20,7 @@ shadcn/ui - UI components
 Getting Started
 Prerequisites
 
-Node.js 18.x or later
+Node.js 20.x or later
 npm or yarn or pnpm
 
 Installation
