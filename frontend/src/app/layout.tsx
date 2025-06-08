@@ -18,6 +18,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="min-h-screen flex flex-col">
+        <a href="#main" className="sr-only focus:not-sr-only absolute left-2 top-2 z-50 bg-primary text-primary-foreground px-2 py-1 rounded">Skip to content</a>
         <Providers>
           <Navigation />
           <div className="flex-grow mb-24"> {/* Added sufficient bottom margin to prevent footer overlap */}
