@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { cn } from '@/lib/utils';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ToggleBox } from '@/components/ui/toggle-box';
@@ -66,7 +67,7 @@ const POTION_OPTIONS = {
 // Define preserve prayer option
 const PRESERVE_OPTION = { value: 'preserve', label: 'Preserve', description: 'Boosted stats last 50% longer' };
 
-export function PrayerPotionSelector() {
+export function PrayerPotionSelector({ className }: { className?: string }) {
   const { params, setParams } = useCalculatorStore();
   const combatStyle = params.combat_style;
   
@@ -228,7 +229,7 @@ export function PrayerPotionSelector() {
   };
   
   return (
-    <Card>
+    <Card className={cn(className)}>
       <CardHeader>
         <CardTitle className="flex items-center">
           Prayer & Potion Selection

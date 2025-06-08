@@ -270,8 +270,8 @@ export function PassiveEffectsDisplay({ loadout, target }: PassiveEffectsDisplay
         <h3 className="text-sm font-semibold mb-2">Active Passive Effects</h3>
         <div className="space-y-2">
           {activeEffects.map((effect, index) => (
-            <div key={index} className="flex flex-col space-y-1 rounded-md border p-2">
-              <div className="flex items-center">
+            <div key={index} className="flex flex-col items-center space-y-1 rounded-md border p-2">
+              <div className="flex items-center justify-center">
                 <Badge variant="secondary" className="mr-2">Active</Badge>
                 <span className="font-medium text-sm">{effect.name}</span>
               </div>

@@ -217,14 +217,6 @@ export function DirectBossSelector({ onSelectBoss, onSelectForm }: DirectBossSel
         <CardDescription>Select a boss to calculate DPS against</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        {selectedBoss && (
-          <div className="flex justify-end">
-            <Button variant="outline" size="sm" onClick={handleResetBoss}>
-              <RotateCcw className="h-4 w-4 mr-2" />
-              Reset
-            </Button>
-          </div>
-        )}
         {bossLocked && (
           <Alert className="mb-4">
             <AlertDescription>
@@ -296,7 +288,13 @@ export function DirectBossSelector({ onSelectBoss, onSelectForm }: DirectBossSel
         {/* Form selector */}
         {selectedBoss && bossDetails?.forms && bossDetails.forms.length > 0 && (
           <div className="space-y-2">
-            <label className="text-sm font-medium">Select Form/Phase</label>
+            <div className="flex items-center justify-between">
+              <label className="text-sm font-medium">Select Form/Phase</label>
+              <Button variant="outline" size="sm" onClick={handleResetBoss}>
+                <RotateCcw className="h-4 w-4 mr-2" />
+                Reset
+              </Button>
+            </div>
             {isLoadingDetails ? (
               <div className="flex items-center text-sm text-muted-foreground">
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -329,12 +327,12 @@ export function DirectBossSelector({ onSelectBoss, onSelectForm }: DirectBossSel
 
         {/* Display the selected boss stats */}
         {selectedForm && (
-          <div className="pt-2 space-y-2 bg-slate-100 dark:bg-slate-800 p-3 rounded-md flex flex-col items-center">
+          <div className="pt-2 space-y-2 bg-slate-100 dark:bg-slate-800 p-2 rounded-md flex flex-col items-center">
             {(selectedForm.icons?.[0] || selectedForm.image_url) && (
               <img
                 src={selectedForm.icons?.[0] || selectedForm.image_url}
                 alt="icon"
-                className="w-28 h-28 mb-2"
+                className="w-28 h-auto mb-2 object-contain"
               />
             )}
             <h4 className="text-sm font-semibold">Target Stats</h4>
