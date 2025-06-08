@@ -128,7 +128,7 @@ export function ItemSelector({ slot, onSelectItem }: ItemSelectorProps) {
               >
                 {selectedItem && (
                   <img
-                    src={selectedItem.icons?.[0]}
+                    src={selectedItem.icons?.[0] || (selectedItem as any)?.image_url}
                     alt="icon"
                     className="w-4 h-4 mr-2 inline-block"
                   />
@@ -156,7 +156,7 @@ export function ItemSelector({ slot, onSelectItem }: ItemSelectorProps) {
                           onSelect={() => handleSelectItem(item)}
                         >
                           <img
-                            src={item.icons?.[0]}
+                            src={item.icons?.[0] || (item as any)?.image_url}
                             alt="icon"
                             className="w-4 h-4 mr-2 inline-block"
                           />

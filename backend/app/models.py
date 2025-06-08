@@ -74,6 +74,7 @@ class Boss(BaseModel):
     name: str
     raid_group: Optional[str] = None
     location: Optional[str] = None
+    icon_url: Optional[str] = None
     release_date: Optional[str] = None
     slayer_level: Optional[int] = None
     slayer_xp: Optional[int] = None
@@ -91,6 +92,7 @@ class BossSummary(BaseModel):
     raid_group: Optional[str] = None
     location: Optional[str] = None
     has_multiple_forms: bool = False
+    icon_url: Optional[str] = None
 
 
 class ItemStats(BaseModel):

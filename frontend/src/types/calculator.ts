@@ -174,6 +174,7 @@ export interface Boss {
   name: string;
   raid_group?: string;
   location?: string;
+  icon_url?: string;
   combat_level?: number;
   hitpoints?: number;
   examine?: string;

@@ -149,7 +149,9 @@ export function EquipmentGrid({ loadout, show2hOption, combatStyle, onUpdateLoad
                   <div className="mb-1">
                     <img
                       src={
-                        loadout[slot]?.icons?.[0] || `/images/${slot}.webp`
+                        loadout[slot]?.icons?.[0] ||
+                        (loadout[slot] as any)?.image_url ||
+                        `/images/${slot}.webp`
                       }
                       alt={slot}
                       className="w-8 h-8 object-contain"

@@ -169,7 +169,7 @@ class DatabaseService:
             cursor = conn.cursor()
             cursor.execute(
                 """
-            SELECT 
+            SELECT
                 id, name, raid_group, location, has_multiple_forms
             FROM bosses
             ORDER BY name
@@ -178,6 +178,31 @@ class DatabaseService:
 
             bosses = []
             for row in cursor.fetchall():
+                icon = None
+                try:
+                    cursor.execute(
+                        """
+                    SELECT icons, image_url
+                    FROM boss_forms
+                    WHERE boss_id = ?
+                    ORDER BY form_order
+                    LIMIT 1
+                    """,
+                        (row[0],),
+                    )
+                    form_row = cursor.fetchone()
+                    if form_row:
+                        try:
+                            icons = json.loads(form_row[0]) if form_row[0] else []
+                        except json.JSONDecodeError:
+                            icons = []
+                        if icons:
+                            icon = icons[0]
+                        elif form_row[1]:
+                            icon = form_row[1]
+                except Exception:
+                    icon = None
+
                 bosses.append(
                     {
                         "id": row[0],
@@ -185,6 +210,7 @@ class DatabaseService:
                         "raid_group": row[2],
                         "location": row[3],
                         "has_multiple_forms": bool(row[4]),
+                        "icon_url": icon,
                     }
                 )
 
@@ -233,6 +259,7 @@ class DatabaseService:
                 "slayer_category": boss_row[8],
                 "has_multiple_forms": bool(boss_row[9]),
                 "forms": [],
+                "icon_url": None,
             }
 
             # Get all forms for this boss
@@ -310,6 +337,13 @@ class DatabaseService:
                 }
 
                 boss_data["forms"].append(form_data)
+            if boss_data["forms"]:
+                first = boss_data["forms"][0]
+                icons = first.get("icons", []) if isinstance(first.get("icons"), list) else []
+                if icons:
+                    boss_data["icon_url"] = icons[0]
+                elif first.get("image_url"):
+                    boss_data["icon_url"] = first.get("image_url")
 
             return boss_data
         except Exception as e:
