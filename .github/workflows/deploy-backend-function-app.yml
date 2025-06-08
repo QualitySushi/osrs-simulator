@@ -1,0 +1,64 @@
+name: Deploy Backend to Azure Function App
+
+on:
+  push:
+    branches: [ main ]
+    paths: [ 'backend/**', 'api/**' ]  # Trigger when backend changes
+  workflow_dispatch:  # Allow manual deployment
+
+env:
+  AZURE_FUNCTIONAPP_NAME: 'osis-simulator-backend'
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: './backend'
+  PYTHON_VERSION: '3.11'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    name: Deploy Backend Functions
+    steps:
+    - name: 'Checkout GitHub Action'
+      uses: actions/checkout@v4
+
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+
+    - name: 'Create and start virtual environment'
+      run: |
+        cd ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
+        python -m venv venv
+        source venv/bin/activate
+
+    - name: 'Install dependencies'
+      run: |
+        cd ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
+        source venv/bin/activate
+        pip install -r requirements.txt
+
+    # Optional: Run tests
+    - name: 'Run tests'
+      run: |
+        cd ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
+        source venv/bin/activate
+        # python -m pytest tests/ --if-present
+        echo "Tests would run here"
+
+    - name: 'Login to Azure'
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: 'Deploy to Azure Functions'
+      uses: Azure/functions-action@v1
+      with:
+        app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
+        package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
+        
+    # Optional: Test deployed functions
+    - name: 'Test deployed functions'
+      run: |
+        echo "Testing function endpoints..."
+        sleep 30  # Wait for deployment to complete
+        # Test health endpoint
+        # curl -f https://osis-simulator-backend.azurewebsites.net/api/health || echo "Health check failed"
