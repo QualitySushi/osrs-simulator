@@ -1,6 +1,6 @@
 import json
 import azure.functions as func
-from . import common  # noqa: F401
+from .. import common  # noqa: F401
 from app.models import DpsParameters
 from app.services import calculation_service
 
