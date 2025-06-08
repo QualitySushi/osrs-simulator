@@ -1,6 +1,8 @@
 import unittest
 import os
 import sys
+import json
+import base64
 from fastapi.testclient import TestClient
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
@@ -64,6 +66,62 @@ class TestApiRoutes(unittest.TestCase):
             resp = client.get('/items')
         self.assertEqual(resp.status_code, 200)
         self.assertIsInstance(resp.json(), list)
+
+    def test_import_seed(self):
+        sample = {
+            'combat_style': 'melee',
+            'strength_level': 99,
+            'attack_level': 99,
+            'melee_strength_bonus': 80,
+            'melee_attack_bonus': 80,
+            'attack_style_bonus_strength': 3,
+            'attack_style_bonus_attack': 0,
+            'target_defence_level': 100,
+            'target_defence_bonus': 50,
+            'attack_speed': 2.4
+        }
+        seed = base64.b64encode(json.dumps(sample).encode()).decode()
+        with self.client_ctx as client:
+            resp = client.post('/import-seed', json={'seed': seed})
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.json()['combat_style'], 'melee')
+
+    def test_calculate_seed(self):
+        sample = {
+            'combat_style': 'melee',
+            'strength_level': 99,
+            'attack_level': 99,
+            'melee_strength_bonus': 80,
+            'melee_attack_bonus': 80,
+            'attack_style_bonus_strength': 3,
+            'attack_style_bonus_attack': 0,
+            'target_defence_level': 100,
+            'target_defence_bonus': 50,
+            'attack_speed': 2.4
+        }
+        seed = base64.b64encode(json.dumps(sample).encode()).decode()
+        with self.client_ctx as client:
+            resp = client.post('/calculate/seed', json={'seed': seed})
+        self.assertEqual(resp.status_code, 200)
+        self.assertIn('dps', resp.json())
+
+    def test_bis(self):
+        params = {
+            'combat_style': 'melee',
+            'strength_level': 99,
+            'attack_level': 99,
+            'melee_strength_bonus': 80,
+            'melee_attack_bonus': 80,
+            'attack_style_bonus_strength': 3,
+            'attack_style_bonus_attack': 0,
+            'target_defence_level': 100,
+            'target_defence_bonus': 50,
+            'attack_speed': 2.4
+        }
+        with self.client_ctx as client:
+            resp = client.post('/bis', json=params)
+        self.assertEqual(resp.status_code, 200)
+        self.assertIsInstance(resp.json(), dict)
 
 if __name__ == '__main__':
     unittest.main()

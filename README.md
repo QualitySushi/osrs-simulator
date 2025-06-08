@@ -205,6 +205,41 @@ Response:
 }
 ```
 
+Import Seed
+------------
+
+POST `/import-seed`
+
+Request Body:
+
+```json
+{
+  "seed": "base64encodedstring"
+}
+```
+
+Calculate DPS from Seed
+-----------------------
+
+POST `/calculate/seed`
+
+Request Body:
+
+```json
+{
+  "seed": "base64encodedstring"
+}
+```
+
+Best In Slot
+------------
+
+POST `/bis`
+
+Request Body: `DpsParameters`
+
+Response: A mapping of gear slot to item details.
+
 See the API documentation at /docs for more endpoints.
 📊 Data Sources
 

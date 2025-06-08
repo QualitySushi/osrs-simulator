@@ -14,6 +14,8 @@ from .models import (
     DpsParameters
 )
 from .services import calculation_service
+from .services import seed_service
+from .services import bis_service
 
 # Create the FastAPI app
 app = FastAPI(
@@ -65,7 +67,7 @@ async def calculate_dps(params: DpsParameters):
     """
     try:
         # Convert Pydantic model to dict for the calculator
-        params_dict = params.dict()
+        params_dict = params.model_dump(exclude_none=True)
         
         # Calculate DPS
         result = calculation_service.calculate_dps(params_dict)
@@ -73,6 +75,43 @@ async def calculate_dps(params: DpsParameters):
         return DpsResult(**result)
     except Exception as e:
         # Handle calculation errors
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@app.post("/import-seed", response_model=DpsParameters, tags=["Seed"])
+async def import_seed(payload: Dict[str, str]):
+    """Import a base64 encoded seed and return the parsed parameters."""
+    seed = payload.get("seed")
+    if not seed:
+        raise HTTPException(status_code=400, detail="seed is required")
+    try:
+        params = seed_service.decode_seed(seed)
+        return params.model_dump(exclude_none=True)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@app.post("/calculate/seed", response_model=DpsResult, tags=["Seed"])
+async def calculate_dps_from_seed(payload: Dict[str, str]):
+    """Calculate DPS directly from a seed payload."""
+    seed = payload.get("seed")
+    if not seed:
+        raise HTTPException(status_code=400, detail="seed is required")
+    try:
+        params = seed_service.decode_seed(seed)
+        result = calculation_service.calculate_dps(params.model_dump(exclude_none=True))
+        return DpsResult(**result)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@app.post("/bis", tags=["BIS"])
+async def get_best_in_slot(params: DpsParameters):
+    """Return a naive best-in-slot recommendation based on parameters."""
+    try:
+        setup = bis_service.suggest_bis(params.model_dump(exclude_none=True))
+        return setup
+    except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
 @app.get("/bosses", response_model=List[BossSummary], tags=["Bosses"])

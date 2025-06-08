@@ -29,14 +29,23 @@ export function Navigation() {
             >
               Calculator
             </Link>
-            <Link 
-              href="/about" 
+            <Link
+              href="/about"
               className={cn(
                 'text-sm transition-colors hover:text-primary',
                 pathname === '/about' ? 'text-foreground font-medium' : 'text-muted-foreground'
               )}
             >
               About
+            </Link>
+            <Link
+              href="/import"
+              className={cn(
+                'text-sm transition-colors hover:text-primary',
+                pathname === '/import' ? 'text-foreground font-medium' : 'text-muted-foreground'
+              )}
+            >
+              Import
             </Link>
           </div>
         </div>
