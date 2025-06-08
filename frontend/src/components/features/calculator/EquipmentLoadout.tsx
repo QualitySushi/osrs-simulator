@@ -413,21 +413,14 @@ export function EquipmentLoadout({ onEquipmentUpdate }: EquipmentLoadoutProps) {
         </div>
         <div className="flex space-x-2">
           {/* Add weapon toggle button */}
-          <Button 
-            variant="outline" 
-            size="sm" 
+          <Button
+            variant="outline"
+            size="sm"
             onClick={toggleWeaponDisplay}
             title={show2hOption ? "Switch to 1H + Shield" : "Switch to 2H weapon"}
           >
             {show2hOption ? <Shield className="h-4 w-4" /> : <Sword className="h-4 w-4" />}
           </Button>
-          
-          {Object.values(loadout).some(item => item !== null) && (
-            <Button variant="outline" size="sm" onClick={handleResetEquipment}>
-              <RotateCcw className="h-4 w-4 mr-2" />
-              Reset
-            </Button>
-          )}
           <Button variant="ghost" size="sm" onClick={() => setIsExpanded(!isExpanded)}>
             {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
           </Button>
@@ -436,6 +429,14 @@ export function EquipmentLoadout({ onEquipmentUpdate }: EquipmentLoadoutProps) {
 
       {isExpanded && (
         <CardContent>
+          {Object.values(loadout).some(item => item !== null) && (
+            <div className="flex justify-end mb-2">
+              <Button variant="outline" size="sm" onClick={handleResetEquipment}>
+                <RotateCcw className="h-4 w-4 mr-2" />
+                Reset
+              </Button>
+            </div>
+          )}
           {gearLocked && (
             <Alert className="mb-4 border-blue-200 dark:border-blue-800 bg-blue-100 dark:bg-blue-900">
               <AlertDescription>
