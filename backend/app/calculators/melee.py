@@ -1,5 +1,11 @@
 import math
 from typing import Dict, Any
+from config.constants import (
+    EFFECTIVE_LEVEL_BASE,
+    VOID_MELEE_MULTIPLIER,
+    EQUIPMENT_BONUS_OFFSET,
+    MAX_HIT_DIVISOR,
+)
 
 class MeleeCalculator:
     """Calculator for melee DPS calculations."""
@@ -18,28 +24,28 @@ class MeleeCalculator:
         # Step 1: Effective Strength Level
         base_str = params["strength_level"] + params.get("strength_boost", 0)
         effective_str = math.floor(base_str * params.get("strength_prayer", 1.0))
-        effective_str += 8 + params.get("attack_style_bonus_strength", 0)
+        effective_str += EFFECTIVE_LEVEL_BASE + params.get("attack_style_bonus_strength", 0)
         if params.get("void_melee", False):
-            effective_str = math.floor(effective_str * 1.1)
+            effective_str = math.floor(effective_str * VOID_MELEE_MULTIPLIER)
 
         # Step 2: Max Hit
-        max_hit = math.floor((effective_str * (params["melee_strength_bonus"] + 64) / 640) + 0.5)
+        max_hit = math.floor((effective_str * (params["melee_strength_bonus"] + EQUIPMENT_BONUS_OFFSET) / MAX_HIT_DIVISOR) + 0.5)
         max_hit = math.floor(max_hit * params.get("gear_multiplier", 1.0))
         max_hit = math.floor(max_hit * params.get("special_multiplier", 1.0))
 
         # Step 3: Effective Attack Level
         base_atk = params["attack_level"] + params.get("attack_boost", 0)
         effective_atk = math.floor(base_atk * params.get("attack_prayer", 1.0))
-        effective_atk += 8 + params.get("attack_style_bonus_attack", 0)
+        effective_atk += EFFECTIVE_LEVEL_BASE + params.get("attack_style_bonus_attack", 0)
         if params.get("void_melee", False):
-            effective_atk = math.floor(effective_atk * 1.1)
+            effective_atk = math.floor(effective_atk * VOID_MELEE_MULTIPLIER)
 
         # Step 4: Attack Roll
-        attack_roll = math.floor(effective_atk * (params["melee_attack_bonus"] + 64))
+        attack_roll = math.floor(effective_atk * (params["melee_attack_bonus"] + EQUIPMENT_BONUS_OFFSET))
         attack_roll = math.floor(attack_roll * params.get("gear_multiplier", 1.0))
 
         # Step 5–6: Defence Roll
-        def_roll = (params["target_defence_level"] + 9) * (params["target_defence_bonus"] + 64)
+        def_roll = (params["target_defence_level"] + 9) * (params["target_defence_bonus"] + EQUIPMENT_BONUS_OFFSET)
 
         # Step 7: Hit Chance (Wiki accurate)
         if attack_roll > def_roll:

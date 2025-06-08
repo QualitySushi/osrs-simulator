@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from typing import Dict, Any, List, Optional, Union
 import json
 
-from .database import db_service
+from .repositories import item_repository, boss_repository
 from .models import (
     DpsResult, 
     Boss, 
@@ -13,7 +13,7 @@ from .models import (
     DpsParameters,
     SearchQuery
 )
-from .calculators import DpsCalculator
+from .services import calculation_service
 
 # Create the FastAPI app
 app = FastAPI(
@@ -62,7 +62,7 @@ async def calculate_dps(params: DpsParameters):
         params_dict = params.dict()
         
         # Calculate DPS
-        result = DpsCalculator.calculate_dps(params_dict)
+        result = calculation_service.calculate_dps(params_dict)
         
         return DpsResult(**result)
     except Exception as e:
@@ -77,7 +77,7 @@ async def get_bosses():
     Returns a list of boss summaries with basic information.
     """
     try:
-        bosses = db_service.get_all_bosses()
+        bosses = boss_repository.get_all_bosses()
         
         # If no bosses are found in the database, return mock data
         if not bosses:
@@ -101,7 +101,7 @@ async def get_boss(boss_id: int):
     Returns detailed information about a boss, including all of its forms if it has multiple forms.
     """
     try:
-        boss = db_service.get_boss(boss_id)
+        boss = boss_repository.get_boss(boss_id)
         
         # If boss not found in the database, return mock data or 404
         if not boss:
@@ -196,7 +196,7 @@ async def get_items(
     Returns a list of item summaries with basic information.
     """
     try:
-        items = db_service.get_all_items(combat_only=combat_only, tradeable_only=tradeable_only)
+        items = item_repository.get_all_items(combat_only=combat_only, tradeable_only=tradeable_only)
         
         # If no items are found in the database, return mock data
         if not items:
@@ -220,7 +220,7 @@ async def get_item(item_id: int):
     Returns detailed information about an item, including its combat stats.
     """
     try:
-        item = db_service.get_item(item_id)
+        item = item_repository.get_item(item_id)
         
         # If item not found in the database, return mock data or 404
         if not item:
@@ -307,7 +307,7 @@ async def search_bosses(query: str, limit: int = 10):
     Returns a list of bosses that match the search query.
     """
     try:
-        results = db_service.search_bosses(query, limit=limit)
+        results = boss_repository.search_bosses(query, limit=limit)
         return results
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Search failed: {str(e)}")
@@ -320,7 +320,7 @@ async def search_items(query: str, limit: int = 10):
     Returns a list of items that match the search query.
     """
     try:
-        results = db_service.search_items(query, limit=limit)
+        results = item_repository.search_items(query, limit=limit)
         return results
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Search failed: {str(e)}")
@@ -334,7 +334,7 @@ async def calculate_item_effect(params: Dict[str, Any]):
     Tumeken's Shadow, etc. based on the provided parameters.
     """
     try:
-        result = DpsCalculator.calculate_item_effect(params)
+        result = calculation_service.calculate_item_effect(params)
         return result
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))

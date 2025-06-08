@@ -1,5 +1,11 @@
 import math
 from typing import Dict, Any
+from config.constants import (
+    EFFECTIVE_LEVEL_BASE,
+    EQUIPMENT_BONUS_OFFSET,
+    VOID_MAGIC_MULTIPLIER,
+    MAX_HIT_DIVISOR,
+)
 
 class MagicCalculator:
     """Calculator for magic DPS calculations."""
@@ -35,21 +41,21 @@ class MagicCalculator:
         # Calculate effective magic attack
         base_mag = params["magic_level"] + params.get("magic_boost", 0)
         effective_atk = math.floor(base_mag * params.get("magic_prayer", 1.0))
-        effective_atk += 8 + (
-            params.get("attack_style_bonus") or 
+        effective_atk += EFFECTIVE_LEVEL_BASE + (
+            params.get("attack_style_bonus") or
             params.get("attack_style_bonus_attack", 0)
         )
         
         # Apply void bonus if applicable
         if params.get("void_magic", False):
-            effective_atk = math.floor(effective_atk * 1.45)
+            effective_atk = math.floor(effective_atk * VOID_MAGIC_MULTIPLIER)
         
         # Calculate attack roll
-        attack_roll = math.floor(effective_atk * (params["magic_attack_bonus"] + 64))
+        attack_roll = math.floor(effective_atk * (params["magic_attack_bonus"] + EQUIPMENT_BONUS_OFFSET))
         attack_roll = math.floor(attack_roll * params.get("gear_multiplier", 1.0))
         
         # Calculate defence roll
-        def_roll = (params["target_magic_level"] + 9) * (params["target_magic_defence"] + 64)
+        def_roll = (params["target_magic_level"] + 9) * (params["target_magic_defence"] + EQUIPMENT_BONUS_OFFSET)
         
         # Calculate hit chance
         if attack_roll > def_roll:
