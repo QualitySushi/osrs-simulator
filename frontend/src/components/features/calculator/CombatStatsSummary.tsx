@@ -68,7 +68,7 @@ export function CombatStatsSummary({
             </span>
           </div>
         )}
-        <div>
+        <div className="col-span-2">
           <span className="text-muted-foreground">Target Defense Type:</span>{' '}
           <span className="font-medium capitalize">
             {(params.target_defence_type || 'defence_slash').replace('defence_', '')}

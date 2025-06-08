@@ -58,7 +58,7 @@ export function EquipmentPanel({ onEquipmentUpdate, bossForm }: EquipmentPanelPr
 
       <CardContent>
         {Object.keys(currentLoadout).length > 0 && (
-          <div className="flex justify-end mb-2">
+          <div className="flex justify-center mb-2">
             <Button
               variant="outline"
               size="sm"
