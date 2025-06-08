@@ -155,13 +155,13 @@ export function CombatStatsSummary({
                   {params.melee_attack_bonus || 0}
                 </span>
               </div>
+              <div />
               <div>
                 <span className="text-muted-foreground">Strength Bonus:</span>{' '}
                 <span className="font-medium">
                   {params.melee_strength_bonus || 0}
                 </span>
               </div>
-              <div />
             </>
           )}
           {combatStyle === 'ranged' && (
@@ -172,13 +172,13 @@ export function CombatStatsSummary({
                   {params.ranged_attack_bonus || 0}
                 </span>
               </div>
+              <div />
               <div>
                 <span className="text-muted-foreground">Ranged Strength Bonus:</span>{' '}
                 <span className="font-medium">
                   {params.ranged_strength_bonus || 0}
                 </span>
               </div>
-              <div />
             </>
           )}
           {combatStyle === 'magic' && (
@@ -189,13 +189,13 @@ export function CombatStatsSummary({
                   {params.magic_attack_bonus || 0}
                 </span>
               </div>
+              <div />
               <div>
                 <span className="text-muted-foreground">Magic Damage Bonus:</span>{' '}
                 <span className="font-medium">
                   {Math.round((params.magic_damage_bonus || 0) * 100)}%
                 </span>
               </div>
-              <div />
             </>
           )}
           <div>
@@ -204,13 +204,13 @@ export function CombatStatsSummary({
               +{params.attack_style_bonus_attack || 0}
             </span>
           </div>
+          <div />
           <div>
             <span className="text-muted-foreground">Style Strength Bonus:</span>{' '}
             <span className="font-medium">
               +{params.attack_style_bonus_strength || 0}
             </span>
           </div>
-          <div />
         </div>
 
         <div className="grid grid-cols-3 gap-x-4 gap-y-1 text-xs mt-2">
