@@ -299,8 +299,14 @@ button[role="tab"][data-state="active"] {
   font-weight: 600;
 }
 
+button[data-slot="toggle-group-item"][data-state="on"] {
+  background-color: var(--primary) !important;
+  color: var(--primary-foreground) !important;
+  font-weight: 600 !important;
+}
+
 button[data-slot="toggle-group-item"]:not([data-state="on"]) {
-  filter: brightness(0.85);
+  filter: brightness(0.85) !important;
 }
 
 /* Form inputs styling */
