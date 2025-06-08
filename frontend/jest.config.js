@@ -1,17 +1,16 @@
-module.exports = {
-  preset: 'ts-jest/presets/js-with-ts-esm',
-  testEnvironment: 'jsdom',
+const nextJest = require('next/jest')
+
+const createJestConfig = nextJest({
+  dir: './',
+})
+
+/** @type {import('jest').Config} */
+const customJestConfig = {
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
   },
-  transform: {
-    '^.+\\.(t|j)sx?$': ['ts-jest', { useESM: true }],
-  },
-  setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
-  globals: {
-    'ts-jest': {
-      tsconfig: './tsconfig.json',
-      useESM: true,
-    },
-  },
-};
+  testEnvironment: 'jsdom',
+}
+
+module.exports = createJestConfig(customJestConfig)
