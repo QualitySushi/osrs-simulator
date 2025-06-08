@@ -137,7 +137,7 @@ class DatabaseService:
             with sqlite3.connect(self.item_db_path) as conn:
                 cursor = conn.cursor()
                 cursor.execute(
-                """
+                    """
             SELECT
                 id, name, has_special_attack, special_attack_text,
                 has_passive_effect, passive_effect_text,
@@ -145,51 +145,39 @@ class DatabaseService:
             FROM items
             WHERE id = ?
             """,
-                (item_id,),
-            )
-
-            row = cursor.fetchone()
-            if not row:
-                return None
-
-            try:
-                icons = json.loads(row[9]) if row[9] else []
-            except json.JSONDecodeError:
-                icons = []
-            try:
-                combat_stats = json.loads(row[10]) if row[10] else {}
-            except json.JSONDecodeError:
-                combat_stats = {}
+                    (item_id,),
+                )
 
                 row = cursor.fetchone()
-                if not row:
-                    return None
-
-                try:
-                    icons = json.loads(row[9]) if row[9] else []
-                except json.JSONDecodeError:
-                    icons = []
-                try:
-                    combat_stats = json.loads(row[10]) if row[10] else {}
-                except json.JSONDecodeError:
-                    combat_stats = {}
-
-                return {
-                    "id": row[0],
-                    "name": row[1],
-                    "has_special_attack": bool(row[2]),
-                "special_attack": row[3],
-                "has_passive_effect": bool(row[4]),
-                "passive_effect_text": row[5],
-                "has_combat_stats": bool(row[6]),
-                "is_tradeable": bool(row[7]),
-                "slot": row[8],
-                "icons": icons,
-                "combat_stats": combat_stats,
-                }
         except Exception as e:
             print(f"Error getting item {item_id}: {e}")
             return None
+
+        if not row:
+            return None
+
+        try:
+            icons = json.loads(row[9]) if row[9] else []
+        except json.JSONDecodeError:
+            icons = []
+        try:
+            combat_stats = json.loads(row[10]) if row[10] else {}
+        except json.JSONDecodeError:
+            combat_stats = {}
+
+        return {
+            "id": row[0],
+            "name": row[1],
+            "has_special_attack": bool(row[2]),
+            "special_attack": row[3],
+            "has_passive_effect": bool(row[4]),
+            "passive_effect_text": row[5],
+            "has_combat_stats": bool(row[6]),
+            "is_tradeable": bool(row[7]),
+            "slot": row[8],
+            "icons": icons,
+            "combat_stats": combat_stats,
+        }
 
     def get_all_bosses(self) -> List[Dict[str, Any]]:
         """Get all bosses from the database."""
