@@ -5,11 +5,11 @@ import json
 import sys
 import os
 
-# Add parent directory to path to import calculator modules
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+# Add backend directory to path to import the app package
+sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
 # Import calculator modules 
-from calculators import DpsCalculator, MeleeCalculator, RangedCalculator, MagicCalculator
+from app.calculators import DpsCalculator, MeleeCalculator, RangedCalculator, MagicCalculator
 
 class TestDpsCalculator(unittest.TestCase):
     """Test the main DPS Calculator dispatch logic."""
@@ -18,7 +18,7 @@ class TestDpsCalculator(unittest.TestCase):
         """Test that melee calculations are dispatched correctly."""
         params = {"combat_style": "melee"}
         
-        with patch('calculators.MeleeCalculator.calculate_dps') as mock_melee:
+        with patch('app.calculators.MeleeCalculator.calculate_dps') as mock_melee:
             mock_melee.return_value = {"dps": 10.0}
             result = DpsCalculator.calculate_dps(params)
             
@@ -29,7 +29,7 @@ class TestDpsCalculator(unittest.TestCase):
         """Test that ranged calculations are dispatched correctly."""
         params = {"combat_style": "ranged"}
         
-        with patch('calculators.RangedCalculator.calculate_dps') as mock_ranged:
+        with patch('app.calculators.RangedCalculator.calculate_dps') as mock_ranged:
             mock_ranged.return_value = {"dps": 8.5}
             result = DpsCalculator.calculate_dps(params)
             
@@ -40,7 +40,7 @@ class TestDpsCalculator(unittest.TestCase):
         """Test that magic calculations are dispatched correctly."""
         params = {"combat_style": "magic"}
         
-        with patch('calculators.MagicCalculator.calculate_dps') as mock_magic:
+        with patch('app.calculators.MagicCalculator.calculate_dps') as mock_magic:
             mock_magic.return_value = {"dps": 7.2}
             result = DpsCalculator.calculate_dps(params)
             
@@ -247,7 +247,7 @@ class TestRangedCalculator(unittest.TestCase):
         tbow_params["weapon_name"] = "Twisted bow"
         tbow_params["target_magic_level"] = 200  # High magic level target
         
-        with patch('calculators.RangedCalculator.calculate_twisted_bow_bonus') as mock_tbow:
+        with patch('app.calculators.RangedCalculator.calculate_twisted_bow_bonus') as mock_tbow:
             # Mock the Twisted Bow bonus calculation
             mock_tbow.return_value = {
                 "accuracy_multiplier": 1.299,  # 29.9% accuracy boost

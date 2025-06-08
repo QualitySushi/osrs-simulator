@@ -1,6 +1,6 @@
 import math
 from typing import Dict, Any
-from config.constants import (
+from ..config.constants import (
     EFFECTIVE_LEVEL_BASE,
     EQUIPMENT_BONUS_OFFSET,
     VOID_RANGED_ATTACK_MULTIPLIER,

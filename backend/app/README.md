@@ -22,11 +22,11 @@ Clone the repository
 
 
 ```bash
-cd backend/app
+cd backend
 python -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
-uvicorn main:app --reload
+uvicorn app.main:app --reload
 ```
 
 The API will then be available at `http://localhost:8000`.
@@ -36,5 +36,5 @@ The API will then be available at `http://localhost:8000`.
 Run unit tests from the `testing` folder:
 
 ```bash
-python testing/UnitTest.py
+python app/testing/UnitTest.py
 ```
