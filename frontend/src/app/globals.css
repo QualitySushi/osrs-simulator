@@ -58,6 +58,7 @@
 
 :root {
   --accent-gold: #c5a64d;
+  --rs-gold: #c5a64d;
   --deep-brown: #3a3023;
   --stone-gray: #5d5853;
   --dark-stone: #2c2825;
@@ -152,10 +153,10 @@
   }
 }
 
-/* Button styling with subtle 3D and texture */
+/* Button styling with subtle 3D and texture - EXCLUDES toggle components */
 .btn-primary, 
-button[class*="bg-primary"],
-button {
+button[class*="bg-primary"]:not([data-slot="toggle"]):not([data-slot="toggle-box"]),
+button:not([data-slot="toggle"]):not([data-slot="toggle-box"]) {
   padding-left: 3px;
   padding-right: 3px;
   margin-left: 3px;
@@ -174,19 +175,59 @@ button {
 }
 
 .btn-primary:hover,
-button[class*="bg-primary"]:hover,
-button:hover {
+button[class*="bg-primary"]:not([data-slot="toggle"]):not([data-slot="toggle-box"]):hover,
+button:not([data-slot="toggle"]):not([data-slot="toggle-box"]):hover {
   filter: brightness(1.05);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 4px 6px rgba(0, 0, 0, 0.25);
   transform: translateY(-1px);
 }
 
 .btn-primary:active,
-button[class*="bg-primary"]:active,
-button:active {
+button[class*="bg-primary"]:not([data-slot="toggle"]):not([data-slot="toggle-box"]):active,
+button:not([data-slot="toggle"]):not([data-slot="toggle-box"]):active {
   transform: translateY(1px);
   box-shadow: inset 0 1px 0 rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.25);
 }
+
+/* ===== TOGGLE COMPONENT FIX - ADD THIS SECTION ===== */
+/* More specific reset for toggle components */
+button[data-slot="toggle-box"],
+button[data-slot="toggle"],
+[data-slot="toggle-box"],
+[data-slot="toggle"] {
+  all: revert !important;
+  background: transparent !important;
+  border: 2px solid var(--rs-gold) !important;
+  border-radius: 50% !important;
+  width: 1rem !important;
+  height: 1rem !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  box-shadow: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: all 0.2s ease !important;
+  transform: none !important;
+  filter: none !important;
+}
+
+/* Active state styling */
+button[data-slot="toggle-box"][data-state="on"],
+[data-slot="toggle-box"][data-state="on"] {
+  background: var(--rs-gold) !important;
+}
+
+/* No checkmark - just background color change */
+
+/* Hover states for toggles */
+button[data-slot="toggle-box"]:hover,
+[data-slot="toggle-box"]:hover {
+  border-color: var(--primary) !important;
+  transform: none !important;
+  filter: none !important;
+}
+/* ===== END TOGGLE COMPONENT FIX ===== */
 
 /* Equipment slots styling */
 div[class*="grid-cols-3 grid-rows-5"] > div {

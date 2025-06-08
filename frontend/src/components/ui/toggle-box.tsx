@@ -14,7 +14,9 @@ function ToggleBox({ className, ...props }: React.ComponentProps<typeof TogglePr
         className
       )}
       {...props}
-    />
+    >
+      <div className="h-2 w-2 rounded-full bg-primary-foreground opacity-0 data-[state=on]:opacity-100 transition-opacity" />
+    </TogglePrimitive.Root>
   )
 }
 
