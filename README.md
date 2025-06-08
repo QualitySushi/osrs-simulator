@@ -129,6 +129,12 @@ NEXT_PUBLIC_API_URL=http://localhost:8000
 For production, set this to your deployed API URL. The deployment workflows
 expect a repository secret named `BACKEND_URL` which will be exposed as
 `NEXT_PUBLIC_API_URL` during the frontend build.
+Ensure this secret contains the URL of your Azure Function App, for example
+`https://osrs-simulator-api.azurewebsites.net`.
+
+When deploying the frontend, the workflow also requires a secret named
+`AZURE_STATIC_WEB_APPS_API_TOKEN_YELLOW_STONE_0DAF36A0F` containing the
+deployment token for your Azure Static Web App.
 Database Setup
 
 The application uses four SQLite databases stored in Azure Blob Storage:
