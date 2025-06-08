@@ -6,7 +6,7 @@ import {
   MeleeCalculatorParams,
   RangedCalculatorParams,
   MagicCalculatorParams
-} from '@/app/types/calculator';
+} from '@/types/calculator';
 
 interface CalculatorState {
   params: CalculatorParams;

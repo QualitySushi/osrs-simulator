@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/tooltip';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useCalculatorStore } from '@/store/calculator-store';
-import { Item } from '@/app/types/calculator';
+import { Item } from '@/types/calculator';
 
 // Equipment slot layout
 const EQUIPMENT_SLOTS = {
@@ -133,10 +133,12 @@ export function EquipmentDisplay({ loadout, totals }: EquipmentDisplayProps) {
         attack_speed: attackSpeed
     });
     
-    console.log('[DEBUG] Selected attack style:', selectedAttackStyle);
-    console.log('[DEBUG] Style bonus (attack):', attackStyleBonusAttack);
-    console.log('[DEBUG] Style bonus (strength):', attackStyleBonusStrength);
-    console.log('[DEBUG] Attack speed:', attackSpeed);
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('[DEBUG] Selected attack style:', selectedAttackStyle);
+      console.log('[DEBUG] Style bonus (attack):', attackStyleBonusAttack);
+      console.log('[DEBUG] Style bonus (strength):', attackStyleBonusStrength);
+      console.log('[DEBUG] Attack speed:', attackSpeed);
+    }
     }, [selectedAttackStyle, setParams, currentWeapon, combatStyle]);
   
   // Update attack style bonus and speed when style changes
@@ -174,11 +176,12 @@ export function EquipmentDisplay({ loadout, totals }: EquipmentDisplayProps) {
     attack_speed: attackSpeed
     });
     
-    console.log('[DEBUG] Selected attack style:', selectedAttackStyle);
-    console.log('[DEBUG] Style bonus (attack):', attackStyleBonusAttack);
-    console.log('[DEBUG] Style bonus (strength):', attackStyleBonusStrength);
-
-    console.log('[DEBUG] Attack speed:', attackSpeed);
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('[DEBUG] Selected attack style:', selectedAttackStyle);
+      console.log('[DEBUG] Style bonus (attack):', attackStyleBonusAttack);
+      console.log('[DEBUG] Style bonus (strength):', attackStyleBonusStrength);
+      console.log('[DEBUG] Attack speed:', attackSpeed);
+    }
   }, [selectedAttackStyle, setParams, currentWeapon]);
   
   // Helper to determine the primary attack type for a weapon

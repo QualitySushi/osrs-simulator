@@ -1,4 +1,4 @@
-import { Item } from '@/app/types/calculator';
+import { Item } from '@/types/calculator';
 import { AttackStyleDefinition } from './AttackStyleSelector';
 
 // Get available attack styles from weapon's combat_styles data

@@ -13,7 +13,7 @@ import { Input } from '@/components/ui/input';
 import { Slider } from '@/components/ui/slider';
 import { Switch } from '@/components/ui/switch';
 import { useCombatForm } from '@/hooks/useCombatForm';
-import { MeleeCalculatorParams } from '@/app/types/calculator';
+import { MeleeCalculatorParams } from '@/types/calculator';
 
 // Zod schema for melee form validation
 const meleeFormSchema = z.object({

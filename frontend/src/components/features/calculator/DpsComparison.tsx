@@ -15,8 +15,8 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { useCalculatorStore } from '@/store/calculator-store';
-import { CalculatorParams} from '@/app/types/calculator';
-// import { CalculatorParams, DpsResult } from '@/app/types/calculator';
+import { CalculatorParams} from '@/types/calculator';
+// import { CalculatorParams, DpsResult } from '@/types/calculator';
 
 export function DpsComparison() {
   const { params, results, comparisonResults, addComparisonResult, removeComparisonResult, clearComparisonResults } = useCalculatorStore();

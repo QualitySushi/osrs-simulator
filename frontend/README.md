@@ -6,6 +6,7 @@ Calculate DPS for all combat styles: Melee, Ranged, and Magic
 Select target bosses and their different forms/phases
 Choose equipment to automatically update stats
 View detailed results with max hit, hit chance, and DPS
+Modular component structure with custom hooks
 
 Technologies Used
 
@@ -34,6 +35,18 @@ npm run dev
 ```
 
 Open `http://localhost:3000` in your browser to use the calculator.
+
+### Testing
+
+Unit tests are written with Jest and React Testing Library.
+
+```bash
+npm test
+```
+
+### Project Structure
+
+Type definitions live under `src/types` and can be imported using `@/types`.
 
 ### Storybook
 

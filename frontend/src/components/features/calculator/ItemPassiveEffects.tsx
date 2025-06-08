@@ -1,5 +1,5 @@
 import React from 'react';
-import { Item } from '@/app/types/calculator';
+import { Item } from '@/types/calculator';
 import { Badge } from '@/components/ui/badge';
 
 // Define interface for passive effect entry

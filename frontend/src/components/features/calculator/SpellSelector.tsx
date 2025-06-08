@@ -1,5 +1,5 @@
 import { useToast } from '@/hooks/use-toast';
-import { CalculatorParams } from '@/app/types/calculator';
+import { CalculatorParams } from '@/types/calculator';
 
 interface SpellSelectorProps {
   params: CalculatorParams;

@@ -15,7 +15,7 @@ import { useCalculatorStore } from '@/store/calculator-store';
 import { EquipmentDisplay } from '@/components/features/calculator/EquipmentDisplay';
 import PassiveEffectsDisplay from './PassiveEffectsDisplay';
 import { ItemSelector } from './ItemSelector';
-import { Item } from '@/app/types/calculator';
+import { Item } from '@/types/calculator';
 import { itemsApi } from '@/services/api';
 
 const EQUIPMENT_SLOTS = [

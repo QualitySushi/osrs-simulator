@@ -18,9 +18,9 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { itemsApi } from '@/services/api';
-import { Item } from '@/app/types/calculator';
+import { Item } from '@/types/calculator';
 import { useCalculatorStore } from '@/store/calculator-store';
-import { CombatStyle } from '@/app/types/calculator';
+import { CombatStyle } from '@/types/calculator';
 import { ItemPassiveEffects } from './ItemPassiveEffects';
 
 interface ItemSelectorProps {

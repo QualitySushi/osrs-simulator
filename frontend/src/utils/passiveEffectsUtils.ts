@@ -1,4 +1,4 @@
-import { Item, BossForm, CombatStyle } from '@/app/types/calculator';
+import { Item, BossForm, CombatStyle } from '@/types/calculator';
 
 // Extended type for Boss weakness that includes monster types
 type BossWeaknessType = CombatStyle | 'dragon' | 'demon' | 'kalphite' | 'undead' | null | undefined;

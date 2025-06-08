@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { useCalculatorStore } from '@/store/calculator-store';
-import { Item, BossForm } from '@/app/types/calculator';
+import { Item, BossForm } from '@/types/calculator';
 import calculatePassiveEffectBonuses from './PassiveEffectCalculator';
 import { Badge } from '@/components/ui/badge';
 import {

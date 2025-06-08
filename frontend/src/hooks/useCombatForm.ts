@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useCalculatorStore } from '@/store/calculator-store';
-import { CombatStyle, CalculatorParams } from '@/app/types/calculator';
+import { CombatStyle, CalculatorParams } from '@/types/calculator';
 import { FieldValues, DefaultValues } from 'react-hook-form';
 
 // Common field validation types - we'll keep these for reference even if not directly used
@@ -136,9 +136,9 @@ type ParamsRecord = Record<string, unknown>;
     
     // Only update the store if there are remaining values
     if (Object.keys(updatedValues).length > 0) {
-      // Log the params being set for debugging
-      console.log(`[DEBUG] Setting ${combatStyle} params:`, updatedValues);
-      
+      if (process.env.NODE_ENV !== 'production') {
+        console.log(`[DEBUG] Setting ${combatStyle} params:`, updatedValues);
+      }
       // Set parameters in the store - use type assertion for safety
       setParams(updatedValues as unknown as Partial<CalculatorParams>);
     }

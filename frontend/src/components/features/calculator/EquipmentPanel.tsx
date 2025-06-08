@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { useCalculatorStore } from '@/store/calculator-store';
-import { BossForm, Item } from '@/app/types/calculator';
+import { BossForm, Item } from '@/types/calculator';
 import { useState } from 'react';
 
 interface EquipmentPanelProps {

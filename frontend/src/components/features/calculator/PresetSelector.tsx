@@ -21,7 +21,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useCalculatorStore } from '@/store/calculator-store';
-import { CombatStyle, CalculatorParams } from '@/app/types/calculator';
+import { CombatStyle, CalculatorParams } from '@/types/calculator';
 import { Badge } from '@/components/ui/badge';
 
 interface PresetSelectorProps {
