@@ -4,7 +4,6 @@ from ..config.constants import (
     EFFECTIVE_LEVEL_BASE,
     EQUIPMENT_BONUS_OFFSET,
     VOID_MAGIC_MULTIPLIER,
-    MAX_HIT_DIVISOR,
 )
 
 class MagicCalculator:

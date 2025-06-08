@@ -152,7 +152,7 @@ class RangedCalculator:
 
         if params.get("debug"):
             print("=== Ranged DPS Calculation Debug ===")
-            print(f"→ Input Stats:")
+            print("→ Input Stats:")
             print(f"  Ranged Level: {params['ranged_level']}")
             print(f"  Ranged Boost: {params.get('ranged_boost', 0)}")
             print(f"  Prayer Modifier: {params.get('ranged_prayer', 1.0)}")
@@ -172,7 +172,7 @@ class RangedCalculator:
             print(f"  Ranged Attack Bonus: {params['ranged_attack_bonus']}")
             print(f"  Attack Roll: {attack_roll}")
             print()
-            print(f"→ Target Stats:")
+            print("→ Target Stats:")
             print(f"  Defence Level: {params['target_defence_level']}")
             print(f"  Ranged Defence Bonus: {params['target_defence_bonus']}")
             if params.get("target_magic_level") is not None:

@@ -1,7 +1,6 @@
 import unittest
 import math
-from unittest.mock import patch, MagicMock
-import json
+from unittest.mock import patch
 import sys
 import os
 
@@ -50,9 +49,14 @@ class TestDpsCalculator(unittest.TestCase):
     def test_invalid_combat_style(self):
         """Test that an invalid combat style raises ValueError."""
         params = {"combat_style": "invalid_style"}
-        
+
         with self.assertRaises(ValueError):
             DpsCalculator.calculate_dps(params)
+
+    def test_missing_melee_params(self):
+        """Missing required melee parameters should raise KeyError."""
+        with self.assertRaises(KeyError):
+            MeleeCalculator.calculate_dps({"combat_style": "melee"})
 
 
 class TestMeleeCalculator(unittest.TestCase):
@@ -266,8 +270,8 @@ class TestRangedCalculator(unittest.TestCase):
     
     def test_twisted_bow_bonus_calculation(self):
         """Test the calculation of Twisted Bow bonus."""
-        # Test with a few different magic levels
-        test_levels = [0, 75, 150, 200, 250, 300]
+        # Test systematically across a range of magic levels
+        test_levels = list(range(0, 301, 25))
         
         for level in test_levels:
             with self.subTest(level=level):
@@ -279,7 +283,6 @@ class TestRangedCalculator(unittest.TestCase):
                 self.assertIn("effect_description", result)
 
                 # Magic level is capped at 250
-                capped_level = min(level, 250)
 
                 # For level 0, expected special case values
                 if level == 0:
@@ -295,6 +298,11 @@ class TestRangedCalculator(unittest.TestCase):
                 # Multipliers should be within their capped ranges
                 self.assertTrue(0 <= result["accuracy_multiplier"] <= 1.4)
                 self.assertTrue(0 <= result["damage_multiplier"] <= 2.5)
+
+    def test_twisted_bow_missing_magic_level(self):
+        """Ensure missing target_magic_level raises ValueError."""
+        with self.assertRaises(ValueError):
+            DpsCalculator.calculate_item_effect({"item_name": "Twisted bow"})
 
 
 class TestMagicCalculator(unittest.TestCase):

@@ -12,6 +12,7 @@ osrs-simulator/
 │   │   ├── models.py           # Pydantic data models
 │   │   ├── main.py             # FastAPI entrypoint
 │   │   └── testing/            # Unit tests
+│   ├── webscraper/           # Scraper scripts for database generation
 │   └── requirements.txt        # Backend dependencies
 ├── frontend/
 │   └── src/                    # Next.js application

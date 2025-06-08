@@ -1,7 +1,7 @@
 import sqlite3
 import os
 import json
-from typing import Dict, List, Optional, Any, Union
+from typing import Dict, List, Optional, Any
 
 
 class DatabaseService:
@@ -31,30 +31,19 @@ class DatabaseService:
         if not self.boss_db_exists:
             print(f"Warning: Boss database not found at {self.boss_db_path}")
 
-    def _get_item_conn(self):
-        """Get a connection to the item database."""
-        if not self.item_db_exists:
-            return None
-        return sqlite3.connect(self.item_db_path)
-
-    def _get_boss_conn(self):
-        """Get a connection to the boss database."""
-        if not self.boss_db_exists:
-            return None
-        return sqlite3.connect(self.boss_db_path)
 
     def get_all_items(
         self, combat_only: bool = True, tradeable_only: bool = False
     ) -> List[Dict[str, Any]]:
         """Get all items from the database with optional filters."""
-        conn = self._get_item_conn()
-        if not conn:
+        if not self.item_db_exists:
             return []
 
         try:
-            cursor = conn.cursor()
+            with sqlite3.connect(self.item_db_path) as conn:
+                cursor = conn.cursor()
 
-            query = """
+                query = """
             SELECT
                 id, name, has_special_attack, special_attack_text,
                 has_passive_effect, passive_effect_text,
@@ -62,60 +51,58 @@ class DatabaseService:
             FROM items
             """
 
-            where_clauses = []
-            if combat_only:
-                where_clauses.append("has_combat_stats = 1")
-            if tradeable_only:
-                where_clauses.append("is_tradeable = 1")
+                where_clauses = []
+                if combat_only:
+                    where_clauses.append("has_combat_stats = 1")
+                if tradeable_only:
+                    where_clauses.append("is_tradeable = 1")
 
-            if where_clauses:
-                query += " WHERE " + " AND ".join(where_clauses)
+                if where_clauses:
+                    query += " WHERE " + " AND ".join(where_clauses)
 
-            cursor.execute(query)
-            items = []
+                cursor.execute(query)
+                items = []
 
-            for row in cursor.fetchall():
-                try:
-                    icons = json.loads(row[9]) if row[9] else []
-                except json.JSONDecodeError:
-                    icons = []
-                try:
-                    combat_stats = json.loads(row[10]) if row[10] else {}
-                except json.JSONDecodeError:
-                    combat_stats = {}
+                for row in cursor.fetchall():
+                    try:
+                        icons = json.loads(row[9]) if row[9] else []
+                    except json.JSONDecodeError:
+                        icons = []
+                    try:
+                        combat_stats = json.loads(row[10]) if row[10] else {}
+                    except json.JSONDecodeError:
+                        combat_stats = {}
 
-                items.append(
-                    {
-                        "id": row[0],
-                        "name": row[1],
-                        "has_special_attack": bool(row[2]),
-                        "special_attack": row[3],
-                        "has_passive_effect": bool(row[4]),
-                        "passive_effect_text": row[5],
-                        "has_combat_stats": bool(row[6]),
-                        "is_tradeable": bool(row[7]),
-                        "slot": row[8],
-                        "icons": icons,
-                        "combat_stats": combat_stats,
-                    }
-                )
+                    items.append(
+                        {
+                            "id": row[0],
+                            "name": row[1],
+                            "has_special_attack": bool(row[2]),
+                            "special_attack": row[3],
+                            "has_passive_effect": bool(row[4]),
+                            "passive_effect_text": row[5],
+                            "has_combat_stats": bool(row[6]),
+                            "is_tradeable": bool(row[7]),
+                            "slot": row[8],
+                            "icons": icons,
+                            "combat_stats": combat_stats,
+                        }
+                    )
 
-            return items
+                return items
         except Exception as e:
             print(f"Error getting items: {e}")
             return []
-        finally:
-            conn.close()
 
     def get_item(self, item_id: int) -> Optional[Dict[str, Any]]:
         """Get details for a specific item by ID."""
-        conn = self._get_item_conn()
-        if not conn:
+        if not self.item_db_exists:
             return None
 
         try:
-            cursor = conn.cursor()
-            cursor.execute(
+            with sqlite3.connect(self.item_db_path) as conn:
+                cursor = conn.cursor()
+                cursor.execute(
                 """
             SELECT
                 id, name, has_special_attack, special_attack_text,
@@ -140,10 +127,23 @@ class DatabaseService:
             except json.JSONDecodeError:
                 combat_stats = {}
 
-            return {
-                "id": row[0],
-                "name": row[1],
-                "has_special_attack": bool(row[2]),
+                row = cursor.fetchone()
+                if not row:
+                    return None
+
+                try:
+                    icons = json.loads(row[9]) if row[9] else []
+                except json.JSONDecodeError:
+                    icons = []
+                try:
+                    combat_stats = json.loads(row[10]) if row[10] else {}
+                except json.JSONDecodeError:
+                    combat_stats = {}
+
+                return {
+                    "id": row[0],
+                    "name": row[1],
+                    "has_special_attack": bool(row[2]),
                 "special_attack": row[3],
                 "has_passive_effect": bool(row[4]),
                 "passive_effect_text": row[5],
@@ -152,21 +152,19 @@ class DatabaseService:
                 "slot": row[8],
                 "icons": icons,
                 "combat_stats": combat_stats,
-            }
+                }
         except Exception as e:
             print(f"Error getting item {item_id}: {e}")
             return None
-        finally:
-            conn.close()
 
     def get_all_bosses(self) -> List[Dict[str, Any]]:
         """Get all bosses from the database."""
-        conn = self._get_boss_conn()
-        if not conn:
+        if not self.boss_db_exists:
             return []
 
         try:
-            cursor = conn.cursor()
+            with sqlite3.connect(self.boss_db_path) as conn:
+                cursor = conn.cursor()
             cursor.execute(
                 """
             SELECT
@@ -214,22 +212,20 @@ class DatabaseService:
                     }
                 )
 
-            return bosses
+                return bosses
         except Exception as e:
             print(f"Error getting bosses: {e}")
             return []
-        finally:
-            conn.close()
 
     def get_boss(self, boss_id: int) -> Optional[Dict[str, Any]]:
         """Get details for a specific boss by ID, including all forms."""
-        conn = self._get_boss_conn()
-        if not conn:
+        if not self.boss_db_exists:
             return None
 
         try:
-            cursor = conn.cursor()
-            # Get boss main data
+            with sqlite3.connect(self.boss_db_path) as conn:
+                cursor = conn.cursor()
+                # Get boss main data
             cursor.execute(
                 """
             SELECT
@@ -345,23 +341,21 @@ class DatabaseService:
                 elif first.get("image_url"):
                     boss_data["icon_url"] = first.get("image_url")
 
-            return boss_data
+                return boss_data
         except Exception as e:
             print(f"Error getting boss {boss_id}: {e}")
             return None
-        finally:
-            conn.close()
 
     def search_items(
         self, query: str, limit: int = 10
     ) -> List[Dict[str, Any]]:
         """Search items by name."""
-        conn = self._get_item_conn()
-        if not conn:
+        if not self.item_db_exists:
             return []
 
         try:
-            cursor = conn.cursor()
+            with sqlite3.connect(self.item_db_path) as conn:
+                cursor = conn.cursor()
             cursor.execute(
                 """
             SELECT 
@@ -388,23 +382,21 @@ class DatabaseService:
                     }
                 )
 
-            return items
+                return items
         except Exception as e:
             print(f"Error searching items: {e}")
             return []
-        finally:
-            conn.close()
 
     def search_bosses(
         self, query: str, limit: int = 10
     ) -> List[Dict[str, Any]]:
         """Search bosses by name."""
-        conn = self._get_boss_conn()
-        if not conn:
+        if not self.boss_db_exists:
             return []
 
         try:
-            cursor = conn.cursor()
+            with sqlite3.connect(self.boss_db_path) as conn:
+                cursor = conn.cursor()
             cursor.execute(
                 """
             SELECT 
@@ -427,12 +419,10 @@ class DatabaseService:
                     }
                 )
 
-            return bosses
+                return bosses
         except Exception as e:
             print(f"Error searching bosses: {e}")
             return []
-        finally:
-            conn.close()
 
 
 # Create a singleton instance

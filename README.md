@@ -2,7 +2,6 @@ OSRS DPS Calculator
 
 A comprehensive damage-per-second calculator for Old School RuneScape with accurate combat formulas, equipment comparison, and boss statistics.
 
-[Try it Live | Report Bug | Request Feature]
 
 Overview
 
@@ -21,7 +20,7 @@ Key Features
 🚀 Getting Started
 Prerequisites
 
-    Node.js 18.x or later
+    Node.js 20.x or later
     Python 3.8+
     npm or yarn
     pip

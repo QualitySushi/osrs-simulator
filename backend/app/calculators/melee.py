@@ -61,7 +61,7 @@ class MeleeCalculator:
 
         if params.get("debug"):
             print("=== Melee DPS Calculation Debug ===")
-            print(f"→ Input Stats:")
+            print("→ Input Stats:")
             print(f"  Strength Level: {params['strength_level']}")
             print(f"  Strength Boost: {params.get('strength_boost', 0)}")
             print(f"  Prayer Modifier (STR): {params.get('strength_prayer', 1.0)}")
@@ -72,7 +72,7 @@ class MeleeCalculator:
             print(f"  Strength Bonus: {params['melee_strength_bonus']}")
             print(f"  Max Hit: {max_hit}")
             print()
-            print(f"→ Input Attack:")
+            print("→ Input Attack:")
             print(f"  Attack Level: {params['attack_level']}")
             print(f"  Attack Boost: {params.get('attack_boost', 0)}")
             print(f"  Prayer Modifier (ATK): {params.get('attack_prayer', 1.0)}")
@@ -81,7 +81,7 @@ class MeleeCalculator:
             print(f"  Attack Bonus: {params['melee_attack_bonus']}")
             print(f"  Attack Roll: {attack_roll}")
             print()
-            print(f"→ Target Stats:")
+            print("→ Target Stats:")
             print(f"  Target Defence Level: {params['target_defence_level']}")
             print(f"  Target Defence Bonus: {params['target_defence_bonus']}")
             print(f"  Defence Roll: {def_roll}")
