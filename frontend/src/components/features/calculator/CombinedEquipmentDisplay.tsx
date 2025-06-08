@@ -351,7 +351,7 @@ export function CombinedEquipmentDisplay({ onEquipmentUpdate, bossForm }: Combin
               className="mr-2"
             />
             <Label htmlFor="use-2h" className="text-sm">
-              {show2hOption ? 'Use 1H + Shield' : 'Use 2H'}
+              {show2hOption ? 'Use 1H' : 'Use 2H'}
             </Label>
           </div>
           

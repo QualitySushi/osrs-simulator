@@ -85,11 +85,11 @@ export function ImprovedDpsCalculator() {
       {/* Two-column layout for middle sections */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Left column */}
-        <div className="space-y-6">
+        <div className="space-y-6 flex flex-col">
           {/* Character equipment section */}
           <CombinedEquipmentDisplay onEquipmentUpdate={handleEquipmentUpdate} bossForm={currentBossForm} />
           {/* Prayer/Potion selector */}
-          <PrayerPotionSelector />
+          <PrayerPotionSelector className="flex-grow" />
         </div>
 
         {/* Right column */}

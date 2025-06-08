@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Search, Loader2, RotateCcw } from 'lucide-react';
+import { Command as CommandPrimitive } from 'cmdk';
 import { 
   Command, 
   CommandEmpty, 
@@ -303,14 +304,6 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
         <CardDescription>Select a boss to calculate DPS against</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        {selectedBoss && (
-          <div className="flex justify-end">
-            <Button variant="outline" size="sm" onClick={handleResetBoss}>
-              <RotateCcw className="h-4 w-4 mr-2" />
-              Reset
-            </Button>
-          </div>
-        )}
         {bossLocked && (
           <Alert className="mb-4 border-blue-200 dark:border-blue-800 bg-blue-100 dark:bg-blue-900">
             <AlertDescription>
@@ -343,7 +336,12 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
             </PopoverTrigger>
             <PopoverContent className="w-[300px] p-0">
               <Command>
-                <CommandInput placeholder="Search bosses..." className="h-9" />
+                <div className="flex h-9 items-center gap-2 border-b px-3">
+                  <CommandPrimitive.Input
+                    placeholder="Search bosses..."
+                    className="placeholder:text-muted-foreground flex h-10 w-full rounded-md bg-transparent py-3 text-sm outline-hidden disabled:cursor-not-allowed disabled:opacity-50"
+                  />
+                </div>
                 <CommandEmpty>No boss found.</CommandEmpty>
                 <CommandGroup>
                   <CommandList>
@@ -383,7 +381,13 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
         {/* Form selector (if the boss has multiple forms) */}
         {selectedBoss && bossDetails?.forms && bossDetails.forms.length > 0 && (
           <div className="space-y-2">
-            <label className="text-sm font-medium">Select Form/Phase</label>
+            <div className="flex items-center justify-between">
+              <label className="text-sm font-medium">Select Form/Phase</label>
+              <Button variant="outline" size="sm" onClick={handleResetBoss}">
+                <RotateCcw className="h-4 w-4 mr-2" />
+                Reset
+              </Button>
+            </div>
             {isLoadingDetails ? (
               <div className="flex items-center text-sm text-muted-foreground">
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -426,7 +430,7 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
               <img
                 src={selectedForm.icons?.[0] || selectedForm.image_url}
                 alt="icon"
-                className="w-24 h-24"
+                className="w-24 h-auto object-contain"
               />
             )}
             <h4 className="text-sm font-semibold">Target Stats</h4>
