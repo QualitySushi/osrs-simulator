@@ -19,15 +19,27 @@ export function CombatStyleTabs({ activeTab, onTabChange, onReset }: CombatStyle
       className="w-full"
     >
       <TabsList className="grid grid-cols-4 mb-6">
-        <TabsTrigger value="melee" className="flex items-center justify-center">
+        <TabsTrigger
+          value="melee"
+          onClick={() => onTabChange('melee')}
+          className="flex items-center justify-center"
+        >
           <Sword className="h-4 w-4 mr-2" />
           Melee
         </TabsTrigger>
-        <TabsTrigger value="ranged" className="flex items-center justify-center">
+        <TabsTrigger
+          value="ranged"
+          onClick={() => onTabChange('ranged')}
+          className="flex items-center justify-center"
+        >
           <Target className="h-4 w-4 mr-2" />
           Ranged
         </TabsTrigger>
-        <TabsTrigger value="magic" className="flex items-center justify-center">
+        <TabsTrigger
+          value="magic"
+          onClick={() => onTabChange('magic')}
+          className="flex items-center justify-center"
+        >
           <Zap className="h-4 w-4 mr-2" />
           Magic
         </TabsTrigger>
