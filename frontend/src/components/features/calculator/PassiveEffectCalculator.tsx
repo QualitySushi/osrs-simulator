@@ -234,23 +234,21 @@ export function calculatePassiveEffectBonuses(
       }
     }
     
-    // Scythe of Vitur multi-hit effect
-    if (itemName.includes('scythe of vitur')) {
-      // Note: This is a special case that depends on target size
-      // Since we don't have target size data yet, we'll just show info about the effect
-      const effectApplicable = target && target.hitpoints && target.hitpoints > 0;
-      
-      if (effectApplicable) {
+    // Scythe of Vitur multi-hit effect based on target size
+    if (itemName.includes('scythe of vitur') && target?.size) {
+      // 1x1 = 1 hit, 2x2 = 2 hits, 3x3+ = 3 hits
+      const hits = target.size >= 3 ? 3 : target.size >= 2 ? 2 : 1;
+
+      if (hits > 1) {
         bonus.isApplicable = true;
-        
-        // The actual damage calculation for Scythe is complex and depends on max hit:
-        // 1st hit: 100% damage
-        // 2nd hit: 50% damage
-        // 3rd hit: 25% damage
-        // This is handled in the DPS calculator, but we'll flag that it's active
+
+        // 1 hit = 100%, 2 hits = 150%, 3 hits = 175%
+        const multiplier = hits === 2 ? 1.5 : 1.75;
+        bonus.damage = (bonus.damage || 1.0) * multiplier;
+
         effects.push({
           name: 'Scythe of Vitur',
-          description: 'Multi-hit weapon: Hits 3 times with 100%, 50%, and 25% damage against large targets'
+          description: `Multi-hit weapon: Hits ${hits} times against ${target.size}x${target.size} targets`
         });
       }
     }
