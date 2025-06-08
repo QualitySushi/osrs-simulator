@@ -39,7 +39,7 @@ export function getWeaponAttackStyles(weapon: Item | null): Record<string, Attac
         const validAttackTypes = ['stab', 'slash', 'crush'];
         if (!validAttackTypes.includes(attackType) || !(attackType in bonusMap) || bonusMap[attackType as keyof typeof bonusMap] <= 0) {
           // Find first attack type with a positive bonus
-          const fallback = Object.entries(bonusMap).find(([type, val]) => val > 0);
+        const fallback = Object.entries(bonusMap).find(([, val]) => val > 0);
           if (fallback) {
             attackType = fallback[0]; // Replace bad attackType
           } else {
@@ -51,7 +51,7 @@ export function getWeaponAttackStyles(weapon: Item | null): Record<string, Attac
         
         if (!hasValidBonus) {
           // Find first attack type with a positive bonus
-          const fallback = Object.entries(bonusMap).find(([type, val]) => val > 0);
+          const fallback = Object.entries(bonusMap).find(([, val]) => val > 0);
           if (!fallback) {
             console.warn(`[Filtered] Skipping ${style.name}: no valid attack type bonuses`);
             continue;

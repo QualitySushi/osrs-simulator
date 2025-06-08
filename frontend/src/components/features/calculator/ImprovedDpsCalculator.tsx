@@ -2,7 +2,6 @@
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Info } from 'lucide-react';
-import { BossSelector } from './BossSelector';
 import { DirectBossSelector } from './DirectBossSelector';
 import { CombinedEquipmentDisplay } from './CombinedEquipmentDisplay';
 import { DpsComparison } from './DpsComparison';

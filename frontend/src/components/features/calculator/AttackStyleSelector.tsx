@@ -174,6 +174,7 @@ export function AttackStyleSelector({
                   <Button
                     size="sm"
                     variant={style === selectedAttackStyle ? 'default' : 'outline'}
+                    className={style === selectedAttackStyle ? 'ring-2 ring-primary' : ''}
                     onClick={() => onSelectAttackStyle(style)}
                   >
                     {styleInfo.name}
