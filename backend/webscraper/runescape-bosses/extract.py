@@ -137,6 +137,7 @@ def init_db():
 
             special_mechanics TEXT,
             image_url TEXT,
+            icons TEXT,
 
             size INTEGER,
             npc_ids TEXT,
@@ -701,6 +702,21 @@ def extract_boss_forms(soup, boss_name):
                     form_data['attribute'] = value
                 elif 'size' in key:
                     form_data['size'] = extract_number(value)
+
+            # Collect all icon URLs for this form
+            icons = []
+            for img_tag in tab.find_all('img'):
+                src = img_tag.get('src')
+                if not src:
+                    continue
+                if src.startswith('//'):
+                    src = 'https:' + src
+                elif src.startswith('/'):
+                    src = f"{WIKI_BASE}{src}"
+                if src not in icons:
+                    icons.append(src)
+            if icons:
+                form_data['icons'] = json.dumps(icons)
 
             # === ATTRIBUTE FROM DATA-ATTR-PARAM ===
             if 'attribute' not in form_data:

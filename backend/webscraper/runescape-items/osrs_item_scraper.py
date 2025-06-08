@@ -78,6 +78,7 @@ def extract_infobox_and_effects(html_content):
         "special_attack": None,
         "passive_effect_formula": None,
         "slot": None,
+        "icons": [],
         "combat_stats": {
             "attack_bonuses": {},
             "defence_bonuses": {},
@@ -105,6 +106,22 @@ def extract_infobox_and_effects(html_content):
         result["passive_effect_formula"] = cleaned if "Accuracy =" in cleaned else None
 
     result["special_attack"] = extract_section_text("Special attack")
+
+    # Collect icon URLs from the item's infobox
+    infobox = soup.find("table", class_="infobox")
+    if infobox:
+        icons = []
+        for img in infobox.find_all("img"):
+            src = img.get("src")
+            if not src:
+                continue
+            if src.startswith("//"):
+                src = "https:" + src
+            elif src.startswith("/"):
+                src = "https://oldschool.runescape.wiki" + src
+            if src not in icons:
+                icons.append(src)
+        result["icons"] = icons
 
     # In the extract_infobox_and_effects function, after extracting the passive effect:
     passive_effect_text = extract_section_text("Passive effect")
@@ -729,6 +746,7 @@ def init_db(path):
             has_combat_stats BOOLEAN,
             is_tradeable BOOLEAN,
             slot TEXT,
+            icons TEXT,
             combat_stats TEXT,
             raw_html TEXT
         )
@@ -739,23 +757,49 @@ def init_db(path):
 
 
 def save_to_db(
-    path, item_id, name, special, special_text, passive, passive_text, stats, tradeable, slot, combat_stats, html
+    path,
+    item_id,
+    name,
+    special,
+    special_text,
+    passive,
+    passive_text,
+    stats,
+    tradeable,
+    slot,
+    icons,
+    combat_stats,
+    html,
 ):
     conn = sqlite3.connect(path)
     c = conn.cursor()
 
     # Convert combat_stats dict to JSON string
     combat_stats_json = json.dumps(combat_stats) if combat_stats else None
+    icons_json = json.dumps(icons) if icons else None
 
     c.execute(
         """
         INSERT OR REPLACE INTO items (
-            id, name, has_special_attack, special_attack_text, 
+            id, name, has_special_attack, special_attack_text,
             has_passive_effect, passive_effect_text,
-            has_combat_stats, is_tradeable, slot, combat_stats, raw_html
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            has_combat_stats, is_tradeable, slot, icons, combat_stats, raw_html
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """,
-        (item_id, name, special, special_text, passive, passive_text, stats, tradeable, slot, combat_stats_json, html),
+        (
+            item_id,
+            name,
+            special,
+            special_text,
+            passive,
+            passive_text,
+            stats,
+            tradeable,
+            slot,
+            icons_json,
+            combat_stats_json,
+            html,
+        ),
     )
     conn.commit()
     conn.close()
@@ -767,9 +811,9 @@ def get_item_from_db(path, name):
     c = conn.cursor()
     c.execute(
         """
-        SELECT id, name, has_special_attack, special_attack_text, 
+        SELECT id, name, has_special_attack, special_attack_text,
                has_passive_effect, passive_effect_text,
-               has_combat_stats, is_tradeable, slot, combat_stats
+               has_combat_stats, is_tradeable, slot, icons, combat_stats
         FROM items
         WHERE name = ?
     """,
@@ -779,7 +823,8 @@ def get_item_from_db(path, name):
     conn.close()
 
     if result:
-        combat_stats = json.loads(result[9]) if result[9] else {}
+        combat_stats = json.loads(result[10]) if result[10] else {}
+        icons = json.loads(result[9]) if result[9] else []
         return {
             "id": result[0],
             "name": result[1],
@@ -790,6 +835,7 @@ def get_item_from_db(path, name):
             "has_combat_stats": bool(result[6]),
             "is_tradeable": bool(result[7]),
             "slot": result[8],
+            "icons": icons,
             "combat_stats": combat_stats,
         }
     return None
@@ -878,6 +924,7 @@ def process_all_items():
             has_combat_stats,
             is_tradeable,
             slot,
+            parsed["icons"],
             parsed["combat_stats"],
             raw_html,
         )
@@ -894,6 +941,7 @@ def process_all_items():
                 has_combat_stats,
                 is_tradeable,
                 slot,
+                parsed["icons"],
                 parsed["combat_stats"],
                 raw_html,
             )
@@ -910,6 +958,7 @@ def process_all_items():
                 has_combat_stats,
                 is_tradeable,
                 slot,
+                parsed["icons"],
                 parsed["combat_stats"],
                 raw_html,
             )
@@ -970,6 +1019,7 @@ def test_items():
                 has_combat_stats,
                 is_tradeable,
                 slot,
+                parsed["icons"],
                 parsed["combat_stats"],
                 raw_html,
             )
