@@ -24,6 +24,7 @@ jobs:
           pip install -r backend/requirements.txt
 
       - name: Run boss scraper
+
         run: |
           cd backend/webscraper/runescape-bosses/
           python extract.py
