@@ -702,6 +702,16 @@ def extract_boss_forms(soup, boss_name):
                 elif 'size' in key:
                     form_data['size'] = extract_number(value)
 
+            # === ATTRIBUTE FROM DATA-ATTR-PARAM ===
+            if 'attribute' not in form_data:
+                attr_cell = tab.find('td', {'data-attr-param': 'attributes'})
+                if attr_cell:
+                    attrs = [a.get_text(strip=True).lower() for a in attr_cell.find_all('a')]
+                    if not attrs:
+                        raw = attr_cell.get_text(separator=',', strip=True).lower()
+                        attrs = [a.strip() for a in re.split(r'[,/]', raw) if a.strip()]
+                    form_data['attribute'] = ', '.join(attrs)
+
             # === ELEMENTAL WEAKNESS FROM IMAGE ALT ===
             elem_type_span = tab.find("span", {"data-attr-param": "elementalweaknesstype_smw"})
             if elem_type_span:
@@ -752,6 +762,7 @@ def get_boss_data(boss_name):
 
         # Extract infobox fields
         infobox = soup.find('table', class_='infobox')
+        infobox_attribute = None
         if infobox:
             for row in infobox.find_all('tr'):
                 header = row.find('th')
@@ -772,6 +783,11 @@ def get_boss_data(boss_name):
                         boss_data['slayer_xp'] = extract_number(val)
                     elif 'category' in key and 'slayer' in key:
                         boss_data['slayer_category'] = val
+                    elif 'attribute' in key:
+                        attrs = [a.get_text(strip=True).lower() for a in value.find_all('a')]
+                        if not attrs:
+                            attrs = [a.strip() for a in re.split(r'[,/]', val.lower()) if a.strip()]
+                        infobox_attribute = ', '.join(attrs)
 
         # Use examine from form if not in infobox
         if examine_texts and not boss_data.get('examine'):
@@ -797,6 +813,9 @@ def get_boss_data(boss_name):
             # Immunities
             form.update(immunities)
 
+            if infobox_attribute and ('attribute' not in form or not form.get('attribute')):
+                form['attribute'] = infobox_attribute
+
             # Special mechanics
             if mechanics:
                 form['special_mechanics'] = json.dumps(mechanics)
@@ -816,14 +835,12 @@ def get_boss_data(boss_name):
 
             # Parse 'attribute'
             if 'attribute' not in form or not form.get('attribute'):
-                if 'undead' in form_text:
-                    form['attribute'] = 'undead'
-                elif 'demon' in form_text:
-                    form['attribute'] = 'demon'
-                elif 'dragon' in form_text:
-                    form['attribute'] = 'dragon'
-                elif 'kalphite' in form_text:
-                    form['attribute'] = 'kalphite'
+                possible = []
+                for attr in ['undead', 'demon', 'dragon', 'kalphite']:
+                    if attr in form_text:
+                        possible.append(attr)
+                if possible:
+                    form['attribute'] = ', '.join(sorted(set(possible)))
 
             # Parse 'npc_ids'
             if 'npc_ids' not in form:
