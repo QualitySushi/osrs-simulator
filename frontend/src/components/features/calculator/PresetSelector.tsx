@@ -161,7 +161,7 @@ export function PresetSelector({ onPresetLoad, className }: PresetSelectorProps)
               </Dialog>
             </div>
           </div>
-        ) : (
+          ) : (
           <>
             <div className="flex justify-end mb-4">
               <Dialog open={saveDialogOpen} onOpenChange={setSaveDialogOpen}>
@@ -199,12 +199,12 @@ export function PresetSelector({ onPresetLoad, className }: PresetSelectorProps)
                 </DialogContent>
               </Dialog>
             </div>
-          <Tabs defaultValue="all">
-            <TabsList className="grid grid-cols-4 mb-4 align-middle w-auto">
-              <TabsTrigger value="all">All</TabsTrigger>
-              <TabsTrigger value="melee">Melee</TabsTrigger>
-              <TabsTrigger value="ranged">Ranged</TabsTrigger>
-              <TabsTrigger value="magic">Magic</TabsTrigger>
+            <Tabs defaultValue="all">
+              <TabsList className="grid grid-cols-4 mb-4 align-middle w-auto">
+                <TabsTrigger value="all">All</TabsTrigger>
+                <TabsTrigger value="melee">Melee</TabsTrigger>
+                <TabsTrigger value="ranged">Ranged</TabsTrigger>
+                <TabsTrigger value="magic">Magic</TabsTrigger>
             </TabsList>
             {Object.entries(groupedPresets).map(([key, group]) => (
               <TabsContent key={key} value={key} className="space-y-2">
@@ -253,8 +253,9 @@ export function PresetSelector({ onPresetLoad, className }: PresetSelectorProps)
                   ))
                 )}
               </TabsContent>
-            ))}
-          </Tabs>
+              ))}
+            </Tabs>
+          </>
         )}
       </CardContent>
     </Card>
