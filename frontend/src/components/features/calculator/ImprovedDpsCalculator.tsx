@@ -95,7 +95,7 @@ export function ImprovedDpsCalculator() {
         {/* Right column */}
         <div className="space-y-6 flex flex-col flex-grow">
           {/* Target selection section */}
-          <DirectBossSelector onSelectForm={handleBossUpdate} />
+          <DirectBossSelector onSelectForm={handleBossUpdate} className="flex-grow" />
           
           {/* Defensive reductions panel - with contained height */}
           <Card className="w-full border">
