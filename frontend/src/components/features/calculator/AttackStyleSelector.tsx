@@ -1,6 +1,4 @@
-import {
-  Button
-} from '@/components/ui/button';
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import {
   Tooltip, TooltipContent, TooltipProvider, TooltipTrigger
 } from '@/components/ui/tooltip';
@@ -121,24 +119,24 @@ export function AttackStyleSelector({
             ? "Ranged Style:" 
             : "Magic Style:"}
       </div>
-      <div className="flex flex-wrap gap-1 justify-center">
-        {availableAttackStyles.map(style => {
+      <ToggleGroup
+        type="single"
+        value={selectedAttackStyle}
+        onValueChange={(v) => v && onSelectAttackStyle(v)}
+        className="flex flex-wrap gap-1 justify-center"
+      >
+        {availableAttackStyles.map((style) => {
           const styleInfo = attackStyles[style];
           if (!styleInfo) return null;
-          
+
           return (
             <TooltipProvider key={style}>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Button
-                    size="sm"
-                    variant={style === selectedAttackStyle ? 'default' : 'outline'}
-                    className={style === selectedAttackStyle ? 'ring-2 ring-primary' : ''}
-                    onClick={() => onSelectAttackStyle(style)}
-                  >
+                  <ToggleGroupItem value={style} size="sm">
                     {styleInfo.name}
                     {combatStyle !== 'melee' && ` (${styleInfo.attackType})`}
-                  </Button>
+                  </ToggleGroupItem>
                 </TooltipTrigger>
                 <TooltipContent>
                   <p>{styleInfo.description}</p>
@@ -150,7 +148,7 @@ export function AttackStyleSelector({
             </TooltipProvider>
           );
         })}
-      </div>
+      </ToggleGroup>
     </div>
   );
 }

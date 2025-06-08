@@ -3,6 +3,7 @@ import {
   Card, CardContent, CardDescription, CardHeader, CardTitle
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Toggle } from '@/components/ui/toggle';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useCalculatorStore } from '@/store/calculator-store';
 import { Item, CalculatorParams, BossForm } from '@/types/calculator';
@@ -320,11 +321,10 @@ export function CombinedEquipmentDisplay({ onEquipmentUpdate, bossForm }: Combin
           <CardDescription>Manage and inspect your gear</CardDescription>
         </div>
         <div className="flex flex-col items-center justify-center">
-          <Button 
-            variant="outline" 
-            size="sm" 
-            className="mb-2" 
-            onClick={() => {
+          <Toggle
+            className="mb-2"
+            pressed={show2hOption}
+            onPressedChange={() => {
               setShow2hOption(prev => !prev);
               const current = { ...loadout };
               if (show2hOption) {
@@ -334,15 +334,17 @@ export function CombinedEquipmentDisplay({ onEquipmentUpdate, bossForm }: Combin
                 delete current['offhand'];
               }
               setLoadout(current);
-              
+
               // Reset weapon stats when switching modes
               setWeaponStats({
                 attackStyles: {},
                 baseAttackSpeed: 2.4
               });
-            }}>
+            }}
+            size="sm"
+          >
             {show2hOption ? 'Use 1H + Shield' : 'Use 2H'}
-          </Button>
+          </Toggle>
           
           {/* Attack style selector component */}
           <AttackStyleSelector

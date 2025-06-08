@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Toggle } from '@/components/ui/toggle';
 import { ChevronDown, ChevronUp, RotateCcw, Sword, Shield } from 'lucide-react';
 import {
   Dialog,
@@ -412,15 +413,17 @@ export function EquipmentLoadout({ onEquipmentUpdate }: EquipmentLoadoutProps) {
           <CardDescription>Manage your equipment loadout</CardDescription>
         </div>
         <div className="flex space-x-2">
-          {/* Add weapon toggle button */}
-          <Button
-            variant="outline"
+
+          {/* Weapon toggle */}
+          <Toggle
+            pressed={show2hOption}
+            onPressedChange={toggleWeaponDisplay}
             size="sm"
-            onClick={toggleWeaponDisplay}
             title={show2hOption ? "Switch to 1H + Shield" : "Switch to 2H weapon"}
           >
             {show2hOption ? <Shield className="h-4 w-4" /> : <Sword className="h-4 w-4" />}
-          </Button>
+          </Toggle>
+
           <Button variant="ghost" size="sm" onClick={() => setIsExpanded(!isExpanded)}>
             {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
           </Button>
