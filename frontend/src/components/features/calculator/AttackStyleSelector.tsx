@@ -129,7 +129,7 @@ export function AttackStyleSelector({
       </div>
       <Tabs
         value={selectedAttackStyle}
-        onValueChange={(v) => v && onSelectAttackStyle(v)}
+        onValueChange={onSelectAttackStyle}
         className="w-full"
       >
         <TabsList
@@ -143,7 +143,11 @@ export function AttackStyleSelector({
               <TooltipProvider key={style}>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <TabsTrigger value={style} className="capitalize text-xs">
+                    <TabsTrigger
+                      value={style}
+                      onClick={() => onSelectAttackStyle(style)}
+                      className="capitalize text-xs"
+                    >
                       {styleInfo.name}
                       {combatStyle !== "melee" && ` (${styleInfo.attackType})`}
                     </TabsTrigger>

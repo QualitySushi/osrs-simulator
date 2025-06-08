@@ -10,6 +10,7 @@ import PassiveEffectsDisplay from './PassiveEffectsDisplay';
 import { DefenceReductionPanel } from './DefenceReductionPanel';
 import { PresetSelector } from './PresetSelector';
 import { CalculatorForms } from './CalculatorForms';
+import { CombatStyleTabs } from './CombatStyleTabs';
 import { DpsResultDisplay } from './DpsResultDisplay';
 import { useDpsCalculator } from '@/hooks/useDpsCalculator';
 import { useToast } from '@/hooks/use-toast';
@@ -45,7 +46,11 @@ export function ImprovedDpsCalculator() {
       {/* Main calculator header card */}
       <Card className="w-full bg-card border border-border shadow-md">
         <CardHeader className="border-b border-border pb-4 flex flex-row justify-between items-center">
-
+          <CombatStyleTabs
+            activeTab={activeTab}
+            onTabChange={handleTabChange}
+            onReset={handleReset}
+          />
         </CardHeader>
         
         <CardContent className="pt-6">
@@ -61,7 +66,6 @@ export function ImprovedDpsCalculator() {
             activeTab={activeTab}
             onTabChange={handleTabChange}
             onCalculate={handleCalculate}
-            onReset={handleReset}
             isCalculating={isCalculating}
           />
 
