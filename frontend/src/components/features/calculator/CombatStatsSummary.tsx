@@ -61,14 +61,14 @@ export function CombatStatsSummary({
           </span>
         </div>
         {Object.keys(getAttackStylesForDisplay()).length > 0 && (
-          <div className="col-span-2">
+          <div>
             <span className="text-muted-foreground">Style Bonus:</span>{' '}
             <span className="font-medium">
               {getAttackStylesForDisplay()[selectedAttackStyle]?.description || 'None'}
             </span>
           </div>
         )}
-        <div className="col-span-2">
+        <div>
           <span className="text-muted-foreground">Target Defense Type:</span>{' '}
           <span className="font-medium capitalize">
             {(params.target_defence_type || 'defence_slash').replace('defence_', '')}
@@ -146,7 +146,7 @@ export function CombatStatsSummary({
       {/* Equipment totals */}
       <div className="mt-2 pt-2 border-t border-border/50">
         <h5 className="text-sm font-medium mb-1">Equipment Totals:</h5>
-        <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
+        <div className="grid grid-cols-3 gap-x-4 gap-y-1 text-xs">
           {combatStyle === 'melee' && (
             <>
               <div>
@@ -161,6 +161,7 @@ export function CombatStatsSummary({
                   {params.melee_strength_bonus || 0}
                 </span>
               </div>
+              <div />
             </>
           )}
           {combatStyle === 'ranged' && (
@@ -177,6 +178,7 @@ export function CombatStatsSummary({
                   {params.ranged_strength_bonus || 0}
                 </span>
               </div>
+              <div />
             </>
           )}
           {combatStyle === 'magic' && (
@@ -193,6 +195,7 @@ export function CombatStatsSummary({
                   {Math.round((params.magic_damage_bonus || 0) * 100)}%
                 </span>
               </div>
+              <div />
             </>
           )}
           <div>
@@ -207,6 +210,7 @@ export function CombatStatsSummary({
               +{params.attack_style_bonus_strength || 0}
             </span>
           </div>
+          <div />
         </div>
 
         <div className="grid grid-cols-3 gap-x-4 gap-y-1 text-xs mt-2">
