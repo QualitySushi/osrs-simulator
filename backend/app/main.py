@@ -1,7 +1,9 @@
 from fastapi import FastAPI, HTTPException, Query, Depends
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from typing import Dict, Any, List, Optional, Union
 import json
+import os
 
 from .repositories import item_repository, boss_repository
 from .models import (
@@ -30,6 +32,12 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Serve static images for the frontend via the API
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+IMAGES_DIR = os.path.join(BASE_DIR, "frontend", "public", "images")
+if os.path.isdir(IMAGES_DIR):
+    app.mount("/images", StaticFiles(directory=IMAGES_DIR), name="images")
 
 @app.get("/", tags=["General"])
 def read_root():

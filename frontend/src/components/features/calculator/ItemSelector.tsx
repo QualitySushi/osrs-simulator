@@ -126,6 +126,13 @@ export function ItemSelector({ slot, onSelectItem }: ItemSelectorProps) {
                 aria-expanded={open}
                 className="w-full justify-between"
               >
+                {selectedItem && (
+                  <img
+                    src={selectedItem.icons?.[0]}
+                    alt="icon"
+                    className="w-4 h-4 mr-2 inline-block"
+                  />
+                )}
                 {selectedItem ? selectedItem.name : `Select an item...`}
                 <Search className="ml-2 h-4 w-4 shrink-0 opacity-50" />
               </Button>
@@ -148,6 +155,11 @@ export function ItemSelector({ slot, onSelectItem }: ItemSelectorProps) {
                           value={item.name}
                           onSelect={() => handleSelectItem(item)}
                         >
+                          <img
+                            src={item.icons?.[0]}
+                            alt="icon"
+                            className="w-4 h-4 mr-2 inline-block"
+                          />
                           {item.name}
                           {item.has_special_attack && (
                             <Badge variant="secondary" className="ml-2">

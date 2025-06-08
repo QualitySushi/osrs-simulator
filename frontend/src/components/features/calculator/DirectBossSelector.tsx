@@ -37,6 +37,7 @@ export function DirectBossSelector({ onSelectBoss, onSelectForm }: DirectBossSel
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedBoss, setSelectedBoss] = useState<Boss | null>(null);
   const [selectedForm, setSelectedForm] = useState<BossForm | null>(null);
+  const [bossIcons, setBossIcons] = useState<Record<number, string>>({});
   const { params, setParams, lockBoss, unlockBoss, bossLocked } = useCalculatorStore();
   const { toast } = useToast();
   const commandRef = useRef<HTMLDivElement>(null);
@@ -55,6 +56,27 @@ export function DirectBossSelector({ onSelectBoss, onSelectForm }: DirectBossSel
     enabled: !!selectedBoss,
     staleTime: Infinity,
   });
+
+  // Fetch icons for all bosses
+  useEffect(() => {
+    if (!bosses) return;
+    Promise.all(
+      bosses.map(async (b) => {
+        try {
+          const data = await bossesApi.getBossById(b.id);
+          return [b.id, data.forms?.[0]?.icons?.[0] || ''] as [number, string];
+        } catch {
+          return [b.id, ''] as [number, string];
+        }
+      })
+    ).then((items) => {
+      const map: Record<number, string> = {};
+      items.forEach(([id, icon]) => {
+        if (icon) map[id] = icon;
+      });
+      setBossIcons(map);
+    });
+  }, [bosses]);
 
   // Handle click outside to close search results
   useEffect(() => {
@@ -226,7 +248,14 @@ export function DirectBossSelector({ onSelectBoss, onSelectForm }: DirectBossSel
         <div className="space-y-2">
           <label className="text-sm font-medium">Select Boss</label>
           <div className="relative" ref={commandRef}>
-            <Command className="rounded-lg border shadow-md">
+            {selectedBoss && (
+              <img
+                src={bossIcons[selectedBoss.id]}
+                alt="icon"
+                className="w-5 h-5 absolute top-2 left-2"
+              />
+            )}
+            <Command className="rounded-lg border shadow-md pl-7">
               <CommandInput
                 placeholder="Search bosses..."
                 className="h-9"
@@ -254,6 +283,11 @@ export function DirectBossSelector({ onSelectBoss, onSelectForm }: DirectBossSel
                           onSelect={() => handleSelectBoss(boss)}
                           className="cursor-pointer"
                         >
+                          <img
+                            src={bossIcons[boss.id]}
+                            alt="icon"
+                            className="w-4 h-4 mr-2 inline-block"
+                          />
                           <span>{boss.name}</span>
                           {boss.raid_group && (
                             <Badge variant="outline" className="ml-2">
@@ -307,6 +341,9 @@ export function DirectBossSelector({ onSelectBoss, onSelectForm }: DirectBossSel
         {/* Display the selected boss stats */}
         {selectedForm && (
           <div className="pt-2 space-y-2 bg-slate-100 dark:bg-slate-800 p-3 rounded-md">
+            {selectedForm.icons?.[0] && (
+              <img src={selectedForm.icons[0]} alt="icon" className="w-10 h-10" />
+            )}
             <h4 className="text-sm font-semibold">Target Stats</h4>
             <div className="grid grid-cols-2 gap-2 text-sm">
               <div>

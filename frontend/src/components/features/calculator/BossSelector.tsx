@@ -41,6 +41,7 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
   const [open, setOpen] = useState(false);
   const [selectedBoss, setSelectedBoss] = useState<Boss | null>(null);
   const [selectedForm, setSelectedForm] = useState<BossForm | null>(null);
+  const [bossIcons, setBossIcons] = useState<Record<number, string>>({});
   const { params, setParams, lockBoss, unlockBoss, bossLocked } = useCalculatorStore();
   const { toast } = useToast();
   
@@ -58,6 +59,27 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
     enabled: !!selectedBoss,
     staleTime: Infinity,
   });
+
+  // Fetch icons for all bosses when list loads
+  useEffect(() => {
+    if (!bosses) return;
+    Promise.all(
+      bosses.map(async (b) => {
+        try {
+          const data = await bossesApi.getBossById(b.id);
+          return [b.id, data.forms?.[0]?.icons?.[0] || ''] as [number, string];
+        } catch {
+          return [b.id, ''] as [number, string];
+        }
+      })
+    ).then((items) => {
+      const map: Record<number, string> = {};
+      items.forEach(([id, icon]) => {
+        if (icon) map[id] = icon;
+      });
+      setBossIcons(map);
+    });
+  }, [bosses]);
 
   // Effect to clean up when combat style changes or component unmounts
   useEffect(() => {
@@ -319,6 +341,13 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
                 aria-expanded={open}
                 className="w-full justify-between"
               >
+                {selectedBoss && (
+                  <img
+                    src={bossIcons[selectedBoss.id]}
+                    alt="icon"
+                    className="w-4 h-4 mr-2 inline-block"
+                  />
+                )}
                 {selectedBoss ? selectedBoss.name : "Select a boss..."}
                 <Search className="ml-2 h-4 w-4 shrink-0 opacity-50" />
               </Button>
@@ -341,6 +370,11 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
                           value={boss.name}
                           onSelect={() => handleSelectBoss(boss)}
                         >
+                          <img
+                            src={bossIcons[boss.id]}
+                            alt="icon"
+                            className="w-4 h-4 mr-2 inline-block"
+                          />
                           {boss.name}
                           {boss.raid_group && (
                             <Badge variant="outline" className="ml-2">
@@ -382,6 +416,11 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
                 <SelectContent>
                   {bossDetails.forms.map((form) => (
                     <SelectItem key={form.id} value={form.id.toString()}>
+                      <img
+                        src={form.icons?.[0]}
+                        alt="icon"
+                        className="w-4 h-4 mr-2 inline-block"
+                      />
                       {form.form_name} (Combat Lvl: {form.combat_level || 'Unknown'})
                     </SelectItem>
                   ))}
@@ -394,6 +433,9 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
         {/* Display the selected boss stats if a form is selected */}
         {selectedForm && (
           <div className="pt-2 space-y-2">
+            {selectedForm.icons?.[0] && (
+              <img src={selectedForm.icons[0]} alt="icon" className="w-10 h-10" />
+            )}
             <h4 className="text-sm font-semibold">Target Stats</h4>
             <div className="grid grid-cols-2 gap-2 text-sm">
               <div>
