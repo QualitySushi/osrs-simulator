@@ -388,23 +388,26 @@ export function EquipmentDisplay({ loadout, totals }: EquipmentDisplayProps) {
               </div>
             )}
             
-            {/* Attack Style Selector */}
+            {/* Attack Style Selector - NOW USING TABS */}
             <div className="space-y-2">
               <label className="text-xs text-muted-foreground">Combat Style</label>
-              <div className="grid grid-cols-2 gap-2">
-                {getPossibleAttackStyles().map(style => (
-                  <Button
-                    key={style}
-                    variant={selectedAttackStyle === style ? "default" : "outline"}
-                    className="justify-start"
-                    onClick={() => setSelectedAttackStyle(style)}
-                  >
-                    <div className="text-left">
-                      <div className="font-medium capitalize">{style}</div>
-                      <div className="text-xs text-muted-foreground">{getStyleDescription(style)}</div>
-                    </div>
-                  </Button>
-                ))}
+              <Tabs 
+                value={selectedAttackStyle} 
+                onValueChange={setSelectedAttackStyle}
+                className="w-full"
+              >
+                <TabsList className={`grid ${getPossibleAttackStyles().length === 2 ? 'grid-cols-2' : getPossibleAttackStyles().length === 3 ? 'grid-cols-3' : 'grid-cols-4'}`}>
+                  {getPossibleAttackStyles().map(style => (
+                    <TabsTrigger key={style} value={style} className="capitalize text-xs">
+                      {style}
+                    </TabsTrigger>
+                  ))}
+                </TabsList>
+              </Tabs>
+              
+              {/* Style description below tabs */}
+              <div className="text-xs text-muted-foreground">
+                {getStyleDescription(selectedAttackStyle)}
               </div>
             </div>
             

@@ -153,10 +153,10 @@
   }
 }
 
-/* Button styling with subtle 3D and texture - EXCLUDES toggle components */
+/* Button styling with subtle 3D and texture - EXCLUDES combat style and toggle components */
 .btn-primary,
-button[class*="bg-primary"]:not([data-slot="toggle"]):not([data-slot="toggle-box"]):not([data-slot="toggle-group-item"]):not([role="tab"]),
-button:not([data-slot="toggle"]):not([data-slot="toggle-box"]):not([data-slot="toggle-group-item"]):not([role="tab"]) {
+button[class*="bg-primary"]:not([data-slot="toggle"]):not([data-slot="toggle-box"]):not([data-slot="toggle-group-item"]):not([role="tab"]):not([data-state]):not([data-value]):not(.tabs-trigger):not(.toggle-group-item),
+button:not([data-slot="toggle"]):not([data-slot="toggle-box"]):not([data-slot="toggle-group-item"]):not([role="tab"]):not([data-state]):not([data-value]):not(.tabs-trigger):not(.toggle-group-item):not(.combat-style-btn) {
   padding-left: 3px;
   padding-right: 3px;
   margin-left: 3px;
@@ -175,16 +175,16 @@ button:not([data-slot="toggle"]):not([data-slot="toggle-box"]):not([data-slot="t
 }
 
 .btn-primary:hover,
-button[class*="bg-primary"]:not([data-slot="toggle"]):not([data-slot="toggle-box"]):not([data-slot="toggle-group-item"]):not([role="tab"]):hover,
-button:not([data-slot="toggle"]):not([data-slot="toggle-box"]):not([data-slot="toggle-group-item"]):not([role="tab"]):hover {
+button[class*="bg-primary"]:not([data-slot="toggle"]):not([data-slot="toggle-box"]):not([data-slot="toggle-group-item"]):not([role="tab"]):not([data-state]):not([data-value]):not(.tabs-trigger):not(.toggle-group-item):hover,
+button:not([data-slot="toggle"]):not([data-slot="toggle-box"]):not([data-slot="toggle-group-item"]):not([role="tab"]):not([data-state]):not([data-value]):not(.tabs-trigger):not(.toggle-group-item):not(.combat-style-btn):hover {
   filter: brightness(1.05);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 4px 6px rgba(0, 0, 0, 0.25);
   transform: translateY(-1px);
 }
 
 .btn-primary:active,
-button[class*="bg-primary"]:not([data-slot="toggle"]):not([data-slot="toggle-box"]):not([data-slot="toggle-group-item"]):not([role="tab"]):active,
-button:not([data-slot="toggle"]):not([data-slot="toggle-box"]):not([data-slot="toggle-group-item"]):not([role="tab"]):active {
+button[class*="bg-primary"]:not([data-slot="toggle"]):not([data-slot="toggle-box"]):not([data-slot="toggle-group-item"]):not([role="tab"]):not([data-state]):not([data-value]):not(.tabs-trigger):not(.toggle-group-item):active,
+button:not([data-slot="toggle"]):not([data-slot="toggle-box"]):not([data-slot="toggle-group-item"]):not([role="tab"]):not([data-state]):not([data-value]):not(.tabs-trigger):not(.toggle-group-item):not(.combat-style-btn):active {
   transform: translateY(1px);
   box-shadow: inset 0 1px 0 rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.25);
 }
