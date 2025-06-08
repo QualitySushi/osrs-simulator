@@ -1,9 +1,9 @@
-OSRS DPS Calculator - Implementation Summary
+OSRS DPS Simulator - Implementation Summary
 
-This document provides an overview of the implementation of both the frontend and backend for the OSRS DPS Calculator project.
+This document provides an overview of the implementation of both the frontend and backend for the OSRS DPS Simulator project.
 Project Structure
 
-osrs-calculator/
+osrs-simulator/
 ├── backend/               # FastAPI backend
 │   ├── app/              # Application code
 │   │   ├── calculators/  # DPS calculation modules
@@ -116,7 +116,7 @@ The core DPS calculation follows the Old School RuneScape combat formulas:
 
     DPS Calculation:
 
-    average_hit = hit_chance * (max_hit / 2)
+    average_hit = hit_chance * ((max_hit + 1) / 2)
     dps = average_hit / attack_speed
 
 Special Item Effects
@@ -170,4 +170,4 @@ Future Enhancements
 
 Conclusion
 
-The OSRS DPS Calculator provides a comprehensive tool for Old School RuneScape players to optimize their combat setups. The modular design allows for easy maintenance and expansion, while the accurate calculations help players make informed decisions about their gear and stats.
+The OSRS DPS Simulator provides a comprehensive tool for Old School RuneScape players to optimize their combat setups. The modular design allows for easy maintenance and expansion, while the accurate calculations help players make informed decisions about their gear and stats.

@@ -17,7 +17,7 @@ export function DefenceReductionPanel() {
     { key: 'dwh_hits', label: 'Dragon warhammer hits' },
     { key: 'arclight_hits', label: 'Arclight hits' },
     { key: 'emberlight_hits', label: 'Emberlight hits' },
-    { key: 'tonalztics_hits', label: "Tonalztics of ralos' hits" },
+    { key: 'tonalztics_hits', label: 'Tenacity of Ralos hits' },
     { key: 'bandos_godsword_damage', label: 'Bandos godsword damage' },
     { key: 'seercull_damage', label: 'Seercull damage' },
   ];
