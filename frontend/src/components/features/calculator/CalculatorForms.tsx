@@ -32,6 +32,7 @@ export function CalculatorForms({
       <div className="flex items-center space-x-2 mb-4">
         <Switch id="manual-toggle" checked={showManual} onCheckedChange={setShowManual} />
         <Label htmlFor="manual-toggle">Show Manual Inputs</Label>
+        
       </div>
       {showManual && (
         <Tabs
