@@ -12,16 +12,26 @@ class AzureDatabaseService:
     def __init__(self):
         """Initialize the Azure database service."""
         self.connection_string = os.environ.get("AZURE_STORAGE_CONNECTION_STRING")
-        self.container_name = "databases"
+        self.container_name = os.environ.get("AZURE_STORAGE_CONTAINER_NAME", "databases")
         
         if not self.connection_string:
             print("Warning: AZURE_STORAGE_CONNECTION_STRING not found")
             
         # Database file mappings
         self.db_files = {
-            "items": "osrs_combat_items.db",
-            "bosses": "osrs_bosses.db"
+            "items_all": "osrs_all_items.db",
+            "items_combat": "osrs_combat_items.db",
+            "items_tradeable": "osrs_tradeable_items.db",
+            "bosses": "osrs_bosses.db",
         }
+
+    def _select_items_db(self, combat_only: bool, tradeable_only: bool) -> str:
+        """Return db key based on filters."""
+        if combat_only:
+            return "items_combat"
+        if tradeable_only:
+            return "items_tradeable"
+        return "items_all"
 
     def _get_db_connection(self, db_type: str):
         """Download database from blob storage and return connection with temp file path."""
@@ -66,7 +76,8 @@ class AzureDatabaseService:
         temp_path = None
         
         try:
-            conn, temp_path = self._get_db_connection("items")
+            db_key = self._select_items_db(combat_only, tradeable_only)
+            conn, temp_path = self._get_db_connection(db_key)
             cursor = conn.cursor()
 
             query = """
@@ -130,7 +141,7 @@ class AzureDatabaseService:
         temp_path = None
         
         try:
-            conn, temp_path = self._get_db_connection("items")
+            conn, temp_path = self._get_db_connection("items_all")
             cursor = conn.cursor()
             cursor.execute("""
             SELECT
@@ -183,7 +194,7 @@ class AzureDatabaseService:
         temp_path = None
         
         try:
-            conn, temp_path = self._get_db_connection("items")
+            conn, temp_path = self._get_db_connection("items_all")
             cursor = conn.cursor()
             cursor.execute("""
             SELECT
