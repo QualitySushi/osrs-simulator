@@ -32,9 +32,14 @@ export function CalculatorForms({
       <div className="flex items-center space-x-2 mb-4">
         <Switch id="manual-toggle" checked={showManual} onCheckedChange={setShowManual} />
         <Label htmlFor="manual-toggle">Show Manual Inputs</Label>
+        
       </div>
       {showManual && (
-        <Tabs value={activeTab} onValueChange={(v) => onTabChange(v as CombatStyle)} className="w-full">
+        <Tabs
+          value={activeTab}
+          onValueChange={(v) => onTabChange(v as CombatStyle)}
+          className="w-full"
+        >
           <TabsList className="grid grid-cols-4 mb-6">
             <TabsTrigger value="melee" className="flex items-center justify-center">
               <Sword className="h-4 w-4 mr-2" />
@@ -62,13 +67,17 @@ export function CalculatorForms({
           <TabsContent value="magic">
             <MagicForm />
           </TabsContent>
-          <div className="mt-6 flex justify-center">
-            <Button onClick={onCalculate} disabled={isCalculating} className="w-full max-w-md text-base py-2">
-              {isCalculating ? 'Calculating...' : 'Calculate DPS'}
-            </Button>
-          </div>
         </Tabs>
       )}
+      <div className="mt-6 flex justify-center">
+        <Button
+          onClick={onCalculate}
+          disabled={isCalculating}
+          className="w-full max-w-md text-base py-2"
+        >
+          {isCalculating ? 'Calculating...' : 'Calculate DPS'}
+        </Button>
+      </div>
     </div>
   );
 }
