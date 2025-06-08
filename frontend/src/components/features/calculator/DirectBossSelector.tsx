@@ -290,7 +290,9 @@ export function DirectBossSelector({ onSelectBoss, onSelectForm }: DirectBossSel
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <label className="text-sm font-medium">Select Form/Phase</label>
+
               <Button variant="outline" size="sm" onClick={handleResetBoss}>
+
                 <RotateCcw className="h-4 w-4 mr-2" />
                 Reset
               </Button>
