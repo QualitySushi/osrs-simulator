@@ -131,10 +131,16 @@ expect a repository secret named `BACKEND_URL` which will be exposed as
 `NEXT_PUBLIC_API_URL` during the frontend build.
 Database Setup
 
-The application uses two SQLite databases:
+The application uses four SQLite databases stored in Azure Blob Storage:
 
-    osrs_combat_items.db: Equipment data
+    osrs_all_items.db: All items
+    osrs_combat_items.db: Combat items
+    osrs_tradeable_items.db: Tradeable items
     osrs_bosses.db: Boss data
+
+Set the `AZURE_STORAGE_CONNECTION_STRING` environment variable so the backend
+can download these files. By default the container name is `databases`, but you
+can override it with `AZURE_STORAGE_CONTAINER_NAME`.
 
 These databases can be generated using the provided scrapers:
 
