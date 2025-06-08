@@ -31,7 +31,7 @@ Frontend Setup
 bash
 
 # Clone the repository
-git clone https://github.com/yourusername/osrs-simulator.git
+git clone https://github.com/QualitySushi/osrs-simulator.git
 cd osrs-simulator
 
 # Install dependencies
@@ -248,7 +248,5 @@ This project is licensed under the MIT License - see the LICENSE file for detail
     Equipment Stats
 
 📧 Contact
-
-Project Link: https://github.com/yourusername/osrs-dps-calculator
 
 OSRS DPS Calculator is not affiliated with Jagex Ltd. Old School RuneScape and Jagex are trademarks of Jagex Ltd.
