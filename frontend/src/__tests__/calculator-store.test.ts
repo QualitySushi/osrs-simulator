@@ -27,4 +27,15 @@ describe('calculator store', () => {
     });
     expect(useCalculatorStore.getState().params.combat_style).toBe('magic');
   });
+
+  it('stores equipment loadout', () => {
+    act(() => {
+      useCalculatorStore.getState().setLoadout({ head: { id: 1, name: 'Bronze helm' } } as any);
+    });
+    expect(useCalculatorStore.getState().loadout.head?.name).toBe('Bronze helm');
+    act(() => {
+      useCalculatorStore.getState().setLoadout({});
+    });
+    expect(Object.keys(useCalculatorStore.getState().loadout).length).toBe(0);
+  });
 });

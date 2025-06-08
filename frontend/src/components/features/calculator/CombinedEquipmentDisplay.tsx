@@ -48,8 +48,7 @@ interface CombinedEquipmentDisplayProps {
 }
 
 export function CombinedEquipmentDisplay({ onEquipmentUpdate, bossForm }: CombinedEquipmentDisplayProps) {
-  const { params, setParams, gearLocked } = useCalculatorStore();
-  const [loadout, setLoadout] = useState<Record<string, Item | null>>({});
+  const { params, setParams, gearLocked, loadout, setLoadout } = useCalculatorStore();
   const [show2hOption, setShow2hOption] = useState(true);
   const [availableAttackStyles, setAvailableAttackStyles] = useState<string[]>([]);
   const [selectedAttackStyle, setSelectedAttackStyle] = useState<string>('');
@@ -295,7 +294,7 @@ export function CombinedEquipmentDisplay({ onEquipmentUpdate, bossForm }: Combin
   // Handle equipment loadout changes
   const handleUpdateLoadout = useCallback((newLoadout: Record<string, Item | null>) => {
     setLoadout(newLoadout);
-  }, []);
+  }, [setLoadout]);
 
   // Handle attack style selection
   const handleSelectAttackStyle = useCallback((style: string) => {
@@ -326,16 +325,14 @@ export function CombinedEquipmentDisplay({ onEquipmentUpdate, bossForm }: Combin
             className="mb-2" 
             onClick={() => {
               setShow2hOption(prev => !prev);
-              setLoadout(prev => {
-                const copy = { ...prev };
-                if (show2hOption) {
-                  delete copy['2h'];
-                } else {
-                  delete copy['mainhand'];
-                  delete copy['offhand'];
-                }
-                return copy;
-              });
+              const current = { ...loadout };
+              if (show2hOption) {
+                delete current['2h'];
+              } else {
+                delete current['mainhand'];
+                delete current['offhand'];
+              }
+              setLoadout(current);
               
               // Reset weapon stats when switching modes
               setWeaponStats({

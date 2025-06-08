@@ -35,6 +35,21 @@ export default function ImportPage() {
       neck: { id: 1704, name: 'Amulet of glory' },
       ammo: null,
     },
+    equipped_armor: {
+      head: { id: 1163, name: 'Rune full helm' },
+      body: { id: 1127, name: 'Rune platebody' },
+      legs: { id: 1079, name: 'Rune platelegs' },
+      hands: { id: 7462, name: 'Barrows gloves' },
+      feet: { id: 3105, name: 'Climbing boots' },
+      shield: { id: 1201, name: 'Rune kiteshield' },
+      cape: { id: 6568, name: 'Obsidian cape' },
+      neck: { id: 1704, name: 'Amulet of glory' },
+      ring: { id: 2550, name: 'Ring of recoil' },
+    },
+    equipped_weapon: {
+      mainhand: { id: 1333, name: 'Rune scimitar' },
+      offhand: { id: 1201, name: 'Rune kiteshield' },
+    },
   };
 
   const defaultSeed = btoa(JSON.stringify(placeholderParams));
@@ -45,7 +60,12 @@ export default function ImportPage() {
     try {
       const jsonStr = atob(seed.trim());
       const data = JSON.parse(jsonStr);
-      useCalculatorStore.getState().setParams(data);
+      const { equipment, equipped_armor, equipped_weapon, ...params } = data;
+      const loadout = equipment || { ...equipped_armor, ...equipped_weapon };
+      useCalculatorStore.getState().setParams(params);
+      if (loadout) {
+        useCalculatorStore.getState().setLoadout(loadout);
+      }
       alert('Profile imported');
     } catch (e) {
       alert('Invalid seed');
