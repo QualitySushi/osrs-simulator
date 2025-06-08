@@ -1,4 +1,8 @@
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import {
+  Tabs,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/tabs";
 import {
   Tooltip,
   TooltipContent,
@@ -123,38 +127,39 @@ export function AttackStyleSelector({
             ? "Ranged Style:"
             : "Magic Style:"}
       </div>
-      <ToggleGroup
-        type="single"
+      <Tabs
         value={selectedAttackStyle}
         onValueChange={(v) => v && onSelectAttackStyle(v)}
-        className="bg-muted text-muted-foreground inline-flex flex-wrap justify-center rounded-lg p-[3px]"
+        className="w-full"
       >
-        {availableAttackStyles.map((style) => {
-          const styleInfo = attackStyles[style];
-          if (!styleInfo) return null;
+        <TabsList
+          className={`grid ${availableAttackStyles.length === 2 ? "grid-cols-2" : availableAttackStyles.length === 3 ? "grid-cols-3" : "grid-cols-4"}`}
+        >
+          {availableAttackStyles.map((style) => {
+            const styleInfo = attackStyles[style];
+            if (!styleInfo) return null;
 
-          return (
-            <TooltipProvider key={style}>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <ToggleGroupItem value={style} size="sm" variant="outline">
-                    {styleInfo.name}
-                    {combatStyle !== "melee" && ` (${styleInfo.attackType})`}
-                  </ToggleGroupItem>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>{styleInfo.description}</p>
-                  {combatStyle === "melee" && (
-                    <p className="text-xs">
-                      Attack type: {styleInfo.attackType}
-                    </p>
-                  )}
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          );
-        })}
-      </ToggleGroup>
+            return (
+              <TooltipProvider key={style}>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <TabsTrigger value={style} className="capitalize text-xs">
+                      {styleInfo.name}
+                      {combatStyle !== "melee" && ` (${styleInfo.attackType})`}
+                    </TabsTrigger>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>{styleInfo.description}</p>
+                    {combatStyle === "melee" && (
+                      <p className="text-xs">Attack type: {styleInfo.attackType}</p>
+                    )}
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            );
+          })}
+        </TabsList>
+      </Tabs>
     </div>
   );
 }
