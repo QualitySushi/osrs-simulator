@@ -146,6 +146,12 @@ python extract.py
 The GitHub workflow `generate-databases.yml` runs these scrapers weekly and
 uploads the resulting `.db` files as artifacts.
 
+The backend automatically searches for the databases in a few locations. By
+default it looks in `backend/db`, but it will also check `backend/app/db`, the
+current working directory's `db` folder, or a directory specified by the
+`OSRS_DB_DIR` environment variable. This means you can launch the server from
+any directory as long as the databases are located in one of these places.
+
 🔄 API Reference
 Calculate DPS
 
@@ -204,6 +210,41 @@ Response:
   "effect_description": "Twisted Bow vs 200 magic: +29.9% accuracy, +91.9% damage"
 }
 ```
+
+Import Seed
+------------
+
+POST `/import-seed`
+
+Request Body:
+
+```json
+{
+  "seed": "base64encodedstring"
+}
+```
+
+Calculate DPS from Seed
+-----------------------
+
+POST `/calculate/seed`
+
+Request Body:
+
+```json
+{
+  "seed": "base64encodedstring"
+}
+```
+
+Best In Slot
+------------
+
+POST `/bis`
+
+Request Body: `DpsParameters`
+
+Response: A mapping of gear slot to item details.
 
 See the API documentation at /docs for more endpoints.
 📊 Data Sources
