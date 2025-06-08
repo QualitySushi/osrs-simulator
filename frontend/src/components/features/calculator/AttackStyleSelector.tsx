@@ -129,7 +129,7 @@ export function AttackStyleSelector({
       </div>
       <Tabs
         value={selectedAttackStyle}
-        onValueChange={(v) => v && onSelectAttackStyle(v)}
+        onValueChange={onSelectAttackStyle}
         className="w-full"
       >
         <TabsList
