@@ -126,7 +126,9 @@ Create a .env.local file in the root directory:
 
 NEXT_PUBLIC_API_URL=http://localhost:8000
 
-For production, set this to your deployed API URL.
+For production, set this to your deployed API URL. The deployment workflows
+expect a repository secret named `BACKEND_URL` which will be exposed as
+`NEXT_PUBLIC_API_URL` during the frontend build.
 Database Setup
 
 The application uses two SQLite databases:
@@ -140,6 +142,9 @@ bash
 
 python osrs_item_scraper.py
 python extract.py
+
+The GitHub workflow `generate-databases.yml` runs these scrapers weekly and
+uploads the resulting `.db` files as artifacts.
 
 🔄 API Reference
 Calculate DPS

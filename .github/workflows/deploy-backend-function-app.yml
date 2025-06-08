@@ -4,6 +4,9 @@ on:
   push:
     branches: [ main ]
     paths: [ 'backend/**', 'api/**' ]  # Trigger when backend changes
+  pull_request:
+    branches: [ main ]
+    paths: [ 'backend/**', 'api/**' ]
   workflow_dispatch:  # Allow manual deployment
 
 env:
@@ -23,6 +26,8 @@ jobs:
       uses: actions/setup-python@v4
       with:
         python-version: ${{ env.PYTHON_VERSION }}
+        cache: 'pip'
+        cache-dependency-path: '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/requirements.txt'
 
     - name: 'Create and start virtual environment'
       run: |
@@ -36,20 +41,27 @@ jobs:
         source venv/bin/activate
         pip install -r requirements.txt
 
-    # Optional: Run tests
     - name: 'Run tests'
       run: |
         cd ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
         source venv/bin/activate
-        # python -m pytest tests/ --if-present
-        echo "Tests would run here"
+        python app/testing/UnitTest.py
 
     - name: 'Login to Azure'
       uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
+    - name: 'Deploy to Azure Functions (PR)'
+      if: github.event_name == 'pull_request'
+      uses: Azure/functions-action@v1
+      with:
+        app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
+        package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
+        slot-name: 'staging'
+
     - name: 'Deploy to Azure Functions'
+      if: github.event_name != 'pull_request'
       uses: Azure/functions-action@v1
       with:
         app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
