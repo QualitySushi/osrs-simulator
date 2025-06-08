@@ -120,6 +120,10 @@ export function PresetSelector({ onPresetLoad }: PresetSelectorProps) {
           </div>
           <Dialog open={saveDialogOpen} onOpenChange={setSaveDialogOpen}>
             <DialogTrigger asChild>
+              <Button size="sm">
+                <Save className="h-4 w-4 mr-2" />
+                Add
+              </Button>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
@@ -158,15 +162,11 @@ export function PresetSelector({ onPresetLoad }: PresetSelectorProps) {
           </div>
         ) : (
           <Tabs defaultValue="all">
-            <TabsList className="grid grid-cols-5 mb-4 align-middle w-auto">
+            <TabsList className="grid grid-cols-4 mb-4 align-middle w-auto">
               <TabsTrigger value="all">All</TabsTrigger>
               <TabsTrigger value="melee">Melee</TabsTrigger>
               <TabsTrigger value="ranged">Ranged</TabsTrigger>
               <TabsTrigger value="magic">Magic</TabsTrigger>
-                <Button size="sm">
-                <Save className="h-4 w-4 mr-2" />
-                Save
-              </Button>
             </TabsList>
             {Object.entries(groupedPresets).map(([key, group]) => (
               <TabsContent key={key} value={key} className="space-y-2">
