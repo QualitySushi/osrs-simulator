@@ -56,7 +56,7 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -r requirements.txt
 
 # Run development server
-uvicorn main:app --reload
+uvicorn app.main:app --reload
 
 The API will be available at http://localhost:8000
 📚 Documentation
