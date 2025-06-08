@@ -1,6 +1,8 @@
 'use client';
 import { useState } from 'react';
 import { useCalculatorStore } from '@/store/calculator-store';
+import { itemsApi } from '@/services/api';
+import { Item } from '@/types/calculator';
 
 export default function ImportPage() {
   const placeholderParams = {
@@ -23,32 +25,32 @@ export default function ImportPage() {
     target_defence_bonus: 20,
     attack_speed: 2.4,
     equipment: {
-      head: { id: 1163, name: 'Rune full helm' },
-      body: { id: 1127, name: 'Rune platebody' },
-      legs: { id: 1079, name: 'Rune platelegs' },
-      mainhand: { id: 1333, name: 'Rune scimitar' },
-      offhand: { id: 1201, name: 'Rune kiteshield' },
-      hands: { id: 7462, name: 'Barrows gloves' },
-      feet: { id: 3105, name: 'Climbing boots' },
-      ring: { id: 2550, name: 'Ring of recoil' },
-      cape: { id: 6568, name: 'Obsidian cape' },
-      neck: { id: 1704, name: 'Amulet of glory' },
+      head: 1163,
+      body: 1127,
+      legs: 1079,
+      mainhand: 1333,
+      offhand: 1201,
+      hands: 7462,
+      feet: 3105,
+      ring: 2550,
+      cape: 6568,
+      neck: 1704,
       ammo: null,
     },
     equipped_armor: {
-      head: { id: 1163, name: 'Rune full helm' },
-      body: { id: 1127, name: 'Rune platebody' },
-      legs: { id: 1079, name: 'Rune platelegs' },
-      hands: { id: 7462, name: 'Barrows gloves' },
-      feet: { id: 3105, name: 'Climbing boots' },
-      shield: { id: 1201, name: 'Rune kiteshield' },
-      cape: { id: 6568, name: 'Obsidian cape' },
-      neck: { id: 1704, name: 'Amulet of glory' },
-      ring: { id: 2550, name: 'Ring of recoil' },
+      head: 1163,
+      body: 1127,
+      legs: 1079,
+      hands: 7462,
+      feet: 3105,
+      shield: 1201,
+      cape: 6568,
+      neck: 1704,
+      ring: 2550,
     },
     equipped_weapon: {
-      mainhand: { id: 1333, name: 'Rune scimitar' },
-      offhand: { id: 1201, name: 'Rune kiteshield' },
+      mainhand: 1333,
+      offhand: 1201,
     },
   };
 
@@ -56,16 +58,34 @@ export default function ImportPage() {
 
   const [seed, setSeed] = useState(defaultSeed);
 
-  const handleImport = () => {
+  const handleImport = async () => {
     try {
       const jsonStr = atob(seed.trim());
       const data = JSON.parse(jsonStr);
       const { equipment, equipped_armor, equipped_weapon, ...params } = data;
-      const loadout = equipment || { ...equipped_armor, ...equipped_weapon };
+
+      const rawLoadout: Record<string, number | null> =
+        equipment || { ...equipped_armor, ...equipped_weapon } || {};
+      const processedLoadout: Record<string, Item | null> = {};
+
+      await Promise.all(
+        Object.entries(rawLoadout).map(async ([slot, itemId]) => {
+          if (!itemId) {
+            processedLoadout[slot] = null;
+            return;
+          }
+          try {
+            const fullItem = await itemsApi.getItemById(itemId as number);
+            processedLoadout[slot] = fullItem;
+          } catch {
+            processedLoadout[slot] = null;
+          }
+        })
+      );
+
       useCalculatorStore.getState().setParams(params);
-      if (loadout) {
-        useCalculatorStore.getState().setLoadout(loadout);
-      }
+      useCalculatorStore.getState().setLoadout(processedLoadout);
+
       alert('Profile imported');
     } catch (e) {
       alert('Invalid seed');

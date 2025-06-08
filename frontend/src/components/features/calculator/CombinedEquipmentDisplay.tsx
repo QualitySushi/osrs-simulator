@@ -49,7 +49,8 @@ interface CombinedEquipmentDisplayProps {
 
 export function CombinedEquipmentDisplay({ onEquipmentUpdate, bossForm }: CombinedEquipmentDisplayProps) {
   const { params, setParams, gearLocked, loadout, setLoadout } = useCalculatorStore();
-  const [show2hOption, setShow2hOption] = useState(true);
+  // Start with 1H + Shield by default
+  const [show2hOption, setShow2hOption] = useState(false);
   const [availableAttackStyles, setAvailableAttackStyles] = useState<string[]>([]);
   const [selectedAttackStyle, setSelectedAttackStyle] = useState<string>('');
   const [weaponStats, setWeaponStats] = useState<{

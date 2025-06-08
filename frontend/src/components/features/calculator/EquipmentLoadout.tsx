@@ -66,7 +66,8 @@ export function EquipmentLoadout({ onEquipmentUpdate }: EquipmentLoadoutProps) {
   const [loadout, setLoadout] = useState<Record<string, Item | null>>({});
   const [isExpanded, setIsExpanded] = useState(true);
   const [selectedBossForm, setSelectedBossForm] = useState(null);
-  const [show2hOption, setShow2hOption] = useState(true); // Add missing state
+  // Default to 1H weapon with offhand
+  const [show2hOption, setShow2hOption] = useState(false); // Add missing state
 
   const [totals, setTotals] = useState<Record<string, number>>({
     stab: 0,
