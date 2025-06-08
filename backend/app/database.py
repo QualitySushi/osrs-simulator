@@ -184,8 +184,9 @@ class DatabaseService:
             cursor = conn.cursor()
             # Get boss main data
             cursor.execute("""
-            SELECT 
-                id, name, raid_group, examine, location, 
+            SELECT
+                id, name, raid_group, examine, location,
+                release_date, slayer_level, slayer_xp, slayer_category,
                 has_multiple_forms
             FROM bosses
             WHERE id = ?
@@ -202,17 +203,30 @@ class DatabaseService:
                 "raid_group": boss_row[2],
                 "examine": boss_row[3],
                 "location": boss_row[4],
-                "has_multiple_forms": bool(boss_row[5]),
+                "release_date": boss_row[5],
+                "slayer_level": boss_row[6],
+                "slayer_xp": boss_row[7],
+                "slayer_category": boss_row[8],
+                "has_multiple_forms": bool(boss_row[9]),
                 "forms": []
             }
             
             # Get all forms for this boss
             cursor.execute("""
-            SELECT 
+            SELECT
                 id, form_name, form_order, combat_level, hitpoints,
+                max_hit, attack_speed, attack_style,
                 attack_level, strength_level, defence_level, magic_level, ranged_level,
-                defence_stab, defence_slash, defence_crush, 
-                defence_magic, defence_ranged_standard
+                aggressive_attack_bonus, aggressive_strength_bonus,
+                aggressive_magic_bonus, aggressive_magic_strength_bonus,
+                aggressive_ranged_bonus, aggressive_ranged_strength_bonus,
+                defence_stab, defence_slash, defence_crush,
+                defence_magic, elemental_weakness_type, elemental_weakness_percent,
+                defence_ranged_light, defence_ranged_standard, defence_ranged_heavy,
+                attribute, xp_bonus, aggressive, poisonous,
+                poison_immunity, venom_immunity, melee_immunity, magic_immunity,
+                ranged_immunity, cannon_immunity, thrall_immunity,
+                special_mechanics, image_url, size, npc_ids, assigned_by
             FROM boss_forms
             WHERE boss_id = ?
             ORDER BY form_order
@@ -226,16 +240,45 @@ class DatabaseService:
                     "form_order": form_row[2],
                     "combat_level": form_row[3],
                     "hitpoints": form_row[4],
-                    "attack_level": form_row[5],
-                    "strength_level": form_row[6],
-                    "defence_level": form_row[7],
-                    "magic_level": form_row[8],
-                    "ranged_level": form_row[9],
-                    "defence_stab": form_row[10],
-                    "defence_slash": form_row[11],
-                    "defence_crush": form_row[12],
-                    "defence_magic": form_row[13],
-                    "defence_ranged_standard": form_row[14]
+                    "max_hit": form_row[5],
+                    "attack_speed": form_row[6],
+                    "attack_style": form_row[7],
+                    "attack_level": form_row[8],
+                    "strength_level": form_row[9],
+                    "defence_level": form_row[10],
+                    "magic_level": form_row[11],
+                    "ranged_level": form_row[12],
+                    "aggressive_attack_bonus": form_row[13],
+                    "aggressive_strength_bonus": form_row[14],
+                    "aggressive_magic_bonus": form_row[15],
+                    "aggressive_magic_strength_bonus": form_row[16],
+                    "aggressive_ranged_bonus": form_row[17],
+                    "aggressive_ranged_strength_bonus": form_row[18],
+                    "defence_stab": form_row[19],
+                    "defence_slash": form_row[20],
+                    "defence_crush": form_row[21],
+                    "defence_magic": form_row[22],
+                    "elemental_weakness_type": form_row[23],
+                    "elemental_weakness_percent": form_row[24],
+                    "defence_ranged_light": form_row[25],
+                    "defence_ranged_standard": form_row[26],
+                    "defence_ranged_heavy": form_row[27],
+                    "attribute": form_row[28],
+                    "xp_bonus": form_row[29],
+                    "aggressive": form_row[30],
+                    "poisonous": form_row[31],
+                    "poison_immunity": form_row[32],
+                    "venom_immunity": form_row[33],
+                    "melee_immunity": form_row[34],
+                    "magic_immunity": form_row[35],
+                    "ranged_immunity": form_row[36],
+                    "cannon_immunity": form_row[37],
+                    "thrall_immunity": form_row[38],
+                    "special_mechanics": form_row[39],
+                    "image_url": form_row[40],
+                    "size": form_row[41],
+                    "npc_ids": form_row[42],
+                    "assigned_by": form_row[43]
                 }
                 
                 boss_data["forms"].append(form_data)
