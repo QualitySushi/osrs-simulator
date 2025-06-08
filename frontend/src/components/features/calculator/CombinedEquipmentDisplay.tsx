@@ -50,7 +50,7 @@ interface CombinedEquipmentDisplayProps {
 }
 
 export function CombinedEquipmentDisplay({ onEquipmentUpdate, bossForm }: CombinedEquipmentDisplayProps) {
-  const { params, setParams, gearLocked, loadout, setLoadout, resetParams, resetLocks } = useCalculatorStore();
+  const { params, setParams, gearLocked, loadout, setLoadout, resetParams, resetLocks, switchCombatStyle } = useCalculatorStore();
   // Start with 1H + Shield by default
   const [show2hOption, setShow2hOption] = useState(false);
   const [availableAttackStyles, setAvailableAttackStyles] = useState<string[]>([]);
@@ -167,6 +167,20 @@ export function CombinedEquipmentDisplay({ onEquipmentUpdate, bossForm }: Combin
       console.log('[DEBUG] Processing weapon:', weapon.name);
     }
   }, [loadout]);
+
+  // Automatically switch combat style based on weapon attack types
+  useEffect(() => {
+    const styles = weaponStats.attackStyles;
+    if (!styles || Object.keys(styles).length === 0) return;
+    const attackTypes = Object.values(styles).map((s: any) => s.attackType);
+    let detected: 'melee' | 'ranged' | 'magic' | null = null;
+    if (attackTypes.some((t) => t === 'magic')) detected = 'magic';
+    else if (attackTypes.some((t) => t === 'ranged')) detected = 'ranged';
+    else if (attackTypes.some((t) => ['stab', 'slash', 'crush'].includes(t))) detected = 'melee';
+    if (detected && detected !== params.combat_style) {
+      switchCombatStyle(detected);
+    }
+  }, [weaponStats.attackStyles, params.combat_style, switchCombatStyle]);
 
   // Update available attack styles when weapon changes
   useEffect(() => {
@@ -348,7 +362,7 @@ export function CombinedEquipmentDisplay({ onEquipmentUpdate, bossForm }: Combin
                   baseAttackSpeed: 2.4,
                 });
               }}
-              className="mr-2"
+              className="mr-2 data-[state=unchecked]:bg-primary"
             />
             <Label htmlFor="use-2h" className="text-sm">
               {show2hOption ? 'Use 1H' : 'Use 2H'}

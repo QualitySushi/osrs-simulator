@@ -26,6 +26,11 @@ export function useDpsCalculator() {
     setCurrentLoadout(storeLoadout);
   }, [storeLoadout]);
 
+  // keep local tab state in sync with store combat style
+  useEffect(() => {
+    setActiveTab(params.combat_style);
+  }, [params.combat_style]);
+
   const calculateEffects = useCallback(() => {
     return calculatePassiveEffectBonuses(params, currentLoadout, currentBossForm);
   }, [params, currentLoadout, currentBossForm]);
