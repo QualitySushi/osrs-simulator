@@ -1,1 +1,1 @@
-python unittest.py
+python -m unittest UnitTest.py

@@ -67,7 +67,7 @@ const defaultRangedParams: RangedCalculatorParams = {
   gear_multiplier: 1.0,
   special_multiplier: 1.0,
   target_defence_level: 200,
-  target_ranged_defence_bonus: 150,
+  target_defence_bonus: 150,
   attack_speed: 2.4
 };
 
