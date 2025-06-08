@@ -124,12 +124,15 @@ export function PassiveEffectsDisplay({ loadout, target }: PassiveEffectsDisplay
         }
       }
       
-      // Scythe of Vitur passive effect
-      if (itemName.includes('scythe of vitur')) {
-        effects.push({
-          name: 'Scythe of Vitur',
-          description: 'Multi-hit: 100%, 50%, and 25% damage against large targets'
-        });
+      // Scythe of Vitur passive effect based on target size
+      if (itemName.includes('scythe of vitur') && target?.size) {
+        const hits = target.size >= 3 ? 3 : target.size >= 2 ? 2 : 1;
+        if (hits > 1) {
+          effects.push({
+            name: 'Scythe of Vitur',
+            description: `Multi-hit: ${hits} hits against ${target.size}x${target.size} targets`
+          });
+        }
       }
       
       if (itemName.includes('dragon hunter') && isTargetDraconic(target)) {

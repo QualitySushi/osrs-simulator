@@ -206,6 +206,7 @@ export interface BossForm {
   attack_styles?: string[];
   immunities?: string[];
   icons?: string[];
+  size?: number;
 }
 
 export interface Item {
