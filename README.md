@@ -146,8 +146,11 @@ python extract.py
 The GitHub workflow `generate-databases.yml` runs these scrapers weekly and
 uploads the resulting `.db` files as artifacts.
 
-The backend automatically searches for the databases in `backend/db`, so the
-server can be started from any working directory without adjusting paths.
+The backend automatically searches for the databases in a few locations. By
+default it looks in `backend/db`, but it will also check `backend/app/db`, the
+current working directory's `db` folder, or a directory specified by the
+`OSRS_DB_DIR` environment variable. This means you can launch the server from
+any directory as long as the databases are located in one of these places.
 
 🔄 API Reference
 Calculate DPS

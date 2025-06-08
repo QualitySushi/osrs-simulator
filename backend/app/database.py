@@ -8,23 +8,48 @@ class DatabaseService:
     """Service for handling database operations for the OSRS DPS Calculator."""
 
     def __init__(self, db_dir: str | None = None):
-        """Initialize the database service with directory path.
+        """Initialize the database service with a database directory.
 
-        If ``db_dir`` is not provided, it defaults to the ``db`` folder located
-        in the backend package, ensuring the databases are found regardless of
-        the current working directory.
+        The service searches for the SQLite databases in several locations so
+        existing setups continue to work:
+
+        1. The ``OSRS_DB_DIR`` environment variable if set.
+        2. A ``db`` folder in the ``backend`` package.
+        3. A legacy ``backend/app/db`` folder.
+        4. A ``db`` folder in the current working directory.
         """
 
-        if db_dir is None:
-            base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-            db_dir = os.path.join(base_dir, "db")
-        self.db_dir = db_dir
-        self.item_db_path = os.path.join(db_dir, "osrs_combat_items.db")
-        self.boss_db_path = os.path.join(db_dir, "osrs_bosses.db")
+        candidates = []
+        if db_dir:
+            candidates.append(db_dir)
+
+        env_dir = os.environ.get("OSRS_DB_DIR")
+        if env_dir:
+            candidates.append(env_dir)
+
+        base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        candidates.append(os.path.join(base_dir, "db"))
+        candidates.append(os.path.join(base_dir, "app", "db"))
+        candidates.append(os.path.join(os.getcwd(), "db"))
+
+        selected = None
+        for path in candidates:
+            items_db = os.path.join(path, "osrs_combat_items.db")
+            bosses_db = os.path.join(path, "osrs_bosses.db")
+            if os.path.exists(items_db) or os.path.exists(bosses_db):
+                selected = path
+                break
+
+        if selected is None:
+            selected = candidates[0]
+
+        self.db_dir = selected
+        self.item_db_path = os.path.join(self.db_dir, "osrs_combat_items.db")
+        self.boss_db_path = os.path.join(self.db_dir, "osrs_bosses.db")
 
         # Ensure database directory exists
-        if not os.path.exists(db_dir):
-            os.makedirs(db_dir)
+        if not os.path.exists(self.db_dir):
+            os.makedirs(self.db_dir)
 
         # Initialize connections
         self._init_connections()
