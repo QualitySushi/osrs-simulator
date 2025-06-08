@@ -26,13 +26,15 @@ import { bossesApi } from '@/services/api';
 import { Boss, BossForm } from '@/types/calculator';
 import { useCalculatorStore } from '@/store/calculator-store';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { cn } from '@/lib/utils';
 
 interface DirectBossSelectorProps {
   onSelectBoss?: (boss: Boss) => void;
   onSelectForm?: (form: BossForm | null) => void;
+  className?: string;
 }
 
-export function DirectBossSelector({ onSelectBoss, onSelectForm }: DirectBossSelectorProps) {
+export function DirectBossSelector({ onSelectBoss, onSelectForm, className }: DirectBossSelectorProps) {
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedBoss, setSelectedBoss] = useState<Boss | null>(null);
@@ -211,7 +213,7 @@ export function DirectBossSelector({ onSelectBoss, onSelectForm }: DirectBossSel
   };
 
   return (
-    <Card>
+    <Card className={cn("flex flex-col h-full", className)}>
       <CardHeader>
         <CardTitle>Target Selection</CardTitle>
         <CardDescription>Select a boss to calculate DPS against</CardDescription>
@@ -294,7 +296,7 @@ export function DirectBossSelector({ onSelectBoss, onSelectForm }: DirectBossSel
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 Loading boss details...
               </div>
-            ) : (<div className="flex items-center gap-2">
+            ) : (<div className="flex items-center gap-2 w-full justify-between">
               <Select
                 value={selectedForm?.id.toString() || ''}
                 onValueChange={(value: string) => {
@@ -304,7 +306,7 @@ export function DirectBossSelector({ onSelectBoss, onSelectForm }: DirectBossSel
                   }
                 }}
               >
-                <SelectTrigger>
+                <SelectTrigger className="w-full">
                   <SelectValue placeholder="Select a form/phase" />
                 </SelectTrigger>
                 <SelectContent>
@@ -315,7 +317,7 @@ export function DirectBossSelector({ onSelectBoss, onSelectForm }: DirectBossSel
                   ))}
                 </SelectContent>
               </Select>
-                <Button variant="outline" size="sm" onClick={handleResetBoss} className="ml-auto">
+                <Button variant="outline" size="sm" onClick={handleResetBoss}>
                   <RotateCcw className="h-4 w-4 mr-2" />
                   Reset
                 </Button>
