@@ -7,8 +7,17 @@ from typing import Dict, List, Optional, Any
 class DatabaseService:
     """Service for handling database operations for the OSRS DPS Calculator."""
 
-    def __init__(self, db_dir: str = "db"):
-        """Initialize the database service with directory path."""
+    def __init__(self, db_dir: str | None = None):
+        """Initialize the database service with directory path.
+
+        If ``db_dir`` is not provided, it defaults to the ``db`` folder located
+        in the backend package, ensuring the databases are found regardless of
+        the current working directory.
+        """
+
+        if db_dir is None:
+            base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+            db_dir = os.path.join(base_dir, "db")
         self.db_dir = db_dir
         self.item_db_path = os.path.join(db_dir, "osrs_combat_items.db")
         self.boss_db_path = os.path.join(db_dir, "osrs_bosses.db")

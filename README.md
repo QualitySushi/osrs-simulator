@@ -146,6 +146,9 @@ python extract.py
 The GitHub workflow `generate-databases.yml` runs these scrapers weekly and
 uploads the resulting `.db` files as artifacts.
 
+The backend automatically searches for the databases in `backend/db`, so the
+server can be started from any working directory without adjusting paths.
+
 🔄 API Reference
 Calculate DPS
 
