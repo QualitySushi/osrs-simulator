@@ -53,6 +53,7 @@ class ItemStats(BaseModel):
     attack_bonuses: Dict[str, int] = Field(default_factory=dict)
     defence_bonuses: Dict[str, int] = Field(default_factory=dict)
     other_bonuses: Dict[str, Union[int, str]] = Field(default_factory=dict)
+    combat_styles: Optional[List[Dict[str, Any]]] = Field(default_factory=list)
 
 class Item(BaseModel):
     """Represents an equipment item with metadata and stats."""
