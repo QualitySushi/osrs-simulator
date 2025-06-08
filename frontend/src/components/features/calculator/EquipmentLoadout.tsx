@@ -413,6 +413,7 @@ export function EquipmentLoadout({ onEquipmentUpdate }: EquipmentLoadoutProps) {
           <CardDescription>Manage your equipment loadout</CardDescription>
         </div>
         <div className="flex space-x-2">
+
           {/* Weapon toggle */}
           <Toggle
             pressed={show2hOption}
@@ -422,6 +423,7 @@ export function EquipmentLoadout({ onEquipmentUpdate }: EquipmentLoadoutProps) {
           >
             {show2hOption ? <Shield className="h-4 w-4" /> : <Sword className="h-4 w-4" />}
           </Toggle>
+
           <Button variant="ghost" size="sm" onClick={() => setIsExpanded(!isExpanded)}>
             {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
           </Button>
