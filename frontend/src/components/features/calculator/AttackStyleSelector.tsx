@@ -1,9 +1,16 @@
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import {
-  Tooltip, TooltipContent, TooltipProvider, TooltipTrigger
-} from '@/components/ui/tooltip';
-import { Item } from '@/types/calculator';
-import { BossForm } from '@/types/calculator';
+  Tabs,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/tabs";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { Item } from "@/types/calculator";
+import { BossForm } from "@/types/calculator";
 
 // Define attack styles with their bonuses
 export interface AttackStyleDefinition {
@@ -18,75 +25,78 @@ export interface AttackStyleDefinition {
 }
 
 export const ATTACK_TYPE_TO_DEFENCE_TYPE: Record<string, string> = {
-  stab: 'defence_stab',
-  slash: 'defence_slash',
-  crush: 'defence_crush',
-  magic: 'defence_magic',
-  ranged: 'defence_ranged_standard'
+  stab: "defence_stab",
+  slash: "defence_slash",
+  crush: "defence_crush",
+  magic: "defence_magic",
+  ranged: "defence_ranged_standard",
 };
 
 // Default attack styles if weapon doesn't provide them
-export const DEFAULT_ATTACK_STYLES: Record<string, Record<string, AttackStyleDefinition>> = {
+export const DEFAULT_ATTACK_STYLES: Record<
+  string,
+  Record<string, AttackStyleDefinition>
+> = {
   melee: {
-    'accurate': { 
-      name: 'Accurate', 
-      attackType: 'slash',
+    accurate: {
+      name: "Accurate",
+      attackType: "slash",
       bonus: { attack: 3, strength: 0, defence: 0 },
-      description: '+3 Attack'
+      description: "+3 Attack",
     },
-    'aggressive': { 
-      name: 'Aggressive', 
-      attackType: 'slash',
+    aggressive: {
+      name: "Aggressive",
+      attackType: "slash",
       bonus: { attack: 0, strength: 3, defence: 0 },
-      description: '+3 Strength'
+      description: "+3 Strength",
     },
-    'controlled': { 
-      name: 'Controlled', 
-      attackType: 'stab',
+    controlled: {
+      name: "Controlled",
+      attackType: "stab",
       bonus: { attack: 1, strength: 1, defence: 1 },
-      description: '+1 to all'
+      description: "+1 to all",
     },
-    'defensive': { 
-      name: 'Defensive', 
-      attackType: 'slash',
+    defensive: {
+      name: "Defensive",
+      attackType: "slash",
       bonus: { attack: 0, strength: 0, defence: 3 },
-      description: '+3 Defence'
-    }
+      description: "+3 Defence",
+    },
   },
   ranged: {
-    'accurate': { 
-      name: 'Accurate', 
-      attackType: 'ranged',
+    accurate: {
+      name: "Accurate",
+      attackType: "ranged",
       bonus: { attack: 3, strength: 0, defence: 0 },
-      description: '+3 Ranged'
+      description: "+3 Ranged",
     },
-    'rapid': { 
-      name: 'Rapid', 
-      attackType: 'ranged',
+    rapid: {
+      name: "Rapid",
+      attackType: "ranged",
       bonus: { attack: 0, strength: 0, defence: 0 },
-      description: 'Faster attack speed'
+      description: "Faster attack speed",
     },
-    'longrange': { 
-      name: 'Longrange', 
-      attackType: 'ranged',
+    longrange: {
+      name: "Longrange",
+      attackType: "ranged",
       bonus: { attack: 0, strength: 0, defence: 3 },
-      description: '+3 Defence, increased range'
-    }
+      description: "+3 Defence, increased range",
+    },
   },
   magic: {
-    'standard': { 
-      name: 'Standard', 
-      attackType: 'magic',
+    standard: {
+      name: "Standard",
+      attackType: "magic",
       bonus: { attack: 0, strength: 0, defence: 0 },
-      description: 'Regular casting'
+      description: "Regular casting",
     },
-    'defensive': { 
-      name: 'Defensive', 
-      attackType: 'magic',
+    defensive: {
+      name: "Defensive",
+      attackType: "magic",
       bonus: { attack: 0, strength: 0, defence: 3 },
-      description: '+3 Defence'
-    }
-  }
+      description: "+3 Defence",
+    },
+  },
 };
 
 interface AttackStyleSelectorProps {
@@ -106,49 +116,50 @@ export function AttackStyleSelector({
   attackStyles,
   availableAttackStyles,
   selectedAttackStyle,
-  onSelectAttackStyle
+  onSelectAttackStyle,
 }: AttackStyleSelectorProps) {
-
-
   return (
     <div className="p-3 text-center">
       <div className="mb-1 text-sm text-muted-foreground">
-        {combatStyle === 'melee' 
-          ? "Combat Style:" 
-          : combatStyle === 'ranged' 
-            ? "Ranged Style:" 
+        {combatStyle === "melee"
+          ? "Combat Style:"
+          : combatStyle === "ranged"
+            ? "Ranged Style:"
             : "Magic Style:"}
       </div>
-      <ToggleGroup
-        type="single"
+      <Tabs
         value={selectedAttackStyle}
         onValueChange={(v) => v && onSelectAttackStyle(v)}
-        className="flex flex-wrap gap-1 justify-center"
+        className="w-full"
       >
-        {availableAttackStyles.map((style) => {
-          const styleInfo = attackStyles[style];
-          if (!styleInfo) return null;
+        <TabsList
+          className={`grid ${availableAttackStyles.length === 2 ? "grid-cols-2" : availableAttackStyles.length === 3 ? "grid-cols-3" : "grid-cols-4"}`}
+        >
+          {availableAttackStyles.map((style) => {
+            const styleInfo = attackStyles[style];
+            if (!styleInfo) return null;
 
-          return (
-            <TooltipProvider key={style}>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <ToggleGroupItem value={style} size="sm">
-                    {styleInfo.name}
-                    {combatStyle !== 'melee' && ` (${styleInfo.attackType})`}
-                  </ToggleGroupItem>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>{styleInfo.description}</p>
-                  {combatStyle === 'melee' && (
-                    <p className="text-xs">Attack type: {styleInfo.attackType}</p>
-                  )}
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          );
-        })}
-      </ToggleGroup>
+            return (
+              <TooltipProvider key={style}>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <TabsTrigger value={style} className="capitalize text-xs">
+                      {styleInfo.name}
+                      {combatStyle !== "melee" && ` (${styleInfo.attackType})`}
+                    </TabsTrigger>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>{styleInfo.description}</p>
+                    {combatStyle === "melee" && (
+                      <p className="text-xs">Attack type: {styleInfo.attackType}</p>
+                    )}
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            );
+          })}
+        </TabsList>
+      </Tabs>
     </div>
   );
 }
