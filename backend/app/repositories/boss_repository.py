@@ -1,6 +1,6 @@
 from typing import Any, Dict, List, Optional
 
-from ..database import db_service
+from ..database import azure_db_service as db_service
 
 
 def get_all_bosses() -> List[Dict[str, Any]]:
