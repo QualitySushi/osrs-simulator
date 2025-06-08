@@ -23,6 +23,18 @@ export const calculatorApi = {
     const { data } = await apiClient.post('/calculate/dps', params);
     return data;
   },
+  importSeed: async (seed: string): Promise<CalculatorParams> => {
+    const { data } = await apiClient.post('/import-seed', { seed });
+    return data;
+  },
+  calculateSeed: async (seed: string): Promise<DpsResult> => {
+    const { data } = await apiClient.post('/calculate/seed', { seed });
+    return data;
+  },
+  getBis: async (params: CalculatorParams): Promise<Record<string, Item>> => {
+    const { data } = await apiClient.post('/bis', params);
+    return data;
+  },
 };
 
 // Bosses API
