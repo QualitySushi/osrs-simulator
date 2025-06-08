@@ -247,7 +247,7 @@ export function DirectBossSelector({ onSelectBoss, onSelectForm }: DirectBossSel
             <Command className="rounded-lg border shadow-md pl-7">
               <CommandInput
                 placeholder="Search bosses..."
-                className="h-9"
+                className="h-9 pl-2"
                 value={searchQuery}
                 onValueChange={(value) => {
                   setSearchQuery(value);
@@ -334,7 +334,7 @@ export function DirectBossSelector({ onSelectBoss, onSelectForm }: DirectBossSel
               <img
                 src={selectedForm.icons?.[0] || selectedForm.image_url}
                 alt="icon"
-                className="w-24 h-24"
+                className="w-28 h-28 mb-2"
               />
             )}
             <h4 className="text-sm font-semibold">Target Stats</h4>

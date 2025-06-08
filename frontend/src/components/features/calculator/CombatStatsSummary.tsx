@@ -15,6 +15,22 @@ export function CombatStatsSummary({
   selectedAttackStyle,
   getAttackStylesForDisplay
 }: CombatStatsSummaryProps) {
+  const totalDefence = {
+    stab: 0,
+    slash: 0,
+    crush: 0,
+    magic: 0,
+    ranged: 0,
+  };
+  Object.values(loadout).forEach((item) => {
+    const def = item?.combat_stats?.defence_bonuses;
+    if (!def) return;
+    totalDefence.stab += def.stab || 0;
+    totalDefence.slash += def.slash || 0;
+    totalDefence.crush += def.crush || 0;
+    totalDefence.magic += def.magic || 0;
+    totalDefence.ranged += def.ranged || 0;
+  });
   return (
     <div className="mt-4 p-3 bg-slate-100 dark:bg-slate-800 rounded-md">
       <h4 className="font-medium text-sm mb-2">Combat Setup:</h4>
@@ -190,6 +206,29 @@ export function CombatStatsSummary({
             <span className="font-medium">
               +{params.attack_style_bonus_strength || 0}
             </span>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-3 gap-x-4 gap-y-1 text-xs mt-2">
+          <div>
+            <span className="text-muted-foreground">Def Stab:</span>{' '}
+            <span className="font-medium">{totalDefence.stab}</span>
+          </div>
+          <div>
+            <span className="text-muted-foreground">Def Slash:</span>{' '}
+            <span className="font-medium">{totalDefence.slash}</span>
+          </div>
+          <div>
+            <span className="text-muted-foreground">Def Crush:</span>{' '}
+            <span className="font-medium">{totalDefence.crush}</span>
+          </div>
+          <div>
+            <span className="text-muted-foreground">Def Magic:</span>{' '}
+            <span className="font-medium">{totalDefence.magic}</span>
+          </div>
+          <div>
+            <span className="text-muted-foreground">Def Ranged:</span>{' '}
+            <span className="font-medium">{totalDefence.ranged}</span>
           </div>
         </div>
       </div>

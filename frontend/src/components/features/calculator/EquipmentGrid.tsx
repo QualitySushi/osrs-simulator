@@ -106,7 +106,7 @@ export function EquipmentGrid({ loadout, show2hOption, combatStyle, onUpdateLoad
     return (
       <>
         <p className="font-bold">{item.name}</p>
-        {(item.combat_stats && (slot === 'mainhand' || slot === '2h')) && (
+        {item.combat_stats && (
           <div className="text-xs mt-1">
             {combatStyle === 'melee' && (
               <>
@@ -136,7 +136,7 @@ export function EquipmentGrid({ loadout, show2hOption, combatStyle, onUpdateLoad
 
   return (
     <>
-      <div className="grid grid-cols-3 grid-rows-5 gap-2 justify-items-center mb-4">
+      <div className="grid grid-cols-3 grid-rows-5 gap-2 justify-items-center mb-4 px-4">
         {getDisplaySlots().map(({ slot, name, position }) => (
           <div
             key={slot}
@@ -169,9 +169,6 @@ export function EquipmentGrid({ loadout, show2hOption, combatStyle, onUpdateLoad
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
-            <div className="text-xs truncate w-full text-center">
-              {loadout[slot]?.name || name}
-            </div>
           </div>
         ))}
       </div>
