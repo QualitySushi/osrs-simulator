@@ -1,7 +1,7 @@
 'use client';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { Switch } from '@/components/ui/switch';
+import { ToggleBox } from '@/components/ui/toggle-box';
 import { Label } from '@/components/ui/label';
 import { useState } from 'react';
 import { RotateCcw, Sword, Target, Zap } from 'lucide-react';
@@ -30,7 +30,11 @@ export function CalculatorForms({
   return (
     <div className="w-full mb-6">
       <div className="flex items-center space-x-2 mb-4">
-        <Switch id="manual-toggle" checked={showManual} onCheckedChange={setShowManual} />
+        <ToggleBox
+          id="manual-toggle"
+          pressed={showManual}
+          onPressedChange={setShowManual}
+        />
         <Label htmlFor="manual-toggle">Show Manual Inputs</Label>
         
       </div>
