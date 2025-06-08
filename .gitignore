@@ -64,3 +64,5 @@ logs/
 
 # Ignore optional dev tools
 storybook-static/
+__pycache__/
+*.pyc

@@ -1,5 +1,15 @@
 import math
 from typing import Dict, Any
+from config.constants import (
+    EFFECTIVE_LEVEL_BASE,
+    EQUIPMENT_BONUS_OFFSET,
+    VOID_RANGED_ATTACK_MULTIPLIER,
+    VOID_RANGED_STRENGTH_MULTIPLIER,
+    TWISTED_BOW_MAGIC_CAP,
+    TWISTED_BOW_MAX_ACCURACY,
+    TWISTED_BOW_MAX_DAMAGE,
+    MAX_HIT_DIVISOR,
+)
 
 class RangedCalculator:
     """Calculator for ranged DPS calculations."""
@@ -15,8 +25,8 @@ class RangedCalculator:
         - Values > 100% = bonus (e.g., 140% = 1.4x multiplier)
         - Values < 100% = penalty (e.g., 50% = 0.5x multiplier)
         """
-        # Cap magic level at 250 for calculations (350 in raids)
-        capped_magic = max(0, min(target_magic_level, 250))
+        # Cap magic level at TWISTED_BOW_MAGIC_CAP for calculations (350 in raids)
+        capped_magic = max(0, min(target_magic_level, TWISTED_BOW_MAGIC_CAP))
         
         # Calculate accuracy using the wiki formula (as a percentage)
         # Accuracy = 140 + ((3 * Magic - 10) / 100) - (((3 * Magic / 10) - 100) ^ 2 / 100)
@@ -33,7 +43,7 @@ class RangedCalculator:
         accuracy_multiplier = accuracy_percent / 100
         
         # Cap at 140% (1.4x)
-        accuracy_multiplier = max(0, min(accuracy_multiplier, 1.4))
+        accuracy_multiplier = max(0, min(accuracy_multiplier, TWISTED_BOW_MAX_ACCURACY))
         
         # Calculate damage using the wiki formula (as a percentage)
         # Damage = 250 + ((3 * Magic - 14) / 100) - (((3 * Magic / 10) - 140) ^ 2 / 100)
@@ -48,7 +58,7 @@ class RangedCalculator:
         damage_multiplier = damage_percent / 100
         
         # Cap at 250% (2.5x)
-        damage_multiplier = max(0, min(damage_multiplier, 2.5))
+        damage_multiplier = max(0, min(damage_multiplier, TWISTED_BOW_MAX_DAMAGE))
         
         # For special case of magic level 0, use values that match test expectations
         if target_magic_level == 0:
@@ -96,25 +106,25 @@ class RangedCalculator:
         # Step 1: Effective Ranged Strength
         base_rng = params["ranged_level"] + params.get("ranged_boost", 0)
         effective_str = math.floor(base_rng * params.get("ranged_prayer", 1.0))
-        effective_str += 8 + params.get("attack_style_bonus_strength", 0)
+        effective_str += EFFECTIVE_LEVEL_BASE + params.get("attack_style_bonus_strength", 0)
 
         if params.get("void_ranged", False):
-            effective_str = math.floor(effective_str * 1.125)
+            effective_str = math.floor(effective_str * VOID_RANGED_STRENGTH_MULTIPLIER)
 
         # Step 2: Max Hit
-        max_hit = math.floor((effective_str * (params["ranged_strength_bonus"] + 64) / 640) + 0.5)
+        max_hit = math.floor((effective_str * (params["ranged_strength_bonus"] + EQUIPMENT_BONUS_OFFSET) / MAX_HIT_DIVISOR) + 0.5)
         max_hit = math.floor(max_hit * params.get("gear_multiplier", 1.0))
         max_hit = math.floor(max_hit * params.get("special_multiplier", 1.0))
 
         # Step 3: Effective Ranged Attack
         effective_atk = math.floor(base_rng * params.get("ranged_prayer", 1.0))
-        effective_atk += 8 + params.get("attack_style_bonus_attack", 0)
+        effective_atk += EFFECTIVE_LEVEL_BASE + params.get("attack_style_bonus_attack", 0)
 
         if params.get("void_ranged", False):
-            effective_atk = math.floor(effective_atk * 1.1)
+            effective_atk = math.floor(effective_atk * VOID_RANGED_ATTACK_MULTIPLIER)
 
         # Step 4: Attack Roll
-        attack_roll = math.floor(effective_atk * (params["ranged_attack_bonus"] + 64))
+        attack_roll = math.floor(effective_atk * (params["ranged_attack_bonus"] + EQUIPMENT_BONUS_OFFSET))
         
         # Apply general gear multiplier (like Slayer Helmet, Salve Amulet, etc.)
         # - but NOT the Twisted Bow accuracy yet
@@ -125,7 +135,7 @@ class RangedCalculator:
         attack_roll = math.floor(attack_roll * tbow_accuracy_multiplier)
 
         # Step 5: Defence Roll
-        def_roll = (params["target_defence_level"] + 9) * (params["target_defence_bonus"] + 64)
+        def_roll = (params["target_defence_level"] + 9) * (params["target_defence_bonus"] + EQUIPMENT_BONUS_OFFSET)
 
         # Step 6: Hit Chance
         if attack_roll > def_roll:

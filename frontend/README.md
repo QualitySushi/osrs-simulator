@@ -26,3 +26,19 @@ Installation
 
 Clone the repository
 
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Open `http://localhost:3000` in your browser to use the calculator.
+
+### Storybook
+
+Components can be explored in Storybook:
+
+```bash
+npm run storybook
+```
