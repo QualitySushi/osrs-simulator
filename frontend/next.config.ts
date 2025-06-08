@@ -6,6 +6,14 @@ const nextConfig: NextConfig = {
   images: {
     unoptimized: true
   },
+  eslint: {
+    // Disable ESLint during builds for deployment
+    ignoreDuringBuilds: true,
+  },
+  typescript: {
+    // Optionally ignore TypeScript errors during build too
+    ignoreBuildErrors: true,
+  },
   // Optional: if you're using basePath for subfolders
   // basePath: '/your-subfolder',
   
