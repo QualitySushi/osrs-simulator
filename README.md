@@ -1,7 +1,7 @@
 OSRS DPS Calculator
 
 A comprehensive damage-per-second calculator for Old School RuneScape with accurate combat formulas, equipment comparison, and boss statistics.
-🎮 Try it Live | Report Bug | Request Feature
+Try it Live | Report Bug | Request Feature
 
 Overview
 
