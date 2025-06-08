@@ -106,8 +106,10 @@ export function ImprovedDpsCalculator() {
           <PresetSelector onPresetLoad={() => toast.success("Preset loaded successfully!")} />
 
         </div>
-           {/* Full-width comparison table at the bottom */}
+        {/* Full-width comparison table at the bottom */}
+        <div className="lg:col-span-2">
           <DpsComparison />
+        </div>
       </div>
       
     </div>

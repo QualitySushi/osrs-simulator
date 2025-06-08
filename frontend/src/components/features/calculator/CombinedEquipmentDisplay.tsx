@@ -49,7 +49,7 @@ interface CombinedEquipmentDisplayProps {
 }
 
 export function CombinedEquipmentDisplay({ onEquipmentUpdate, bossForm }: CombinedEquipmentDisplayProps) {
-  const { params, setParams, gearLocked, loadout, setLoadout } = useCalculatorStore();
+  const { params, setParams, gearLocked, loadout, setLoadout, resetParams, resetLocks } = useCalculatorStore();
   // Start with 1H + Shield by default
   const [show2hOption, setShow2hOption] = useState(false);
   const [availableAttackStyles, setAvailableAttackStyles] = useState<string[]>([]);
@@ -61,6 +61,12 @@ export function CombinedEquipmentDisplay({ onEquipmentUpdate, bossForm }: Combin
     attackStyles: {},
     baseAttackSpeed: 2.4 // Default 4 ticks
   });
+
+  const handleResetEquipment = () => {
+    setLoadout({});
+    resetParams();
+    resetLocks();
+  };
   
   const combatStyle = params.combat_style;
 
@@ -360,6 +366,15 @@ export function CombinedEquipmentDisplay({ onEquipmentUpdate, bossForm }: Combin
       </CardHeader>
 
       <CardContent>
+        {Object.keys(loadout).length > 0 && (
+          <div className="flex justify-end mb-2">
+            <Button variant="outline" size="sm" onClick={handleResetEquipment}
+            >
+              Reset Equipment
+            </Button>
+          </div>
+        )}
+
         {gearLocked && (
           <Alert className="mb-4 border-blue-300 dark:border-blue-800 bg-blue-100 dark:bg-blue-900">
             <AlertDescription>Gear bonuses are locked in for simulation.</AlertDescription>
