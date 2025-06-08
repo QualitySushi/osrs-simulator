@@ -1,11 +1,12 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { 
-  CalculatorParams, 
+import {
+  CalculatorParams,
   DpsResult,
   MeleeCalculatorParams,
   RangedCalculatorParams,
-  MagicCalculatorParams
+  MagicCalculatorParams,
+  Item
 } from '@/types/calculator';
 
 interface CalculatorState {
@@ -18,6 +19,7 @@ interface CalculatorState {
   }>;
   gearLocked: boolean;
   bossLocked: boolean;
+  loadout: Record<string, Item | null>;
 
   setParams: (params: Partial<CalculatorParams>) => void;
   switchCombatStyle: (style: 'melee' | 'ranged' | 'magic') => void;
@@ -31,6 +33,7 @@ interface CalculatorState {
   lockBoss: () => void;
   unlockBoss: () => void;
   resetLocks: () => void;
+  setLoadout: (loadout: Record<string, Item | null>) => void;
 }
 
 const defaultMeleeParams: MeleeCalculatorParams = {
@@ -109,6 +112,7 @@ export const useCalculatorStore = create<CalculatorState>()(
       comparisonResults: [],
       gearLocked: false,
       bossLocked: false,
+      loadout: {},
 
       setParams: (newParams: Partial<CalculatorParams>) => set((state): Partial<CalculatorState> => {
         const currentStyle = state.params.combat_style;
@@ -195,14 +199,16 @@ export const useCalculatorStore = create<CalculatorState>()(
       unlockGear: () => set({ gearLocked: false }),
       lockBoss: () => set({ bossLocked: true }),
       unlockBoss: () => set({ bossLocked: false }),
-      resetLocks: () => set({ gearLocked: false, bossLocked: false })
+      resetLocks: () => set({ gearLocked: false, bossLocked: false }),
+      setLoadout: (loadout) => set({ loadout })
     }),
     {
       name: 'osrs-calculator-storage',
-      partialize: (state) => ({ 
+      partialize: (state) => ({
         params: state.params,
         gearLocked: state.gearLocked,
-        bossLocked: state.bossLocked
+        bossLocked: state.bossLocked,
+        loadout: state.loadout
       })
     }
   )

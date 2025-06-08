@@ -60,7 +60,12 @@ export default function ImportPage() {
     try {
       const jsonStr = atob(seed.trim());
       const data = JSON.parse(jsonStr);
-      useCalculatorStore.getState().setParams(data);
+      const { equipment, equipped_armor, equipped_weapon, ...params } = data;
+      const loadout = equipment || { ...equipped_armor, ...equipped_weapon };
+      useCalculatorStore.getState().setParams(params);
+      if (loadout) {
+        useCalculatorStore.getState().setLoadout(loadout);
+      }
       alert('Profile imported');
     } catch (e) {
       alert('Invalid seed');

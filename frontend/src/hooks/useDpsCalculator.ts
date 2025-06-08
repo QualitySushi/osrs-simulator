@@ -14,11 +14,17 @@ export function useDpsCalculator() {
   const switchCombatStyle = useCalculatorStore((s) => s.switchCombatStyle);
   const resetParams = useCalculatorStore((s) => s.resetParams);
   const resetLocks = useCalculatorStore((s) => s.resetLocks);
+  const storeLoadout = useCalculatorStore((s) => s.loadout);
+  const setStoreLoadout = useCalculatorStore((s) => s.setLoadout);
 
   const [activeTab, setActiveTab] = useState<CombatStyle>(params.combat_style);
-  const [currentLoadout, setCurrentLoadout] = useState<Record<string, Item | null>>({});
+  const [currentLoadout, setCurrentLoadout] = useState<Record<string, Item | null>>(storeLoadout);
   const [currentBossForm, setCurrentBossForm] = useState<BossForm | null>(null);
   const [appliedPassiveEffects, setAppliedPassiveEffects] = useState<any>(null);
+
+  useEffect(() => {
+    setCurrentLoadout(storeLoadout);
+  }, [storeLoadout]);
 
   const calculateEffects = useCallback(() => {
     return calculatePassiveEffectBonuses(params, currentLoadout, currentBossForm);
@@ -112,6 +118,7 @@ export function useDpsCalculator() {
     setResults(null);
     setAppliedPassiveEffects(null);
     setCurrentLoadout({});
+    setStoreLoadout({});
     setCurrentBossForm(null);
     toast.success('Calculator reset to defaults');
   };
@@ -124,6 +131,7 @@ export function useDpsCalculator() {
 
   const handleEquipmentUpdate = (loadout: Record<string, Item | null>) => {
     setCurrentLoadout(loadout);
+    setStoreLoadout(loadout);
   };
 
   const handleBossUpdate = (bossForm: BossForm | null) => {
