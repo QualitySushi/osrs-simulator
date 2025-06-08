@@ -157,6 +157,9 @@ default it looks in `backend/db`, but it will also check `backend/app/db`, the
 current working directory's `db` folder, or a directory specified by the
 `OSRS_DB_DIR` environment variable. This means you can launch the server from
 any directory as long as the databases are located in one of these places.
+If the databases are not found locally and `AZURE_STORAGE_CONNECTION_STRING` is
+set, the backend will download the files from Azure Blob Storage and cache them
+in the first writable search directory so subsequent requests are fast.
 
 🔄 API Reference
 Calculate DPS

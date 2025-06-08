@@ -13,10 +13,22 @@ class AzureDatabaseService:
         """Initialize the Azure database service."""
         self.connection_string = os.environ.get("AZURE_STORAGE_CONNECTION_STRING")
         self.container_name = os.environ.get("AZURE_STORAGE_CONTAINER_NAME", "databases")
-        
+
         if not self.connection_string:
             print("Warning: AZURE_STORAGE_CONNECTION_STRING not found")
-            
+
+        # Possible locations for database files
+        base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        self.db_search_paths = [
+            os.path.join(base_dir, "db"),
+            os.path.join(base_dir, "app", "db"),
+            os.path.join(os.getcwd(), "db"),
+        ]
+
+        env_dir = os.environ.get("OSRS_DB_DIR")
+        if env_dir:
+            self.db_search_paths.insert(0, env_dir)
+
         # Database file mappings
         self.db_files = {
             "items_all": "osrs_all_items.db",
@@ -24,6 +36,8 @@ class AzureDatabaseService:
             "items_tradeable": "osrs_tradeable_items.db",
             "bosses": "osrs_bosses.db",
         }
+
+        self._cached_paths: Dict[str, str] = {}
 
     def _select_items_db(self, combat_only: bool, tradeable_only: bool) -> str:
         """Return db key based on filters."""
@@ -33,28 +47,52 @@ class AzureDatabaseService:
             return "items_tradeable"
         return "items_all"
 
+    def _find_local_db(self, db_filename: str) -> Optional[str]:
+        """Return path to a local database file if it exists."""
+        for path in self.db_search_paths:
+            candidate = os.path.join(path, db_filename)
+            if os.path.isfile(candidate):
+                return candidate
+        return None
+
     def _get_db_connection(self, db_type: str):
-        """Download database from blob storage and return connection with temp file path."""
-        if not self.connection_string:
-            raise Exception("Azure Storage connection string not configured")
-            
-        blob_service_client = BlobServiceClient.from_connection_string(self.connection_string)
-        container_client = blob_service_client.get_container_client(self.container_name)
-        
+        """Return a SQLite connection for the requested database."""
         db_filename = self.db_files.get(db_type)
         if not db_filename:
             raise Exception(f"Unknown database type: {db_type}")
-            
+
+        # Check for a cached/local copy first
+        if db_filename in self._cached_paths:
+            return sqlite3.connect(self._cached_paths[db_filename]), None
+
+        local_path = self._find_local_db(db_filename)
+        if local_path:
+            self._cached_paths[db_filename] = local_path
+            return sqlite3.connect(local_path), None
+
+        if not self.connection_string:
+            raise Exception("Azure Storage connection string not configured and local database not found")
+
+        # Download from Azure and cache to first search directory if possible
+        blob_service_client = BlobServiceClient.from_connection_string(self.connection_string)
+        container_client = blob_service_client.get_container_client(self.container_name)
         blob_client = container_client.get_blob_client(db_filename)
-        
-        # Create temporary file
-        temp_file = tempfile.NamedTemporaryFile(delete=False, suffix='.db')
+
+        cache_dir = self.db_search_paths[0] if self.db_search_paths else None
+        if cache_dir:
+            os.makedirs(cache_dir, exist_ok=True)
+            local_path = os.path.join(cache_dir, db_filename)
+            with open(local_path, "wb") as f:
+                f.write(blob_client.download_blob().readall())
+            self._cached_paths[db_filename] = local_path
+            return sqlite3.connect(local_path), None
+
+        # Fallback to a temporary file if no cache directory
+        temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=".db")
         try:
-            blob_data = blob_client.download_blob()
-            temp_file.write(blob_data.readall())
+            temp_file.write(blob_client.download_blob().readall())
             temp_file.flush()
             temp_file.close()
-            
             return sqlite3.connect(temp_file.name), temp_file.name
         except Exception as e:
             temp_file.close()
@@ -455,6 +493,15 @@ class AzureDatabaseService:
             if temp_path:
                 self._cleanup_temp_file(temp_path)
 
+
+# Backwards compatibility for old imports
+class DatabaseService(AzureDatabaseService):
+    """Backward compatible wrapper allowing optional db_dir."""
+
+    def __init__(self, db_dir: Optional[str] = None):
+        if db_dir:
+            os.environ["OSRS_DB_DIR"] = db_dir
+        super().__init__()
 
 # Create a singleton instance
 azure_db_service = AzureDatabaseService()
