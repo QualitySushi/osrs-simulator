@@ -120,54 +120,91 @@ export function PresetSelector({ onPresetLoad, className }: PresetSelectorProps)
         <CardDescription>Save and load your equipment setups</CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="flex justify-end mb-4">
-          <Dialog open={saveDialogOpen} onOpenChange={setSaveDialogOpen}>
-            <DialogTrigger asChild>
-              <Button size="sm">
-                <Save className="h-4 w-4 mr-2" />
-                Add
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Save Loadout Preset</DialogTitle>
-                <DialogDescription>
-                  Give your preset a name to save your current setup
-                </DialogDescription>
-              </DialogHeader>
-              <div className="space-y-4 py-4">
-                <Input
-                  placeholder="Preset name..."
-                  value={presetName}
-                  onChange={(e) => setPresetName(e.target.value)}
-                />
-                <div className="text-sm">
-                  <p>Combat Style: <Badge>{params.combat_style}</Badge></p>
-                </div>
-              </div>
-              <div className="flex justify-end gap-2">
-                <Button variant="outline" onClick={() => setSaveDialogOpen(false)}>
-                  Cancel
-                </Button>
-                <Button onClick={savePreset} disabled={!presetName.trim()}>
-                  Save Preset
-                </Button>
-              </div>
-            </DialogContent>
-          </Dialog>
-        </div>
         {presets.length === 0 ? (
           <div className="text-center py-8 text-muted-foreground">
             <p>You haven&apos;t saved any presets yet.</p>
             <p className="text-sm">Save your current setup to create a preset.</p>
+            <div className="mt-4 flex justify-center">
+              <Dialog open={saveDialogOpen} onOpenChange={setSaveDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button size="sm">
+                    <Save className="h-4 w-4 mr-2" />
+                    Add
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Save Loadout Preset</DialogTitle>
+                    <DialogDescription>
+                      Give your preset a name to save your current setup
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="space-y-4 py-4">
+                    <Input
+                      placeholder="Preset name..."
+                      value={presetName}
+                      onChange={(e) => setPresetName(e.target.value)}
+                    />
+                    <div className="text-sm">
+                      <p>Combat Style: <Badge>{params.combat_style}</Badge></p>
+                    </div>
+                  </div>
+                  <div className="flex justify-end gap-2">
+                    <Button variant="outline" onClick={() => setSaveDialogOpen(false)}>
+                      Cancel
+                    </Button>
+                    <Button onClick={savePreset} disabled={!presetName.trim()}>
+                      Save Preset
+                    </Button>
+                  </div>
+                </DialogContent>
+              </Dialog>
+            </div>
           </div>
-        ) : (
-          <Tabs defaultValue="all">
-            <TabsList className="grid grid-cols-4 mb-4 align-middle w-auto">
-              <TabsTrigger value="all">All</TabsTrigger>
-              <TabsTrigger value="melee">Melee</TabsTrigger>
-              <TabsTrigger value="ranged">Ranged</TabsTrigger>
-              <TabsTrigger value="magic">Magic</TabsTrigger>
+          ) : (
+          <>
+            <div className="flex justify-end mb-4">
+              <Dialog open={saveDialogOpen} onOpenChange={setSaveDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button size="sm">
+                    <Save className="h-4 w-4 mr-2" />
+                    Add
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Save Loadout Preset</DialogTitle>
+                    <DialogDescription>
+                      Give your preset a name to save your current setup
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="space-y-4 py-4">
+                    <Input
+                      placeholder="Preset name..."
+                      value={presetName}
+                      onChange={(e) => setPresetName(e.target.value)}
+                    />
+                    <div className="text-sm">
+                      <p>Combat Style: <Badge>{params.combat_style}</Badge></p>
+                    </div>
+                  </div>
+                  <div className="flex justify-end gap-2">
+                    <Button variant="outline" onClick={() => setSaveDialogOpen(false)}>
+                      Cancel
+                    </Button>
+                    <Button onClick={savePreset} disabled={!presetName.trim()}>
+                      Save Preset
+                    </Button>
+                  </div>
+                </DialogContent>
+              </Dialog>
+            </div>
+            <Tabs defaultValue="all">
+              <TabsList className="grid grid-cols-4 mb-4 align-middle w-auto">
+                <TabsTrigger value="all">All</TabsTrigger>
+                <TabsTrigger value="melee">Melee</TabsTrigger>
+                <TabsTrigger value="ranged">Ranged</TabsTrigger>
+                <TabsTrigger value="magic">Magic</TabsTrigger>
             </TabsList>
             {Object.entries(groupedPresets).map(([key, group]) => (
               <TabsContent key={key} value={key} className="space-y-2">
@@ -216,8 +253,9 @@ export function PresetSelector({ onPresetLoad, className }: PresetSelectorProps)
                   ))
                 )}
               </TabsContent>
-            ))}
-          </Tabs>
+              ))}
+            </Tabs>
+          </>
         )}
       </CardContent>
     </Card>
