@@ -24,7 +24,10 @@ jobs:
           pip install -r backend/requirements.txt
 
       - name: Run boss scraper
-        run: python backend/webscraper/runescape-bosses/extract.py
+
+        run: |
+          cd backend/webscraper/runescape-bosses/
+          python extract.py
 
       - name: Upload boss database
         uses: actions/upload-artifact@v4
