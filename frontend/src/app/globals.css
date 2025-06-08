@@ -154,9 +154,9 @@
 }
 
 /* Button styling with subtle 3D and texture - EXCLUDES toggle components */
-.btn-primary, 
-button[class*="bg-primary"]:not([data-slot="toggle"]):not([data-slot="toggle-box"]),
-button:not([data-slot="toggle"]):not([data-slot="toggle-box"]) {
+.btn-primary,
+button[class*="bg-primary"]:not([data-slot="toggle"]):not([data-slot="toggle-box"]):not([data-slot="toggle-group-item"]):not([role="tab"]),
+button:not([data-slot="toggle"]):not([data-slot="toggle-box"]):not([data-slot="toggle-group-item"]):not([role="tab"]) {
   padding-left: 3px;
   padding-right: 3px;
   margin-left: 3px;
@@ -175,16 +175,16 @@ button:not([data-slot="toggle"]):not([data-slot="toggle-box"]) {
 }
 
 .btn-primary:hover,
-button[class*="bg-primary"]:not([data-slot="toggle"]):not([data-slot="toggle-box"]):hover,
-button:not([data-slot="toggle"]):not([data-slot="toggle-box"]):hover {
+button[class*="bg-primary"]:not([data-slot="toggle"]):not([data-slot="toggle-box"]):not([data-slot="toggle-group-item"]):not([role="tab"]):hover,
+button:not([data-slot="toggle"]):not([data-slot="toggle-box"]):not([data-slot="toggle-group-item"]):not([role="tab"]):hover {
   filter: brightness(1.05);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 4px 6px rgba(0, 0, 0, 0.25);
   transform: translateY(-1px);
 }
 
 .btn-primary:active,
-button[class*="bg-primary"]:not([data-slot="toggle"]):not([data-slot="toggle-box"]):active,
-button:not([data-slot="toggle"]):not([data-slot="toggle-box"]):active {
+button[class*="bg-primary"]:not([data-slot="toggle"]):not([data-slot="toggle-box"]):not([data-slot="toggle-group-item"]):not([role="tab"]):active,
+button:not([data-slot="toggle"]):not([data-slot="toggle-box"]):not([data-slot="toggle-group-item"]):not([role="tab"]):active {
   transform: translateY(1px);
   box-shadow: inset 0 1px 0 rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.25);
 }
@@ -289,10 +289,18 @@ button[role="tab"] {
   font-weight: 500;
 }
 
+button[role="tab"]:not([data-state="active"]) {
+  filter: brightness(0.85);
+}
+
 button[role="tab"][data-state="active"] {
   background-color: var(--primary);
   color: var(--primary-foreground);
   font-weight: 600;
+}
+
+button[data-slot="toggle-group-item"]:not([data-state="on"]) {
+  filter: brightness(0.85);
 }
 
 /* Form inputs styling */
