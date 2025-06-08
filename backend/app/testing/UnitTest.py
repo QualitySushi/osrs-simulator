@@ -270,32 +270,31 @@ class TestRangedCalculator(unittest.TestCase):
         test_levels = [0, 75, 150, 200, 250, 300]
         
         for level in test_levels:
-            result = RangedCalculator.calculate_twisted_bow_bonus(level)
-            
-            # Check result structure
-            self.assertIn("accuracy_multiplier", result)
-            self.assertIn("damage_multiplier", result)
-            self.assertIn("effect_description", result)
-            
-            # Magic level is capped at 250
-            capped_level = min(level, 250)
-            
-            # For level 0, according to the formula:
-            # Accuracy = (140 - 10)/100 - 100² / 100 = 1.3 - 100 = -98.7%
-            # Since negative values are capped at 0%, the actual formula gives 0.399
-            if level == 0:
-                self.assertAlmostEqual(result["accuracy_multiplier"], 0.399, delta=0.1)
-                self.assertAlmostEqual(result["damage_multiplier"], 0.236, delta=0.1)
-            
-            # For level 300, should use capped value of 250
-            if level == 300:
-                tbow_250 = RangedCalculator.calculate_twisted_bow_bonus(250)
-                self.assertEqual(result["accuracy_multiplier"], tbow_250["accuracy_multiplier"])
-                self.assertEqual(result["damage_multiplier"], tbow_250["damage_multiplier"])
-            
-            # Multipliers should be within their capped ranges
-            self.assertTrue(0 <= result["accuracy_multiplier"] <= 1.4)
-            self.assertTrue(0 <= result["damage_multiplier"] <= 2.5)
+            with self.subTest(level=level):
+                result = RangedCalculator.calculate_twisted_bow_bonus(level)
+
+                # Check result structure
+                self.assertIn("accuracy_multiplier", result)
+                self.assertIn("damage_multiplier", result)
+                self.assertIn("effect_description", result)
+
+                # Magic level is capped at 250
+                capped_level = min(level, 250)
+
+                # For level 0, expected special case values
+                if level == 0:
+                    self.assertAlmostEqual(result["accuracy_multiplier"], 0.399, delta=0.1)
+                    self.assertAlmostEqual(result["damage_multiplier"], 0.236, delta=0.1)
+
+                # For level 300, should equal level 250 calculation
+                if level == 300:
+                    tbow_250 = RangedCalculator.calculate_twisted_bow_bonus(250)
+                    self.assertEqual(result["accuracy_multiplier"], tbow_250["accuracy_multiplier"])
+                    self.assertEqual(result["damage_multiplier"], tbow_250["damage_multiplier"])
+
+                # Multipliers should be within their capped ranges
+                self.assertTrue(0 <= result["accuracy_multiplier"] <= 1.4)
+                self.assertTrue(0 <= result["damage_multiplier"] <= 2.5)
 
 
 class TestMagicCalculator(unittest.TestCase):

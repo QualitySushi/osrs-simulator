@@ -15,4 +15,16 @@ describe('calculator store', () => {
     });
     expect(useCalculatorStore.getState().comparisonResults.length).toBeGreaterThan(0);
   });
+
+  it('switches combat styles and resets params', () => {
+    act(() => {
+      useCalculatorStore.getState().switchCombatStyle('ranged');
+    });
+    expect(useCalculatorStore.getState().params.combat_style).toBe('ranged');
+
+    act(() => {
+      useCalculatorStore.getState().switchCombatStyle('magic');
+    });
+    expect(useCalculatorStore.getState().params.combat_style).toBe('magic');
+  });
 });

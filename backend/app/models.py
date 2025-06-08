@@ -183,7 +183,6 @@ class DpsParameters(BaseModel):
     target_defence_bonus: int = 0
     target_magic_level: int = 1
     target_magic_defence: int = 0
-    target_ranged_defence_bonus: int = 0
 
     class Config:
         validate_assignment = True

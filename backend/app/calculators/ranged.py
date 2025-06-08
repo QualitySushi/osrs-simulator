@@ -25,7 +25,7 @@ class RangedCalculator:
         - Values > 100% = bonus (e.g., 140% = 1.4x multiplier)
         - Values < 100% = penalty (e.g., 50% = 0.5x multiplier)
         """
-        # Cap magic level at TWISTED_BOW_MAGIC_CAP for calculations (350 in raids)
+        # Cap magic level at TWISTED_BOW_MAGIC_CAP for calculations (250 in raids)
         capped_magic = max(0, min(target_magic_level, TWISTED_BOW_MAGIC_CAP))
         
         # Calculate accuracy using the wiki formula (as a percentage)
@@ -101,7 +101,8 @@ class RangedCalculator:
             # Note: accuracy is applied separately below
             params["gear_multiplier"] = params.get("gear_multiplier", 1.0) * tbow_damage_multiplier
             
-            print(f"[DEBUG] Applied Twisted bow multiplier: damage={tbow_damage_multiplier:.2f}x, accuracy={tbow_accuracy_multiplier:.2f}x")
+            if params.get("debug"):
+                print(f"[DEBUG] Applied Twisted bow multiplier: damage={tbow_damage_multiplier:.2f}x, accuracy={tbow_accuracy_multiplier:.2f}x")
         
         # Step 1: Effective Ranged Strength
         base_rng = params["ranged_level"] + params.get("ranged_boost", 0)
@@ -149,40 +150,40 @@ class RangedCalculator:
         avg_hit = hit_chance * (max_hit + 1) / 2
         dps = avg_hit / params["attack_speed"]
 
-        # Debug print
-        print("=== Ranged DPS Calculation Debug ===")
-        print(f"→ Input Stats:")
-        print(f"  Ranged Level: {params['ranged_level']}")
-        print(f"  Ranged Boost: {params.get('ranged_boost', 0)}")
-        print(f"  Prayer Modifier: {params.get('ranged_prayer', 1.0)}")
-        print(f"  Style Bonus (Attack): {params.get('attack_style_bonus_attack', 0)}")
-        print(f"  Style Bonus (Strength): {params.get('attack_style_bonus_strength', 0)}")
-        print(f"  Void Ranged: {params.get('void_ranged', False)}")
-        print(f"  Gear Multiplier: {params.get('gear_multiplier', 1.0)}")
-        if tbow_accuracy_multiplier != 1.0:
-            print(f"  Tbow Accuracy Multiplier: {tbow_accuracy_multiplier}")
-            print(f"  Tbow Damage Multiplier: {tbow_damage_multiplier}")
-        print()
-        print(f"→ Effective Strength: {effective_str}")
-        print(f"  Ranged Strength Bonus: {params['ranged_strength_bonus']}")
-        print(f"  Max Hit: {max_hit}")
-        print()
-        print(f"→ Effective Attack: {effective_atk}")
-        print(f"  Ranged Attack Bonus: {params['ranged_attack_bonus']}")
-        print(f"  Attack Roll: {attack_roll}")
-        print()
-        print(f"→ Target Stats:")
-        print(f"  Defence Level: {params['target_defence_level']}")
-        print(f"  Ranged Defence Bonus: {params['target_defence_bonus']}")
-        if params.get("target_magic_level") is not None:
-            print(f"  Magic Level: {params.get('target_magic_level')}")
-        print(f"  Defence Roll: {def_roll}")
-        print()
-        print(f"→ Hit Chance: {hit_chance:.4f}")
-        print(f"→ Average Hit: {avg_hit:.4f}")
-        print(f"→ Attack Speed: {params['attack_speed']}s")
-        print(f"→ DPS: {dps:.4f}")
-        print("====================================")
+        if params.get("debug"):
+            print("=== Ranged DPS Calculation Debug ===")
+            print(f"→ Input Stats:")
+            print(f"  Ranged Level: {params['ranged_level']}")
+            print(f"  Ranged Boost: {params.get('ranged_boost', 0)}")
+            print(f"  Prayer Modifier: {params.get('ranged_prayer', 1.0)}")
+            print(f"  Style Bonus (Attack): {params.get('attack_style_bonus_attack', 0)}")
+            print(f"  Style Bonus (Strength): {params.get('attack_style_bonus_strength', 0)}")
+            print(f"  Void Ranged: {params.get('void_ranged', False)}")
+            print(f"  Gear Multiplier: {params.get('gear_multiplier', 1.0)}")
+            if tbow_accuracy_multiplier != 1.0:
+                print(f"  Tbow Accuracy Multiplier: {tbow_accuracy_multiplier}")
+                print(f"  Tbow Damage Multiplier: {tbow_damage_multiplier}")
+            print()
+            print(f"→ Effective Strength: {effective_str}")
+            print(f"  Ranged Strength Bonus: {params['ranged_strength_bonus']}")
+            print(f"  Max Hit: {max_hit}")
+            print()
+            print(f"→ Effective Attack: {effective_atk}")
+            print(f"  Ranged Attack Bonus: {params['ranged_attack_bonus']}")
+            print(f"  Attack Roll: {attack_roll}")
+            print()
+            print(f"→ Target Stats:")
+            print(f"  Defence Level: {params['target_defence_level']}")
+            print(f"  Ranged Defence Bonus: {params['target_defence_bonus']}")
+            if params.get("target_magic_level") is not None:
+                print(f"  Magic Level: {params.get('target_magic_level')}")
+            print(f"  Defence Roll: {def_roll}")
+            print()
+            print(f"→ Hit Chance: {hit_chance:.4f}")
+            print(f"→ Average Hit: {avg_hit:.4f}")
+            print(f"→ Attack Speed: {params['attack_speed']}s")
+            print(f"→ DPS: {dps:.4f}")
+            print("====================================")
 
         return {
             "dps": dps,
