@@ -5,7 +5,6 @@ node_modules/
 
 /backend/db/
 /backend/app/venv
-/backend/webscraper/
 
 # Build output
 .next/
