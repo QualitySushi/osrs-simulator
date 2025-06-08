@@ -3,15 +3,15 @@ name: Deploy Backend to Azure Function App
 on:
   push:
     branches: [ main ]
-    paths: [ 'backend/**', 'api/**' ]  # Trigger when backend changes
+    paths: [ 'backend/**' ]  # Trigger when backend changes
   pull_request:
     branches: [ main ]
-    paths: [ 'backend/**', 'api/**' ]
+    paths: [ 'backend/**' ]
   workflow_dispatch:  # Allow manual deployment
 
 env:
   AZURE_FUNCTIONAPP_NAME: 'OSRS-Simulator-API'
-  AZURE_FUNCTIONAPP_PACKAGE_PATH: './api'
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: './backend'
   PYTHON_VERSION: '3.11'
 
 jobs:
@@ -22,8 +22,6 @@ jobs:
     - name: 'Checkout GitHub Action'
       uses: actions/checkout@v4
 
-    - name: Include backend in API package
-      run: cp -r backend api/
 
     - name: Setup Python
       uses: actions/setup-python@v4
@@ -48,7 +46,7 @@ jobs:
       run: |
         cd ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
         source venv/bin/activate
-        python backend/app/testing/UnitTest.py
+        python app/testing/UnitTest.py
 
     - name: 'Login to Azure'
       uses: azure/login@v1
