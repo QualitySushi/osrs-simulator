@@ -187,18 +187,18 @@ class DatabaseService:
         try:
             with sqlite3.connect(self.boss_db_path) as conn:
                 cursor = conn.cursor()
-            cursor.execute(
+                cursor.execute(
+                    """
+                SELECT
+                    id, name, raid_group, location, has_multiple_forms
+                FROM bosses
+                ORDER BY name
                 """
-            SELECT
-                id, name, raid_group, location, has_multiple_forms
-            FROM bosses
-            ORDER BY name
-            """
-            )
+                )
 
-            bosses = []
-            for row in cursor.fetchall():
-                icon = None
+                bosses = []
+                for row in cursor.fetchall():
+                    icon = None
                 try:
                     cursor.execute(
                         """
@@ -222,7 +222,6 @@ class DatabaseService:
                             icon = form_row[1]
                 except Exception:
                     icon = None
-
                 bosses.append(
                     {
                         "id": row[0],
@@ -234,7 +233,7 @@ class DatabaseService:
                     }
                 )
 
-                return bosses
+            return bosses
         except Exception as e:
             print(f"Error getting bosses: {e}")
             return []
@@ -378,24 +377,24 @@ class DatabaseService:
         try:
             with sqlite3.connect(self.item_db_path) as conn:
                 cursor = conn.cursor()
-            cursor.execute(
-                """
-            SELECT 
-                id, name, has_special_attack, has_passive_effect, 
-                has_combat_stats, is_tradeable, slot
-            FROM items
-            WHERE name LIKE ?
-            LIMIT ?
-            """,
-                (f"%{query}%", limit),
-            )
+                cursor.execute(
+                    """
+                SELECT
+                    id, name, has_special_attack, has_passive_effect,
+                    has_combat_stats, is_tradeable, slot
+                FROM items
+                WHERE name LIKE ?
+                LIMIT ?
+                """,
+                    (f"%{query}%", limit),
+                )
 
-            items = []
-            for row in cursor.fetchall():
-                items.append(
-                    {
-                        "id": row[0],
-                        "name": row[1],
+                items = []
+                for row in cursor.fetchall():
+                    items.append(
+                        {
+                            "id": row[0],
+                            "name": row[1],
                         "has_special_attack": bool(row[2]),
                         "has_passive_effect": bool(row[3]),
                         "has_combat_stats": bool(row[4]),
@@ -404,7 +403,7 @@ class DatabaseService:
                     }
                 )
 
-                return items
+            return items
         except Exception as e:
             print(f"Error searching items: {e}")
             return []
@@ -419,29 +418,29 @@ class DatabaseService:
         try:
             with sqlite3.connect(self.boss_db_path) as conn:
                 cursor = conn.cursor()
-            cursor.execute(
-                """
-            SELECT 
-                id, name, raid_group, location
-            FROM bosses
-            WHERE name LIKE ?
-            LIMIT ?
-            """,
-                (f"%{query}%", limit),
-            )
-
-            bosses = []
-            for row in cursor.fetchall():
-                bosses.append(
-                    {
-                        "id": row[0],
-                        "name": row[1],
-                        "raid_group": row[2],
-                        "location": row[3],
-                    }
+                cursor.execute(
+                    """
+                SELECT
+                    id, name, raid_group, location
+                FROM bosses
+                WHERE name LIKE ?
+                LIMIT ?
+                """,
+                    (f"%{query}%", limit),
                 )
 
-                return bosses
+                bosses = []
+                for row in cursor.fetchall():
+                    bosses.append(
+                        {
+                            "id": row[0],
+                            "name": row[1],
+                            "raid_group": row[2],
+                            "location": row[3],
+                        }
+                    )
+
+            return bosses
         except Exception as e:
             print(f"Error searching bosses: {e}")
             return []
