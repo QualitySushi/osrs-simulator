@@ -242,12 +242,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
     Jagex for creating Old School RuneScape
     The OSRS community for verifying formulas and mechanics
 
-📝 References
-
-    OSRS Combat Formulas
-    DPS Calculator Theory
-    Equipment Stats
-
-📧 Contact
-
 OSRS DPS Calculator is not affiliated with Jagex Ltd. Old School RuneScape and Jagex are trademarks of Jagex Ltd.
