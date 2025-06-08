@@ -299,6 +299,12 @@ button[role="tab"][data-state="active"] {
   font-weight: 600;
 }
 
+button[data-slot="toggle-group-item"][data-state="on"] {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+  font-weight: 600;
+}
+
 button[data-slot="toggle-group-item"]:not([data-state="on"]) {
   filter: brightness(0.85);
 }
