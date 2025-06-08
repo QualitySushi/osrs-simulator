@@ -258,24 +258,22 @@ export function PrayerPotionSelector({ className }: { className?: string }) {
           
           <TabsContent value="prayer" className="space-y-4">
             <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <Label htmlFor="prayer-select">Combat Prayer</Label>
-                <Select
-                  value={selectedPrayer}
-                  onValueChange={handlePrayerChange}
-                >
-                  <SelectTrigger id="prayer-select" className="w-[250px]">
-                    <SelectValue placeholder="Select prayer" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {PRAYER_OPTIONS[combatStyle].map((prayer) => (
-                      <SelectItem key={prayer.value} value={prayer.value}>
-                        {prayer.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+              <Label htmlFor="prayer-select">Combat Prayer</Label>
+              <Select
+                value={selectedPrayer}
+                onValueChange={handlePrayerChange}
+              >
+                <SelectTrigger id="prayer-select" className="w-full">
+                  <SelectValue placeholder="Select prayer" />
+                </SelectTrigger>
+                <SelectContent>
+                  {PRAYER_OPTIONS[combatStyle].map((prayer) => (
+                    <SelectItem key={prayer.value} value={prayer.value}>
+                      {prayer.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
               
               <div className="flex items-center gap-4 pt-2">
                 <ToggleBox
