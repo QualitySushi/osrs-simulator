@@ -2,7 +2,7 @@ name: Generate Databases
 
 on:
   schedule:
-    - cron: '0 0 * * 0'  # Fixed cron syntax - runs weekly on Sunday at midnight
+    - cron: '0 0 * * 0'  # Runs weekly on Sunday at midnight
   workflow_dispatch:
 
 jobs:
@@ -22,12 +22,16 @@ jobs:
       - name: Install dependencies
         run: |
           pip install -r backend/app/requirements.txt
-
+          
       - name: Generate valid item list
-        run: python backend/webscraper/runescape-items/generate_valid_items.py
+        run: |
+          cd backend/webscraper/runescape-items/
+          python generate_valid_items.py
       
       - name: Run item scraper
-        run: python backend/webscraper/runescape-items/osrs_item_scraper.py
+        run: |
+          cd backend/webscraper/runescape-items/
+          python osrs_item_scraper.py
       
       - name: Run boss scraper
         run: python backend/webscraper/runescape-bosses/extract.py
