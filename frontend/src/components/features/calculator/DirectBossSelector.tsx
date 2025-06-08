@@ -288,21 +288,13 @@ export function DirectBossSelector({ onSelectBoss, onSelectForm }: DirectBossSel
         {/* Form selector */}
         {selectedBoss && bossDetails?.forms && bossDetails.forms.length > 0 && (
           <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <label className="text-sm font-medium">Select Form/Phase</label>
-
-              <Button variant="outline" size="sm" onClick={handleResetBoss}>
-
-                <RotateCcw className="h-4 w-4 mr-2" />
-                Reset
-              </Button>
-            </div>
+            <label className="text-sm font-medium">Select Form/Phase</label>
             {isLoadingDetails ? (
               <div className="flex items-center text-sm text-muted-foreground">
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 Loading boss details...
               </div>
-            ) : (
+            ) : (<div className="flex items-center gap-2">
               <Select
                 value={selectedForm?.id.toString() || ''}
                 onValueChange={(value: string) => {
@@ -323,6 +315,11 @@ export function DirectBossSelector({ onSelectBoss, onSelectForm }: DirectBossSel
                   ))}
                 </SelectContent>
               </Select>
+                <Button variant="outline" size="sm" onClick={handleResetBoss}>
+                  <RotateCcw className="h-4 w-4 mr-2" />
+                  Reset
+                </Button>
+              </div>
             )}
           </div>
         )}
