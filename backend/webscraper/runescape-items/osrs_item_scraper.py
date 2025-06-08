@@ -400,67 +400,74 @@ def extract_infobox_and_effects(html_content):
     # Extract combat styles
     combat_styles_table = soup.find("table", class_="wikitable combat-styles")
     if combat_styles_table:
-        styles = []
-        default_attack_speed = None
-        style_rows = combat_styles_table.find_all("tr")[2:]
-        prev_values = {}
+        rows = combat_styles_table.find_all("tr")
+        if len(rows) >= 2:
+            # First header row usually omits the icon column, so prepend it
+            header_cells = rows[1].find_all(["th", "td"])
+            headers = ["icon"] + [h.get_text(strip=True).lower() for h in header_cells]
 
-        for row in style_rows:
-            cells = row.find_all(["td", "th"])
+            num_cols = len(headers)
+            pending = [None] * num_cols
+            styles = []
+            default_attack_speed = None
 
-            # Fill missing cells using previous values
-            current = []
-            cell_index = 0
-            for i in range(8):  # Max expected columns
-                if cell_index < len(cells):
-                    text = cells[cell_index].get_text(strip=True)
-                    current.append(text)
-                    prev_values[i] = text
-                    cell_index += 1
-                else:
-                    current.append(prev_values.get(i, ""))
+            for row in rows[2:]:
+                cells = row.find_all(["td", "th"])
+                row_values = []
+                cell_idx = 0
+                for col in range(num_cols):
+                    if pending[col]:
+                        val, remain = pending[col]
+                        row_values.append(val)
+                        remain -= 1
+                        pending[col] = (val, remain) if remain > 0 else None
+                    else:
+                        if cell_idx < len(cells):
+                            cell = cells[cell_idx]
+                            val = cell.get_text(strip=True)
+                            row_values.append(val)
+                            rowspan = cell.get("rowspan")
+                            if rowspan and rowspan.isdigit() and int(rowspan) > 1:
+                                pending[col] = (val, int(rowspan) - 1)
+                            cell_idx += 1
+                        else:
+                            row_values.append("")
 
-            def resolve(i):
-                return current[i] if current[i] else prev_values.get(i, "")
+                if default_attack_speed is None and row_values[4]:
+                    default_attack_speed = row_values[4]
 
-            # Extract default speed from first row if not already set
-            if default_attack_speed is None and resolve(4):
-                default_attack_speed = resolve(4)
+                style = {
+                    "name": row_values[1],
+                    "attack_type": row_values[2],
+                    "style": row_values[3],
+                    "speed": row_values[4] or default_attack_speed or "",
+                    "range": row_values[5],
+                    "experience": row_values[6] if len(row_values) > 6 else "",
+                }
 
-            style = {
-                "name": resolve(1),
-                "attack_type": resolve(2),
-                "style": resolve(3),
-                "speed": resolve(4) or default_attack_speed or "",  # Use default if current is empty
-                "range": resolve(5),
-                "experience": resolve(6),
-            }
+                if len(row_values) > 7 and row_values[7]:
+                    style["boost"] = row_values[7]
 
-            if resolve(7):
-                style["boost"] = resolve(7)
+                if default_attack_speed is None:
+                    match = re.search(r"\(([\d.]+)s\)", row_values[4])
+                    if match:
+                        default_attack_speed = float(match.group(1))
 
-            # Extract speed number for future reference if not already done
-            if default_attack_speed is None:
-                match = re.search(r"\(([\d.]+)s\)", prev_values.get(4, ""))
-                if match:
-                    default_attack_speed = float(match.group(1))
+                styles.append(style)
 
-            styles.append(style)
+            if styles:
+                if default_attack_speed is not None:
+                    for style in styles:
+                        if not style["speed"] and default_attack_speed:
+                            ticks = round(float(default_attack_speed) / 0.6)
+                            style["speed"] = f"{ticks} ticks ({default_attack_speed}s)"
 
-        if styles:
-            # Before saving, ensure all styles have a speed value if we have a default
-            if default_attack_speed is not None:
-                for style in styles:
-                    if not style["speed"]:
-                        # If we have the numeric value but not the original text format,
-                        # try to reconstruct a standard format
-                        ticks = round(default_attack_speed / 0.6)
-                        style["speed"] = f"{ticks} ticks ({default_attack_speed}s)"
-
-            result["combat_stats"]["combat_styles"] = styles
-            log(f"✅ Found combat styles: {[s['name'] for s in styles]}")
+                result["combat_stats"]["combat_styles"] = styles
+                log(f"✅ Found combat styles: {[s['name'] for s in styles]}")
+            else:
+                log("⚠️ Combat styles table found but no valid styles parsed.")
         else:
-            log("⚠️ Combat styles table found but no valid styles parsed.")
+            log("⚠️ Combat styles table found but not enough rows to parse.")
     else:
         log("❌ No combat styles table found.")
 
