@@ -20,7 +20,7 @@ Key Features
 🚀 Getting Started
 Prerequisites
 
-    Node.js 16+
+    Node.js 18.x or later
     Python 3.8+
     npm or yarn
     pip
@@ -31,8 +31,8 @@ Frontend Setup
 bash
 
 # Clone the repository
-git clone https://github.com/yourusername/osrs-dps-calculator.git
-cd osrs-dps-calculator
+git clone https://github.com/yourusername/osrs-simulator.git
+cd osrs-simulator
 
 # Install dependencies
 npm install
@@ -117,7 +117,7 @@ Else:
 
 DPS:
 
-DPS = Hit Chance × (Max Hit / 2) / Attack Speed
+DPS = Hit Chance × ((Max Hit + 1) / 2) / Attack Speed
 
 ⚙️ Configuration
 Environment Variables
@@ -181,6 +181,29 @@ json
   "effective_str": 110,
   "effective_atk": 107
 }
+
+Calculate Item Effect
+
+POST /calculate/item-effect
+
+Request Body:
+
+```json
+{
+  "weapon_name": "Twisted bow",
+  "target_magic_level": 200
+}
+```
+
+Response:
+
+```json
+{
+  "accuracy_multiplier": 1.299,
+  "damage_multiplier": 1.919,
+  "effect_description": "Twisted Bow vs 200 magic: +29.9% accuracy, +91.9% damage"
+}
+```
 
 See the API documentation at /docs for more endpoints.
 📊 Data Sources

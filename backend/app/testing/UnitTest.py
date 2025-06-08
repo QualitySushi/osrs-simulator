@@ -220,7 +220,7 @@ class TestRangedCalculator(unittest.TestCase):
         self.assertEqual(result["max_hit"], expected_max_hit)
 
         self.assertEqual(result["effective_atk"], 99 + 8 + 0)
-        expected_attack_roll = math.floor((99 + 8) * (70 + 64))  # Fixed line
+        expected_attack_roll = math.floor((99 + 8) * (70 + 64))
         self.assertEqual(result["attack_roll"], expected_attack_roll)
 
         expected_def_roll = (200 + 9) * (60 + 64)
@@ -239,7 +239,7 @@ class TestRangedCalculator(unittest.TestCase):
         result = RangedCalculator.calculate_dps(void_params)
 
         self.assertEqual(result["effective_str"], math.floor((99 + 8) * 1.125))
-        self.assertEqual(result["effective_atk"], math.floor((99 + 8) * 1.1))  # Fixed line
+        self.assertEqual(result["effective_atk"], math.floor((99 + 8) * 1.1))
     
     def test_twisted_bow(self):
         """Test the Twisted Bow special effect calculation."""
