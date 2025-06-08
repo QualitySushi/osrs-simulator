@@ -5,7 +5,6 @@ import {
   Tooltip, TooltipContent, TooltipProvider, TooltipTrigger
 } from '@/components/ui/tooltip';
 import { Item } from '@/types/calculator';
-import { useCalculatorStore } from '@/store/calculator-store';
 import { BossForm } from '@/types/calculator';
 
 // Define attack styles with their bonuses
@@ -111,50 +110,10 @@ export function AttackStyleSelector({
   selectedAttackStyle,
   onSelectAttackStyle
 }: AttackStyleSelectorProps) {
-  const { params, setParams } = useCalculatorStore();
-  
-  // Render melee-specific attack type selector
-  const renderMeleeAttackTypeSelector = () => {
-    if (combatStyle !== 'melee') return null;
-    
-    return (
-      <>
-        <div className="mb-1 text-sm text-muted-foreground">Attack Type:</div>
-        <div className="flex gap-2 justify-center mb-2">
-          {(['stab', 'slash', 'crush'] as const).map((type) => {
-            return (
-              <Button
-                key={type}
-                variant={params.attack_type === type ? 'default' : 'outline'}
-                size="sm"
-                onClick={() => {
-                  const weapon = loadout['2h'] || loadout['mainhand'];
-                  const attackBonuses = weapon?.combat_stats?.attack_bonuses || {};
-                  const bonus = attackBonuses[type] || 0;
 
-                  const defenceBonus = bossForm?.[`defence_${type}` as keyof BossForm] ?? 0;
-
-                  setParams({
-                    attack_type: type,
-                    melee_attack_bonus: bonus,
-                    target_defence_type: ATTACK_TYPE_TO_DEFENCE_TYPE[type],
-                    target_defence_bonus: defenceBonus
-                  });
-                }}
-              >
-                {type.charAt(0).toUpperCase() + type.slice(1)}
-              </Button>
-            );
-          })}
-        </div>
-      </>
-    );
-  };
 
   return (
     <div className="p-3 text-center">
-      {renderMeleeAttackTypeSelector()}
-
       <div className="mb-1 text-sm text-muted-foreground">
         {combatStyle === 'melee' 
           ? "Combat Style:" 

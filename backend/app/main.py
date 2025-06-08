@@ -255,7 +255,36 @@ async def get_item(item_id: int):
                             "ranged strength": 20,
                             "magic damage": "+0%",
                             "prayer": 0
-                        }
+                        },
+                        "combat_styles": [
+                            {
+                                "name": "Accurate",
+                                "attack_type": "Ranged",
+                                "style": "Accurate",
+                                "speed": "5 ticks (3.0s)",
+                                "range": "10 tiles",
+                                "experience": "",
+                                "boost": "+3 Attack"
+                            },
+                            {
+                                "name": "Rapid",
+                                "attack_type": "Ranged",
+                                "style": "Rapid",
+                                "speed": "4 ticks (2.4s)",
+                                "range": "10 tiles",
+                                "experience": "",
+                                "boost": ""
+                            },
+                            {
+                                "name": "Longrange",
+                                "attack_type": "Ranged",
+                                "style": "Longrange",
+                                "speed": "5 ticks (3.0s)",
+                                "range": "10 tiles",
+                                "experience": "",
+                                "boost": "+3 Defence"
+                            }
+                        ]
                     }
                 }
             elif item_id == 2:  # Abyssal whip
@@ -287,7 +316,45 @@ async def get_item(item_id: int):
                             "ranged strength": 0,
                             "magic damage": "+0%",
                             "prayer": 0
-                        }
+                        },
+                        "combat_styles": [
+                            {
+                                "name": "Chop",
+                                "attack_type": "Slash",
+                                "style": "Accurate",
+                                "speed": "5 ticks (3.0s)",
+                                "range": "1 tile",
+                                "experience": "",
+                                "boost": "+3 Attack"
+                            },
+                            {
+                                "name": "Slash",
+                                "attack_type": "Slash",
+                                "style": "Aggressive",
+                                "speed": "5 ticks (3.0s)",
+                                "range": "1 tile",
+                                "experience": "",
+                                "boost": "+3 Strength"
+                            },
+                            {
+                                "name": "Lunge",
+                                "attack_type": "Stab",
+                                "style": "Controlled",
+                                "speed": "5 ticks (3.0s)",
+                                "range": "1 tile",
+                                "experience": "",
+                                "boost": "+1 Attack, Strength, Defence"
+                            },
+                            {
+                                "name": "Block",
+                                "attack_type": "Slash",
+                                "style": "Defensive",
+                                "speed": "5 ticks (3.0s)",
+                                "range": "1 tile",
+                                "experience": "",
+                                "boost": "+3 Defence"
+                            }
+                        ]
                     }
                 }
             else:
