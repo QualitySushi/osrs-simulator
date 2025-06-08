@@ -34,7 +34,7 @@ export function CombatStatsSummary({
   return (
     <div className="mt-4 p-3 bg-slate-100 dark:bg-slate-800 rounded-md">
       <h4 className="font-medium text-sm mb-2">Combat Setup:</h4>
-      <div className="grid grid-cols-2 gap-2 text-sm text-center">
+      <div className="grid grid-cols-3 gap-2 text-sm text-center">
         <div>
           <span className="text-muted-foreground">Combat Style:</span>{' '}
           <span className="font-medium capitalize">{combatStyle}</span>
