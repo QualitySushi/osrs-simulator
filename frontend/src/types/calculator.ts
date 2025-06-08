@@ -204,6 +204,7 @@ export interface BossForm {
   weakness?: CombatStyle | null;
   attack_styles?: string[];
   immunities?: string[];
+  icons?: string[];
 }
 
 export interface Item {
@@ -225,6 +226,7 @@ export interface Item {
     quests?: string[];
   };
   release_date?: string;
+  icons?: string[];
 }
 
 export interface ItemCombatStats {

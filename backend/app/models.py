@@ -1,8 +1,10 @@
 from pydantic import BaseModel, Field
 from typing import Dict, List, Optional, Any, Union
 
+
 class DpsResult(BaseModel):
     """Result of a DPS calculation."""
+
     dps: float
     max_hit: int
     hit_chance: float
@@ -13,8 +15,10 @@ class DpsResult(BaseModel):
     effective_atk: Optional[int] = None
     damage_multiplier: Optional[float] = None
 
+
 class BossForm(BaseModel):
     """Represents a specific form or phase of a boss."""
+
     id: int
     boss_id: int
     form_name: str
@@ -57,12 +61,15 @@ class BossForm(BaseModel):
     thrall_immunity: Optional[bool] = None
     special_mechanics: Optional[str] = None
     image_url: Optional[str] = None
+    icons: Optional[List[str]] = None
     size: Optional[int] = None
     npc_ids: Optional[str] = None
     assigned_by: Optional[str] = None
 
+
 class Boss(BaseModel):
     """Represents a boss with metadata."""
+
     id: int
     name: str
     raid_group: Optional[str] = None
@@ -75,23 +82,29 @@ class Boss(BaseModel):
     has_multiple_forms: bool = False
     forms: List[BossForm] = []
 
+
 class BossSummary(BaseModel):
     """Summary representation of a boss."""
+
     id: int
     name: str
     raid_group: Optional[str] = None
     location: Optional[str] = None
     has_multiple_forms: bool = False
 
+
 class ItemStats(BaseModel):
     """Combat statistics for an item."""
+
     attack_bonuses: Dict[str, int] = Field(default_factory=dict)
     defence_bonuses: Dict[str, int] = Field(default_factory=dict)
     other_bonuses: Dict[str, Union[int, str]] = Field(default_factory=dict)
     combat_styles: Optional[List[Dict[str, Any]]] = Field(default_factory=list)
 
+
 class Item(BaseModel):
     """Represents an equipment item with metadata and stats."""
+
     id: int
     name: str
     slot: Optional[str] = None
@@ -100,11 +113,14 @@ class Item(BaseModel):
     passive_effect_text: Optional[str] = None
     is_tradeable: bool = True
     has_combat_stats: bool = True
+    icons: Optional[List[str]] = None
     combat_stats: Optional[ItemStats] = None
     special_attack: Optional[str] = None
 
+
 class ItemSummary(BaseModel):
     """Summary representation of an item."""
+
     id: int
     name: str
     slot: Optional[str] = None
@@ -112,17 +128,20 @@ class ItemSummary(BaseModel):
     has_passive_effect: bool = False
     is_tradeable: bool = True
     has_combat_stats: bool = True
+    icons: Optional[List[str]] = None
+
 
 class DpsParameters(BaseModel):
     """Parameters for DPS calculation."""
+
     combat_style: str = "melee"
-    
+
     # Common parameters
     attack_speed: float = 2.4
     gear_multiplier: float = 1.0
     special_multiplier: float = 1.0
     attack_style_bonus: Optional[int] = Field(default=0)
-    
+
     # Melee parameters
     strength_level: Optional[int] = None
     strength_boost: Optional[int] = None
@@ -133,7 +152,7 @@ class DpsParameters(BaseModel):
     attack_prayer: Optional[float] = None
     melee_attack_bonus: Optional[int] = None
     void_melee: Optional[bool] = None
-    
+
     # Ranged parameters
     ranged_level: Optional[int] = None
     ranged_boost: Optional[int] = None
@@ -141,7 +160,7 @@ class DpsParameters(BaseModel):
     ranged_strength_bonus: Optional[int] = None
     ranged_attack_bonus: Optional[int] = None
     void_ranged: Optional[bool] = None
-    
+
     # Magic parameters
     magic_level: Optional[int] = None
     magic_boost: Optional[int] = None
@@ -156,19 +175,21 @@ class DpsParameters(BaseModel):
     prayer_bonus: Optional[float] = None
     elemental_weakness: Optional[float] = None
     salve_bonus: Optional[float] = None
-    
+
     # Target parameters
     target_defence_level: int = 1
     target_defence_bonus: int = 0
     target_magic_level: int = 1
     target_magic_defence: int = 0
     target_ranged_defence_bonus: int = 0
-    
+
     class Config:
         validate_assignment = True
         extra = "allow"  # Allow extra fields for future expansion
 
+
 class SearchQuery(BaseModel):
     """Query parameters for search endpoints."""
+
     query: str
     limit: int = 10

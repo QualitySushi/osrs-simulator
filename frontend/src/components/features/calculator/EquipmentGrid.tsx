@@ -148,7 +148,9 @@ export function EquipmentGrid({ loadout, show2hOption, combatStyle, onUpdateLoad
                 <TooltipTrigger asChild>
                   <div className="mb-1">
                     <img
-                      src={`/images/${loadout[slot]?.slug || `${slot}.webp`}`}
+                      src={
+                        loadout[slot]?.icons?.[0] || `/images/${slot}.webp`
+                      }
                       alt={slot}
                       className="w-8 h-8 object-contain"
                       onError={(e) => {
