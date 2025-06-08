@@ -315,7 +315,7 @@ export function DirectBossSelector({ onSelectBoss, onSelectForm }: DirectBossSel
                   ))}
                 </SelectContent>
               </Select>
-                <Button variant="outline" size="sm" onClick={handleResetBoss}>
+                <Button variant="outline" size="sm" onClick={handleResetBoss} className="ml-auto">
                   <RotateCcw className="h-4 w-4 mr-2" />
                   Reset
                 </Button>

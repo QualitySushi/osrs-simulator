@@ -93,7 +93,7 @@ export function ImprovedDpsCalculator() {
         </div>
 
         {/* Right column */}
-        <div className="space-y-6 flex flex-col">
+        <div className="space-y-6 flex flex-col flex-grow">
           {/* Target selection section */}
           <DirectBossSelector onSelectForm={handleBossUpdate} />
           
@@ -104,17 +104,13 @@ export function ImprovedDpsCalculator() {
             </CardContent>
           </Card>
 
-          {/* Preset selector */}
-          <PresetSelector
-            className="flex-grow"
-            onPresetLoad={() => toast.success("Preset loaded successfully!")}
-          />
-
         </div>
-        {/* Full-width comparison table at the bottom */}
-        <div className="lg:col-span-2">
-          <DpsComparison />
-        </div>
+        {/* Bottom row: DPS comparison and loadout presets */}
+        <DpsComparison />
+        <PresetSelector
+          className="flex-grow"
+          onPresetLoad={() => toast.success("Preset loaded successfully!")}
+        />
       </div>
       
     </div>
