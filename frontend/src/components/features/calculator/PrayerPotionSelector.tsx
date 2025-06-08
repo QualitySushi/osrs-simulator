@@ -276,7 +276,7 @@ export function PrayerPotionSelector() {
                 </Select>
               </div>
               
-              <div className="flex items-center space-x-2 pt-2">
+              <div className="flex items-center gap-4 pt-2">
                 <ToggleBox
                   id="preserve"
                   pressed={preserveActive}

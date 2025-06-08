@@ -24,8 +24,11 @@ import { useCalculatorStore } from '@/store/calculator-store';
 import { CombatStyle, CalculatorParams } from '@/types/calculator';
 import { Badge } from '@/components/ui/badge';
 
+import { cn } from '@/lib/utils';
+
 interface PresetSelectorProps {
   onPresetLoad?: () => void;
+  className?: string;
 }
 
 interface Preset {
@@ -36,7 +39,7 @@ interface Preset {
   params: CalculatorParams;
 }
 
-export function PresetSelector({ onPresetLoad }: PresetSelectorProps) {
+export function PresetSelector({ onPresetLoad, className }: PresetSelectorProps) {
   const { params, setParams, switchCombatStyle } = useCalculatorStore();
   const [hasMounted, setHasMounted] = useState(false);
   const [saveDialogOpen, setSaveDialogOpen] = useState(false);
@@ -111,7 +114,7 @@ export function PresetSelector({ onPresetLoad }: PresetSelectorProps) {
   if (!hasMounted) return null;
 
   return (
-    <Card className="w-full">
+    <Card className={cn('w-full flex flex-col', className)}>
       <CardHeader>
         <CardTitle>Loadout Presets</CardTitle>
         <CardDescription>Save and load your equipment setups</CardDescription>
