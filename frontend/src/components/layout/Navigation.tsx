@@ -12,9 +12,9 @@ export function Navigation() {
     <nav className="py-3 border-b mb-8">
       <div className="container mx-auto flex justify-between items-center">
         <div className="flex space-x-6 items-center">
-          <Link 
-            href="/" 
-            className="text-xl font-bold"
+          <Link
+            href="/"
+            className="text-xl font-bold font-title"
           >
             OSRS DPS Calculator
           </Link>
