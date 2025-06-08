@@ -299,20 +299,18 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
   return (
     <Card>
       <CardHeader>
-        <div className="flex justify-between items-center">
-          <div>
-            <CardTitle>Target Selection</CardTitle>
-            <CardDescription>Select a boss to calculate DPS against</CardDescription>
-          </div>
-          {selectedBoss && (
+        <CardTitle>Target Selection</CardTitle>
+        <CardDescription>Select a boss to calculate DPS against</CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        {selectedBoss && (
+          <div className="flex justify-end">
             <Button variant="outline" size="sm" onClick={handleResetBoss}>
               <RotateCcw className="h-4 w-4 mr-2" />
               Reset
             </Button>
-          )}
-        </div>
-      </CardHeader>
-      <CardContent className="space-y-4">
+          </div>
+        )}
         {bossLocked && (
           <Alert className="mb-4 border-blue-200 dark:border-blue-800 bg-blue-100 dark:bg-blue-900">
             <AlertDescription>
@@ -423,12 +421,12 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
 
         {/* Display the selected boss stats if a form is selected */}
         {selectedForm && (
-          <div className="pt-2 space-y-2">
+          <div className="pt-2 space-y-2 flex flex-col items-center">
             {(selectedForm.icons?.[0] || selectedForm.image_url) && (
               <img
                 src={selectedForm.icons?.[0] || selectedForm.image_url}
                 alt="icon"
-                className="w-10 h-10"
+                className="w-24 h-24"
               />
             )}
             <h4 className="text-sm font-semibold">Target Stats</h4>

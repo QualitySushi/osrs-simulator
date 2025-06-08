@@ -113,11 +113,11 @@ export function PresetSelector({ onPresetLoad }: PresetSelectorProps) {
   return (
     <Card className="w-full">
       <CardHeader>
-        <div className="flex justify-between items-center">
-          <div>
-            <CardTitle>Loadout Presets</CardTitle>
-            <CardDescription>Save and load your equipment setups</CardDescription>
-          </div>
+        <CardTitle>Loadout Presets</CardTitle>
+        <CardDescription>Save and load your equipment setups</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="flex justify-end mb-4">
           <Dialog open={saveDialogOpen} onOpenChange={setSaveDialogOpen}>
             <DialogTrigger asChild>
               <Button size="sm">
@@ -153,8 +153,6 @@ export function PresetSelector({ onPresetLoad }: PresetSelectorProps) {
             </DialogContent>
           </Dialog>
         </div>
-      </CardHeader>
-      <CardContent>
         {presets.length === 0 ? (
           <div className="text-center py-8 text-muted-foreground">
             <p>You haven&apos;t saved any presets yet.</p>
