@@ -3,7 +3,7 @@ import { useCalculatorStore } from '@/store/calculator-store';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
+import { ToggleBox } from '@/components/ui/toggle-box';
 import { useRef } from 'react';
 import { 
   Shield
@@ -124,10 +124,10 @@ export function DefenceReductionPanel() {
 
         {toggleEffects.map(({ key, label }) => (
           <div key={key} className="flex items-center gap-2">
-            <Switch
-              checked={!!params[key]}
-              onCheckedChange={(value) => setParams({ [key]: value })}
-              className="data-[state=checked]:bg-rs-gold"
+            <ToggleBox
+              pressed={!!params[key]}
+              onPressedChange={(value) => setParams({ [key]: value })}
+              className="data-[state=on]:bg-rs-gold"
             />
             <Label className="text-sm font-medium whitespace-nowrap text-rs-gold">{label}</Label>
           </div>

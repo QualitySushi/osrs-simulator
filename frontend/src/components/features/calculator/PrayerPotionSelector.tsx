@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Switch } from '@/components/ui/switch';
+import { ToggleBox } from '@/components/ui/toggle-box';
 import { Label } from '@/components/ui/label';
 import { useCalculatorStore } from '@/store/calculator-store';
 import { Info } from 'lucide-react';
@@ -277,10 +277,10 @@ export function PrayerPotionSelector() {
               </div>
               
               <div className="flex items-center space-x-2 pt-2">
-                <Switch
+                <ToggleBox
                   id="preserve"
-                  checked={preserveActive}
-                  onCheckedChange={handlePreserveToggle}
+                  pressed={preserveActive}
+                  onPressedChange={handlePreserveToggle}
                 />
                 <div className="grid gap-1.5">
                   <Label htmlFor="preserve">
