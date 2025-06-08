@@ -67,6 +67,26 @@ class TestApiRoutes(unittest.TestCase):
         self.assertEqual(resp.status_code, 200)
         self.assertIsInstance(resp.json(), list)
 
+    def test_get_item(self):
+        """Ensure /item/1 returns mock data when the DB is absent."""
+        with self.client_ctx as client:
+            resp = client.get('/item/1')
+        self.assertEqual(resp.status_code, 200)
+        data = resp.json()
+        self.assertIsInstance(data, dict)
+        self.assertEqual(data.get('id'), 1)
+        self.assertIn('name', data)
+
+    def test_get_boss(self):
+        """Ensure /boss/1 returns mock data when the DB is absent."""
+        with self.client_ctx as client:
+            resp = client.get('/boss/1')
+        self.assertEqual(resp.status_code, 200)
+        data = resp.json()
+        self.assertIsInstance(data, dict)
+        self.assertEqual(data.get('id'), 1)
+        self.assertIn('name', data)
+
     def test_import_seed(self):
         sample = {
             'combat_style': 'melee',
