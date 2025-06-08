@@ -1,0 +1,35 @@
+name: Generate Boss Database
+
+on:
+  schedule:
+    - cron: '0 0 * * 0'  # Runs weekly on Sunday at midnight
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+          cache-dependency-path: 'backend/requirements.txt'
+
+      - name: Install dependencies
+        run: |
+          pip install -r backend/requirements.txt
+
+      - name: Run boss scraper
+        run: |
+          cd backend/webscraper/runescape-bosses/
+          python extract.py
+
+      - name: Upload boss database
+        uses: actions/upload-artifact@v4
+        with:
+          name: osrs-boss-database
+          path: backend/webscraper/runescape-bosses/osrs_bosses.db
