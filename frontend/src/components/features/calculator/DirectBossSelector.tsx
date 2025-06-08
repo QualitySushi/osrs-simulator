@@ -352,13 +352,6 @@ export function DirectBossSelector({ onSelectBoss, onSelectForm }: DirectBossSel
                 <span className="text-muted-foreground">Magic Level:</span>{' '}
                 <span className="font-medium">{selectedForm.magic_level || 'Unknown'}</span>
               </div>
-              <div>
-                <span className="text-muted-foreground">Size:</span>{' '}
-                <span className="font-medium">
-                  {selectedForm.size ? `${selectedForm.size}x${selectedForm.size}` : 'Unknown'}
-                </span>
-              </div>
-              
               <div className="col-span-2 mt-1">
                 <h5 className="text-xs font-semibold mb-1">Defence Bonuses</h5>
                 <div className="grid grid-cols-3 gap-x-2 gap-y-1">
@@ -381,6 +374,12 @@ export function DirectBossSelector({ onSelectBoss, onSelectForm }: DirectBossSel
                   <div>
                     <span className="text-xs text-muted-foreground">Ranged:</span>{' '}
                     <span className="text-xs font-medium">{selectedForm.defence_ranged_standard ?? '0'}</span>
+                  </div>
+                  <div>
+                    <span className="text-xs text-muted-foreground">Size:</span>{' '}
+                    <span className="text-xs font-medium">
+                      {selectedForm.size ? `${selectedForm.size}x${selectedForm.size}` : 'Unknown'}
+                    </span>
                   </div>
                 </div>
               </div>
