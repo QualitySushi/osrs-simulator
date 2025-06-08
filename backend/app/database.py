@@ -199,39 +199,39 @@ class DatabaseService:
                 bosses = []
                 for row in cursor.fetchall():
                     icon = None
-                try:
-                    cursor.execute(
-                        """
-                    SELECT icons, image_url
-                    FROM boss_forms
-                    WHERE boss_id = ?
-                    ORDER BY form_order
-                    LIMIT 1
-                    """,
-                        (row[0],),
+                    try:
+                        cursor.execute(
+                            """
+                        SELECT icons, image_url
+                        FROM boss_forms
+                        WHERE boss_id = ?
+                        ORDER BY form_order
+                        LIMIT 1
+                        """,
+                            (row[0],),
+                        )
+                        form_row = cursor.fetchone()
+                        if form_row:
+                            try:
+                                icons = json.loads(form_row[0]) if form_row[0] else []
+                            except json.JSONDecodeError:
+                                icons = []
+                            if icons:
+                                icon = icons[0]
+                            elif form_row[1]:
+                                icon = form_row[1]
+                    except Exception:
+                        icon = None
+                    bosses.append(
+                        {
+                            "id": row[0],
+                            "name": row[1],
+                            "raid_group": row[2],
+                            "location": row[3],
+                            "has_multiple_forms": bool(row[4]),
+                            "icon_url": icon,
+                        }
                     )
-                    form_row = cursor.fetchone()
-                    if form_row:
-                        try:
-                            icons = json.loads(form_row[0]) if form_row[0] else []
-                        except json.JSONDecodeError:
-                            icons = []
-                        if icons:
-                            icon = icons[0]
-                        elif form_row[1]:
-                            icon = form_row[1]
-                except Exception:
-                    icon = None
-                bosses.append(
-                    {
-                        "id": row[0],
-                        "name": row[1],
-                        "raid_group": row[2],
-                        "location": row[3],
-                        "has_multiple_forms": bool(row[4]),
-                        "icon_url": icon,
-                    }
-                )
 
             return bosses
         except Exception as e:
