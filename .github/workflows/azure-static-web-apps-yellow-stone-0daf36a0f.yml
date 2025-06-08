@@ -1,13 +1,13 @@
-name: Azure Static Web Apps CI/CD
+name: Deploy Frontend to Azure Static Web Apps
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
+    paths: [ 'frontend/**' ]  # Only trigger when frontend changes
   pull_request:
     types: [opened, synchronize, reopened, closed]
-    branches:
-      - main
+    branches: [ main ]
+    paths: [ 'frontend/**' ]
 
 jobs:
   build_and_deploy_job:
@@ -38,13 +38,10 @@ jobs:
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_YELLOW_STONE_0DAF36A0F }}
           action: "upload"
-          ###### Repository/Build Configurations - These values can be configured to match your app requirements. ######
-          # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
-          app_location: "./frontend" # App source code path
-          api_location: "./api" # Api source code path - optional
-          output_location: "out" # Built app content directory - optional
+          app_location: "./frontend"
+          api_location: ""  # EMPTY - no API with Static Web App
+          output_location: "out"
           github_id_token: ${{ steps.idtoken.outputs.result }}
-          ###### End of Repository/Build Configurations ######
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
