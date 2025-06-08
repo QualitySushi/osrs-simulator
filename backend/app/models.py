@@ -21,14 +21,45 @@ class BossForm(BaseModel):
     form_order: int
     combat_level: Optional[int] = None
     hitpoints: Optional[int] = None
+    max_hit: Optional[str] = None
+    attack_speed: Optional[int] = None
+    attack_style: Optional[Union[str, List[str]]] = None
+    attack_level: Optional[int] = None
+    strength_level: Optional[int] = None
     defence_level: Optional[int] = None
     magic_level: Optional[int] = None
     ranged_level: Optional[int] = None
+    aggressive_attack_bonus: Optional[int] = None
+    aggressive_strength_bonus: Optional[int] = None
+    aggressive_magic_bonus: Optional[int] = None
+    aggressive_magic_strength_bonus: Optional[int] = None
+    aggressive_ranged_bonus: Optional[int] = None
+    aggressive_ranged_strength_bonus: Optional[int] = None
     defence_stab: Optional[int] = None
     defence_slash: Optional[int] = None
     defence_crush: Optional[int] = None
     defence_magic: Optional[int] = None
     defence_ranged_standard: Optional[int] = None
+    defence_ranged_light: Optional[int] = None
+    defence_ranged_heavy: Optional[int] = None
+    elemental_weakness_type: Optional[str] = None
+    elemental_weakness_percent: Optional[str] = None
+    attribute: Optional[str] = None
+    xp_bonus: Optional[str] = None
+    aggressive: Optional[bool] = None
+    poisonous: Optional[bool] = None
+    poison_immunity: Optional[bool] = None
+    venom_immunity: Optional[bool] = None
+    melee_immunity: Optional[bool] = None
+    magic_immunity: Optional[bool] = None
+    ranged_immunity: Optional[bool] = None
+    cannon_immunity: Optional[bool] = None
+    thrall_immunity: Optional[bool] = None
+    special_mechanics: Optional[str] = None
+    image_url: Optional[str] = None
+    size: Optional[int] = None
+    npc_ids: Optional[str] = None
+    assigned_by: Optional[str] = None
 
 class Boss(BaseModel):
     """Represents a boss with metadata."""
@@ -36,6 +67,10 @@ class Boss(BaseModel):
     name: str
     raid_group: Optional[str] = None
     location: Optional[str] = None
+    release_date: Optional[str] = None
+    slayer_level: Optional[int] = None
+    slayer_xp: Optional[int] = None
+    slayer_category: Optional[str] = None
     examine: Optional[str] = None
     has_multiple_forms: bool = False
     forms: List[BossForm] = []
