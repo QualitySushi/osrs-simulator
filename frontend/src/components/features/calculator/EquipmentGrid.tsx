@@ -12,7 +12,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { ItemSelector } from './ItemSelector';
-import { Item } from '@/app/types/calculator';
+import { Item } from '@/types/calculator';
 import { useToast } from '@/hooks/use-toast';
 import { itemsApi } from '@/services/api';
 

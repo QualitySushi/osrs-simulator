@@ -23,7 +23,7 @@ import {
 } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { bossesApi } from '@/services/api';
-import { Boss, BossForm, MeleeCalculatorParams, RangedCalculatorParams, MagicCalculatorParams } from '@/app/types/calculator';
+import { Boss, BossForm, MeleeCalculatorParams, RangedCalculatorParams, MagicCalculatorParams } from '@/types/calculator';
 import { useCalculatorStore } from '@/store/calculator-store';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 

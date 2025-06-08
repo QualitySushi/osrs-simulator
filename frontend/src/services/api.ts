@@ -5,7 +5,7 @@ import {
   Boss, 
   Item, 
   BossForm 
-} from '@/app/types/calculator';
+} from '@/types/calculator';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 

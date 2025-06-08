@@ -4,9 +4,9 @@ import {
 import {
   Tooltip, TooltipContent, TooltipProvider, TooltipTrigger
 } from '@/components/ui/tooltip';
-import { Item } from '@/app/types/calculator';
+import { Item } from '@/types/calculator';
 import { useCalculatorStore } from '@/store/calculator-store';
-import { BossForm } from '@/app/types/calculator';
+import { BossForm } from '@/types/calculator';
 
 // Define attack styles with their bonuses
 export interface AttackStyleDefinition {

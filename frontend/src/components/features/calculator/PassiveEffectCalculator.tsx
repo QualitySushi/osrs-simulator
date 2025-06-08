@@ -1,4 +1,4 @@
-import { CalculatorParams, Item, BossForm } from '@/app/types/calculator';
+import { CalculatorParams, Item, BossForm } from '@/types/calculator';
 import {
   isTargetDraconic,
   isTargetDemonic,
@@ -64,8 +64,10 @@ export function calculatePassiveEffectBonuses(
   // Process each item for passive effects
   equippedItems.forEach(item => {
     const itemName = item.name.toLowerCase();
-    console.log('[DEBUG] Checking item:', itemName);
-    console.log('[DEBUG] Target form:', target?.form_name);
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('[DEBUG] Checking item:', itemName);
+      console.log('[DEBUG] Target form:', target?.form_name);
+    }
     
     // === WEAPONS ===
     

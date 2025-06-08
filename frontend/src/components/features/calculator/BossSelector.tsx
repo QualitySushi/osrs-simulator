@@ -28,7 +28,7 @@ import {
 } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { bossesApi } from '@/services/api';
-import { Boss, BossForm, MeleeCalculatorParams, RangedCalculatorParams, MagicCalculatorParams } from '@/app/types/calculator';
+import { Boss, BossForm, MeleeCalculatorParams, RangedCalculatorParams, MagicCalculatorParams } from '@/types/calculator';
 import { useCalculatorStore } from '@/store/calculator-store';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
@@ -87,24 +87,30 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
     // Log the values before update
     if (params.combat_style === 'melee') {
       const meleeParams = params as MeleeCalculatorParams;
-      console.log('[DEBUG] Before update - Melee target params:', {
-        current_defence_level: meleeParams.target_defence_level,
-        current_defence_bonus: meleeParams.target_defence_bonus
-      });
+      if (process.env.NODE_ENV !== 'production') {
+        console.log('[DEBUG] Before update - Melee target params:', {
+          current_defence_level: meleeParams.target_defence_level,
+          current_defence_bonus: meleeParams.target_defence_bonus
+        });
+      }
     }
     else if (params.combat_style === 'ranged') {
       const rangedParams = params as RangedCalculatorParams;
-      console.log('[DEBUG] Before update - Ranged target params:', {
-        current_defence_level: rangedParams.target_defence_level,
-        current_ranged_defence_bonus: rangedParams.target_defence_bonus
-      });
+      if (process.env.NODE_ENV !== 'production') {
+        console.log('[DEBUG] Before update - Ranged target params:', {
+          current_defence_level: rangedParams.target_defence_level,
+          current_ranged_defence_bonus: rangedParams.target_defence_bonus
+        });
+      }
     }
     else if (params.combat_style === 'magic') {
       const magicParams = params as MagicCalculatorParams;
-      console.log('[DEBUG] Before update - Magic target params:', {
-        current_magic_level: magicParams.target_magic_level,
-        current_magic_defence: magicParams.target_magic_defence
-      });
+      if (process.env.NODE_ENV !== 'production') {
+        console.log('[DEBUG] Before update - Magic target params:', {
+          current_magic_level: magicParams.target_magic_level,
+          current_magic_defence: magicParams.target_magic_defence
+        });
+      }
     }
 
     // Update the calculator params with the selected boss's defense stats
@@ -139,22 +145,26 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
         target_defence_type: target_defence_type
       });
 
-      console.log('[DEBUG] Updated melee target stats:', {
-        defence_level: form.defence_level,
-        defence_bonus: defenceBonus,
-        target_defence_type: target_defence_type
-      });
+      if (process.env.NODE_ENV !== 'production') {
+        console.log('[DEBUG] Updated melee target stats:', {
+          defence_level: form.defence_level,
+          defence_bonus: defenceBonus,
+          target_defence_type: target_defence_type
+        });
+      }
       
       // Verify the update
       setTimeout(() => {
         const currentParams = useCalculatorStore.getState().params;
         if (currentParams.combat_style === 'melee') {
           const meleeParams = currentParams as MeleeCalculatorParams;
-          console.log('[DEBUG] Verified melee boss stats after update:', {
-            target_defence_level: meleeParams.target_defence_level,
-            target_defence_bonus: meleeParams.target_defence_bonus,
-            target_defence_type: meleeParams.target_defence_type
-          });
+          if (process.env.NODE_ENV !== 'production') {
+            console.log('[DEBUG] Verified melee boss stats after update:', {
+              target_defence_level: meleeParams.target_defence_level,
+              target_defence_bonus: meleeParams.target_defence_bonus,
+              target_defence_type: meleeParams.target_defence_type
+            });
+          }
         }
       }, 0);
     } 
@@ -166,22 +176,26 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
         target_defence_type: 'defence_ranged_standard'
       });
 
-      console.log('[DEBUG] Updated ranged target stats:', {
-        defence_level: form.defence_level,
-        ranged_defence_bonus: form.defence_ranged_standard,
-        target_defence_type: 'defence_ranged_standard'
-      });
+      if (process.env.NODE_ENV !== 'production') {
+        console.log('[DEBUG] Updated ranged target stats:', {
+          defence_level: form.defence_level,
+          ranged_defence_bonus: form.defence_ranged_standard,
+          target_defence_type: 'defence_ranged_standard'
+        });
+      }
       
       // Verify the update
       setTimeout(() => {
         const currentParams = useCalculatorStore.getState().params;
         if (currentParams.combat_style === 'ranged') {
           const rangedParams = currentParams as RangedCalculatorParams;
-          console.log('[DEBUG] Verified ranged boss stats after update:', {
-            target_defence_level: rangedParams.target_defence_level,
-            target_defence_bonus: rangedParams.target_defence_bonus,
-            target_defence_type: rangedParams.target_defence_type
-          });
+          if (process.env.NODE_ENV !== 'production') {
+            console.log('[DEBUG] Verified ranged boss stats after update:', {
+              target_defence_level: rangedParams.target_defence_level,
+              target_defence_bonus: rangedParams.target_defence_bonus,
+              target_defence_type: rangedParams.target_defence_type
+            });
+          }
         }
       }, 0);
     } 
@@ -195,22 +209,26 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
         target_defence_type: 'defence_magic'
       });
 
-      console.log('[DEBUG] Updated magic target stats:', {
-        magic_level: form.magic_level,
-        magic_defence: form.defence_magic,
-        target_defence_type: 'defence_magic'
-      });
+      if (process.env.NODE_ENV !== 'production') {
+        console.log('[DEBUG] Updated magic target stats:', {
+          magic_level: form.magic_level,
+          magic_defence: form.defence_magic,
+          target_defence_type: 'defence_magic'
+        });
+      }
       
       // Verify the update
       setTimeout(() => {
         const currentParams = useCalculatorStore.getState().params;
         if (currentParams.combat_style === 'magic') {
           const magicParams = currentParams as MagicCalculatorParams;
-          console.log('[DEBUG] Verified magic boss stats after update:', {
-            target_magic_level: magicParams.target_magic_level,
-            target_magic_defence: magicParams.target_magic_defence,
-            target_defence_type: magicParams.target_defence_type
-          });
+          if (process.env.NODE_ENV !== 'production') {
+            console.log('[DEBUG] Verified magic boss stats after update:', {
+              target_magic_level: magicParams.target_magic_level,
+              target_magic_defence: magicParams.target_magic_defence,
+              target_defence_type: magicParams.target_defence_type
+            });
+          }
         }
       }, 0);
     }

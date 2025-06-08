@@ -14,7 +14,7 @@ import { Slider } from '@/components/ui/slider';
 import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useCombatForm } from '@/hooks/useCombatForm';
-import { MagicCalculatorParams } from '@/app/types/calculator';
+import { MagicCalculatorParams } from '@/types/calculator';
 import { useEffect } from 'react';
 
 // Magic form schema for validation
@@ -84,14 +84,17 @@ export function MagicForm() {
   // Cast params to magic params for type safety
   const magicParams = params as MagicCalculatorParams;
 
+  // Log gear bonuses only during development
   useEffect(() => {
-    console.log('[DEBUG] Magic gear bonuses from store:', {
-      magic_attack_bonus: magicParams.magic_attack_bonus,
-      magic_damage_bonus: magicParams.magic_damage_bonus,
-      attack_style_bonus_attack: magicParams.attack_style_bonus_attack,
-      attack_style_bonus_strength: magicParams.attack_style_bonus_strength,
-      attack_speed: magicParams.attack_speed,
-    });
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('[DEBUG] Magic gear bonuses from store:', {
+        magic_attack_bonus: magicParams.magic_attack_bonus,
+        magic_damage_bonus: magicParams.magic_damage_bonus,
+        attack_style_bonus_attack: magicParams.attack_style_bonus_attack,
+        attack_style_bonus_strength: magicParams.attack_style_bonus_strength,
+        attack_speed: magicParams.attack_speed,
+      });
+    }
   }, [
     magicParams.magic_attack_bonus,
     magicParams.magic_damage_bonus,

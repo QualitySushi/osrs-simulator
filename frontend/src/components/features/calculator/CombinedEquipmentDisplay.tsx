@@ -5,7 +5,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useCalculatorStore } from '@/store/calculator-store';
-import { Item, CalculatorParams, BossForm } from '@/app/types/calculator';
+import { Item, CalculatorParams, BossForm } from '@/types/calculator';
 
 // Import our new components
 import { EquipmentGrid } from './EquipmentGrid';
@@ -125,7 +125,9 @@ export function CombinedEquipmentDisplay({ onEquipmentUpdate, bossForm }: Combin
     }
 
     if (Object.keys(updates).length > 0) {
-      console.log('[DEBUG] Updating combat totals:', updates);
+      if (process.env.NODE_ENV !== 'production') {
+        console.log('[DEBUG] Updating combat totals:', updates);
+      }
       setParams(updates);
       lastBonusRef.current = {
         ...lastBonusRef.current,
@@ -153,7 +155,9 @@ export function CombinedEquipmentDisplay({ onEquipmentUpdate, bossForm }: Combin
       baseAttackSpeed: weapon.combat_stats?.attack_speed ?? 2.4,
     });
 
-    console.log('[DEBUG] Processing weapon:', weapon.name);
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('[DEBUG] Processing weapon:', weapon.name);
+    }
   }, [loadout]);
 
   // Update available attack styles when weapon changes

@@ -13,7 +13,7 @@ import { Input } from '@/components/ui/input';
 import { Slider } from '@/components/ui/slider';
 import { Switch } from '@/components/ui/switch';
 import { useCombatForm } from '@/hooks/useCombatForm';
-import { RangedCalculatorParams } from '@/app/types/calculator';
+import { RangedCalculatorParams } from '@/types/calculator';
 
 // Zod schema for ranged form validation
 const rangedFormSchema = z.object({

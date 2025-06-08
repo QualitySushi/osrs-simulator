@@ -1,4 +1,4 @@
-import { CalculatorParams, Item } from '@/app/types/calculator';
+import { CalculatorParams, Item } from '@/types/calculator';
 
 interface CombatStatsSummaryProps {
   params: CalculatorParams;
