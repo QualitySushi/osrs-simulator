@@ -118,18 +118,14 @@ export function DpsComparison() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex justify-center items-center">
-          <span>DPS Comparison</span>
-          <Button 
-            variant="outline" 
-            size="sm" 
-            onClick={clearComparisonResults}
-          >
-            Clear All
-          </Button>
-        </CardTitle>
+        <CardTitle className="text-center">DPS Comparison</CardTitle>
       </CardHeader>
       <CardContent>
+        <div className="flex justify-end mb-2">
+          <Button variant="outline" size="sm" onClick={clearComparisonResults}>
+            Clear All
+          </Button>
+        </div>
         <div className="flex gap-2 mb-4 justify-center items-center">
           <Input
             value={label}

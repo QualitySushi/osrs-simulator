@@ -213,20 +213,18 @@ export function DirectBossSelector({ onSelectBoss, onSelectForm }: DirectBossSel
   return (
     <Card>
       <CardHeader>
-        <div className="flex justify-between items-center">
-          <div>
-            <CardTitle>Target Selection</CardTitle>
-            <CardDescription>Select a boss to calculate DPS against</CardDescription>
-          </div>
-          {selectedBoss && (
+        <CardTitle>Target Selection</CardTitle>
+        <CardDescription>Select a boss to calculate DPS against</CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        {selectedBoss && (
+          <div className="flex justify-end">
             <Button variant="outline" size="sm" onClick={handleResetBoss}>
               <RotateCcw className="h-4 w-4 mr-2" />
               Reset
             </Button>
-          )}
-        </div>
-      </CardHeader>
-      <CardContent className="space-y-4">
+          </div>
+        )}
         {bossLocked && (
           <Alert className="mb-4">
             <AlertDescription>
@@ -331,12 +329,12 @@ export function DirectBossSelector({ onSelectBoss, onSelectForm }: DirectBossSel
 
         {/* Display the selected boss stats */}
         {selectedForm && (
-          <div className="pt-2 space-y-2 bg-slate-100 dark:bg-slate-800 p-3 rounded-md">
+          <div className="pt-2 space-y-2 bg-slate-100 dark:bg-slate-800 p-3 rounded-md flex flex-col items-center">
             {(selectedForm.icons?.[0] || selectedForm.image_url) && (
               <img
                 src={selectedForm.icons?.[0] || selectedForm.image_url}
                 alt="icon"
-                className="w-10 h-10"
+                className="w-24 h-24"
               />
             )}
             <h4 className="text-sm font-semibold">Target Stats</h4>

@@ -54,19 +54,20 @@ export function EquipmentPanel({ onEquipmentUpdate, bossForm }: EquipmentPanelPr
           <CardTitle>Equipment</CardTitle>
           <CardDescription>Configure your gear and attack style</CardDescription>
         </div>
-        
-        {Object.keys(currentLoadout).length > 0 && (
-          <Button 
-            variant="outline" 
-            size="sm" 
-            onClick={handleResetEquipment}
-          >
-            Reset Equipment
-          </Button>
-        )}
       </CardHeader>
 
       <CardContent>
+        {Object.keys(currentLoadout).length > 0 && (
+          <div className="flex justify-end mb-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleResetEquipment}
+            >
+              Reset Equipment
+            </Button>
+          </div>
+        )}
         {Object.keys(currentLoadout).length === 0 && (
           <Alert className="mb-4">
             <AlertDescription>
