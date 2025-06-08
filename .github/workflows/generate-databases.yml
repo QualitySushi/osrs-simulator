@@ -22,6 +22,9 @@ jobs:
       - name: Install dependencies
         run: |
           pip install -r backend/app/requirements.txt
+
+      - name: Generate valid item list
+        run: python backend/webscraper/runescape-items/generate_valid_items.py
       
       - name: Run item scraper
         run: python backend/webscraper/runescape-items/osrs_item_scraper.py
