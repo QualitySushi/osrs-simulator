@@ -247,7 +247,7 @@ class DatabaseService:
             with sqlite3.connect(self.boss_db_path) as conn:
                 cursor = conn.cursor()
                 # Get boss main data
-            cursor.execute(
+                cursor.execute(
                 """
             SELECT
                 id, name, raid_group, examine, location,
@@ -259,28 +259,28 @@ class DatabaseService:
                 (boss_id,),
             )
 
-            boss_row = cursor.fetchone()
+                boss_row = cursor.fetchone()
 
-            if not boss_row:
-                return None
+                if not boss_row:
+                    return None
 
-            boss_data = {
-                "id": boss_row[0],
-                "name": boss_row[1],
-                "raid_group": boss_row[2],
-                "examine": boss_row[3],
-                "location": boss_row[4],
-                "release_date": boss_row[5],
-                "slayer_level": boss_row[6],
-                "slayer_xp": boss_row[7],
-                "slayer_category": boss_row[8],
-                "has_multiple_forms": bool(boss_row[9]),
-                "forms": [],
-                "icon_url": None,
-            }
+                boss_data = {
+                    "id": boss_row[0],
+                    "name": boss_row[1],
+                    "raid_group": boss_row[2],
+                    "examine": boss_row[3],
+                    "location": boss_row[4],
+                    "release_date": boss_row[5],
+                    "slayer_level": boss_row[6],
+                    "slayer_xp": boss_row[7],
+                    "slayer_category": boss_row[8],
+                    "has_multiple_forms": bool(boss_row[9]),
+                    "forms": [],
+                    "icon_url": None,
+                }
 
-            # Get all forms for this boss
-            cursor.execute(
+                # Get all forms for this boss
+                cursor.execute(
                 """
             SELECT
                 id, form_name, form_order, combat_level, hitpoints,
@@ -303,64 +303,65 @@ class DatabaseService:
                 (boss_id,),
             )
 
-            for form_row in cursor.fetchall():
-                form_data = {
-                    "id": form_row[0],
-                    "boss_id": boss_id,
-                    "form_name": form_row[1],
-                    "form_order": form_row[2],
-                    "combat_level": form_row[3],
-                    "hitpoints": form_row[4],
-                    "max_hit": form_row[5],
-                    "attack_speed": form_row[6],
-                    "attack_style": form_row[7],
-                    "attack_level": form_row[8],
-                    "strength_level": form_row[9],
-                    "defence_level": form_row[10],
-                    "magic_level": form_row[11],
-                    "ranged_level": form_row[12],
-                    "aggressive_attack_bonus": form_row[13],
-                    "aggressive_strength_bonus": form_row[14],
-                    "aggressive_magic_bonus": form_row[15],
-                    "aggressive_magic_strength_bonus": form_row[16],
-                    "aggressive_ranged_bonus": form_row[17],
-                    "aggressive_ranged_strength_bonus": form_row[18],
-                    "defence_stab": form_row[19],
-                    "defence_slash": form_row[20],
-                    "defence_crush": form_row[21],
-                    "defence_magic": form_row[22],
-                    "elemental_weakness_type": form_row[23],
-                    "elemental_weakness_percent": form_row[24],
-                    "defence_ranged_light": form_row[25],
-                    "defence_ranged_standard": form_row[26],
-                    "defence_ranged_heavy": form_row[27],
-                    "attribute": form_row[28],
-                    "xp_bonus": form_row[29],
-                    "aggressive": form_row[30],
-                    "poisonous": form_row[31],
-                    "poison_immunity": form_row[32],
-                    "venom_immunity": form_row[33],
-                    "melee_immunity": form_row[34],
-                    "magic_immunity": form_row[35],
-                    "ranged_immunity": form_row[36],
-                    "cannon_immunity": form_row[37],
-                    "thrall_immunity": form_row[38],
-                    "special_mechanics": form_row[39],
-                    "image_url": form_row[40],
-                    "icons": json.loads(form_row[41]) if form_row[41] else [],
-                    "size": form_row[42],
-                    "npc_ids": form_row[43],
-                    "assigned_by": form_row[44],
-                }
+                for form_row in cursor.fetchall():
+                    form_data = {
+                        "id": form_row[0],
+                        "boss_id": boss_id,
+                        "form_name": form_row[1],
+                        "form_order": form_row[2],
+                        "combat_level": form_row[3],
+                        "hitpoints": form_row[4],
+                        "max_hit": form_row[5],
+                        "attack_speed": form_row[6],
+                        "attack_style": form_row[7],
+                        "attack_level": form_row[8],
+                        "strength_level": form_row[9],
+                        "defence_level": form_row[10],
+                        "magic_level": form_row[11],
+                        "ranged_level": form_row[12],
+                        "aggressive_attack_bonus": form_row[13],
+                        "aggressive_strength_bonus": form_row[14],
+                        "aggressive_magic_bonus": form_row[15],
+                        "aggressive_magic_strength_bonus": form_row[16],
+                        "aggressive_ranged_bonus": form_row[17],
+                        "aggressive_ranged_strength_bonus": form_row[18],
+                        "defence_stab": form_row[19],
+                        "defence_slash": form_row[20],
+                        "defence_crush": form_row[21],
+                        "defence_magic": form_row[22],
+                        "elemental_weakness_type": form_row[23],
+                        "elemental_weakness_percent": form_row[24],
+                        "defence_ranged_light": form_row[25],
+                        "defence_ranged_standard": form_row[26],
+                        "defence_ranged_heavy": form_row[27],
+                        "attribute": form_row[28],
+                        "xp_bonus": form_row[29],
+                        "aggressive": form_row[30],
+                        "poisonous": form_row[31],
+                        "poison_immunity": form_row[32],
+                        "venom_immunity": form_row[33],
+                        "melee_immunity": form_row[34],
+                        "magic_immunity": form_row[35],
+                        "ranged_immunity": form_row[36],
+                        "cannon_immunity": form_row[37],
+                        "thrall_immunity": form_row[38],
+                        "special_mechanics": form_row[39],
+                        "image_url": form_row[40],
+                        "icons": json.loads(form_row[41]) if form_row[41] else [],
+                        "size": form_row[42],
+                        "npc_ids": form_row[43],
+                        "assigned_by": form_row[44],
+                    }
 
-                boss_data["forms"].append(form_data)
-            if boss_data["forms"]:
-                first = boss_data["forms"][0]
-                icons = first.get("icons", []) if isinstance(first.get("icons"), list) else []
-                if icons:
-                    boss_data["icon_url"] = icons[0]
-                elif first.get("image_url"):
-                    boss_data["icon_url"] = first.get("image_url")
+                    boss_data["forms"].append(form_data)
+
+                if boss_data["forms"]:
+                    first = boss_data["forms"][0]
+                    icons = first.get("icons", []) if isinstance(first.get("icons"), list) else []
+                    if icons:
+                        boss_data["icon_url"] = icons[0]
+                    elif first.get("image_url"):
+                        boss_data["icon_url"] = first.get("image_url")
 
                 return boss_data
         except Exception as e:
