@@ -23,6 +23,8 @@ jobs:
         with:
           submodules: true
           lfs: false
+      - name: Include backend in API package
+        run: cp -r backend api/
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
