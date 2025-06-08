@@ -370,7 +370,7 @@ export function CombinedEquipmentDisplay({ onEquipmentUpdate, bossForm }: Combin
 
       <CardContent>
         {Object.keys(loadout).length > 0 && (
-          <div className="flex justify-end mb-2">
+          <div className="flex justify-center mb-2">
             <Button variant="outline" size="sm" onClick={handleResetEquipment}
             >
               Reset Equipment
