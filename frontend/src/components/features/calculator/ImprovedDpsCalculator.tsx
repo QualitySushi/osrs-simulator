@@ -75,6 +75,13 @@ export function ImprovedDpsCalculator() {
         </CardContent>
       </Card>
 
+      {Object.keys(currentLoadout).length > 0 && (
+        <PassiveEffectsDisplay
+          loadout={currentLoadout}
+          target={currentBossForm}
+        />
+      )}
+
       {/* Two-column layout for middle sections */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Left column */}
@@ -84,9 +91,9 @@ export function ImprovedDpsCalculator() {
           {/* Prayer/Potion selector */}
           <PrayerPotionSelector />
         </div>
-        
+
         {/* Right column */}
-        <div className="space-y-6">
+        <div className="space-y-6 flex flex-col">
           {/* Target selection section */}
           <DirectBossSelector onSelectForm={handleBossUpdate} />
           
@@ -96,14 +103,12 @@ export function ImprovedDpsCalculator() {
               <DefenceReductionPanel />
             </CardContent>
           </Card>
-          
-          {/* Display passive effects relevant to the current loadout and boss */}
-          {Object.keys(currentLoadout).length > 0 && (
-            <PassiveEffectsDisplay loadout={currentLoadout} target={currentBossForm} />
-          )}
-          
+
           {/* Preset selector */}
-          <PresetSelector onPresetLoad={() => toast.success("Preset loaded successfully!")} />
+          <PresetSelector
+            className="flex-grow"
+            onPresetLoad={() => toast.success("Preset loaded successfully!")}
+          />
 
         </div>
         {/* Full-width comparison table at the bottom */}

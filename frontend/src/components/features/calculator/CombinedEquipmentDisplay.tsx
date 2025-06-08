@@ -3,7 +3,8 @@ import {
   Card, CardContent, CardDescription, CardHeader, CardTitle
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Toggle } from '@/components/ui/toggle';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useCalculatorStore } from '@/store/calculator-store';
 import { Item, CalculatorParams, BossForm } from '@/types/calculator';
@@ -327,30 +328,32 @@ export function CombinedEquipmentDisplay({ onEquipmentUpdate, bossForm }: Combin
           <CardDescription>Manage and inspect your gear</CardDescription>
         </div>
         <div className="flex flex-col items-center justify-center">
-          <Toggle
-            className="mb-2"
-            pressed={show2hOption}
-            onPressedChange={() => {
-              setShow2hOption(prev => !prev);
-              const current = { ...loadout };
-              if (show2hOption) {
-                delete current['2h'];
-              } else {
-                delete current['mainhand'];
-                delete current['offhand'];
-              }
-              setLoadout(current);
+          <div className="flex items-center mb-2 gap-2">
+            <Switch
+              id="use-2h"
+              checked={show2hOption}
+              onCheckedChange={(checked) => {
+                setShow2hOption(checked);
+                const current = { ...loadout };
+                if (checked) {
+                  delete current['mainhand'];
+                  delete current['offhand'];
+                } else {
+                  delete current['2h'];
+                }
+                setLoadout(current);
 
-              // Reset weapon stats when switching modes
-              setWeaponStats({
-                attackStyles: {},
-                baseAttackSpeed: 2.4
-              });
-            }}
-            size="sm"
-          >
-            {show2hOption ? 'Use 1H + Shield' : 'Use 2H'}
-          </Toggle>
+                setWeaponStats({
+                  attackStyles: {},
+                  baseAttackSpeed: 2.4,
+                });
+              }}
+              className="mr-2"
+            />
+            <Label htmlFor="use-2h" className="text-sm">
+              {show2hOption ? 'Use 1H + Shield' : 'Use 2H'}
+            </Label>
+          </div>
           
           {/* Attack style selector component */}
           <AttackStyleSelector

@@ -29,7 +29,7 @@ export function CalculatorForms({
 
   return (
     <div className="w-full mb-6">
-      <div className="flex items-center space-x-2 mb-4">
+      <div className="flex items-center gap-4 mb-4">
         <ToggleBox
           id="manual-toggle"
           pressed={showManual}
