@@ -138,11 +138,9 @@ export function EquipmentGrid({ loadout, show2hOption, combatStyle, onUpdateLoad
     <>
       <div className="grid grid-cols-3 grid-rows-5 gap-2 justify-items-center mb-4">
         {getDisplaySlots().map(({ slot, name, position }) => (
-          <button
-            type="button"
+          <div
             key={slot}
-            aria-label={loadout[slot] ? `Change ${loadout[slot]!.name}` : `Select ${name}`}
-            className={`${POSITION_TO_GRID[position]} w-20 h-20 flex flex-col items-center justify-center border rounded-md bg-muted/20 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary`}
+            className={`${POSITION_TO_GRID[position]} w-20 h-20 flex flex-col items-center justify-center border rounded-md bg-muted/20 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800`}
             onClick={() => { setSelectedSlot(slot); setIsDialogOpen(true); }}
           >
             <TooltipProvider>
@@ -155,7 +153,7 @@ export function EquipmentGrid({ loadout, show2hOption, combatStyle, onUpdateLoad
                         (loadout[slot] as any)?.image_url ||
                         `/images/${slot}.webp`
                       }
-                      alt={loadout[slot]?.name || slot}
+                      alt={slot}
                       className="w-8 h-8 object-contain"
                       onError={(e) => {
                         if (!e.currentTarget.dataset.fallback) {
@@ -174,7 +172,7 @@ export function EquipmentGrid({ loadout, show2hOption, combatStyle, onUpdateLoad
             <div className="text-xs truncate w-full text-center">
               {loadout[slot]?.name || name}
             </div>
-          </button>
+          </div>
         ))}
       </div>
 
