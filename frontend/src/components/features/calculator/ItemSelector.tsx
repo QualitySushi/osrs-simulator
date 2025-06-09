@@ -33,14 +33,15 @@ export function ItemSelector({ slot, onSelectItem }: ItemSelectorProps) {
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
   const { params, setParams } = useCalculatorStore();
   const combatStyle = params.combat_style;
-  
+
 
   // Pagination state (default to first page with 50 items)
   const [page, setPage] = useState(1);
   const [pageSize] = useState(50);
+  const [items, setItems] = useState<Item[]>([]);
 
   // Fetch items (with combat stats only)
-  const { data: items, isLoading } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ['items', page, pageSize, { combat_only: true, tradeable_only: false }],
     queryFn: () =>
       itemsApi.getAllItems({
