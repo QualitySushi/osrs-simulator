@@ -41,7 +41,11 @@ export const calculatorApi = {
 
 // Bosses API
 export const bossesApi = {
-  getAllBosses: async (params?: { page?: number; page_size?: number }): Promise<Boss[]> => {
+
+  getAllBosses: async (
+    params?: { page?: number; page_size?: number }
+  ): Promise<Boss[]> => {
+
     const { data } = await apiClient.get('/bosses', { params });
     return data;
   },
@@ -60,7 +64,14 @@ export const bossesApi = {
 // Items API
 export const itemsApi = {
   getAllItems: async (
-    params?: { combat_only?: boolean; tradeable_only?: boolean; page?: number; page_size?: number }
+
+    params?: {
+      page?: number;
+      page_size?: number;
+      combat_only?: boolean;
+      tradeable_only?: boolean;
+    }
+
   ): Promise<Item[]> => {
     const { data } = await apiClient.get('/items', { params });
     return data;

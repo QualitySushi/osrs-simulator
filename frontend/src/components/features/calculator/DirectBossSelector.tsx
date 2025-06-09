@@ -47,12 +47,18 @@ export function DirectBossSelector({ onSelectBoss, onSelectForm, className }: Di
   const { toast } = useToast();
   const commandRef = useRef<HTMLDivElement>(null);
   
-  // Fetch bosses with pagination
-  const { data, isLoading } = useQuery({
-    queryKey: ['bosses', page],
+
+  // Pagination state (default to first page with 50 bosses)
+  const [page, setPage] = useState(1);
+  const [pageSize] = useState(50);
+
+  // Fetch all bosses
+  const { data: bosses, isLoading } = useQuery({
+    queryKey: ['bosses', page, pageSize],
     queryFn: () => bossesApi.getAllBosses({ page, page_size: pageSize }),
-    keepPreviousData: true,
+
     staleTime: Infinity,
+    keepPreviousData: true,
   });
 
   useEffect(() => {
