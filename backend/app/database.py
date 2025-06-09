@@ -150,7 +150,8 @@ class AzureSQLDatabaseService:
             cursor.execute("""
                 SELECT id, boss_id, form_name, form_order, combat_level, hitpoints,
                        defence_level, magic_level, ranged_level, defence_stab, defence_slash,
-                       defence_crush, defence_magic, defence_ranged_standard, icons, image_url
+                       defence_crush, defence_magic, defence_ranged_standard, icons, image_url,
+                       size
                 FROM boss_forms
                 WHERE boss_id = ?
                 ORDER BY form_order
@@ -181,7 +182,8 @@ class AzureSQLDatabaseService:
                     "defence_magic": form_row[12],
                     "defence_ranged_standard": form_row[13],
                     "icons": icons,
-                    "image_url": form_row[15]
+                    "image_url": form_row[15],
+                    "size": form_row[16]
                 }
                 boss_data["forms"].append(form_data)
             

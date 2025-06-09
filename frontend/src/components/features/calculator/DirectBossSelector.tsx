@@ -397,9 +397,7 @@ export function DirectBossSelector({ onSelectBoss, onSelectForm, className }: Di
                   </div>
                   <div>
                     <span className="text-xs text-muted-foreground">Size:</span>{' '}
-                    <span className="text-xs font-medium">
-                      {selectedForm.size ? `${selectedForm.size}x${selectedForm.size}` : 'Unknown'}
-                    </span>
+                    <span className="text-xs font-medium">{selectedForm.size ?? 'Unknown'}</span>
                   </div>
                 </div>
               </div>
