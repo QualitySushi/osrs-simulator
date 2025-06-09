@@ -1,10 +1,11 @@
 import axios from 'axios';
-import { 
-  CalculatorParams, 
-  DpsResult, 
-  Boss, 
-  Item, 
-  BossForm 
+import {
+  CalculatorParams,
+  DpsResult,
+  Boss,
+  Item,
+  BossForm,
+  BossFormSelection,
 } from '@/types/calculator';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
@@ -37,11 +38,11 @@ export const calculatorApi = {
   },
   simulateBosses: async (
     params: CalculatorParams,
-    bossIds: number[]
+    forms: BossFormSelection[]
   ): Promise<Record<number, DpsResult>> => {
     const { data } = await apiClient.post('/simulate/bosses', {
       params,
-      boss_ids: bossIds,
+      selections: forms,
     });
     return data;
   },
