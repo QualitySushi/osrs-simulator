@@ -67,6 +67,13 @@ class BossForm(BaseModel):
     assigned_by: Optional[str] = None
 
 
+class BossFormSelection(BaseModel):
+    """Request selection of a specific boss form."""
+
+    boss_id: int
+    form_id: int
+
+
 class Boss(BaseModel):
     """Represents a boss with metadata."""
 

@@ -209,6 +209,11 @@ export interface BossForm {
   size?: number;
 }
 
+export interface BossFormSelection {
+  boss_id: number;
+  form_id: number;
+}
+
 export interface Item {
   id: number;
   name: string;

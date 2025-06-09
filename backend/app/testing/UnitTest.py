@@ -461,7 +461,7 @@ class TestSimulationService(unittest.TestCase):
             }
 
             from app.services import simulation_service
-            result = simulation_service.simulate_bosses(params, [1])
+            result = simulation_service.simulate_bosses(params, [{"boss_id": 1, "form_id": 1}])
 
             self.assertIn(1, result)
             self.assertEqual(result[1].dps, 5.0)
@@ -477,7 +477,7 @@ class TestSimulationService(unittest.TestCase):
 
         with patch.dict(sys.modules, {"app.repositories.boss_repository": dummy_repo}):
             from app.services import simulation_service
-            result = simulation_service.simulate_bosses(params, [99])
+            result = simulation_service.simulate_bosses(params, [{"boss_id": 99, "form_id": 1}])
             self.assertEqual(result, {})
 
 if __name__ == "__main__":

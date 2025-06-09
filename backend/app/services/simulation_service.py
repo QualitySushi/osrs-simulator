@@ -22,11 +22,14 @@ def _defence_bonus_for_form(form: Dict[str, Any], params: Dict[str, Any]) -> int
     return form.get("defence_magic", 0)
 
 
-def simulate_bosses(params: Dict[str, Any], boss_ids: List[int]) -> Dict[int, DpsResult]:
-    """Simulate DPS against each boss ID using its defence stats."""
+def simulate_bosses(params: Dict[str, Any], selections: List[Dict[str, int]]) -> Dict[int, DpsResult]:
+    """Simulate DPS against each selected boss form."""
     results: Dict[int, DpsResult] = {}
 
-    for boss_id in boss_ids:
+    for sel in selections:
+        boss_id = sel.get("boss_id")
+        form_id = sel.get("form_id")
+
         boss = boss_repository.get_boss(boss_id)
         if not boss:
             continue
@@ -35,8 +38,7 @@ def simulate_bosses(params: Dict[str, Any], boss_ids: List[int]) -> Dict[int, Dp
         if not forms:
             continue
 
-        # Only use the first form for now
-        form = forms[0]
+        form = next((f for f in forms if f.get("id") == form_id), forms[0])
         form_params = params.copy()
         form_params["target_defence_level"] = form.get(
             "defence_level", form_params.get("target_defence_level", 1)
@@ -50,6 +52,6 @@ def simulate_bosses(params: Dict[str, Any], boss_ids: List[int]) -> Dict[int, Dp
         form_params["target_defence_bonus"] = _defence_bonus_for_form(form, form_params)
 
         calc = calculation_service.calculate_dps(form_params)
-        results[boss_id] = DpsResult(**calc)
+        results[form.get("id")] = DpsResult(**calc)
 
     return results

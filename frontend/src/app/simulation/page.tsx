@@ -16,6 +16,7 @@ import {
   MeleeCalculatorParams,
   RangedCalculatorParams,
   MagicCalculatorParams,
+  BossFormSelection,
 } from '@/types/calculator';
 
 interface SimulationResult {
@@ -62,23 +63,19 @@ function applyBossForm(params: CalculatorParams, form: BossForm): CalculatorPara
 }
 
 async function simulateBosses(params: CalculatorParams, bosses: BossForm[]) {
-  // Use the underlying boss_id when calling the API. The server expects boss
-  // identifiers rather than form IDs which caused missing results for bosses
-  // that don't share the same id as their form.
-  const bossIds = bosses.map((b) => b.boss_id);
-  const simResults = await calculatorApi.simulateBosses(params, bossIds);
+  // Send explicit boss_id/form_id pairs so the backend can simulate the
+  // selected form instead of always using the first one.
+  const selections = bosses.map((b) => ({ boss_id: b.boss_id, form_id: b.id }));
+  const simResults = await calculatorApi.simulateBosses(params, selections);
   const results: SimulationResult[] = [];
   for (const form of bosses) {
     const p = applyBossForm(params, form);
     try {
-      // Use the parent boss_id for API requests and when retrieving the
-      // simulation result. Using the form id here caused undefined results when
-      // the form id didn't match an actual boss id.
       const upgradesResp = await calculatorApi.getUpgradeSuggestions(form.boss_id, p);
-      results.push({ boss: form, result: simResults[form.boss_id], upgrades: upgradesResp.upgrades || {} });
+      results.push({ boss: form, result: simResults[form.id], upgrades: upgradesResp.upgrades || {} });
     } catch (err) {
       console.error('Failed to fetch upgrades', err);
-      results.push({ boss: form, result: simResults[form.boss_id], upgrades: {} });
+      results.push({ boss: form, result: simResults[form.id], upgrades: {} });
     }
   }
   return results;

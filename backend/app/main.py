@@ -11,12 +11,13 @@ load_dotenv()
 
 from .repositories import item_repository, boss_repository
 from .models import (
-    DpsResult, 
-    Boss, 
-    BossSummary, 
-    Item, 
+    DpsResult,
+    Boss,
+    BossSummary,
+    Item,
     ItemSummary,
-    DpsParameters
+    DpsParameters,
+    BossFormSelection,
 )
 from .services import calculation_service
 from .services import seed_service
@@ -470,17 +471,17 @@ async def calculate_item_effect(params: Dict[str, Any]):
 
 class BossSimulationRequest(BaseModel):
     params: DpsParameters
-    boss_ids: List[int]
+    selections: List[BossFormSelection]
 
 
 @app.post("/simulate/bosses", tags=["Simulation"])
 async def simulate_bosses_endpoint(request: BossSimulationRequest):
-    """Return DPS results for each boss id using its defence stats."""
+    """Return DPS results for each selected boss form."""
     try:
         results = simulation_service.simulate_bosses(
-            request.params.model_dump(exclude_none=True), request.boss_ids
+            request.params.model_dump(exclude_none=True), request.selections
         )
-        return {bid: res.model_dump() for bid, res in results.items()}
+        return {fid: res.model_dump() for fid, res in results.items()}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
