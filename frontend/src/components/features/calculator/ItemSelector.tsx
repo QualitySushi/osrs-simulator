@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Search, Loader2 } from 'lucide-react';
 import { 
@@ -34,12 +34,31 @@ export function ItemSelector({ slot, onSelectItem }: ItemSelectorProps) {
   const { params, setParams } = useCalculatorStore();
   const combatStyle = params.combat_style;
   
-  // Fetch items (with combat stats only)
-  const { data: items, isLoading } = useQuery({
-    queryKey: ['items', { combat_only: true, tradeable_only: false }],
-    queryFn: () => itemsApi.getAllItems({ combat_only: true, tradeable_only: false }),
+  const pageSize = 50;
+  const [page, setPage] = useState(1);
+  const [items, setItems] = useState<Item[]>([]);
+
+  // Fetch items with pagination
+  const { data, isLoading } = useQuery({
+    queryKey: ['items', { combat_only: true, tradeable_only: false, page }],
+    queryFn: () =>
+      itemsApi.getAllItems({
+        combat_only: true,
+        tradeable_only: false,
+        page,
+        page_size: pageSize,
+      }),
+    keepPreviousData: true,
     staleTime: Infinity,
   });
+
+  useEffect(() => {
+    if (data) {
+      setItems((prev) => (page === 1 ? data : [...prev, ...data]));
+    }
+  }, [data, page]);
+
+  const loadMore = () => setPage((p) => p + 1);
 
   // Fetch specific item details when an item is selected
   const { data: itemDetails } = useQuery({
@@ -175,6 +194,13 @@ export function ItemSelector({ slot, onSelectItem }: ItemSelectorProps) {
                       ))
                     )}
                   </CommandList>
+                  {data && data.length === pageSize && (
+                    <div className="flex justify-center p-2">
+                      <Button variant="ghost" size="sm" onClick={loadMore}>
+                        Load More
+                      </Button>
+                    </div>
+                  )}
                 </CommandGroup>
               </Command>
             </PopoverContent>

@@ -65,3 +65,10 @@ The React frontend is found in `frontend/src` and relies on:
 
 A simple about page exists at `frontend/src/app/about/page.tsx` and describes the project, its data sources and technologies used. It links back to the main calculator page.
 
+## API Pagination
+
+The `/items` and `/bosses` endpoints accept optional `page` and `page_size` query parameters. These correspond to SQL `OFFSET`/`FETCH` clauses in the database service.
+
+- `page` defaults to `1`.
+- `page_size` defaults to `50`.
+

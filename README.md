@@ -264,6 +264,28 @@ Request Body: `DpsParameters`
 
 Response: A mapping of gear slot to item details.
 
+List Bosses
+-----------
+
+GET `/bosses`
+
+Query Parameters:
+
+- `page` – Page number (default `1`)
+- `page_size` – Results per page (default `50`)
+
+List Items
+----------
+
+GET `/items`
+
+Query Parameters:
+
+- `combat_only` – Only items with combat stats (default `true`)
+- `tradeable_only` – Only tradeable items (default `false`)
+- `page` – Page number (default `1`)
+- `page_size` – Results per page (default `50`)
+
 See the API documentation at /docs for more endpoints.
 📊 Data Sources
 
