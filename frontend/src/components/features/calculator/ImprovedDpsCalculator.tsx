@@ -12,6 +12,8 @@ import { PresetSelector } from './PresetSelector';
 import { CalculatorForms } from './CalculatorForms';
 import { CombatStyleTabs } from './CombatStyleTabs';
 import { DpsResultDisplay } from './DpsResultDisplay';
+import { BossDpsTable } from './BossDpsTable';
+import { UpgradeList } from './UpgradeList';
 import { useDpsCalculator } from '@/hooks/useDpsCalculator';
 import { useToast } from '@/hooks/use-toast';
 
@@ -70,11 +72,17 @@ export function ImprovedDpsCalculator() {
           />
 
           {results && (
-            <DpsResultDisplay
-              params={params}
-              results={results}
-              appliedPassiveEffects={appliedPassiveEffects}
-            />
+            <>
+              <DpsResultDisplay
+                params={params}
+                results={results}
+                appliedPassiveEffects={appliedPassiveEffects}
+              />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+                <BossDpsTable />
+                <UpgradeList />
+              </div>
+            </>
           )}
         </CardContent>
       </Card>

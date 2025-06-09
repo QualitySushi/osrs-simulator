@@ -16,6 +16,8 @@ Key Features
     DPS Comparison: Save and compare multiple equipment setups
     Passive Effects: Automatic detection of relevant passive effects for your setup
     Prayer & Potions: Account for all combat boosting prayers and potions
+    Multi-Boss Simulation: Analyze DPS across multiple bosses at once
+    Upgrade Suggestions: Discover gear improvements for specific bosses
 
 🚀 Getting Started
 Prerequisites
