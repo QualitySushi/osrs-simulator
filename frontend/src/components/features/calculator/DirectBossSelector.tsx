@@ -26,6 +26,7 @@ import { bossesApi } from '@/services/api';
 import { Boss, BossForm } from '@/types/calculator';
 import { useCalculatorStore } from '@/store/calculator-store';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { useReferenceDataStore } from '@/store/reference-data-store';
 import { cn } from '@/lib/utils';
 
 interface DirectBossSelectorProps {
@@ -40,29 +41,28 @@ export function DirectBossSelector({ onSelectBoss, onSelectForm, className }: Di
   const [selectedBoss, setSelectedBoss] = useState<Boss | null>(null);
   const [selectedForm, setSelectedForm] = useState<BossForm | null>(null);
   const [bossIcons, setBossIcons] = useState<Record<number, string>>({});
-  const [bosses, setBosses] = useState<Boss[]>([]);
-  const [page, setPage] = useState(1);
-  const pageSize = 50;
+  const storeBosses = useReferenceDataStore((s) => s.bosses);
+  const initData = useReferenceDataStore((s) => s.initData);
+  const addBosses = useReferenceDataStore((s) => s.addBosses);
   const { params, setParams, lockBoss, unlockBoss, bossLocked } = useCalculatorStore();
   const { toast } = useToast();
   const commandRef = useRef<HTMLDivElement>(null);
   
 
-  // Fetch all bosses
-  const { data, isLoading } = useQuery({
-    queryKey: ['bosses', page, pageSize],
-    queryFn: () => bossesApi.getAllBosses({ page, page_size: pageSize }),
-    staleTime: Infinity,
-    keepPreviousData: true,
-  });
-
   useEffect(() => {
-    if (data) {
-      setBosses((prev) => (page === 1 ? data : [...prev, ...data]));
-    }
-  }, [data, page]);
+    initData();
+  }, [initData]);
 
-  const loadMore = () => setPage((p) => p + 1);
+  const {
+    data: searchResults,
+    isLoading,
+  } = useQuery({
+    queryKey: ['boss-search', searchQuery],
+    queryFn: () => bossesApi.searchBosses(searchQuery, 50),
+    enabled: searchQuery.length > 0,
+    staleTime: Infinity,
+    onSuccess: (d) => addBosses(d),
+  });
 
   // Fetch specific boss details when a boss is selected
   const { data: bossDetails, isLoading: isLoadingDetails } = useQuery({
@@ -74,15 +74,15 @@ export function DirectBossSelector({ onSelectBoss, onSelectForm, className }: Di
 
   // Fetch icons for all bosses
   useEffect(() => {
-    if (!bosses) return;
+    if (!storeBosses) return;
     const map: Record<number, string> = {};
-    bosses.forEach((b) => {
+    storeBosses.forEach((b) => {
       if (b.icon_url) {
         map[b.id] = b.icon_url;
       }
     });
     setBossIcons(map);
-  }, [bosses]);
+  }, [storeBosses]);
 
   // Handle click outside to close search results
   useEffect(() => {
@@ -266,13 +266,13 @@ export function DirectBossSelector({ onSelectBoss, onSelectForm, className }: Di
                 <CommandList>
                   <CommandEmpty>No boss found.</CommandEmpty>
                   <CommandGroup>
-                    {isLoading ? (
+                    {isLoading && searchQuery ? (
                       <div className="flex items-center justify-center p-4">
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                         Loading...
                       </div>
                     ) : (
-                      bosses?.map((boss) => (
+                      (searchQuery.length > 0 ? searchResults ?? [] : storeBosses).map((boss) => (
                         <CommandItem
                           key={boss.id}
                           value={boss.name}
@@ -294,13 +294,11 @@ export function DirectBossSelector({ onSelectBoss, onSelectForm, className }: Di
                       ))
                     )}
                   </CommandGroup>
-                  {data && data.length === pageSize && (
-                    <div className="flex justify-center p-2">
-                      <Button variant="ghost" size="sm" onClick={loadMore}>
-                        Load More
-                      </Button>
+                  { (isLoading && !searchQuery) || (storeBosses.length === 0 && !searchQuery) ? (
+                    <div className="flex items-center justify-center p-2">
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     </div>
-                  )}
+                  ) : null}
                 </CommandList>
               )}
             </Command>

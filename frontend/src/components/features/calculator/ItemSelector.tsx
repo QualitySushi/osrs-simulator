@@ -22,6 +22,7 @@ import { Item } from '@/types/calculator';
 import { useCalculatorStore } from '@/store/calculator-store';
 import { CombatStyle } from '@/types/calculator';
 import { ItemPassiveEffects } from './ItemPassiveEffects';
+import { useReferenceDataStore } from '@/store/reference-data-store';
 
 interface ItemSelectorProps {
   slot?: string;
@@ -34,34 +35,26 @@ export function ItemSelector({ slot, onSelectItem }: ItemSelectorProps) {
   const { params, setParams } = useCalculatorStore();
   const combatStyle = params.combat_style;
 
-
-  // Pagination state (default to first page with 50 items)
-  const [page, setPage] = useState(1);
-  const [pageSize] = useState(50);
-  const [items, setItems] = useState<Item[]>([]);
-
-  // Fetch items (with combat stats only)
-  const { data, isLoading } = useQuery({
-    queryKey: ['items', page, pageSize, { combat_only: true, tradeable_only: false }],
-    queryFn: () =>
-      itemsApi.getAllItems({
-        page,
-        page_size: pageSize,
-        combat_only: true,
-        tradeable_only: false,
-      }),
-
-    staleTime: Infinity,
-    keepPreviousData: true,
-  });
+  const storeItems = useReferenceDataStore((s) => s.items);
+  const initData = useReferenceDataStore((s) => s.initData);
+  const addItems = useReferenceDataStore((s) => s.addItems);
 
   useEffect(() => {
-    if (data) {
-      setItems((prev) => (page === 1 ? data : [...prev, ...data]));
-    }
-  }, [data, page]);
+    initData();
+  }, [initData]);
 
-  const loadMore = () => setPage((p) => p + 1);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const {
+    data: searchResults,
+    isLoading,
+  } = useQuery({
+    queryKey: ['item-search', searchTerm],
+    queryFn: () => itemsApi.searchItems(searchTerm, 50),
+    enabled: searchTerm.length > 0,
+    staleTime: Infinity,
+    onSuccess: (d) => addItems(d),
+  });
 
   // Fetch specific item details when an item is selected
   const { data: itemDetails } = useQuery({
@@ -71,10 +64,12 @@ export function ItemSelector({ slot, onSelectItem }: ItemSelectorProps) {
     staleTime: Infinity,
   });
 
-  // Filter items by slot if provided
-  const filteredItems = items ? 
-    (slot ? items.filter(item => item.slot === slot) : items) : 
-    [];
+  // Items from store filtered by slot
+  const filteredItems = slot
+    ? storeItems.filter((item) => item.slot === slot)
+    : storeItems;
+
+  const itemsToDisplay = searchTerm.length > 0 ? searchResults ?? [] : filteredItems;
 
   // Handle item selection and update calculator params based on its stats
   const handleSelectItem = (item: Item) => {
@@ -161,17 +156,22 @@ export function ItemSelector({ slot, onSelectItem }: ItemSelectorProps) {
             </PopoverTrigger>
             <PopoverContent className="w-[300px] p-0" align="start">
               <Command>
-                <CommandInput placeholder="Search items..." className="h-9" />
+                <CommandInput
+                  placeholder="Search items..."
+                  className="h-9"
+                  value={searchTerm}
+                  onValueChange={setSearchTerm}
+                />
                 <CommandEmpty>No item found.</CommandEmpty>
                 <CommandGroup>
                   <CommandList className="max-h-[300px]">
-                    {isLoading ? (
+                    {isLoading && searchTerm ? (
                       <div className="flex items-center justify-center p-4">
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                         Loading...
                       </div>
                     ) : (
-                      filteredItems.map((item) => (
+                      itemsToDisplay.map((item) => (
                         <CommandItem
                           key={item.id}
                           value={item.name}
@@ -197,11 +197,9 @@ export function ItemSelector({ slot, onSelectItem }: ItemSelectorProps) {
                       ))
                     )}
                   </CommandList>
-                  {data && data.length === pageSize && (
-                    <div className="flex justify-center p-2">
-                      <Button variant="ghost" size="sm" onClick={loadMore}>
-                        Load More
-                      </Button>
+                  {isLoading && !searchTerm && (
+                    <div className="flex items-center justify-center p-2">
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     </div>
                   )}
                 </CommandGroup>

@@ -2,6 +2,8 @@
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Info } from 'lucide-react';
+import { useEffect } from 'react';
+import { useReferenceDataStore } from '@/store/reference-data-store';
 import { BossSelector } from './BossSelector';
 import { CombinedEquipmentDisplay } from './CombinedEquipmentDisplay';
 import { DpsComparison } from './DpsComparison';
@@ -38,6 +40,11 @@ export function ImprovedDpsCalculator() {
     currentLoadout,
     currentBossForm,
   } = useDpsCalculator();
+  const initData = useReferenceDataStore((s) => s.initData);
+
+  useEffect(() => {
+    initData();
+  }, [initData]);
   const { toast } = useToast();
 
 
