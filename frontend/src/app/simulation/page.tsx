@@ -4,8 +4,10 @@ import { useState } from 'react';
 import { DirectBossSelector } from '@/components/features/calculator/DirectBossSelector';
 import { Table, TableHead, TableBody, TableHeader, TableRow, TableCell } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
+import { Loader2, X } from 'lucide-react';
 import { calculatorApi } from '@/services/api';
 import { useCalculatorStore } from '@/store/calculator-store';
+import { useToast } from '@/hooks/use-toast';
 import {
   BossForm,
   DpsResult,
@@ -19,7 +21,7 @@ import {
 interface SimulationResult {
   boss: BossForm;
   result: DpsResult;
-  upgrades: Record<string, Item | undefined>;
+  upgrades: Record<string, { best_item: Item; improvement: number }>;
 }
 
 function applyBossForm(params: CalculatorParams, form: BossForm): CalculatorParams {
@@ -65,9 +67,13 @@ async function simulateBosses(params: CalculatorParams, bosses: BossForm[]) {
   const results: SimulationResult[] = [];
   for (const form of bosses) {
     const p = applyBossForm(params, form);
-    const upgradesResp = await calculatorApi.getUpgradeSuggestions(form.id, p);
-    const headItem = upgradesResp.upgrades?.head?.best_item as Item | undefined;
-    results.push({ boss: form, result: simResults[form.id], upgrades: { head: headItem } as any });
+    try {
+      const upgradesResp = await calculatorApi.getUpgradeSuggestions(form.id, p);
+      results.push({ boss: form, result: simResults[form.id], upgrades: upgradesResp.upgrades || {} });
+    } catch (err) {
+      console.error('Failed to fetch upgrades', err);
+      results.push({ boss: form, result: simResults[form.id], upgrades: {} });
+    }
   }
   return results;
 }
@@ -77,6 +83,8 @@ export default function SimulationPage() {
   const [selectedBosses, setSelectedBosses] = useState<BossForm[]>([]);
   const [currentBoss, setCurrentBoss] = useState<BossForm | null>(null);
   const [results, setResults] = useState<SimulationResult[] | null>(null);
+  const [isSimulating, setIsSimulating] = useState(false);
+  const { toast } = useToast();
   const handleAddBoss = () => {
     if (currentBoss) {
       setSelectedBosses((b) => [...b, currentBoss]);
@@ -84,9 +92,21 @@ export default function SimulationPage() {
     }
   };
 
+  const handleRemoveBoss = (id: number) => {
+    setSelectedBosses((b) => b.filter((f) => f.id !== id));
+  };
+
   const handleSimulate = async () => {
-    const res = await simulateBosses(params, selectedBosses);
-    setResults(res);
+    try {
+      setIsSimulating(true);
+      const res = await simulateBosses(params, selectedBosses);
+      setResults(res);
+    } catch (err) {
+      console.error(err);
+      toast.error('Simulation failed');
+    } finally {
+      setIsSimulating(false);
+    }
   };
 
   return (
@@ -95,12 +115,19 @@ export default function SimulationPage() {
       <DirectBossSelector onSelectForm={setCurrentBoss} className="max-w-xl" />
       <div className="flex gap-2">
         <Button onClick={handleAddBoss} disabled={!currentBoss}>Add Boss</Button>
-        <Button onClick={handleSimulate} disabled={selectedBosses.length === 0}>Simulate</Button>
+        <Button onClick={handleSimulate} disabled={selectedBosses.length === 0 || isSimulating}>
+          {isSimulating && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}Simulate
+        </Button>
       </div>
       {selectedBosses.length > 0 && (
-        <ul className="list-disc pl-6">
+        <ul className="list-disc pl-6 space-y-1">
           {selectedBosses.map((b) => (
-            <li key={b.id}>{b.form_name || `Boss ${b.id}`}</li>
+            <li key={b.id} className="flex items-center gap-2">
+              <span>{b.form_name || `Boss ${b.id}`}</span>
+              <Button variant="ghost" size="sm" onClick={() => handleRemoveBoss(b.id)}>
+                <X className="h-4 w-4" />
+              </Button>
+            </li>
           ))}
         </ul>
       )}
@@ -112,7 +139,7 @@ export default function SimulationPage() {
               <TableHead>Boss</TableHead>
               <TableHead>DPS</TableHead>
               <TableHead>Max Hit</TableHead>
-              <TableHead>Upgrade Suggestion (Head Slot)</TableHead>
+              <TableHead>Upgrade Suggestions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -121,7 +148,13 @@ export default function SimulationPage() {
                 <TableCell>{boss.form_name || `Boss ${boss.id}`}</TableCell>
                 <TableCell>{result.dps.toFixed(2)}</TableCell>
                 <TableCell>{result.max_hit}</TableCell>
-                <TableCell>{upgrades.head ? upgrades.head.name : 'N/A'}</TableCell>
+                <TableCell>
+                  {Object.keys(upgrades).length > 0
+                    ? Object.entries(upgrades)
+                        .map(([slot, info]) => `${slot}: ${(info as any).best_item.name}`)
+                        .join(', ')
+                    : 'N/A'}
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
