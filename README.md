@@ -172,7 +172,10 @@ in the first writable search directory so subsequent requests are fast.
 
 The API also caches boss and item lookups in memory. Set the
 `CACHE_TTL_SECONDS` environment variable to control how long (in seconds)
-these results remain cached. The default is `3600` seconds.
+these results remain cached. The default is `3600` seconds. On the first
+request the server loads and caches the full boss and item lists, and all
+subsequent search requests are served from this in-memory cache so the
+database is only queried when a specific record is requested.
 
 🔄 API Reference
 Calculate DPS
