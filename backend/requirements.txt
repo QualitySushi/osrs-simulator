@@ -8,3 +8,4 @@ httpx<0.28
 azure-functions
 azure-storage-blob==12.19.0
 python-dotenv==1.0.1
+pyodbc>=5.0.0

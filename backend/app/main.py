@@ -462,7 +462,6 @@ if __name__ == "__main__":
     
 
 # Add this endpoint to your main.py file temporarily
-
 @app.get("/debug/database", tags=["Debug"])
 async def debug_database():
     """Debug endpoint to check database schema and content."""

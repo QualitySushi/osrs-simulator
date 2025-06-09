@@ -1,6 +1,6 @@
 from typing import Any, Dict, List, Optional
 
-from ..database import azure_db_service as db_service
+from ..database import azure_sql_service as db_service
 
 
 def get_all_items(combat_only: bool = True, tradeable_only: bool = False) -> List[Dict[str, Any]]:
