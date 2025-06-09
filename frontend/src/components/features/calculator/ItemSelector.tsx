@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Search, Loader2 } from 'lucide-react';
 import { 
@@ -34,6 +34,7 @@ export function ItemSelector({ slot, onSelectItem }: ItemSelectorProps) {
   const { params, setParams } = useCalculatorStore();
   const combatStyle = params.combat_style;
   
+
   // Pagination state (default to first page with 50 items)
   const [page, setPage] = useState(1);
   const [pageSize] = useState(50);
@@ -48,9 +49,18 @@ export function ItemSelector({ slot, onSelectItem }: ItemSelectorProps) {
         combat_only: true,
         tradeable_only: false,
       }),
+
     staleTime: Infinity,
     keepPreviousData: true,
   });
+
+  useEffect(() => {
+    if (data) {
+      setItems((prev) => (page === 1 ? data : [...prev, ...data]));
+    }
+  }, [data, page]);
+
+  const loadMore = () => setPage((p) => p + 1);
 
   // Fetch specific item details when an item is selected
   const { data: itemDetails } = useQuery({
@@ -186,6 +196,13 @@ export function ItemSelector({ slot, onSelectItem }: ItemSelectorProps) {
                       ))
                     )}
                   </CommandList>
+                  {data && data.length === pageSize && (
+                    <div className="flex justify-center p-2">
+                      <Button variant="ghost" size="sm" onClick={loadMore}>
+                        Load More
+                      </Button>
+                    </div>
+                  )}
                 </CommandGroup>
               </Command>
             </PopoverContent>

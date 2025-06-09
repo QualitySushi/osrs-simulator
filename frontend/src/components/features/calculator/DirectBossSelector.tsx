@@ -40,10 +40,14 @@ export function DirectBossSelector({ onSelectBoss, onSelectForm, className }: Di
   const [selectedBoss, setSelectedBoss] = useState<Boss | null>(null);
   const [selectedForm, setSelectedForm] = useState<BossForm | null>(null);
   const [bossIcons, setBossIcons] = useState<Record<number, string>>({});
+  const [bosses, setBosses] = useState<Boss[]>([]);
+  const [page, setPage] = useState(1);
+  const pageSize = 50;
   const { params, setParams, lockBoss, unlockBoss, bossLocked } = useCalculatorStore();
   const { toast } = useToast();
   const commandRef = useRef<HTMLDivElement>(null);
   
+
   // Pagination state (default to first page with 50 bosses)
   const [page, setPage] = useState(1);
   const [pageSize] = useState(50);
@@ -52,9 +56,18 @@ export function DirectBossSelector({ onSelectBoss, onSelectForm, className }: Di
   const { data: bosses, isLoading } = useQuery({
     queryKey: ['bosses', page, pageSize],
     queryFn: () => bossesApi.getAllBosses({ page, page_size: pageSize }),
+
     staleTime: Infinity,
     keepPreviousData: true,
   });
+
+  useEffect(() => {
+    if (data) {
+      setBosses((prev) => (page === 1 ? data : [...prev, ...data]));
+    }
+  }, [data, page]);
+
+  const loadMore = () => setPage((p) => p + 1);
 
   // Fetch specific boss details when a boss is selected
   const { data: bossDetails, isLoading: isLoadingDetails } = useQuery({
@@ -286,6 +299,13 @@ export function DirectBossSelector({ onSelectBoss, onSelectForm, className }: Di
                       ))
                     )}
                   </CommandGroup>
+                  {data && data.length === pageSize && (
+                    <div className="flex justify-center p-2">
+                      <Button variant="ghost" size="sm" onClick={loadMore}>
+                        Load More
+                      </Button>
+                    </div>
+                  )}
                 </CommandList>
               )}
             </Command>

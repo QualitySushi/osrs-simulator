@@ -57,17 +57,28 @@ class AzureSQLDatabaseService:
             print(f"Failed to connect to Azure SQL Database: {e}")
             raise
 
-    def get_all_bosses(self) -> List[Dict[str, Any]]:
-        """Get all bosses from the database."""
+    def get_all_bosses(
+        self,
+        limit: int | None = None,
+        offset: int | None = None,
+    ) -> List[Dict[str, Any]]:
+        """Get all bosses from the database with optional pagination."""
         try:
             conn = self._get_connection()
             cursor = conn.cursor()
-            
-            cursor.execute("""
-                SELECT id, name, raid_group, location, has_multiple_forms
-                FROM bosses
-                ORDER BY name
-            """)
+
+            query = (
+                "SELECT id, name, raid_group, location, has_multiple_forms\n"
+                "FROM bosses\n"
+                "ORDER BY name"
+            )
+            params: list[Any] = []
+            if limit is not None:
+                off = offset or 0
+                query += " OFFSET ? ROWS FETCH NEXT ? ROWS ONLY"
+                params.extend([off, limit])
+
+            cursor.execute(query, params)
             
             bosses = []
             for row in cursor.fetchall():
@@ -189,8 +200,14 @@ class AzureSQLDatabaseService:
             print(f"Error getting boss {boss_id}: {e}")
             return None
 
-    def get_all_items(self, combat_only: bool = True, tradeable_only: bool = False) -> List[Dict[str, Any]]:
-        """Get all items from the database with optional filters."""
+    def get_all_items(
+        self,
+        combat_only: bool = True,
+        tradeable_only: bool = False,
+        limit: int | None = None,
+        offset: int | None = None,
+    ) -> List[Dict[str, Any]]:
+        """Get all items from the database with optional filters and pagination."""
         try:
             conn = self._get_connection()
             cursor = conn.cursor()
@@ -209,7 +226,12 @@ class AzureSQLDatabaseService:
                 query += " AND is_tradeable = 1"
                 
             query += " ORDER BY name"
-            
+
+            if limit is not None:
+                off = offset or 0
+                query += " OFFSET ? ROWS FETCH NEXT ? ROWS ONLY"
+                params.extend([off, limit])
+
             cursor.execute(query, params)
             
             items = []
