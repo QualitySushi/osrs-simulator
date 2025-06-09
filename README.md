@@ -70,6 +70,11 @@ Usage Guide
     Calculate: View your expected DPS and other stats
     Compare: Save setups to compare different loadouts
 
+Additional documentation can be found in the `docs/` folder:
+
+    docs/ARCHITECTURE.md - High level component diagram
+    docs/WIREFRAME.md    - Basic UI wireframe
+
 Technical Documentation
 Frontend Architecture
 
