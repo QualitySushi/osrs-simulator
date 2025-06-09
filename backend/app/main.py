@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import FastAPI, HTTPException, Query, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from typing import Dict, Any, List
@@ -9,6 +9,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from .repositories import item_repository, boss_repository
+from .config.settings import CACHE_TTL_SECONDS
 from .models import (
     DpsResult, 
     Boss, 
@@ -119,7 +120,7 @@ async def get_best_in_slot(params: DpsParameters):
         raise HTTPException(status_code=400, detail=str(e))
 
 @app.get("/bosses", response_model=List[BossSummary], tags=["Bosses"])
-async def get_bosses():
+async def get_bosses(response: Response):
     """
     Get a list of all bosses.
     
@@ -127,7 +128,7 @@ async def get_bosses():
     """
     try:
         bosses = boss_repository.get_all_bosses()
-        
+
         # If no bosses are found in the database, return mock data
         if not bosses:
             return [
@@ -137,13 +138,12 @@ async def get_bosses():
                 BossSummary(id=4, name="Great Olm", raid_group="Chambers of Xeric", location="Mount Quidamortem", has_multiple_forms=True),
                 BossSummary(id=5, name="Corporeal Beast", raid_group=None, location="Corporeal Beast Lair", has_multiple_forms=False),
             ]
-        
         return bosses
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to retrieve bosses: {str(e)}")
 
 @app.get("/boss/{boss_id}", response_model=Boss, tags=["Bosses"])
-async def get_boss(boss_id: int):
+async def get_boss(boss_id: int, response: Response):
     """
     Get details for a specific boss.
     
@@ -151,7 +151,8 @@ async def get_boss(boss_id: int):
     """
     try:
         boss = boss_repository.get_boss(boss_id)
-        
+        response.headers["Cache-Control"] = f"public, max-age={CACHE_TTL_SECONDS}"
+
         # If boss not found in the database, return mock data or 404
         if not boss:
             # Mock data for sample bosses
@@ -228,6 +229,7 @@ async def get_boss(boss_id: int):
             else:
                 raise HTTPException(status_code=404, detail="Boss not found")
         
+        response.headers["Cache-Control"] = f"public, max-age={CACHE_TTL_SECONDS}"
         return boss
     except HTTPException:
         raise
@@ -236,6 +238,7 @@ async def get_boss(boss_id: int):
 
 @app.get("/items", response_model=List[ItemSummary], tags=["Items"])
 async def get_items(
+    response: Response,
     combat_only: bool = Query(True, description="Filter to only show items with combat stats"),
     tradeable_only: bool = Query(False, description="Filter to only show tradeable items")
 ):
@@ -246,6 +249,7 @@ async def get_items(
     """
     try:
         items = item_repository.get_all_items(combat_only=combat_only, tradeable_only=tradeable_only)
+        response.headers["Cache-Control"] = f"public, max-age={CACHE_TTL_SECONDS}"
         
         # If no items are found in the database, return mock data
         if not items:
@@ -256,13 +260,12 @@ async def get_items(
                 ItemSummary(id=4, name="Bandos chestplate", slot="body", has_special_attack=False, has_passive_effect=False, is_tradeable=True, has_combat_stats=True),
                 ItemSummary(id=5, name="Amulet of fury", slot="neck", has_special_attack=False, has_passive_effect=False, is_tradeable=True, has_combat_stats=True),
             ]
-        
         return items
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to retrieve items: {str(e)}")
 
 @app.get("/item/{item_id}", response_model=Item, tags=["Items"])
-async def get_item(item_id: int):
+async def get_item(item_id: int, response: Response):
     """
     Get details for a specific item.
     
@@ -270,7 +273,8 @@ async def get_item(item_id: int):
     """
     try:
         item = item_repository.get_item(item_id)
-        
+        response.headers["Cache-Control"] = f"public, max-age={CACHE_TTL_SECONDS}"
+
         # If item not found in the database, return mock data or 404
         if not item:
             # Mock data for sample items
@@ -408,7 +412,6 @@ async def get_item(item_id: int):
                 }
             else:
                 raise HTTPException(status_code=404, detail="Item not found")
-        
         return item
     except HTTPException:
         raise

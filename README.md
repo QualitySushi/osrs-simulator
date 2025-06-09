@@ -170,6 +170,10 @@ If the databases are not found locally and `AZURE_STORAGE_CONNECTION_STRING` is
 set, the backend will download the files from Azure Blob Storage and cache them
 in the first writable search directory so subsequent requests are fast.
 
+The API also caches boss and item lookups in memory. Set the
+`CACHE_TTL_SECONDS` environment variable to control how long (in seconds)
+these results remain cached. The default is `3600` seconds.
+
 🔄 API Reference
 Calculate DPS
 
