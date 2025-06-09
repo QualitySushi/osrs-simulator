@@ -459,3 +459,62 @@ async def calculate_item_effect(params: Dict[str, Any]):
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("app.main:app", host="0.0.0.0", port=8000, reload=True)
+    
+
+# Add this endpoint to your main.py file temporarily
+
+@app.get("/debug/database", tags=["Debug"])
+async def debug_database():
+    """Debug endpoint to check database schema and content."""
+    from .database import azure_db_service
+    
+    results = {}
+    
+    for db_type in ["bosses", "items_all"]:
+        try:
+            conn, temp_path = azure_db_service._get_db_connection(db_type)
+            cursor = conn.cursor()
+            
+            # Get all table names
+            cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
+            tables = [row[0] for row in cursor.fetchall()]
+            
+            results[db_type] = {
+                "database_file": azure_db_service.db_files.get(db_type),
+                "tables": tables,
+                "schemas": {}
+            }
+            
+            # Get schema for each table
+            for table in tables:
+                try:
+                    cursor.execute(f"PRAGMA table_info({table});")
+                    columns = cursor.fetchall()
+                    
+                    # Get row count
+                    cursor.execute(f"SELECT COUNT(*) FROM {table};")
+                    count = cursor.fetchone()[0]
+                    
+                    # Get sample data if table has rows
+                    sample_data = []
+                    if count > 0:
+                        cursor.execute(f"SELECT * FROM {table} LIMIT 3;")
+                        sample_data = cursor.fetchall()
+                    
+                    results[db_type]["schemas"][table] = {
+                        "columns": [{"name": col[1], "type": col[2]} for col in columns],
+                        "row_count": count,
+                        "sample_data": sample_data
+                    }
+                    
+                except Exception as e:
+                    results[db_type]["schemas"][table] = f"Error: {str(e)}"
+            
+            conn.close()
+            if temp_path:
+                azure_db_service._cleanup_temp_file(temp_path)
+                
+        except Exception as e:
+            results[db_type] = f"Error: {str(e)}"
+    
+    return results
