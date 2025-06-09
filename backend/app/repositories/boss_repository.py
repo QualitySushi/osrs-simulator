@@ -8,12 +8,9 @@ from ..config.settings import CACHE_TTL_SECONDS
 _all_bosses_cache = TTLCache(maxsize=8, ttl=CACHE_TTL_SECONDS)
 _boss_cache = TTLCache(maxsize=256, ttl=CACHE_TTL_SECONDS)
 
-
-@cached(_all_bosses_cache)
-def get_all_bosses() -> List[Dict[str, Any]]:
-    """Return the list of bosses, cached for the configured TTL."""
-    return db_service.get_all_bosses()
-
+def get_all_bosses(limit: int | None = None, offset: int | None = None) -> List[Dict[str, Any]]:
+    """Return bosses with optional pagination."""
+    return db_service.get_all_bosses(limit=limit, offset=offset)
 
 @cached(_boss_cache)
 def get_boss(boss_id: int) -> Optional[Dict[str, Any]]:

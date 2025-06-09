@@ -9,10 +9,19 @@ _all_items_cache = TTLCache(maxsize=32, ttl=CACHE_TTL_SECONDS)
 _item_cache = TTLCache(maxsize=512, ttl=CACHE_TTL_SECONDS)
 
 
-@cached(_all_items_cache)
-def get_all_items(combat_only: bool = True, tradeable_only: bool = False) -> List[Dict[str, Any]]:
-    """Return all items with optional filters, using an in-memory cache."""
-    return db_service.get_all_items(combat_only=combat_only, tradeable_only=tradeable_only)
+def get_all_items(
+    combat_only: bool = True,
+    tradeable_only: bool = False,
+    limit: int | None = None,
+    offset: int | None = None,
+) -> List[Dict[str, Any]]:
+    """Return items with optional pagination."""
+    return db_service.get_all_items(
+        combat_only=combat_only,
+        tradeable_only=tradeable_only,
+        limit=limit,
+        offset=offset,
+    )
 
 
 @cached(_item_cache)
