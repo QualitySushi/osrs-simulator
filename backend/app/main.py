@@ -119,14 +119,17 @@ async def get_best_in_slot(params: DpsParameters):
         raise HTTPException(status_code=400, detail=str(e))
 
 @app.get("/bosses", response_model=List[BossSummary], tags=["Bosses"])
-async def get_bosses():
+async def get_bosses(
+    page: int = Query(1, ge=1, description="Page number"),
+    page_size: int = Query(50, ge=1, le=100, description="Results per page"),
+):
     """
     Get a list of all bosses.
     
     Returns a list of boss summaries with basic information.
     """
     try:
-        bosses = boss_repository.get_all_bosses()
+        bosses = boss_repository.get_all_bosses(limit=page_size, offset=(page - 1) * page_size)
         
         # If no bosses are found in the database, return mock data
         if not bosses:
@@ -237,7 +240,9 @@ async def get_boss(boss_id: int):
 @app.get("/items", response_model=List[ItemSummary], tags=["Items"])
 async def get_items(
     combat_only: bool = Query(True, description="Filter to only show items with combat stats"),
-    tradeable_only: bool = Query(False, description="Filter to only show tradeable items")
+    tradeable_only: bool = Query(False, description="Filter to only show tradeable items"),
+    page: int = Query(1, ge=1, description="Page number"),
+    page_size: int = Query(50, ge=1, le=100, description="Results per page")
 ):
     """
     Get a list of all items with optional filters.
@@ -245,7 +250,12 @@ async def get_items(
     Returns a list of item summaries with basic information.
     """
     try:
-        items = item_repository.get_all_items(combat_only=combat_only, tradeable_only=tradeable_only)
+        items = item_repository.get_all_items(
+            combat_only=combat_only,
+            tradeable_only=tradeable_only,
+            limit=page_size,
+            offset=(page - 1) * page_size,
+        )
         
         # If no items are found in the database, return mock data
         if not items:
