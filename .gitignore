@@ -65,3 +65,34 @@ logs/
 storybook-static/
 __pycache__/
 *.pyc
+
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Environment variables
+.env
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Database files (these will be downloaded from Azure)
+*.db
+db/
