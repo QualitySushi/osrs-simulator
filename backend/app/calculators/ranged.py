@@ -193,5 +193,5 @@ class RangedCalculator:
             "defence_roll": def_roll,
             "average_hit": avg_hit,
             "effective_str": effective_str,
-            "effective_atk": effective_atk
+        "effective_atk": effective_atk
         }
