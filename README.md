@@ -18,6 +18,7 @@ Key Features
     Prayer & Potions: Account for all combat boosting prayers and potions
     Multi-Boss Simulation: Analyze DPS across multiple bosses at once
     Upgrade Suggestions: Discover gear improvements for specific bosses
+    RuneLite Seed Import: Import exported setups on the simulation screen
 
 🚀 Getting Started
 Prerequisites
@@ -71,6 +72,7 @@ Usage Guide
     Apply Modifiers: Select prayers, potions, and special attacks
     Calculate: View your expected DPS and other stats
     Compare: Save setups to compare different loadouts
+    Import RuneLite Seed: Paste an exported seed on the Simulation page to load your gear
 
 Technical Documentation
 Frontend Architecture
@@ -240,6 +242,10 @@ Request Body:
   "seed": "base64encodedstring"
 }
 ```
+
+### Importing RuneLite Gear Seeds
+
+You can export your current equipment from the companion RuneLite plugin and import it directly into the calculator. In RuneLite open the **DPS Calculator** plugin and click **Export Setup**. Copy the displayed base64 string and paste it into the seed field on the `/import` page or the simulation screen (look for the RuneLite icon). Press **Import Seed** to load your gear and stats.
 
 Calculate DPS from Seed
 -----------------------
