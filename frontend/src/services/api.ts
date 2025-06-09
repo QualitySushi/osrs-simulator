@@ -35,12 +35,21 @@ export const calculatorApi = {
     const { data } = await apiClient.post('/bis', params);
     return data;
   },
-  simulateBosses: async (params: CalculatorParams): Promise<any> => {
-    const { data } = await apiClient.post('/simulate/bosses', params);
+  simulateBosses: async (
+    params: CalculatorParams,
+    bossIds: number[]
+  ): Promise<Record<number, DpsResult>> => {
+    const { data } = await apiClient.post('/simulate/bosses', {
+      params,
+      boss_ids: bossIds,
+    });
     return data;
   },
-  getUpgradeSuggestions: async (params: CalculatorParams): Promise<any> => {
-    const { data } = await apiClient.post('/upgrade-suggestions', params);
+  getUpgradeSuggestions: async (
+    bossId: number,
+    params: CalculatorParams
+  ): Promise<any> => {
+    const { data } = await apiClient.post(`/bis/upgrades?boss_id=${bossId}`, params);
     return data;
   },
 };

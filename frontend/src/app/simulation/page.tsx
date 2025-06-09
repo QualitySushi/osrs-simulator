@@ -6,12 +6,20 @@ import { Table, TableHead, TableBody, TableHeader, TableRow, TableCell } from '@
 import { Button } from '@/components/ui/button';
 import { calculatorApi } from '@/services/api';
 import { useCalculatorStore } from '@/store/calculator-store';
-import { BossForm, DpsResult, Item, CalculatorParams, MeleeCalculatorParams, RangedCalculatorParams, MagicCalculatorParams } from '@/types/calculator';
+import {
+  BossForm,
+  DpsResult,
+  Item,
+  CalculatorParams,
+  MeleeCalculatorParams,
+  RangedCalculatorParams,
+  MagicCalculatorParams,
+} from '@/types/calculator';
 
 interface SimulationResult {
   boss: BossForm;
   result: DpsResult;
-  upgrades: Record<string, Item>;
+  upgrades: Record<string, Item | undefined>;
 }
 
 function applyBossForm(params: CalculatorParams, form: BossForm): CalculatorParams {
@@ -52,12 +60,14 @@ function applyBossForm(params: CalculatorParams, form: BossForm): CalculatorPara
 }
 
 async function simulateBosses(params: CalculatorParams, bosses: BossForm[]) {
+  const bossIds = bosses.map((b) => b.id);
+  const simResults = await calculatorApi.simulateBosses(params, bossIds);
   const results: SimulationResult[] = [];
   for (const form of bosses) {
     const p = applyBossForm(params, form);
-    const result = await calculatorApi.calculateDps(p);
-    const upgrades = await calculatorApi.getBis(p);
-    results.push({ boss: form, result, upgrades });
+    const upgradesResp = await calculatorApi.getUpgradeSuggestions(form.id, p);
+    const headItem = upgradesResp.upgrades?.head?.best_item as Item | undefined;
+    results.push({ boss: form, result: simResults[form.id], upgrades: { head: headItem } as any });
   }
   return results;
 }
