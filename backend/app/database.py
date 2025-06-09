@@ -195,10 +195,32 @@ class AzureSQLDatabaseService:
             
             conn.close()
             return boss_data
-            
+
         except Exception as e:
             print(f"Error getting boss {boss_id}: {e}")
             return None
+
+    def get_boss_id_by_form(self, form_id: int) -> Optional[int]:
+        """Return the boss_id associated with a boss form."""
+        try:
+            conn = self._get_connection()
+            cursor = conn.cursor()
+            cursor.execute("SELECT boss_id FROM boss_forms WHERE id = ?", (form_id,))
+            row = cursor.fetchone()
+            conn.close()
+            if row:
+                return row[0]
+            return None
+        except Exception as e:
+            print(f"Error getting boss id from form {form_id}: {e}")
+            return None
+
+    def get_boss_by_form(self, form_id: int) -> Optional[Dict[str, Any]]:
+        """Get boss details using a form id."""
+        boss_id = self.get_boss_id_by_form(form_id)
+        if boss_id is None:
+            return None
+        return self.get_boss(boss_id)
 
     def get_all_items(
         self,

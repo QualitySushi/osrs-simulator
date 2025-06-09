@@ -240,6 +240,21 @@ async def get_boss(boss_id: int, response: Response):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to retrieve boss: {str(e)}")
 
+
+@app.get("/boss/form/{form_id}", response_model=Boss, tags=["Bosses"])
+async def get_boss_by_form(form_id: int, response: Response):
+    """Get boss details using a form id."""
+    try:
+        boss = boss_repository.get_boss_by_form(form_id)
+        if not boss:
+            raise HTTPException(status_code=404, detail="Boss form not found")
+        response.headers["Cache-Control"] = f"public, max-age={CACHE_TTL_SECONDS}"
+        return boss
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to retrieve boss: {str(e)}")
+
 @app.get("/items", response_model=List[ItemSummary], tags=["Items"])
 async def get_items(
     response: Response,
