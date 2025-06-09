@@ -65,7 +65,7 @@ Key Features
         RangedForm - Form for ranged parameters
         MagicForm - Form for magic parameters
     Target Selection - Component for selecting bosses to calculate DPS against:
-        BossSelector - Allows selecting bosses and their forms
+        DirectBossSelector - Allows selecting bosses and their forms
         Automatically updates defense parameters based on the selected boss
     Equipment Selection - Component for selecting items:
         ItemSelector - Allows selecting items with combat stats
