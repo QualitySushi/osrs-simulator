@@ -29,7 +29,7 @@ class SQLiteDatabaseService:
 
         boss = {"id": row["id"], "name": row["name"], "forms": []}
         cursor.execute(
-            "SELECT id, boss_id, form_name, form_order FROM boss_forms WHERE boss_id = ? ORDER BY form_order",
+            "SELECT id, boss_id, form_name, form_order, size FROM boss_forms WHERE boss_id = ? ORDER BY form_order",
             (boss_id,),
         )
         for form_row in cursor.fetchall():
@@ -39,6 +39,7 @@ class SQLiteDatabaseService:
                     "boss_id": form_row["boss_id"],
                     "form_name": form_row["form_name"],
                     "form_order": form_row["form_order"],
+                    "size": form_row["size"],
                 }
             )
         conn.close()
