@@ -35,6 +35,14 @@ export const calculatorApi = {
     const { data } = await apiClient.post('/bis', params);
     return data;
   },
+  simulateBosses: async (params: CalculatorParams): Promise<any> => {
+    const { data } = await apiClient.post('/simulate/bosses', params);
+    return data;
+  },
+  getUpgradeSuggestions: async (params: CalculatorParams): Promise<any> => {
+    const { data } = await apiClient.post('/upgrade-suggestions', params);
+    return data;
+  },
 };
 
 // Bosses API
