@@ -46,11 +46,16 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
   const { params, setParams, lockBoss, unlockBoss, bossLocked } = useCalculatorStore();
   const { toast } = useToast();
   
+  // Pagination state (default to first page with 50 bosses)
+  const [page, setPage] = useState(1);
+  const [pageSize] = useState(50);
+
   // Fetch all bosses
   const { data: bosses, isLoading } = useQuery({
-    queryKey: ['bosses'],
-    queryFn: bossesApi.getAllBosses,
+    queryKey: ['bosses', page, pageSize],
+    queryFn: () => bossesApi.getAllBosses({ page, page_size: pageSize }),
     staleTime: Infinity,
+    keepPreviousData: true,
   });
 
   // Fetch specific boss details when a boss is selected
