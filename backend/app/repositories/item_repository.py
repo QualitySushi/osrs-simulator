@@ -30,5 +30,5 @@ def get_item(item_id: int) -> Optional[Dict[str, Any]]:
     return db_service.get_item(item_id)
 
 
-def search_items(query: str, limit: int = 10) -> List[Dict[str, Any]]:
+def search_items(query: str, limit: int | None = None) -> List[Dict[str, Any]]:
     return db_service.search_items(query, limit=limit)

@@ -278,6 +278,17 @@ Query Parameters:
 - `page` – Page number (default `1`)
 - `page_size` – Results per page (default `50`)
 
+Search Endpoints
+----------------
+
+GET `/search/bosses` - Search for bosses by name
+GET `/search/items` - Search for items by name
+
+Query Parameters:
+
+- `query` – Search term (required)
+- `limit` – Maximum results to return. If omitted, all matches are returned.
+
 List Items
 ----------
 
