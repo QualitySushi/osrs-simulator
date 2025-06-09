@@ -62,17 +62,23 @@ function applyBossForm(params: CalculatorParams, form: BossForm): CalculatorPara
 }
 
 async function simulateBosses(params: CalculatorParams, bosses: BossForm[]) {
-  const bossIds = bosses.map((b) => b.id);
+  // Use the underlying boss_id when calling the API. The server expects boss
+  // identifiers rather than form IDs which caused missing results for bosses
+  // that don't share the same id as their form.
+  const bossIds = bosses.map((b) => b.boss_id);
   const simResults = await calculatorApi.simulateBosses(params, bossIds);
   const results: SimulationResult[] = [];
   for (const form of bosses) {
     const p = applyBossForm(params, form);
     try {
-      const upgradesResp = await calculatorApi.getUpgradeSuggestions(form.id, p);
-      results.push({ boss: form, result: simResults[form.id], upgrades: upgradesResp.upgrades || {} });
+      // Use the parent boss_id for API requests and when retrieving the
+      // simulation result. Using the form id here caused undefined results when
+      // the form id didn't match an actual boss id.
+      const upgradesResp = await calculatorApi.getUpgradeSuggestions(form.boss_id, p);
+      results.push({ boss: form, result: simResults[form.boss_id], upgrades: upgradesResp.upgrades || {} });
     } catch (err) {
       console.error('Failed to fetch upgrades', err);
-      results.push({ boss: form, result: simResults[form.id], upgrades: {} });
+      results.push({ boss: form, result: simResults[form.boss_id], upgrades: {} });
     }
   }
   return results;
