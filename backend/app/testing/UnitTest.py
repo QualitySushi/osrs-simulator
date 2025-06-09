@@ -425,5 +425,61 @@ class TestMagicCalculator(unittest.TestCase):
         self.assertEqual(result_50["max_hit_with_bonus"], math.floor(24 * (1 + expected_dmg_bonus)))
 
 
-if __name__ == '__main__':
+class TestSimulationService(unittest.TestCase):
+    """Test the boss simulation service."""
+
+    def test_simulate_bosses_basic(self):
+        params = {"combat_style": "melee", "attack_speed": 2.4}
+        boss_data = {
+            "id": 1,
+            "name": "Test Boss",
+            "forms": [
+                {
+                    "id": 1,
+                    "defence_level": 100,
+                    "magic_level": 50,
+                    "defence_stab": 30,
+                    "defence_magic": 40,
+                    "defence_ranged_standard": 20,
+                }
+            ],
+        }
+
+        import types
+        dummy_repo = types.ModuleType("boss_repo")
+        dummy_repo.get_boss = lambda _id: boss_data
+
+        with patch.dict(sys.modules, {"app.repositories.boss_repository": dummy_repo}), \
+             patch('app.services.calculation_service.calculate_dps') as mock_calc:
+            mock_calc.return_value = {
+                "dps": 5.0,
+                "max_hit": 10,
+                "hit_chance": 1.0,
+                "attack_roll": 1,
+                "defence_roll": 1,
+                "average_hit": 1.0,
+            }
+
+            from app.services import simulation_service
+            result = simulation_service.simulate_bosses(params, [1])
+
+            self.assertIn(1, result)
+            self.assertEqual(result[1].dps, 5.0)
+            called = mock_calc.call_args[0][0]
+            self.assertEqual(called["target_defence_level"], 100)
+            self.assertEqual(called["target_defence_bonus"], 30)
+
+    def test_simulate_boss_not_found(self):
+        params = {"combat_style": "melee"}
+        import types
+        dummy_repo = types.ModuleType("boss_repo")
+        dummy_repo.get_boss = lambda _id: None
+
+        with patch.dict(sys.modules, {"app.repositories.boss_repository": dummy_repo}):
+            from app.services import simulation_service
+            result = simulation_service.simulate_bosses(params, [99])
+            self.assertEqual(result, {})
+
+if __name__ == "__main__":
     unittest.main()
+

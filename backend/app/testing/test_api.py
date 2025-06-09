@@ -143,5 +143,25 @@ class TestApiRoutes(unittest.TestCase):
         self.assertEqual(resp.status_code, 200)
         self.assertIsInstance(resp.json(), dict)
 
+    def test_bis_upgrades(self):
+        params = {
+            'combat_style': 'melee',
+            'strength_level': 99,
+            'attack_level': 99,
+            'melee_strength_bonus': 80,
+            'melee_attack_bonus': 80,
+            'attack_style_bonus_strength': 3,
+            'attack_style_bonus_attack': 0,
+            'target_defence_level': 100,
+            'target_defence_bonus': 50,
+            'attack_speed': 2.4
+        }
+        with self.client_ctx as client:
+            resp = client.post('/bis/upgrades?boss_id=1', json=params)
+        self.assertEqual(resp.status_code, 200)
+        data = resp.json()
+        self.assertIn('current_dps', data)
+        self.assertIn('upgrades', data)
+
 if __name__ == '__main__':
     unittest.main()
