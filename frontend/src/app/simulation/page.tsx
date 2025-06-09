@@ -101,8 +101,7 @@ function applyBossForm(params: CalculatorParams, form: BossForm): CalculatorPara
 }
 
 async function simulateBosses(params: CalculatorParams, bosses: BossForm[]) {
-  // Send explicit boss_id/form_id pairs so the backend can simulate the
-  // selected form instead of always using the first one.
+  // Convert BossForm objects to BossFormSelection format expected by backend
   const selections = bosses.map((b) => ({ boss_id: b.boss_id, form_id: b.id }));
   const simResults = await calculatorApi.simulateBosses(params, selections);
   const results: SimulationResult[] = [];
