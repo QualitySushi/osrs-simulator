@@ -2,6 +2,7 @@
 
 ```
 osrs-simulator/
+├── api/                        # Azure Function App wrappers around the backend
 ├── backend/
 │   ├── app/
 │   │   ├── calculators/        # DPS calculators for each combat style
@@ -12,12 +13,13 @@ osrs-simulator/
 │   │   ├── models.py           # Pydantic data models
 │   │   ├── main.py             # FastAPI entrypoint
 │   │   └── testing/            # Unit tests
-│   ├── webscraper/           # Scraper scripts for database generation
+│   ├── webscraper/             # Scraper scripts for database generation
 │   └── requirements.txt        # Backend dependencies
 ├── frontend/
 │   └── src/                    # Next.js application
 └── docs/
-    └── PROJECT_STRUCTURE.md    # (this file)
+    ├── PROJECT_STRUCTURE.md    # (this file)
+    └── DEVELOPER_GUIDE.md      # System architecture notes
 ```
 
 This layout keeps calculation logic isolated from the API so it can be reused in tests or other interfaces.
