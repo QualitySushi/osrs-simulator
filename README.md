@@ -122,9 +122,12 @@ DPS = Hit Chance × ((Max Hit + 1) / 2) / Attack Speed
 ⚙️ Configuration
 Environment Variables
 
-Create a .env.local file in the root directory:
+Create a `.env.local` file inside the `frontend` directory:
 
-NEXT_PUBLIC_API_URL=http://localhost:8000
+```bash
+cd frontend
+echo "NEXT_PUBLIC_API_URL=http://localhost:8000" > .env.local
+```
 
 For production, set this to your deployed API URL. The deployment workflows
 expect a repository secret named `BACKEND_URL` which will be exposed as
