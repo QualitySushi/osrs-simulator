@@ -1,0 +1,77 @@
+name: Deploy Backend to Azure Function App
+
+on:
+  push:
+    branches: [ main ]
+    paths: [ 'backend/**' ]  # Trigger when backend changes
+  pull_request:
+    branches: [ main ]
+    paths: [ 'backend/**' ]
+  workflow_dispatch:  # Allow manual deployment
+
+env:
+  AZURE_FUNCTIONAPP_NAME: 'OSRS-Simulator-API'
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: './backend'
+  PYTHON_VERSION: '3.11'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    name: Deploy Backend Functions
+    steps:
+    - name: 'Checkout GitHub Action'
+      uses: actions/checkout@v4
+
+
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+        cache: 'pip'
+        cache-dependency-path: '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/requirements.txt'
+
+    - name: 'Create and start virtual environment'
+      run: |
+        cd ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
+        python -m venv venv
+        source venv/bin/activate
+
+    - name: 'Install dependencies'
+      run: |
+        cd ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
+        source venv/bin/activate
+        pip install -r requirements.txt
+
+    - name: 'Run tests'
+      run: |
+        cd ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
+        source venv/bin/activate
+        python app/testing/UnitTest.py
+
+    - name: 'Login to Azure'
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: 'Deploy to Azure Functions (PR)'
+      if: github.event_name == 'pull_request'
+      uses: Azure/functions-action@v1
+      with:
+        app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
+        package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
+        slot-name: 'staging'
+
+    - name: 'Deploy to Azure Functions'
+      if: github.event_name != 'pull_request'
+      uses: Azure/functions-action@v1
+      with:
+        app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
+        package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
+        
+    # Optional: Test deployed functions
+    - name: 'Test deployed functions'
+      run: |
+        echo "Testing function endpoints..."
+        sleep 30  # Wait for deployment to complete
+        # Test health endpoint
+        # curl -f https://OSRS-Simulator-API.azurewebsites.net/api/health || echo "Health check failed"

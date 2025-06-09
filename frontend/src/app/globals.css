@@ -1,0 +1,378 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+/* Import clean, professional fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cinzel:wght@400;600;700&display=swap');
+
+/* Local RuneScape-inspired font */
+@font-face {
+  font-family: 'RuneScape UF';
+  src: url('/fonts/runescape_uf.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-title: 'RuneScape UF', 'Cinzel', serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 2px);
+  --radius-md: calc(var(--radius) - 1px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 2px);
+}
+
+:root {
+  --accent-gold: #c5a64d;
+  --rs-gold: #c5a64d;
+  --deep-brown: #3a3023;
+  --stone-gray: #5d5853;
+  --dark-stone: #2c2825;
+  --light-stone: #a09a94;
+  --shadow-black: rgba(0, 0, 0, 0.2);
+  --radius: 0.5rem;
+  --background: #2c2c2c;
+  --foreground: #f1f1f1;
+  --card: #3a3a3a;
+  --card-foreground: #f1f1f1;
+  --popover: #3a3a3a;
+  --popover-foreground: #f1f1f1;
+  --primary: var(--accent-gold);
+  --primary-foreground: #1c1c1c;
+  --secondary: var(--stone-gray);
+  --secondary-foreground: #f1f1f1;
+  --muted: #424242;
+  --muted-foreground: #a0a0a0;
+  --accent: var(--deep-brown);
+  --accent-foreground: #f1f1f1;
+  --destructive: #d13636;
+  --border: #444444;
+  --input: #383838;
+  --ring: var(--accent-gold);
+  --chart-1: var(--accent-gold);
+  --chart-2: #6e85b2;
+  --chart-3: #739e82;
+  --chart-4: #a67c52;
+  --chart-5: #8e7cc3;
+  --sidebar: #2a2a2a;
+  --sidebar-foreground: #f1f1f1;
+  --sidebar-primary: var(--accent-gold);
+  --sidebar-primary-foreground: #1c1c1c;
+  --sidebar-accent: var(--stone-gray);
+  --sidebar-accent-foreground: #f1f1f1;
+  --sidebar-border: #3d3d3d;
+  --sidebar-ring: var(--accent-gold);
+}
+
+.dark {
+  --background: #1a1a1a;
+  --foreground: #f1f1f1;
+  --card: #282828;
+  --card-foreground: #f1f1f1;
+  --popover: #282828;
+  --popover-foreground: #f1f1f1;
+  --primary: var(--accent-gold);
+  --primary-foreground: #0f0f0f;
+  --secondary: #3a3a3a;
+  --secondary-foreground: #f1f1f1;
+  --muted: #2c2c2c;
+  --muted-foreground: #8f8f8f;
+  --accent: #3a3023;
+  --accent-foreground: #f1f1f1;
+  --destructive: #c13030;
+  --border: #3d3d3d;
+  --input: #2c2c2c;
+  --ring: var(--accent-gold);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-sans);
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h60v60H0V0zm30 54a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm22-22a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm0 22a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM8 54a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm0-22a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm22 0a4 4 0 1 0 0-8 4 4 0 0 0 0 8z' fill='%23333333' fill-opacity='0.08' fill-rule='evenodd'/%3E%3C/svg%3E");
+    background-attachment: fixed;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-title);
+    font-weight: 700;
+    color: var(--primary);
+    letter-spacing: 0.5px;
+  }
+
+  h1 { font-size: 2rem; }
+  h2 { font-size: 1.75rem; }
+  h3 { font-size: 1.5rem; }
+
+  /* Large underlined section headings */
+  .section-heading {
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-decoration: underline;
+    color: var(--primary);
+    margin-bottom: 0.5rem;
+    display: inline-block;
+  }
+}
+
+/* Button styling with subtle 3D and texture - EXCLUDES combat style and toggle components */
+.btn-primary,
+button[class*="bg-primary"]:not([data-slot="toggle"]):not([data-slot="toggle-box"]):not([data-slot="toggle-group-item"]):not([role="tab"]):not([data-state]):not([data-value]):not(.tabs-trigger):not(.toggle-group-item),
+button:not([data-slot="toggle"]):not([data-slot="toggle-box"]):not([data-slot="toggle-group-item"]):not([role="tab"]):not([data-state]):not([data-value]):not(.tabs-trigger):not(.toggle-group-item):not(.combat-style-btn) {
+  padding-left: 3px;
+  padding-right: 3px;
+  margin-left: 3px;
+  margin-right: 3px;
+  background: var(--primary);
+  background: linear-gradient(145deg, #d3b866, #b8973c);
+  color: var(--primary-foreground);
+  border: none;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 2px 0 var(--accent), 0 2px 6px rgba(0,0,0,0.2);
+  transition: all 0.2s ease-in-out;
+  background-size: 100% 100%;
+  background-blend-mode: overlay;
+}
+
+.btn-primary:hover,
+button[class*="bg-primary"]:not([data-slot="toggle"]):not([data-slot="toggle-box"]):not([data-slot="toggle-group-item"]):not([role="tab"]):not([data-state]):not([data-value]):not(.tabs-trigger):not(.toggle-group-item):hover,
+button:not([data-slot="toggle"]):not([data-slot="toggle-box"]):not([data-slot="toggle-group-item"]):not([role="tab"]):not([data-state]):not([data-value]):not(.tabs-trigger):not(.toggle-group-item):not(.combat-style-btn):hover {
+  filter: brightness(1.05);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 4px 6px rgba(0, 0, 0, 0.25);
+  transform: translateY(-1px);
+}
+
+.btn-primary:active,
+button[class*="bg-primary"]:not([data-slot="toggle"]):not([data-slot="toggle-box"]):not([data-slot="toggle-group-item"]):not([role="tab"]):not([data-state]):not([data-value]):not(.tabs-trigger):not(.toggle-group-item):active,
+button:not([data-slot="toggle"]):not([data-slot="toggle-box"]):not([data-slot="toggle-group-item"]):not([role="tab"]):not([data-state]):not([data-value]):not(.tabs-trigger):not(.toggle-group-item):not(.combat-style-btn):active {
+  transform: translateY(1px);
+  box-shadow: inset 0 1px 0 rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+
+/* ===== TOGGLE COMPONENT FIX - ADD THIS SECTION ===== */
+/* More specific reset for toggle components */
+button[data-slot="toggle-box"],
+button[data-slot="toggle"],
+[data-slot="toggle-box"],
+[data-slot="toggle"] {
+  all: revert !important;
+  background: transparent !important;
+  border: 2px solid var(--rs-gold) !important;
+  border-radius: 50% !important;
+  width: 1rem !important;
+  height: 1rem !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  box-shadow: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: all 0.2s ease !important;
+  transform: none !important;
+  filter: none !important;
+}
+
+/* Active state styling */
+button[data-slot="toggle-box"][data-state="on"],
+[data-slot="toggle-box"][data-state="on"] {
+  background: var(--rs-gold) !important;
+}
+
+/* No checkmark - just background color change */
+
+/* Hover states for toggles */
+button[data-slot="toggle-box"]:hover,
+[data-slot="toggle-box"]:hover {
+  border-color: var(--primary) !important;
+  transform: none !important;
+  filter: none !important;
+}
+/* ===== END TOGGLE COMPONENT FIX ===== */
+
+/* Equipment slots styling */
+div[class*="grid-cols-3 grid-rows-5"] > div {
+  background-color: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  transition: all 0.2s ease;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+div[class*="grid-cols-3 grid-rows-5"] > div:hover {
+  background-color: var(--accent);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 1px var(--primary);
+}
+
+/* Results panels styling */
+div[class*="bg-slate-100"] {
+  background-color: var(--card) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--card-foreground) !important;
+}
+
+.dark div[class*="bg-slate-800"] {
+  background-color: var(--muted) !important;
+  border: 1px solid var(--border) !important;
+}
+
+/* Navigation styling */
+nav {
+  background-color: var(--background) !important;
+  border-bottom: 1px solid var(--border) !important;
+}
+
+/* Footer styling */
+footer {
+  background-color: var(--background) !important;
+  border-top: 1px solid var(--border) !important;
+  color: var(--foreground) !important;
+}
+
+/* Alert styling */
+div[class*="border-blue-200"] {
+  border-color: var(--primary) !important;
+  background-color: rgba(197, 166, 77, 0.1) !important;
+  color: var(--foreground) !important;
+}
+
+.dark div[class*="border-blue-800"] {
+  border-color: var(--primary) !important;
+  background-color: rgba(197, 166, 77, 0.05) !important;
+}
+
+/* Tabs styling */
+button[role="tab"] {
+  background-color: var(--muted);
+  border: none;
+  color: var(--muted-foreground);
+  font-weight: 500;
+}
+
+button[role="tab"]:not([data-state="active"]) {
+  filter: brightness(0.85);
+}
+
+button[role="tab"][data-state="active"] {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+  font-weight: 600;
+}
+
+button[data-slot="toggle-group-item"][data-state="on"] {
+  background-color: var(--primary) !important;
+  color: var(--primary-foreground) !important;
+  font-weight: 600 !important;
+}
+
+button[data-slot="toggle-group-item"]:not([data-state="on"]) {
+  filter: brightness(0.85) !important;
+}
+
+/* Form inputs styling */
+input, select, textarea {
+  background-color: var(--input) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--foreground) !important;
+  border-radius: var(--radius-md) !important;
+}
+
+/* Custom styling for select elements */
+select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 8 8'%3E%3Cpath fill='%23c5a64d' d='M0 0h8L4 8z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.5rem center;
+  padding-right: 1.5rem;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--muted);
+  border-radius: var(--radius-sm);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--secondary);
+  border-radius: var(--radius-sm);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary);
+}
+
+/* Value styling */
+.value-highlight {
+  color: var(--primary);
+  font-weight: 600;
+}
+
+/* Text coloring for stats */
+.text-good {
+  color: #4caf50;
+  font-weight: 500;
+}
+
+.text-bad {
+  color: #f44336;
+  font-weight: 500;
+}
+
+/* Title styling */
+.title-text {
+  color: var(--primary);
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+/* Border styling */
+.custom-border {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
