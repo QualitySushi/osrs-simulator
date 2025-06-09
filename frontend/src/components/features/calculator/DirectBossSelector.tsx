@@ -306,7 +306,7 @@ export function DirectBossSelector({ onSelectBoss, onSelectForm, className }: Di
         </div>
 
         {/* Form selector */}
-        {selectedBoss && bossDetails?.forms && bossDetails.forms.length > 0 && (
+        {selectedBoss && (
           <div className="space-y-2">
             <label className="text-sm font-medium">Select Form/Phase</label>
             {isLoadingDetails ? (
@@ -328,9 +328,9 @@ export function DirectBossSelector({ onSelectBoss, onSelectForm, className }: Di
                   <SelectValue placeholder="Select a form/phase" />
                 </SelectTrigger>
                 <SelectContent>
-                  {bossDetails.forms.map((form) => (
+                  {(bossDetails?.forms ?? []).map((form) => (
                     <SelectItem key={form.id} value={form.id.toString()}>
-                      {form.form_name || `${bossDetails.name} (${form.combat_level || 'Unknown'})`}
+                      {form.form_name || `${bossDetails?.name} (${form.combat_level || 'Unknown'})`}
                     </SelectItem>
                   ))}
                 </SelectContent>

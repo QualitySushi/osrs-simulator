@@ -55,6 +55,11 @@ export const bossesApi = {
     return data;
   },
 
+  getBossByFormId: async (formId: number): Promise<Boss> => {
+    const { data } = await apiClient.get(`/boss/form/${formId}`);
+    return data;
+  },
+
   getBossForms: async (bossId: number): Promise<BossForm[]> => {
     const { data } = await apiClient.get(`/boss/${bossId}`);
     return data.forms || [];

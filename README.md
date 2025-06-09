@@ -276,6 +276,8 @@ List Bosses
 
 GET `/bosses`
 
+GET `/boss/form/{form_id}` - Retrieve boss details by form identifier
+
 Query Parameters:
 
 - `page` – Page number (default `1`)

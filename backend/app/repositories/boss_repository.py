@@ -36,6 +36,14 @@ def get_boss(boss_id: int) -> Optional[Dict[str, Any]]:
     return db_service.get_boss(boss_id)
 
 
+def get_boss_by_form(form_id: int) -> Optional[Dict[str, Any]]:
+    """Return boss details by looking up a form id."""
+    boss_id = db_service.get_boss_id_by_form(form_id)
+    if boss_id is None:
+        return None
+    return get_boss(boss_id)
+
+
 def search_bosses(query: str, limit: int | None = None) -> List[Dict[str, Any]]:
     """Search the cached boss list."""
     bosses = _load_all_bosses()

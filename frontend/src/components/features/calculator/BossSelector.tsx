@@ -401,8 +401,8 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
           </Popover>
         </div>
 
-        {/* Form selector (if the boss has multiple forms) */}
-        {selectedBoss && bossDetails?.forms && bossDetails.forms.length > 0 && (
+        {/* Form selector */}
+        {selectedBoss && (
           <div className="space-y-2">
             <label className="text-sm font-medium">Select Form/Phase</label>
             {isLoadingDetails ? (
@@ -424,7 +424,7 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
                   <SelectValue placeholder="Select a form/phase" />
                 </SelectTrigger>
                 <SelectContent>
-                  {bossDetails.forms.map((form) => (
+                  {(bossDetails?.forms ?? []).map((form) => (
                     <SelectItem key={form.id} value={form.id.toString()}>
                       <img
                         src={form.icons?.[0]}
