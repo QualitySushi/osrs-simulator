@@ -32,6 +32,7 @@ import { bossesApi } from '@/services/api';
 import { Boss, BossForm, MeleeCalculatorParams, RangedCalculatorParams, MagicCalculatorParams } from '@/types/calculator';
 import { useCalculatorStore } from '@/store/calculator-store';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { useReferenceDataStore } from '@/store/reference-data-store';
 
 interface BossSelectorProps {
   onSelectBoss?: (boss: Boss) => void;
@@ -43,27 +44,30 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
   const [selectedBoss, setSelectedBoss] = useState<Boss | null>(null);
   const [selectedForm, setSelectedForm] = useState<BossForm | null>(null);
   const [bossIcons, setBossIcons] = useState<Record<number, string>>({});
-  const [bosses, setBosses] = useState<Boss[]>([]);
-  const [page, setPage] = useState(1);
-  const pageSize = 50;
+  const storeBosses = useReferenceDataStore((s) => s.bosses);
+  const initData = useReferenceDataStore((s) => s.initData);
+  const addBosses = useReferenceDataStore((s) => s.addBosses);
   const { params, setParams, lockBoss, unlockBoss, bossLocked } = useCalculatorStore();
   const { toast } = useToast();
-  
-  // Fetch all bosses
-  const { data, isLoading } = useQuery({
-    queryKey: ['bosses', page, pageSize],
-    queryFn: () => bossesApi.getAllBosses({ page, page_size: pageSize }),
-    staleTime: Infinity,
-    keepPreviousData: true,
-  });
 
   useEffect(() => {
-    if (data) {
-      setBosses((prev) => (page === 1 ? data : [...prev, ...data]));
-    }
-  }, [data, page]);
+    initData();
+  }, [initData]);
 
-  const loadMore = () => setPage((p) => p + 1);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const initialLoading = storeBosses.length === 0 && searchTerm.length === 0;
+
+  const {
+    data: searchResults,
+    isLoading,
+  } = useQuery({
+    queryKey: ['boss-search', searchTerm],
+    queryFn: () => bossesApi.searchBosses(searchTerm, 50),
+    enabled: searchTerm.length > 0,
+    staleTime: Infinity,
+    onSuccess: (d) => addBosses(d),
+  });
 
   // Fetch specific boss details when a boss is selected
   const { data: bossDetails, isLoading: isLoadingDetails } = useQuery({
@@ -75,15 +79,15 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
 
   // Fetch icons for all bosses when list loads
   useEffect(() => {
-    if (!bosses) return;
+    if (!storeBosses) return;
     const map: Record<number, string> = {};
-    bosses.forEach((b) => {
+    storeBosses.forEach((b) => {
       if (b.icon_url) {
         map[b.id] = b.icon_url;
       }
     });
     setBossIcons(map);
-  }, [bosses]);
+  }, [storeBosses]);
 
   // Effect to clean up when combat style changes or component unmounts
   useEffect(() => {
@@ -351,19 +355,21 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
                 <div className="flex h-9 items-center gap-2 border-b px-3">
                   <CommandPrimitive.Input
                     placeholder="Search bosses..."
+                    value={searchTerm}
+                    onValueChange={setSearchTerm}
                     className="placeholder:text-muted-foreground flex h-10 w-full rounded-md bg-transparent py-3 text-sm outline-hidden disabled:cursor-not-allowed disabled:opacity-50"
                   />
                 </div>
                 <CommandEmpty>No boss found.</CommandEmpty>
                 <CommandGroup>
                   <CommandList>
-                    {isLoading ? (
+                    {isLoading && searchTerm ? (
                       <div className="flex items-center justify-center p-4">
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                         Loading...
                       </div>
                     ) : (
-                      bosses?.map((boss) => (
+                      (searchTerm.length > 0 ? searchResults ?? [] : storeBosses).map((boss) => (
                         <CommandItem
                           key={boss.id}
                           value={boss.name}
@@ -384,13 +390,11 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
                       ))
                     )}
                   </CommandList>
-                  {data && data.length === pageSize && (
-                    <div className="flex justify-center p-2">
-                      <Button variant="ghost" size="sm" onClick={loadMore}>
-                        Load More
-                      </Button>
+                  { (isLoading && !searchTerm) || initialLoading ? (
+                    <div className="flex items-center justify-center p-2">
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     </div>
-                  )}
+                  ) : null}
                 </CommandGroup>
               </Command>
             </PopoverContent>

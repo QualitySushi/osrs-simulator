@@ -59,6 +59,13 @@ export const bossesApi = {
     const { data } = await apiClient.get(`/boss/${bossId}`);
     return data.forms || [];
   },
+
+  searchBosses: async (query: string, limit?: number): Promise<Boss[]> => {
+    const { data } = await apiClient.get('/search/bosses', {
+      params: { query, limit },
+    });
+    return data;
+  },
 };
 
 // Items API
@@ -79,6 +86,13 @@ export const itemsApi = {
 
   getItemById: async (id: number): Promise<Item> => {
     const { data } = await apiClient.get(`/item/${id}`);
+    return data;
+  },
+
+  searchItems: async (query: string, limit?: number): Promise<Item[]> => {
+    const { data } = await apiClient.get('/search/items', {
+      params: { query, limit },
+    });
     return data;
   },
 };
