@@ -8,6 +8,8 @@ import {
 } from '@/types/calculator';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+// Log the resolved API URL to help debug environment issues
+console.log('API_URL:', API_URL);
 
 // Create axios instance with base configuration
 const apiClient = axios.create({
