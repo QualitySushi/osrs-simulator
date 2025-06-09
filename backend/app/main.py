@@ -120,6 +120,16 @@ async def get_best_in_slot(params: DpsParameters):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
+
+@app.post("/bis/upgrades", tags=["BIS"])
+async def get_upgrade_suggestions(boss_id: int, params: DpsParameters):
+    """Return DPS improvements for each slot compared to best-in-slot items."""
+    try:
+        result = bis_service.suggest_upgrades(params.model_dump(exclude_none=True), boss_id)
+        return result
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
 @app.get("/bosses", response_model=List[BossSummary], tags=["Bosses"])
 async def get_bosses():
     """
