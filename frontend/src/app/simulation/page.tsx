@@ -100,10 +100,74 @@ function applyBossForm(params: CalculatorParams, form: BossForm): CalculatorPara
   return newParams;
 }
 
+function cleanParamsForBackend(params: CalculatorParams): any {
+  const cleanParams: any = {
+    combat_style: params.combat_style,
+    attack_speed: params.attack_speed,
+    gear_multiplier: params.gear_multiplier || 1.0,
+    special_multiplier: params.special_multiplier || 1.0,
+    target_defence_level: (params as any).target_defence_level || 1,
+    target_defence_bonus: (params as any).target_defence_bonus || 0,
+    target_magic_level: (params as any).target_magic_level || 1,
+    target_magic_defence: (params as any).target_magic_defence || 0,
+  };
+
+  if ((params as any).attack_style_bonus_attack !== undefined) {
+    cleanParams.attack_style_bonus = (params as any).attack_style_bonus_attack;
+  }
+
+  if (params.combat_style === 'melee') {
+    const meleeParams = params as MeleeCalculatorParams;
+    Object.assign(cleanParams, {
+      strength_level: meleeParams.strength_level,
+      strength_boost: meleeParams.strength_boost || 0,
+      strength_prayer: meleeParams.strength_prayer || 1.0,
+      attack_level: meleeParams.attack_level,
+      attack_boost: meleeParams.attack_boost || 0,
+      attack_prayer: meleeParams.attack_prayer || 1.0,
+      melee_strength_bonus: meleeParams.melee_strength_bonus || 0,
+      melee_attack_bonus: meleeParams.melee_attack_bonus || 0,
+      void_melee: meleeParams.void_melee || false,
+    });
+  } else if (params.combat_style === 'ranged') {
+    const rangedParams = params as RangedCalculatorParams;
+    Object.assign(cleanParams, {
+      ranged_level: rangedParams.ranged_level,
+      ranged_boost: rangedParams.ranged_boost || 0,
+      ranged_prayer: rangedParams.ranged_prayer || 1.0,
+      ranged_strength_bonus: rangedParams.ranged_strength_bonus || 0,
+      ranged_attack_bonus: rangedParams.ranged_attack_bonus || 0,
+      void_ranged: rangedParams.void_ranged || false,
+    });
+  } else if (params.combat_style === 'magic') {
+    const magicParams = params as MagicCalculatorParams;
+    Object.assign(cleanParams, {
+      magic_level: magicParams.magic_level,
+      magic_boost: magicParams.magic_boost || 0,
+      magic_prayer: magicParams.magic_prayer || 1.0,
+      base_spell_max_hit: magicParams.base_spell_max_hit || 0,
+      magic_attack_bonus: magicParams.magic_attack_bonus || 0,
+      magic_damage_bonus: magicParams.magic_damage_bonus || 0,
+      void_magic: magicParams.void_magic || false,
+      shadow_bonus: magicParams.shadow_bonus || 0,
+      virtus_bonus: magicParams.virtus_bonus || 0,
+      tome_bonus: magicParams.tome_bonus || 0,
+      prayer_bonus: magicParams.prayer_bonus || 0,
+      elemental_weakness: magicParams.elemental_weakness || 0,
+      salve_bonus: magicParams.salve_bonus || 0,
+    });
+  }
+
+  return cleanParams;
+}
+
 async function simulateBosses(params: CalculatorParams, bosses: BossForm[]) {
   // Convert BossForm objects to BossFormSelection format expected by backend
   const selections = bosses.map((b) => ({ boss_id: b.boss_id, form_id: b.id }));
-  const simResults = await calculatorApi.simulateBosses(params, selections);
+  // Clean params before sending to the backend
+  const cleanedParams = cleanParamsForBackend(params);
+  // Use cleaned parameters to request simulations
+  const simResults = await calculatorApi.simulateBosses(cleanedParams, selections);
   const results: SimulationResult[] = [];
   for (const form of bosses) {
     const p = applyBossForm(params, form);
