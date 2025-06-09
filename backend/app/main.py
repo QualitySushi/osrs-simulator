@@ -254,16 +254,13 @@ async def get_items(
     Returns a list of item summaries with basic information.
     """
     try:
-
-        items = item_repository.get_all_items(combat_only=combat_only, tradeable_only=tradeable_only)
-        response.headers["Cache-Control"] = f"public, max-age={CACHE_TTL_SECONDS}"
-
         items = item_repository.get_all_items(
             combat_only=combat_only,
             tradeable_only=tradeable_only,
             limit=page_size,
             offset=(page - 1) * page_size,
         )
+        response.headers["Cache-Control"] = f"public, max-age={CACHE_TTL_SECONDS}"
 
         
         # If no items are found in the database, return mock data

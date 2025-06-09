@@ -290,6 +290,13 @@ Query Parameters:
 - `page` – Page number (default `1`)
 - `page_size` – Results per page (default `50`)
 
+Performance & API Best Practices
+-------------------------------
+
+- Use `page` and `page_size` on `/items` and `/bosses` to paginate responses and minimize payload size.
+- Item and boss detail endpoints utilise server-side in-memory caches. Responses include a `Cache-Control` header with a `max-age` matching the `CACHE_TTL_SECONDS` setting.
+- Adjust cache duration via the `CACHE_TTL_SECONDS` environment variable when launching the backend.
+
 See the API documentation at /docs for more endpoints.
 📊 Data Sources
 

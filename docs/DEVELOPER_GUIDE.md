@@ -72,3 +72,18 @@ The `/items` and `/bosses` endpoints accept optional `page` and `page_size` quer
 - `page` defaults to `1`.
 - `page_size` defaults to `50`.
 
+### Caching
+
+Item and boss detail lookups are cached using `cachetools.TTLCache`.
+The cache duration is controlled by the `CACHE_TTL_SECONDS` environment
+variable defined in `backend/app/config/settings.py`.
+
+To override the default 3600‑second TTL during development run:
+
+```bash
+export CACHE_TTL_SECONDS=600  # 10 minutes
+uvicorn app.main:app --reload
+```
+
+Caches automatically expire when the TTL elapses.
+
