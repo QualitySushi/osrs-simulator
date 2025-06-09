@@ -143,5 +143,12 @@ class TestApiRoutes(unittest.TestCase):
         self.assertEqual(resp.status_code, 200)
         self.assertIsInstance(resp.json(), dict)
 
+    def test_cache_headers(self):
+        """Endpoints should include Cache-Control headers."""
+        with self.client_ctx as client:
+            resp = client.get('/items')
+        self.assertEqual(resp.status_code, 200)
+        self.assertIn('Cache-Control', resp.headers)
+
 if __name__ == '__main__':
     unittest.main()
