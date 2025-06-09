@@ -5,7 +5,7 @@ import { DirectBossSelector } from '@/components/features/calculator/DirectBossS
 import { Table, TableHead, TableBody, TableHeader, TableRow, TableCell } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { Loader2, X } from 'lucide-react';
-import { calculatorApi } from '@/services/api';
+import { calculatorApi, itemsApi } from '@/services/api';
 import { useCalculatorStore } from '@/store/calculator-store';
 import { useToast } from '@/hooks/use-toast';
 import {
@@ -19,10 +19,48 @@ import {
   BossFormSelection,
 } from '@/types/calculator';
 
+function calculateBonuses(params: CalculatorParams, loadout: Record<string, Item | null>) {
+  let meleeAtk = 0,
+    meleeStr = 0,
+    rangedAtk = 0,
+    rangedStr = 0,
+    magicAtk = 0,
+    magicDmg = 0;
+  const type = (params as any).attack_type || 'slash';
+  Object.values(loadout).forEach((item) => {
+    if (!item?.combat_stats) return;
+    const { attack_bonuses = {}, other_bonuses = {} } = item.combat_stats;
+    meleeAtk += attack_bonuses[type as keyof typeof attack_bonuses] || 0;
+    meleeStr += (other_bonuses as any).strength || 0;
+    rangedAtk += attack_bonuses.ranged || 0;
+    rangedStr += (other_bonuses as any)['ranged strength'] || 0;
+    magicAtk += attack_bonuses.magic || 0;
+    const dmg = (other_bonuses as any)['magic damage'];
+    if (typeof dmg === 'string' && dmg.includes('%')) {
+      magicDmg += parseFloat(dmg) / 100;
+    } else if (typeof dmg === 'number') {
+      magicDmg += dmg;
+    }
+  });
+  const next = { ...params } as any;
+  if (params.combat_style === 'melee') {
+    next.melee_attack_bonus = meleeAtk;
+    next.melee_strength_bonus = meleeStr;
+  } else if (params.combat_style === 'ranged') {
+    next.ranged_attack_bonus = rangedAtk;
+    next.ranged_strength_bonus = rangedStr;
+  } else {
+    next.magic_attack_bonus = magicAtk;
+    next.magic_damage_bonus = magicDmg;
+  }
+  return next as CalculatorParams;
+}
+
 interface SimulationResult {
   boss: BossForm;
   result: DpsResult;
   upgrades: Record<string, { best_item: Item; improvement: number }>;
+  bisDps: number | null;
 }
 
 function applyBossForm(params: CalculatorParams, form: BossForm): CalculatorParams {
@@ -72,10 +110,19 @@ async function simulateBosses(params: CalculatorParams, bosses: BossForm[]) {
     const p = applyBossForm(params, form);
     try {
       const upgradesResp = await calculatorApi.getUpgradeSuggestions(form.boss_id, p);
-      results.push({ boss: form, result: simResults[form.id], upgrades: upgradesResp.upgrades || {} });
+      let bisDps: number | null = null;
+      try {
+        const bis = await calculatorApi.getBis(p);
+        const bisParams = calculateBonuses(p, bis as any);
+        const bisResult = await calculatorApi.calculateDps(bisParams);
+        bisDps = bisResult.dps;
+      } catch (err) {
+        console.error('Failed to fetch BIS DPS', err);
+      }
+      results.push({ boss: form, result: simResults[form.id], upgrades: upgradesResp.upgrades || {}, bisDps });
     } catch (err) {
       console.error('Failed to fetch upgrades', err);
-      results.push({ boss: form, result: simResults[form.id], upgrades: {} });
+      results.push({ boss: form, result: simResults[form.id], upgrades: {}, bisDps: null });
     }
   }
   return results;
@@ -87,6 +134,7 @@ export default function SimulationPage() {
   const [currentBoss, setCurrentBoss] = useState<BossForm | null>(null);
   const [results, setResults] = useState<SimulationResult[] | null>(null);
   const [isSimulating, setIsSimulating] = useState(false);
+  const [seed, setSeed] = useState('');
   const { toast } = useToast();
   const handleAddBoss = () => {
     if (currentBoss) {
@@ -97,6 +145,39 @@ export default function SimulationPage() {
 
   const handleRemoveBoss = (id: number) => {
     setSelectedBosses((b) => b.filter((f) => f.id !== id));
+  };
+
+  const handleImport = async () => {
+    try {
+      const jsonStr = atob(seed.trim());
+      const data = JSON.parse(jsonStr);
+      const { equipment, equipped_armor, equipped_weapon, ...params } = data;
+
+      const rawLoadout: Record<string, number | null> =
+        equipment || { ...(equipped_armor || {}), ...(equipped_weapon || {}) } || {};
+      const processedLoadout: Record<string, Item | null> = {};
+
+      await Promise.all(
+        Object.entries(rawLoadout).map(async ([slot, itemId]) => {
+          if (!itemId) {
+            processedLoadout[slot] = null;
+            return;
+          }
+          try {
+            const fullItem = await itemsApi.getItemById(itemId as number);
+            processedLoadout[slot] = fullItem;
+          } catch {
+            processedLoadout[slot] = null;
+          }
+        })
+      );
+
+      useCalculatorStore.getState().setParams(params);
+      useCalculatorStore.getState().setLoadout(processedLoadout);
+      toast.success('Seed imported');
+    } catch (e) {
+      toast.error('Invalid seed');
+    }
   };
 
   const handleSimulate = async () => {
@@ -115,6 +196,20 @@ export default function SimulationPage() {
   return (
     <main id="main" className="container mx-auto py-8 px-4 space-y-4">
       <h1 className="text-2xl font-bold">Boss Simulation</h1>
+      <div className="space-y-2">
+        <label className="flex items-center gap-2 text-sm font-medium">
+          <img src="/images/RuneLite.a9810730.webp" alt="RuneLite" className="w-5 h-5" />
+          Paste RuneLite Export Seed
+        </label>
+        <textarea
+          className="w-full border p-2 rounded"
+          rows={2}
+          value={seed}
+          onChange={(e) => setSeed(e.target.value)}
+          placeholder="Base64 seed"
+        />
+        <Button onClick={handleImport} size="sm">Import Seed</Button>
+      </div>
       <DirectBossSelector onSelectForm={setCurrentBoss} className="max-w-xl" />
       <div className="flex gap-2">
         <Button onClick={handleAddBoss} disabled={!currentBoss}>Add Boss</Button>
@@ -141,22 +236,46 @@ export default function SimulationPage() {
             <TableRow>
               <TableHead>Boss</TableHead>
               <TableHead>DPS</TableHead>
+              <TableHead>BIS DPS</TableHead>
               <TableHead>Max Hit</TableHead>
               <TableHead>Upgrade Suggestions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {results.map(({ boss, result, upgrades }) => (
+            {results.map(({ boss, result, upgrades, bisDps }) => (
               <TableRow key={boss.id}>
                 <TableCell>{boss.form_name || `Boss ${boss.id}`}</TableCell>
                 <TableCell>{result.dps.toFixed(2)}</TableCell>
+                <TableCell>{bisDps !== null ? bisDps.toFixed(2) : 'N/A'}</TableCell>
                 <TableCell>{result.max_hit}</TableCell>
                 <TableCell>
-                  {Object.keys(upgrades).length > 0
-                    ? Object.entries(upgrades)
-                        .map(([slot, info]) => `${slot}: ${(info as any).best_item.name}`)
-                        .join(', ')
-                    : 'N/A'}
+                  {Object.keys(upgrades).length > 0 ? (
+                    <ul className="list-disc pl-4">
+                      {Object.entries(upgrades)
+                        .sort((a, b) => b[1].improvement - a[1].improvement)
+                        .map(([slot, info], idx) => (
+                          <li
+                            key={slot}
+                            className={
+                              idx === 0 ? 'font-semibold text-green-700 dark:text-green-400' : ''
+                            }
+                          >
+                            <a
+                              href={`https://oldschool.runescape.wiki/w/${encodeURIComponent(
+                                info.best_item.name
+                              )}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="underline"
+                            >
+                              {slot}: {info.best_item.name} (+{info.improvement.toFixed(2)} DPS)
+                            </a>
+                          </li>
+                        ))}
+                    </ul>
+                  ) : (
+                    'N/A'
+                  )}
                 </TableCell>
               </TableRow>
             ))}
