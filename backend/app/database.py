@@ -317,18 +317,29 @@ class AzureSQLDatabaseService:
             print(f"Error getting item {item_id}: {e}")
             return None
 
-    def search_bosses(self, query: str, limit: int = 10) -> List[Dict[str, Any]]:
+    def search_bosses(self, query: str, limit: int | None = None) -> List[Dict[str, Any]]:
         """Search bosses by name."""
         try:
             conn = self._get_connection()
             cursor = conn.cursor()
-            
-            cursor.execute("""
-                SELECT TOP (?) id, name, raid_group, location
-                FROM bosses
-                WHERE name LIKE ?
-                ORDER BY name
-            """, (limit, f"%{query}%"))
+
+            sql = (
+                "SELECT id, name, raid_group, location\n"
+                "FROM bosses\n"
+                "WHERE name LIKE ?\n"
+                "ORDER BY name"
+            )
+            params: list[Any] = [f"%{query}%"]
+            if limit is not None:
+                sql = (
+                    "SELECT TOP (?) id, name, raid_group, location\n"
+                    "FROM bosses\n"
+                    "WHERE name LIKE ?\n"
+                    "ORDER BY name"
+                )
+                params.insert(0, limit)
+
+            cursor.execute(sql, params)
             
             bosses = []
             for row in cursor.fetchall():
@@ -346,19 +357,31 @@ class AzureSQLDatabaseService:
             print(f"Error searching bosses: {e}")
             return []
 
-    def search_items(self, query: str, limit: int = 10) -> List[Dict[str, Any]]:
+    def search_items(self, query: str, limit: int | None = None) -> List[Dict[str, Any]]:
         """Search items by name."""
         try:
             conn = self._get_connection()
             cursor = conn.cursor()
-            
-            cursor.execute("""
-                SELECT TOP (?) id, name, has_special_attack, has_passive_effect,
-                       has_combat_stats, is_tradeable, slot, icons
-                FROM items
-                WHERE name LIKE ?
-                ORDER BY name
-            """, (limit, f"%{query}%"))
+
+            sql = (
+                "SELECT id, name, has_special_attack, has_passive_effect,\n"
+                "       has_combat_stats, is_tradeable, slot, icons\n"
+                "FROM items\n"
+                "WHERE name LIKE ?\n"
+                "ORDER BY name"
+            )
+            params: list[Any] = [f"%{query}%"]
+            if limit is not None:
+                sql = (
+                    "SELECT TOP (?) id, name, has_special_attack, has_passive_effect,\n"
+                    "       has_combat_stats, is_tradeable, slot, icons\n"
+                    "FROM items\n"
+                    "WHERE name LIKE ?\n"
+                    "ORDER BY name"
+                )
+                params.insert(0, limit)
+
+            cursor.execute(sql, params)
             
             items = []
             for row in cursor.fetchall():
@@ -386,6 +409,9 @@ class AzureSQLDatabaseService:
         except Exception as e:
             print(f"Error searching items: {e}")
             return []
+
+# Provide legacy name for unit tests
+DatabaseService = AzureSQLDatabaseService
 
 # Create a singleton instance
 azure_sql_service = AzureSQLDatabaseService()

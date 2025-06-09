@@ -18,5 +18,5 @@ def get_boss(boss_id: int) -> Optional[Dict[str, Any]]:
     return db_service.get_boss(boss_id)
 
 
-def search_bosses(query: str, limit: int = 10) -> List[Dict[str, Any]]:
+def search_bosses(query: str, limit: int | None = None) -> List[Dict[str, Any]]:
     return db_service.search_bosses(query, limit=limit)

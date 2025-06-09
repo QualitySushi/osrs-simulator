@@ -7,9 +7,14 @@ async def main(req: func.HttpRequest) -> func.HttpResponse:
     query = req.params.get('query')
     if not query:
         return func.HttpResponse("Missing query", status_code=400)
-    try:
-        limit = int(req.params.get('limit', 10))
-    except ValueError:
-        return func.HttpResponse("Invalid limit", status_code=400)
+    limit_param = req.params.get('limit')
+    if limit_param is not None:
+        try:
+            limit = int(limit_param)
+        except ValueError:
+            return func.HttpResponse("Invalid limit", status_code=400)
+    else:
+        limit = None
+
     results = boss_repository.search_bosses(query, limit=limit)
     return json_response(results)

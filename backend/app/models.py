@@ -193,4 +193,4 @@ class SearchQuery(BaseModel):
     """Query parameters for search endpoints."""
 
     query: str
-    limit: int = 10
+    limit: int | None = None

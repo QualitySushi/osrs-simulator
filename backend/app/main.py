@@ -431,7 +431,7 @@ async def get_item(item_id: int, response: Response):
         raise HTTPException(status_code=500, detail=f"Failed to retrieve item: {str(e)}")
 
 @app.get("/search/bosses", response_model=List[BossSummary], tags=["Search"])
-async def search_bosses(query: str, limit: int = 10):
+async def search_bosses(query: str, limit: int | None = None):
     """
     Search for bosses by name.
     
@@ -444,7 +444,7 @@ async def search_bosses(query: str, limit: int = 10):
         raise HTTPException(status_code=500, detail=f"Search failed: {str(e)}")
 
 @app.get("/search/items", response_model=List[ItemSummary], tags=["Search"])
-async def search_items(query: str, limit: int = 10):
+async def search_items(query: str, limit: int | None = None):
     """
     Search for items by name.
     
