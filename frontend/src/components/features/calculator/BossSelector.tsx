@@ -41,8 +41,10 @@ interface BossSelectorProps {
 
 export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) {
   const [open, setOpen] = useState(false);
-  const [selectedBoss, setSelectedBoss] = useState<Boss | null>(null);
-  const [selectedForm, setSelectedForm] = useState<BossForm | null>(null);
+  const selectedBoss = useCalculatorStore((s) => s.selectedBoss);
+  const setSelectedBoss = useCalculatorStore((s) => s.setSelectedBoss);
+  const selectedForm = useCalculatorStore((s) => s.selectedBossForm);
+  const setSelectedForm = useCalculatorStore((s) => s.setSelectedBossForm);
   const [bossIcons, setBossIcons] = useState<Record<number, string>>({});
   const storeBosses = useReferenceDataStore((s) => s.bosses);
   const initData = useReferenceDataStore((s) => s.initData);

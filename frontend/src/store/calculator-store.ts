@@ -6,7 +6,9 @@ import {
   MeleeCalculatorParams,
   RangedCalculatorParams,
   MagicCalculatorParams,
-  Item
+  Item,
+  Boss,
+  BossForm
 } from '@/types/calculator';
 
 interface CalculatorState {
@@ -20,6 +22,8 @@ interface CalculatorState {
   gearLocked: boolean;
   bossLocked: boolean;
   loadout: Record<string, Item | null>;
+  selectedBoss: Boss | null;
+  selectedBossForm: BossForm | null;
 
   setParams: (params: Partial<CalculatorParams>) => void;
   switchCombatStyle: (style: 'melee' | 'ranged' | 'magic') => void;
@@ -34,6 +38,8 @@ interface CalculatorState {
   unlockBoss: () => void;
   resetLocks: () => void;
   setLoadout: (loadout: Record<string, Item | null>) => void;
+  setSelectedBoss: (boss: Boss | null) => void;
+  setSelectedBossForm: (form: BossForm | null) => void;
 }
 
 const defaultMeleeParams: MeleeCalculatorParams = {
@@ -113,6 +119,8 @@ export const useCalculatorStore = create<CalculatorState>()(
       gearLocked: false,
       bossLocked: false,
       loadout: {},
+      selectedBoss: null,
+      selectedBossForm: null,
 
       setParams: (newParams: Partial<CalculatorParams>) => set((state): Partial<CalculatorState> => {
         const currentStyle = state.params.combat_style;
@@ -200,7 +208,9 @@ export const useCalculatorStore = create<CalculatorState>()(
       lockBoss: () => set({ bossLocked: true }),
       unlockBoss: () => set({ bossLocked: false }),
       resetLocks: () => set({ gearLocked: false, bossLocked: false }),
-      setLoadout: (loadout) => set({ loadout })
+      setLoadout: (loadout) => set({ loadout }),
+      setSelectedBoss: (boss) => set({ selectedBoss: boss }),
+      setSelectedBossForm: (form) => set({ selectedBossForm: form })
     }),
     {
       name: 'osrs-calculator-storage',
@@ -208,7 +218,9 @@ export const useCalculatorStore = create<CalculatorState>()(
         params: state.params,
         gearLocked: state.gearLocked,
         bossLocked: state.bossLocked,
-        loadout: state.loadout
+        loadout: state.loadout,
+        selectedBoss: state.selectedBoss,
+        selectedBossForm: state.selectedBossForm
       })
     }
   )
