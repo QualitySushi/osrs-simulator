@@ -10,7 +10,7 @@ on:
   workflow_dispatch:  # Allow manual deployment
 
 env:
-  AZURE_WEBAPP_NAME: 'scapelab-api-dvawaebtdze3brf0'  # Your full app name
+  AZURE_WEBAPP_NAME: 'ScapeLab-API'  # Your full app name
   AZURE_WEBAPP_PACKAGE_PATH: './backend'
   PYTHON_VERSION: '3.12'  # Match your App Service Python version
 
