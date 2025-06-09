@@ -2,6 +2,7 @@ from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from typing import Dict, Any, List
+from pydantic import BaseModel
 import os
 from dotenv import load_dotenv
 
@@ -20,6 +21,7 @@ from .models import (
 from .services import calculation_service
 from .services import seed_service
 from .services import bis_service
+from .services import simulation_service
 
 # Create the FastAPI app
 app = FastAPI(
@@ -452,6 +454,23 @@ async def calculate_item_effect(params: Dict[str, Any]):
     try:
         result = calculation_service.calculate_item_effect(params)
         return result
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+class BossSimulationRequest(BaseModel):
+    params: DpsParameters
+    boss_ids: List[int]
+
+
+@app.post("/simulate/bosses", tags=["Simulation"])
+async def simulate_bosses_endpoint(request: BossSimulationRequest):
+    """Return DPS results for each boss id using its defence stats."""
+    try:
+        results = simulation_service.simulate_bosses(
+            request.params.model_dump(exclude_none=True), request.boss_ids
+        )
+        return {bid: res.model_dump() for bid, res in results.items()}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
