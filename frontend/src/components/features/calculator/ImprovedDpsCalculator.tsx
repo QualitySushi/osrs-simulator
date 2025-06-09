@@ -2,7 +2,7 @@
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Info } from 'lucide-react';
-import { DirectBossSelector } from './DirectBossSelector';
+import { BossSelector } from './BossSelector';
 import { CombinedEquipmentDisplay } from './CombinedEquipmentDisplay';
 import { DpsComparison } from './DpsComparison';
 import { PrayerPotionSelector } from './PrayerPotionSelector';
@@ -99,7 +99,7 @@ export function ImprovedDpsCalculator() {
         {/* Right column */}
         <div className="space-y-6 flex flex-col flex-grow">
           {/* Target selection section */}
-          <DirectBossSelector onSelectForm={handleBossUpdate} className="flex-grow" />
+          <BossSelector onSelectForm={handleBossUpdate} />
           
           {/* Defensive reductions panel - with contained height */}
           <Card className="w-full border">
