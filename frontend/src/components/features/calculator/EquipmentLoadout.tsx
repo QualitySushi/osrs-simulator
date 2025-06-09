@@ -103,7 +103,9 @@ export function EquipmentLoadout({ onEquipmentUpdate }: EquipmentLoadoutProps) {
       return;
     }
 
-    console.log('[DEBUG] Calculated equipment totals:', totals);
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('[DEBUG] Calculated equipment totals:', totals);
+    }
     
     // Apply totals to parameters based on combat style
     if (params.combat_style === 'melee') {
@@ -113,10 +115,12 @@ export function EquipmentLoadout({ onEquipmentUpdate }: EquipmentLoadoutProps) {
       if (maxAttack !== params.melee_attack_bonus || 
           (totals.strength || 0) !== params.melee_strength_bonus) {
         
-        console.log('[DEBUG] Setting melee equipment bonuses:', {
-          attack: maxAttack,
-          strength: totals.strength || 0
-        });
+        if (process.env.NODE_ENV !== 'production') {
+          console.log('[DEBUG] Setting melee equipment bonuses:', {
+            attack: maxAttack,
+            strength: totals.strength || 0
+          });
+        }
         
         // IMPORTANT: Set the params with the CALCULATED TOTALS, not individual item stats
         setParams({
@@ -131,10 +135,12 @@ export function EquipmentLoadout({ onEquipmentUpdate }: EquipmentLoadoutProps) {
       if ((totals.ranged || 0) !== params.ranged_attack_bonus || 
           (totals['ranged strength'] || 0) !== params.ranged_strength_bonus) {
         
-        console.log('[DEBUG] Setting ranged equipment bonuses:', {
-          attack: totals.ranged || 0,
-          strength: totals['ranged strength'] || 0
-        });
+        if (process.env.NODE_ENV !== 'production') {
+          console.log('[DEBUG] Setting ranged equipment bonuses:', {
+            attack: totals.ranged || 0,
+            strength: totals['ranged strength'] || 0
+          });
+        }
         
         setParams({
           ranged_attack_bonus: totals.ranged || 0,
@@ -151,10 +157,12 @@ export function EquipmentLoadout({ onEquipmentUpdate }: EquipmentLoadoutProps) {
       if (magicAttack !== params.magic_attack_bonus || 
           magicDamage !== params.magic_damage_bonus) {
         
-        console.log('[DEBUG] Setting magic equipment bonuses:', {
-          attack: magicAttack,
-          damage: magicDamage
-        });
+        if (process.env.NODE_ENV !== 'production') {
+          console.log('[DEBUG] Setting magic equipment bonuses:', {
+            attack: magicAttack,
+            damage: magicDamage
+          });
+        }
         
         setParams({
           magic_attack_bonus: magicAttack,
@@ -196,7 +204,9 @@ export function EquipmentLoadout({ onEquipmentUpdate }: EquipmentLoadoutProps) {
 
   const handleSelectItem = (slot: string, item: Item | null) => {
     if (!item) {
-      console.debug(`[DEBUG] Deselected item for slot: ${slot}`);
+      if (process.env.NODE_ENV !== 'production') {
+        console.debug(`[DEBUG] Deselected item for slot: ${slot}`);
+      }
       // Create a new loadout without this item
       const updatedLoadout = { ...loadout };
       delete updatedLoadout[slot];
@@ -214,17 +224,23 @@ export function EquipmentLoadout({ onEquipmentUpdate }: EquipmentLoadoutProps) {
       return;
     }
 
-    console.debug('[DEBUG] Selected slot:', slot);
-    console.debug('[DEBUG] Selected raw item:', item);
+    if (process.env.NODE_ENV !== 'production') {
+      console.debug('[DEBUG] Selected slot:', slot);
+      console.debug('[DEBUG] Selected raw item:', item);
+    }
 
     // Fetch full item details including combat_stats
     itemsApi.getItemById(item.id).then((fullItem) => {
       if (!fullItem) {
-        console.warn('[DEBUG] Failed to fetch full item details for:', item.id);
+        if (process.env.NODE_ENV !== 'production') {
+          console.warn('[DEBUG] Failed to fetch full item details for:', item.id);
+        }
         return;
       }
 
-      console.debug('[DEBUG] Full item details:', fullItem);
+      if (process.env.NODE_ENV !== 'production') {
+        console.debug('[DEBUG] Full item details:', fullItem);
+      }
 
       // Handle 2h weapons or mainhand/offhand items
       const newLoadout = { ...loadout };
@@ -243,7 +259,9 @@ export function EquipmentLoadout({ onEquipmentUpdate }: EquipmentLoadoutProps) {
         newLoadout[slot] = fullItem;
       }
 
-      console.debug('[DEBUG] New loadout:', newLoadout);
+      if (process.env.NODE_ENV !== 'production') {
+        console.debug('[DEBUG] New loadout:', newLoadout);
+      }
       
       // Update the loadout - useEffect will handle recalculating totals and updating the store
       setLoadout(newLoadout);
@@ -257,7 +275,9 @@ export function EquipmentLoadout({ onEquipmentUpdate }: EquipmentLoadoutProps) {
   };
 
   const getTotals = (gear: Record<string, Item | null>) => {
-    console.debug('[DEBUG] Calculating totals from gear:', gear);
+    if (process.env.NODE_ENV !== 'production') {
+      console.debug('[DEBUG] Calculating totals from gear:', gear);
+    }
 
     const totals: Record<string, number> = {
       stab: 0,
@@ -279,7 +299,9 @@ export function EquipmentLoadout({ onEquipmentUpdate }: EquipmentLoadoutProps) {
     // Loop through all equipped items
     for (const item of Object.values(gear)) {
       if (!item?.combat_stats) continue;
-      console.debug(`[DEBUG] Adding stats from item: ${item.name}`);
+      if (process.env.NODE_ENV !== 'production') {
+        console.debug(`[DEBUG] Adding stats from item: ${item.name}`);
+      }
 
       const { attack_bonuses, other_bonuses } = item.combat_stats;
 
@@ -287,7 +309,9 @@ export function EquipmentLoadout({ onEquipmentUpdate }: EquipmentLoadoutProps) {
       for (const [key, val] of Object.entries(attack_bonuses)) {
         if (Object.hasOwn(totals, key)) {
           totals[key] += typeof val === 'number' ? val : Number(val) || 0;
-          console.debug(`[DEBUG] Added ${val} to ${key}, new total: ${totals[key]}`);
+          if (process.env.NODE_ENV !== 'production') {
+            console.debug(`[DEBUG] Added ${val} to ${key}, new total: ${totals[key]}`);
+          }
         }
       }
 
@@ -298,12 +322,16 @@ export function EquipmentLoadout({ onEquipmentUpdate }: EquipmentLoadoutProps) {
           const match = val.match(/\+(\d+)%/);
           if (match) {
             totals['magic damage percent'] += parseInt(match[1]);
-            console.debug(`[DEBUG] Added ${match[1]}% to magic damage percent, new total: ${totals['magic damage percent']}`);
+            if (process.env.NODE_ENV !== 'production') {
+              console.debug(`[DEBUG] Added ${match[1]}% to magic damage percent, new total: ${totals['magic damage percent']}`);
+            }
           }
         } else if (Object.hasOwn(totals, key)) {
           // Add numeric bonuses
           totals[key] += typeof val === 'number' ? val : Number(val) || 0;
-          console.debug(`[DEBUG] Added ${val} to ${key}, new total: ${totals[key]}`);
+          if (process.env.NODE_ENV !== 'production') {
+            console.debug(`[DEBUG] Added ${val} to ${key}, new total: ${totals[key]}`);
+          }
         }
       }
       
@@ -321,7 +349,9 @@ export function EquipmentLoadout({ onEquipmentUpdate }: EquipmentLoadoutProps) {
       }
     }
 
-    console.debug('[DEBUG] Final calculated totals:', totals);
+    if (process.env.NODE_ENV !== 'production') {
+      console.debug('[DEBUG] Final calculated totals:', totals);
+    }
     return totals;
   };
 
@@ -506,7 +536,9 @@ export function EquipmentLoadout({ onEquipmentUpdate }: EquipmentLoadoutProps) {
                     base_spell_max_hit: baseHit
                     });
 
-                    console.log(`[DEBUG] Set spell to ${selected} with base max hit ${baseHit}`);
+                    if (process.env.NODE_ENV !== 'production') {
+                      console.log(`[DEBUG] Set spell to ${selected} with base max hit ${baseHit}`);
+                    }
                 }}
                 className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-1"
                 aria-label="Select a magic spell"

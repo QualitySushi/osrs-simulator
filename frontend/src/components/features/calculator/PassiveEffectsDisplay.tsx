@@ -61,7 +61,9 @@ export function PassiveEffectsDisplay({ loadout, target }: PassiveEffectsDisplay
               );
       }) as Item[];
     
-    console.log('[DEBUG] Items with passive effects:', itemsWithPassiveEffects);
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('[DEBUG] Items with passive effects:', itemsWithPassiveEffects);
+    }
     
     // If no items with passive effects (after enhanced detection), return empty
     if (itemsWithPassiveEffects.length === 0) {
@@ -112,7 +114,9 @@ export function PassiveEffectsDisplay({ loadout, target }: PassiveEffectsDisplay
       const itemName = item.name.toLowerCase();
 
       if (itemName.includes('twisted bow')) {
-        console.log('[DEBUG] Found Twisted Bow, target magic level:', target?.magic_level);
+        if (process.env.NODE_ENV !== 'production') {
+          console.log('[DEBUG] Found Twisted Bow, target magic level:', target?.magic_level);
+        }
         
         if (target?.magic_level) {
           effects.push({
@@ -120,7 +124,9 @@ export function PassiveEffectsDisplay({ loadout, target }: PassiveEffectsDisplay
             description: `Scaling against target with ${target.magic_level} Magic level`
           });
         } else {
-          console.log('[DEBUG] Target has no magic level, Twisted Bow effect not applicable');
+          if (process.env.NODE_ENV !== 'production') {
+            console.log('[DEBUG] Target has no magic level, Twisted Bow effect not applicable');
+          }
         }
       }
       
