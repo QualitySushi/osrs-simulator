@@ -1,6 +1,6 @@
-import json
 import azure.functions as func
 from .. import common  # noqa: F401
+from ..common import json_response
 from app.repositories import boss_repository
 
 async def main(req: func.HttpRequest) -> func.HttpResponse:
@@ -14,4 +14,4 @@ async def main(req: func.HttpRequest) -> func.HttpResponse:
     boss = boss_repository.get_boss(boss_id)
     if not boss:
         return func.HttpResponse("Not found", status_code=404)
-    return func.HttpResponse(json.dumps(boss), mimetype="application/json")
+    return json_response(boss)

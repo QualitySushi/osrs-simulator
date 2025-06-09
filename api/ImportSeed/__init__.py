@@ -1,6 +1,6 @@
-import json
 import azure.functions as func
 from .. import common  # noqa: F401
+from ..common import json_response
 from app.services import seed_service
 
 async def main(req: func.HttpRequest) -> func.HttpResponse:
@@ -13,6 +13,6 @@ async def main(req: func.HttpRequest) -> func.HttpResponse:
         return func.HttpResponse("seed is required", status_code=400)
     try:
         params = seed_service.decode_seed(seed)
-        return func.HttpResponse(params.model_dump_json(), mimetype="application/json")
+        return json_response(params.model_dump(exclude_none=True))
     except Exception as e:
         return func.HttpResponse(str(e), status_code=400)
