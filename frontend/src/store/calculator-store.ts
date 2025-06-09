@@ -209,6 +209,11 @@ export const useCalculatorStore = create<CalculatorState>()(
         gearLocked: state.gearLocked,
         bossLocked: state.bossLocked,
         loadout: state.loadout
+      }),
+      merge: (persisted, current) => ({
+        ...current,
+        ...persisted,
+        params: { ...(current as any).params, ...(persisted as any).params }
       })
     }
   )
