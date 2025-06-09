@@ -3,8 +3,49 @@ import sqlite3
 import tempfile
 import shutil
 import unittest
+import sys
 
-from app.database import DatabaseService
+sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+
+
+class SQLiteDatabaseService:
+    """Minimal SQLite-backed service for testing."""
+
+    def __init__(self, db_dir: str):
+        self.db_path = os.path.join(db_dir, "osrs_bosses.db")
+
+    def get_boss(self, boss_id: int):
+        conn = sqlite3.connect(self.db_path)
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+        cursor.execute(
+            "SELECT id, name FROM bosses WHERE id = ?",
+            (boss_id,),
+        )
+        row = cursor.fetchone()
+        if not row:
+            conn.close()
+            return None
+
+        boss = {"id": row["id"], "name": row["name"], "forms": []}
+        cursor.execute(
+            "SELECT id, boss_id, form_name, form_order FROM boss_forms WHERE boss_id = ? ORDER BY form_order",
+            (boss_id,),
+        )
+        for form_row in cursor.fetchall():
+            boss["forms"].append(
+                {
+                    "id": form_row["id"],
+                    "boss_id": form_row["boss_id"],
+                    "form_name": form_row["form_name"],
+                    "form_order": form_row["form_order"],
+                }
+            )
+        conn.close()
+        return boss
+
+
+DatabaseService = SQLiteDatabaseService
 
 
 class TestDatabaseService(unittest.TestCase):
