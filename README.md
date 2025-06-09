@@ -85,6 +85,13 @@ The frontend is built with Next.js and uses:
     shadcn/ui and Tailwind CSS for styling
     TypeScript for type safety
 
+State Persistence
+
+The calculator remembers your last selected boss, locked gear, and loadout across
+page reloads using Zustand's `persist` middleware. Boss and item lists are cached
+locally for 12 hours so returning to the app doesn't require refetching all
+reference data.
+
 Backend Architecture
 
 The backend is built with FastAPI and uses:

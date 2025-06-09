@@ -19,8 +19,14 @@ export function useDpsCalculator() {
 
   const [activeTab, setActiveTab] = useState<CombatStyle>(params.combat_style);
   const [currentLoadout, setCurrentLoadout] = useState<Record<string, Item | null>>(storeLoadout);
-  const [currentBossForm, setCurrentBossForm] = useState<BossForm | null>(null);
+  const storeBossForm = useCalculatorStore((s) => s.selectedBossForm);
+  const setStoreBossForm = useCalculatorStore((s) => s.setSelectedBossForm);
+  const [currentBossForm, setCurrentBossForm] = useState<BossForm | null>(storeBossForm);
   const [appliedPassiveEffects, setAppliedPassiveEffects] = useState<any>(null);
+
+  useEffect(() => {
+    setCurrentBossForm(storeBossForm);
+  }, [storeBossForm]);
 
   useEffect(() => {
     setCurrentLoadout(storeLoadout);
@@ -141,6 +147,7 @@ export function useDpsCalculator() {
 
   const handleBossUpdate = (bossForm: BossForm | null) => {
     setCurrentBossForm(bossForm);
+    setStoreBossForm(bossForm);
   };
 
   return {
