@@ -4,6 +4,10 @@ import { create } from 'zustand';
 // No persistence to avoid localStorage quota errors
 import { bossesApi, itemsApi } from '@/services/api';
 import { Boss, BossForm, Item } from '@/types/calculator';
+import { safeStorage } from '@/utils/safeStorage';
+
+// Clean up old persisted data that could exceed the quota
+safeStorage.removeItem('osrs-reference-data');
 
 interface ReferenceDataState {
   bosses: Boss[];

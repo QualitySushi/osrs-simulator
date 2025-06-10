@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { persist, createJSONStorage } from 'zustand/middleware';
+// No persistence to avoid localStorage quota errors
 import { safeStorage } from '@/utils/safeStorage';
 import { idbStorage } from '@/utils/idbStorage';
 import { useReferenceDataStore } from './reference-data-store';
@@ -139,9 +139,11 @@ const defaultMagicParams: MagicCalculatorParams = {
   duration: 60
 };
 
+// Clean up old persisted data that could exceed the quota
+safeStorage.removeItem('osrs-calculator-storage');
+
 export const useCalculatorStore = create<CalculatorState>()(
-  persist(
-    (set) => ({
+  (set) => ({
       params: defaultMeleeParams,
       results: null,
       comparisonResults: [],
@@ -240,34 +242,10 @@ export const useCalculatorStore = create<CalculatorState>()(
       lockBoss: () => set({ bossLocked: true }),
       unlockBoss: () => set({ bossLocked: false }),
       resetLocks: () => set({ gearLocked: false, bossLocked: false }),
-      setLoadout: (loadout) => set({
-        loadout,
-        loadoutIds: Object.fromEntries(
-          Object.entries(loadout).map(([slot, item]) => [slot, item?.id ?? null])
-        )
-      }),
-      setSelectedBoss: (boss) => set({
-        selectedBoss: boss,
-        selectedBossId: boss?.id ?? null
-      }),
-      setSelectedBossForm: (form) => set({
-        selectedBossForm: form,
-        selectedBossFormId: form?.id ?? null
-      })
-    }),
-    {
-      name: 'osrs-calculator-storage',
-      storage: createJSONStorage(() => (typeof window !== 'undefined' && 'indexedDB' in window ? idbStorage : safeStorage)),
-      partialize: (state) => ({
-        params: state.params,
-        gearLocked: state.gearLocked,
-        bossLocked: state.bossLocked,
-        loadoutIds: state.loadoutIds,
-        selectedBossId: state.selectedBossId,
-        selectedBossFormId: state.selectedBossFormId
-      })
-    }
-  )
+      setLoadout: (loadout) => set({ loadout }),
+      setSelectedBoss: (boss) => set({ selectedBoss: boss }),
+      setSelectedBossForm: (form) => set({ selectedBossForm: form })
+    })
 );
 
 // After hydration, populate objects from persisted IDs

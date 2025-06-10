@@ -25,6 +25,7 @@ import { CombatStyle, CalculatorParams } from '@/types/calculator';
 import { Badge } from '@/components/ui/badge';
 
 import { cn } from '@/lib/utils';
+import { safeStorage } from '@/utils/safeStorage';
 
 interface PresetSelectorProps {
   onPresetLoad?: () => void;
@@ -49,7 +50,7 @@ export function PresetSelector({ onPresetLoad, className }: PresetSelectorProps)
   useEffect(() => {
     setHasMounted(true);
     if (typeof window !== 'undefined') {
-      const savedPresets = localStorage.getItem('osrs-dps-presets');
+      const savedPresets = safeStorage.getItem('osrs-dps-presets');
       setPresets(savedPresets ? JSON.parse(savedPresets) : []);
     }
   }, []);
@@ -68,7 +69,7 @@ export function PresetSelector({ onPresetLoad, className }: PresetSelectorProps)
     const updatedPresets = [...presets, newPreset];
     setPresets(updatedPresets);
     if (typeof window !== 'undefined') {
-      localStorage.setItem('osrs-dps-presets', JSON.stringify(updatedPresets));
+      safeStorage.setItem('osrs-dps-presets', JSON.stringify(updatedPresets));
     }
     setSaveDialogOpen(false);
     setPresetName('');
@@ -84,7 +85,7 @@ export function PresetSelector({ onPresetLoad, className }: PresetSelectorProps)
     const updatedPresets = presets.filter(preset => preset.id !== presetId);
     setPresets(updatedPresets);
     if (typeof window !== 'undefined') {
-      localStorage.setItem('osrs-dps-presets', JSON.stringify(updatedPresets));
+      safeStorage.setItem('osrs-dps-presets', JSON.stringify(updatedPresets));
     }
   };
 
