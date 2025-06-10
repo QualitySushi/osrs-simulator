@@ -72,13 +72,21 @@ export const useReferenceDataStore = create<ReferenceDataState>()(
         }
       },
       addBosses(b) {
-        set((state) => ({ bosses: [...state.bosses, ...b] }));
+        set((state) => {
+          const map = new Map(state.bosses.map((boss) => [boss.id, boss]));
+          b.forEach((boss) => map.set(boss.id, boss));
+          return { bosses: Array.from(map.values()) };
+        });
       },
       addBossForms(id, forms) {
         set((state) => ({ bossForms: { ...state.bossForms, [id]: forms } }));
       },
       addItems(i) {
-        set((state) => ({ items: [...state.items, ...i] }));
+        set((state) => {
+          const map = new Map(state.items.map((item) => [item.id, item]));
+          i.forEach((item) => map.set(item.id, item));
+          return { items: Array.from(map.values()) };
+        });
       },
     }),
     {
@@ -102,3 +110,4 @@ export const useReferenceDataStore = create<ReferenceDataState>()(
     }
   )
 );
+
