@@ -112,33 +112,45 @@ class AzureSQLDatabaseService:
     def connection(self):
         """Context manager with retry logic for DB connections."""
         for attempt in range(MAX_RETRIES):
+            conn = None
             try:
                 conn = self._get_connection()
-                try:
-                    yield conn
-                finally:
-                    self.pool.release(conn)
-                break
-            except Exception as e:
+                yield conn
+            except Exception:
+                if conn:
+                    try:
+                        self.pool.release(conn)
+                    except Exception:
+                        pass
                 if attempt == MAX_RETRIES - 1:
                     raise
                 time.sleep(2**attempt)
+            else:
+                if conn:
+                    self.pool.release(conn)
+                break
 
     @asynccontextmanager
     async def connection_async(self):
         """Async context manager with retry logic for DB connections."""
         for attempt in range(MAX_RETRIES):
+            conn = None
             try:
                 conn = await self._get_connection_async()
-                try:
-                    yield conn
-                finally:
-                    await self.pool.release_async(conn)
-                break
+                yield conn
             except Exception:
+                if conn:
+                    try:
+                        await self.pool.release_async(conn)
+                    except Exception:
+                        pass
                 if attempt == MAX_RETRIES - 1:
                     raise
                 await asyncio.sleep(2**attempt)
+            else:
+                if conn:
+                    await self.pool.release_async(conn)
+                break
 
     def get_all_bosses(
         self,
