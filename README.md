@@ -193,6 +193,7 @@ Database connections are pooled. Tune pool behaviour with the following
 environment variables:
 
 - `DB_POOL_SIZE` – Maximum number of open connections (default `5`).
+  Values below `1` are automatically clamped to `1`.
 - `DB_CONNECTION_TIMEOUT` – Connection timeout in seconds (default `30`).
 - `DB_MAX_RETRIES` – Number of connection retries for transient failures
   (default `3`).
