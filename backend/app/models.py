@@ -178,6 +178,12 @@ class DpsParameters(BaseModel):
     elemental_weakness: Optional[float] = None
     salve_bonus: Optional[float] = None
 
+    # Raid parameters
+    raid: Optional[str] = None
+    raid_level: Optional[int] = None
+    party_size: Optional[int] = None
+    path_level: Optional[int] = None
+
     # Target parameters
     target_defence_level: int = 1
     target_defence_bonus: int = 0

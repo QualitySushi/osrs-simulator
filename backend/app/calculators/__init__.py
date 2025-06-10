@@ -1,6 +1,7 @@
 from .melee import MeleeCalculator
 from .ranged import RangedCalculator
 from .magic import MagicCalculator
+from .raid_scaling import apply_raid_scaling
 from typing import Dict, Any
 
 
@@ -12,6 +13,7 @@ class DpsCalculator:
         """
         Dispatch DPS calculation based on combat style.
         """
+        params = apply_raid_scaling(params)
         combat_style = params.get("combat_style", "melee").lower()
 
         if combat_style == "melee":
