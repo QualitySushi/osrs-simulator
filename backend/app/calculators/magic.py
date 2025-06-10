@@ -52,21 +52,26 @@ class MagicCalculator:
         # Calculate attack roll
         attack_roll = math.floor(effective_atk * (params["magic_attack_bonus"] + EQUIPMENT_BONUS_OFFSET))
         attack_roll = math.floor(attack_roll * params.get("gear_multiplier", 1.0))
+        attack_roll = math.floor(attack_roll * params.get("accuracy_multiplier", 1.0))
         
         # Calculate defence roll
         def_roll = (params["target_magic_level"] + 9) * (params["target_magic_defence"] + EQUIPMENT_BONUS_OFFSET)
         
         # Calculate hit chance
-        if attack_roll > def_roll:
-            hit_chance = 1 - (def_roll + 2) / (2 * (attack_roll + 1))
+        if params.get("guaranteed_hit"):
+            hit_chance = 1.0
         else:
-            hit_chance = attack_roll / (2 * (def_roll + 1))
+            if attack_roll > def_roll:
+                hit_chance = 1 - (def_roll + 2) / (2 * (attack_roll + 1))
+            else:
+                hit_chance = attack_roll / (2 * (def_roll + 1))
         
         # Cap hit chance between 0 and 1
         hit_chance = max(0, min(1, hit_chance))
         
         # Calculate average hit and DPS
         avg_hit = hit_chance * (max_hit + 1) / 2
+        avg_hit *= params.get("hit_count", 1)
         dps = avg_hit / params["attack_speed"]
         
         # Return all calculated values

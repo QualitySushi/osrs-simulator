@@ -179,6 +179,6 @@ class TestSpecialAttackRepository(unittest.TestCase):
         from app.repositories import special_attack_repository
         data = special_attack_repository.get_special_attack("Dragon dagger")
         self.assertIsNotNone(data)
-        self.assertEqual(data["cost"], 25)
+        self.assertEqual(data["special_cost"], 25)
 
 

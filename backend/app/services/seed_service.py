@@ -17,6 +17,6 @@ def decode_seed(seed: str) -> DpsParameters:
 
 def encode_seed(params: DpsParameters) -> str:
     """Encode DpsParameters into a base64 seed string."""
-    payload = params.model_dump()
+    payload = params.dict()
     json_str = json.dumps(payload)
     return base64.b64encode(json_str.encode("utf-8")).decode("utf-8")

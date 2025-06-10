@@ -33,6 +33,9 @@ class DpsCalculator:
         # Calculate regular and special attack damage per hit
         regular_params = params.copy()
         regular_params["special_multiplier"] = 1.0
+        regular_params["accuracy_multiplier"] = 1.0
+        regular_params["hit_count"] = 1
+        regular_params["guaranteed_hit"] = False
         regular_result = calculator.calculate_dps(regular_params)
         special_result = calculator.calculate_dps(params)
 

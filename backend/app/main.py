@@ -86,7 +86,7 @@ async def calculate_dps(params: DpsParameters):
     """
     try:
         # Convert Pydantic model to dict for the calculator
-        params_dict = params.model_dump(exclude_none=True)
+        params_dict = params.dict(exclude_none=True)
         
         # Calculate DPS
         result = calculation_service.calculate_dps(params_dict)
@@ -105,7 +105,7 @@ async def import_seed(payload: Dict[str, str]):
         raise HTTPException(status_code=400, detail="seed is required")
     try:
         params = seed_service.decode_seed(seed)
-        return params.model_dump(exclude_none=True)
+        return params.dict(exclude_none=True)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
@@ -118,7 +118,7 @@ async def calculate_dps_from_seed(payload: Dict[str, str]):
         raise HTTPException(status_code=400, detail="seed is required")
     try:
         params = seed_service.decode_seed(seed)
-        result = calculation_service.calculate_dps(params.model_dump(exclude_none=True))
+        result = calculation_service.calculate_dps(params.dict(exclude_none=True))
         return DpsResult(**result)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
@@ -129,7 +129,7 @@ async def get_best_in_slot(params: DpsParameters):
     """Return a naive best-in-slot recommendation based on parameters."""
     try:
         setup = await bis_service.suggest_bis_async(
-            params.model_dump(exclude_none=True)
+            params.dict(exclude_none=True)
         )
         return setup
     except Exception as e:
@@ -504,6 +504,13 @@ async def search_items(query: str, limit: int | None = None):
         return results
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Search failed: {str(e)}")
+
+@app.get("/special-attacks", tags=["Items"])
+async def get_special_attacks():
+    """Return all special attack data."""
+    from .repositories import special_attack_repository
+    data = special_attack_repository.get_all_special_attacks()
+    return list(data.values())
 
 @app.post("/calculate/item-effect", tags=["DPS"])
 async def calculate_item_effect(params: Dict[str, Any]):
