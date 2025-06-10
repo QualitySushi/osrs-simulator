@@ -53,8 +53,16 @@ export const bossesApi = {
   },
 
   getBossById: async (id: number): Promise<Boss> => {
-    const { data } = await apiClient.get(`/boss/${id}`);
-    return data;
+    try {
+      const { data } = await apiClient.get(`/boss/${id}`);
+      return data;
+    } catch (err: any) {
+      if (err.response?.status === 404) {
+        const { data } = await apiClient.get(`/boss/form/${id}`);
+        return data;
+      }
+      throw err;
+    }
   },
 
   getBossByFormId: async (formId: number): Promise<Boss> => {
@@ -63,8 +71,16 @@ export const bossesApi = {
   },
 
   getBossForms: async (bossId: number): Promise<BossForm[]> => {
-    const { data } = await apiClient.get(`/boss/${bossId}`);
-    return data.forms || [];
+    try {
+      const { data } = await apiClient.get(`/boss/${bossId}`);
+      return data.forms || [];
+    } catch (err: any) {
+      if (err.response?.status === 404) {
+        const { data } = await apiClient.get(`/boss/form/${bossId}`);
+        return data.forms || [];
+      }
+      throw err;
+    }
   },
 
   searchBosses: async (query: string, limit?: number): Promise<Boss[]> => {
