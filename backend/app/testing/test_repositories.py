@@ -1,6 +1,11 @@
 import unittest
 import asyncio
+import os
+import sys
 from unittest.mock import MagicMock, AsyncMock
+from fastapi.testclient import TestClient
+
+sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
 from app.repositories import item_repository, boss_repository
 
@@ -132,6 +137,38 @@ class TestAsyncRepositoryCaching(unittest.TestCase):
         asyncio.run(boss_repository.get_all_bosses_async())
         asyncio.run(boss_repository.get_all_bosses_async())
         self.assertEqual(self.boss_service.get_all_bosses_async.call_count, 1)
+
+
+class TestStartupCacheWarmup(unittest.TestCase):
+    def setUp(self):
+        self.mock_items = [{"id": 1}]
+        self.mock_bosses = [{"id": 1}]
+
+        self.item_service = MagicMock()
+        self.item_service.get_all_items_async = AsyncMock(return_value=self.mock_items)
+        self.orig_item_service = item_repository.db_service
+        item_repository.db_service = self.item_service
+
+        self.boss_service = MagicMock()
+        self.boss_service.get_all_bosses_async = AsyncMock(return_value=self.mock_bosses)
+        self.orig_boss_service = boss_repository.db_service
+        boss_repository.db_service = self.boss_service
+
+        item_repository._all_items_cache.clear()
+        boss_repository._all_bosses_cache.clear()
+
+        from app.main import app
+        self.client = TestClient(app)
+
+    def tearDown(self):
+        item_repository.db_service = self.orig_item_service
+        boss_repository.db_service = self.orig_boss_service
+
+    def test_startup_populates_caches(self):
+        with self.client as client:
+            client.get("/")
+        self.assertEqual(item_repository._all_items_cache.get("all"), self.mock_items)
+        self.assertEqual(boss_repository._all_bosses_cache.get("all"), self.mock_bosses)
 
 
 if __name__ == '__main__':

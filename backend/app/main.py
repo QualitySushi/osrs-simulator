@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from typing import Dict, Any, List
 import os
+import asyncio
 from dotenv import load_dotenv
 
 # Load environment variables from a .env file if present
@@ -37,6 +38,19 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Preload caches on startup in the background
+async def _preload_caches_async() -> None:
+    try:
+        await boss_repository.get_all_bosses_async()
+        await item_repository.get_all_items_async(combat_only=False)
+    except Exception as e:
+        print(f"Cache preload failed: {e}")
+
+
+@app.on_event("startup")
+async def preload_cache_event() -> None:
+    asyncio.create_task(_preload_caches_async())
 
 # Serve static images for the frontend via the API
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -114,7 +128,9 @@ async def calculate_dps_from_seed(payload: Dict[str, str]):
 async def get_best_in_slot(params: DpsParameters):
     """Return a naive best-in-slot recommendation based on parameters."""
     try:
-        setup = bis_service.suggest_bis(params.model_dump(exclude_none=True))
+        setup = await bis_service.suggest_bis_async(
+            params.model_dump(exclude_none=True)
+        )
         return setup
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
