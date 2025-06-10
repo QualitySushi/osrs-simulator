@@ -19,6 +19,7 @@ from osrs_parser import (
     AreaOfEffectExtractor,
     PrayerEffectExtractor,
     SkillBoostExtractor,
+    MagicDamageExtractor,
     parse_special_attack
 )
 
@@ -364,6 +365,14 @@ class TestPrayerEffectExtractor:
         assert result['restore']['type'] == 'damage_based'
         assert result['drain']['type'] == 'damage_based'
 
+    def test_no_false_positive_from_combat_levels(self):
+        text = (
+            "drains the opponent's combat levels equivalent to the damage hit in the "
+            "following order: Defence, Strength, Prayer, Attack"
+        )
+        result = self.extractor.extract(text)
+        assert result is None or 'drain' not in result
+
 
 class TestSkillBoostExtractor:
     """Test skill boost extraction"""
@@ -375,6 +384,25 @@ class TestSkillBoostExtractor:
         text = "temporarily boosts the player's Woodcutting level by 3"
         result = self.extractor.extract(text)
         assert result == [{'skill': 'woodcutting', 'amount': 3}]
+
+
+class TestMagicDamageExtractor:
+    """Test magic damage extraction"""
+
+    def setup_method(self):
+        self.extractor = MagicDamageExtractor()
+
+    def test_flat_magic_damage(self):
+        text = "target takes 25 magic damage"
+        result = self.extractor.extract(text)
+        assert result == {'type': 'flat', 'value': 25}
+
+    def test_magic_damage_range(self):
+        text = "deals guaranteed Magic damage between 50-150% of the wielder's maximum melee hit"
+        result = self.extractor.extract(text)
+        assert result['type'] == 'multiplier_range'
+        assert result['min'] == 0.5
+        assert result['max'] == 1.5
 
 
 class TestIntegrationCases:
@@ -512,6 +540,29 @@ class TestIntegrationCases:
         assert result['special_cost'] == 100
         assert result['special_mechanics']['skill_boosts'][0]['skill'] == 'defence'
         assert result['special_mechanics']['skill_boosts'][0]['amount'] == 8
+
+    def test_ancient_godsword_magic_damage(self):
+        """Test Ancient godsword magic damage parsing"""
+        text = (
+            "The ancient godsword has doubled accuracy and deals 10% increased damage. "
+            "If the target fails to move away, they will take 25 magic damage."
+        )
+        result = parse_special_attack(text, "Ancient godsword")
+        assert result['damage_multiplier'] == 1.1
+        assert result['special_mechanics']['magic_damage']['type'] == 'flat'
+        assert result['special_mechanics']['magic_damage']['value'] == 25
+
+    def test_voidwaker_magic_conversion(self):
+        """Test Voidwaker magic damage conversion"""
+        text = (
+            "The Voidwaker has a special attack that deals guaranteed Magic damage between 50-150% "
+            "of the wielder's maximum melee hit, consuming 50% energy."
+        )
+        result = parse_special_attack(text, "Voidwaker")
+        md = result['special_mechanics']['magic_damage']
+        assert md['type'] == 'multiplier_range'
+        assert md['min'] == 0.5
+        assert md['max'] == 1.5
 
 
 class TestEdgeCases:

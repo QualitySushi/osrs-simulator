@@ -10,7 +10,14 @@
     "guaranteed_hit": false,
     "min_damage": null,
     "max_damage_cap": null,
-    "special_mechanics": {},
+    "special_mechanics": {
+      "skill_boosts": [
+        {
+          "skill": "woodcutting",
+          "amount": 3
+        }
+      ]
+    },
     "combat_stats": {
       "attack_bonuses": {
         "stab": -2,
@@ -49,7 +56,14 @@
     "guaranteed_hit": false,
     "min_damage": null,
     "max_damage_cap": null,
-    "special_mechanics": {},
+    "special_mechanics": {
+      "skill_boosts": [
+        {
+          "skill": "woodcutting",
+          "amount": 3
+        }
+      ]
+    },
     "combat_stats": {
       "attack_bonuses": {
         "stab": -3,
@@ -252,8 +266,12 @@
     "special_mechanics": {
       "stat_drains": [
         {
-          "type": "general",
-          "description": "Drains opponent stats (details not parsed)"
+          "stat": "defence",
+          "percentage": 15
+        },
+        {
+          "stat": "magic",
+          "percentage": 15
         }
       ]
     },
@@ -300,6 +318,10 @@
         "type": "percentage_damage",
         "value": 15,
         "cap": 25
+      },
+      "magic_damage": {
+        "type": "flat",
+        "value": 25
       }
     },
     "combat_stats": {
@@ -340,7 +362,16 @@
     "guaranteed_hit": false,
     "min_damage": null,
     "max_damage_cap": null,
-    "special_mechanics": {},
+    "special_mechanics": {
+      "prayer": {
+        "restore": {
+          "type": "damage_based"
+        },
+        "drain": {
+          "type": "damage_based"
+        }
+      }
+    },
     "combat_stats": {
       "attack_bonuses": {
         "stab": 10,
@@ -630,12 +661,19 @@
     "icon_url": "https://oldschool.runescape.wiki/images/Barrelchest_anchor.png?fefbc",
     "special_cost": 50,
     "accuracy_multiplier": 2.0,
-    "damage_multiplier": 1.0,
+    "damage_multiplier": 1.1,
     "hit_count": 1,
     "guaranteed_hit": false,
     "min_damage": null,
     "max_damage_cap": null,
-    "special_mechanics": {},
+    "special_mechanics": {
+      "stat_drains": [
+        {
+          "type": "damage_based",
+          "description": "Drains combat stats equal to 10% of damage"
+        }
+      ]
+    },
     "combat_stats": {
       "attack_bonuses": {
         "stab": -2,
@@ -745,7 +783,7 @@
     "weapon_name": "Bone dagger",
     "effect": "The bone dagger has a special attack , Backstab , (75%) which will never miss as long as the target has not been damaged previously or you weren't the last one to damage the target. It lowers the target's Defence by the amount of damage dealt, similar to the Bandos godsword 's and Dorgeshuun crossbow 's special attacks. The defence lowering is only applied when the target doesn't currently have their defence levels lowered. [1] Backstab's accuracy is not guaranteed on Kephri upon entering her room, nor against Duke Sucellus after he is woken up. While the weapon can be used prior to the Death to the Dorgeshuun quest , the special attack can only be used after completing it.",
     "icon_url": "https://oldschool.runescape.wiki/images/Bone_dagger.png?84a48",
-    "special_cost": null,
+    "special_cost": 75,
     "accuracy_multiplier": 1.0,
     "damage_multiplier": 1.0,
     "hit_count": 1,
@@ -755,8 +793,8 @@
     "special_mechanics": {
       "stat_drains": [
         {
-          "type": "general",
-          "description": "Drains opponent stats (details not parsed)"
+          "stat": "defence",
+          "type": "damage_based"
         }
       ]
     },
@@ -828,7 +866,7 @@
   },
   {
     "weapon_name": "Burning claws",
-    "effect": "The burning claws have a special attack , Burning barrage , which drains 30% of the player's special attack energy. Burning barrage hits an enemy three times in succession, rolling against the opponent's slash or stab defence (depending on the combat style used). Each of the three hits also has a chance to inflict a burn on the target, dealing a total of 10 damage over the course of 40 ticks (24 seconds). Burn effects can be stacked with each other up to a cap of five active burns. One spec can inflict 0, 10, 19, 20, or 29 burn damage, taking 40-44 ticks depending on the case. The chance to inflict a burn on each hitsplat scales based on which of the attack's three accuracy rolls is the first to succeed: 15% if the first roll succeeds, 30% if the second roll succeeds, and 45% if the third rolls succeeds. Burning barrage works as follows: Roll accuracy. If successful, roll total damage between 75% and 175% of the maximum hit. Divide the damage into three hitsplats as 25%-25%-50%. Each hitsplat has a 15% chance to inflict burn. If first roll misses, reroll accuracy. If successful, roll total damage between 50% and 150% of the maximum hit. Divide the damage into three hitsplats as 50%-50%-0%, then subtract 1 from the first two hitsplats and add that damage to the third hitsplat (e.g., a total roll of 16 becomes 7-7-2). Each hitsplat has a 30% chance to inflict burn. If the second roll misses, reroll accuracy. If successful, roll total damage between 25% and 125% of the maximum hit. Divide the damage into three hitsplats as 0%-0%-100%, then subtract 2 from the third hitsplat and add 1 to each of the other two hitsplats (e.g., a total roll of 9 becomes 1-1-7). Each hitsplat has a 45% chance to inflict burn. If all three accuracy rolls miss, there is a 20% chance of dealing 0 damage, a 40% chance of dealing 1 damage, and a 40% chance of dealing 2 damage. These hits cannot inflict burn. All of the minimum and maximum hit calculations are rounded down, and the individual hitsplats are rounded down as well. For example, for a normal maximum hit of 39, the minimum and maximum hits for the first accuracy roll case are calculated as floor(0.75 * 39) and floor(1.75 * 39), resulting in a damage range of 29-68. If 29 damage is rolled, the hitsplats are calculated as floor(0.25 * 29), floor(0.25 * 29), and floor(0.5 * 29), resulting in a hit of 7-7-14—a total of 28 actual damage, despite originally rolling for 29 damage.",
+    "effect": "The burning claws have a special attack , Burning barrage , which drains 30% of the player's special attack energy. Burning barrage hits an enemy three times in succession, rolling against the opponent's slash or stab defence (depending on the combat style used). Each of the three hits also has a chance to inflict a burn on the target, dealing a total of 10 damage over the course of 40 ticks (24 seconds). Burn effects can be stacked with each other up to a cap of five active burns. One spec can inflict 0, 10, 19, 20, or 29 burn damage, taking 40-44 ticks depending on the case. The chance to inflict a burn on each hitsplat scales based on which of the attack's three accuracy rolls is the first to succeed: 15% if the first roll succeeds, 30% if the second roll succeeds, and 45% if the third rolls succeeds. Burning barrage works as follows: Roll accuracy. If successful, roll total damage between 75% and 175% of the maximum hit. Divide the damage into three hitsplats as 25%-25%-50%. Each hitsplat has a 15% chance to inflict burn. If first roll misses, reroll accuracy. If successful, roll total damage between 50% and 150% of the maximum hit. Divide the damage into three hitsplats as 50%-50%-0%, then subtract 1 from the first two hitsplats and add that damage to the third hitsplat (e.g., a total roll of 16 becomes 7-7-2). Each hitsplat has a 30% chance to inflict burn. If the second roll misses, reroll accuracy. If successful, roll total damage between 25% and 125% of the maximum hit. Divide the damage into three hitsplats as 0%-0%-100%, then subtract 2 from the third hitsplat and add 1 to each of the other two hitsplats (e.g., a total roll of 9 becomes 1-1-7). Each hitsplat has a 45% chance to inflict burn. If all three accuracy rolls miss, there is a 20% chance of dealing 0 damage, a 40% chance of dealing 1 damage, and a 40% chance of dealing 2 damage. These hits cannot inflict burn. All of the minimum and maximum hit calculations are rounded down, and the individual hitsplats are rounded down as well. For example, for a normal maximum hit of 39, the minimum and maximum hits for the first accuracy roll case are calculated as floor(0.75 * 39) and floor(1.75 * 39), resulting in a damage range of 29-68. If 29 damage is rolled, the hitsplats are calculated as floor(0.25 * 29), floor(0.25 * 29), and floor(0.5 * 29), resulting in a hit of 7-7-14\u2014a total of 28 actual damage, despite originally rolling for 29 damage.",
     "icon_url": "https://oldschool.runescape.wiki/images/Burning_claws.png?8d51d",
     "special_cost": 30,
     "accuracy_multiplier": 1.15,
@@ -883,7 +921,14 @@
     "guaranteed_hit": false,
     "min_damage": null,
     "max_damage_cap": null,
-    "special_mechanics": {},
+    "special_mechanics": {
+      "skill_boosts": [
+        {
+          "skill": "woodcutting",
+          "amount": 3
+        }
+      ]
+    },
     "combat_stats": {
       "attack_bonuses": {
         "stab": -2,
@@ -913,7 +958,7 @@
   },
   {
     "weapon_name": "Crystal halberd",
-    "effect": "The crystal halberd shares the same special attack as the dragon halberd , consuming 30% of the player's special attack energy. In addition to a 10% damage boost, if used against \"large\" monsters (anything that is larger than 1x1, such as General Graardor ), the special attack will deal an additional second hit onto them, although with 25% reduced accuracy. It can also hit up to 10 NPCs in a multi-combat area in a 3x1 area centred on the main target (unless it used on an NPC larger than 1x1, in which case it will hit the target twice and ignore the rest of the NPCs). In PvP , it can only hit up to three players. The crystal halberd's special attack's accuracy rolls against the opponent's slash defence. [1] When using gear with the highest strength bonus and a Slayer helmet or black mask on task, the highest possible hit with the special attack is 78–78 (total of 156) on large monsters. While this is higher than what dragon claws and dragon dagger can achieve, the much slower attack speed of the halberd is a major downside, so the claws and dagger generally lead to faster damage output in combat. The crystal halberd's special attack can still be particularly useful in certain situations. Anywhere that players have a forced amount of downtime (time where it is impossible to continue attacking), a crystal halberd special attack can be substituted for extra damage without incurring the 7-tick penalty. This is a common tactic against the Pestilent Bloat ; due to his long period of time where you have to run away, players typically use a crystal halberd special attack as their last damaging attack before running away to increase their potential damage cap. In a similar manner, it is often used when the opponent is on low health and the special attack is likely to finish them faster than using standard weapons (a strategy known as \"last-hitting\"). Although halberds are the only weapon category alongside spears to ignore the damage reduction on the Corporeal Beast , the crystal halberd has limited use on it; as the special attack rolls against the opponent's slash defence, which is particularly high on the Corporeal Beast, it is very inaccurate against it (typically to the point where dragon claws are more effective despite the damage reduction) unless its Defence level is severely reduced. The special attack's ability to hit up to ten enemies can prove useful as well; when on a Slayer task where stacking enemies up in one pile to cast multi-combat spells is efficient, such as smoke devils , the crystal halberd can deal a large amount of additional damage, often twice that of an Ice Barrage . It is often used for this purpose in efficient Barbarian Assault teams by the attacker.",
+    "effect": "The crystal halberd shares the same special attack as the dragon halberd , consuming 30% of the player's special attack energy. In addition to a 10% damage boost, if used against \"large\" monsters (anything that is larger than 1x1, such as General Graardor ), the special attack will deal an additional second hit onto them, although with 25% reduced accuracy. It can also hit up to 10 NPCs in a multi-combat area in a 3x1 area centred on the main target (unless it used on an NPC larger than 1x1, in which case it will hit the target twice and ignore the rest of the NPCs). In PvP , it can only hit up to three players. The crystal halberd's special attack's accuracy rolls against the opponent's slash defence. [1] When using gear with the highest strength bonus and a Slayer helmet or black mask on task, the highest possible hit with the special attack is 78\u201378 (total of 156) on large monsters. While this is higher than what dragon claws and dragon dagger can achieve, the much slower attack speed of the halberd is a major downside, so the claws and dagger generally lead to faster damage output in combat. The crystal halberd's special attack can still be particularly useful in certain situations. Anywhere that players have a forced amount of downtime (time where it is impossible to continue attacking), a crystal halberd special attack can be substituted for extra damage without incurring the 7-tick penalty. This is a common tactic against the Pestilent Bloat ; due to his long period of time where you have to run away, players typically use a crystal halberd special attack as their last damaging attack before running away to increase their potential damage cap. In a similar manner, it is often used when the opponent is on low health and the special attack is likely to finish them faster than using standard weapons (a strategy known as \"last-hitting\"). Although halberds are the only weapon category alongside spears to ignore the damage reduction on the Corporeal Beast , the crystal halberd has limited use on it; as the special attack rolls against the opponent's slash defence, which is particularly high on the Corporeal Beast, it is very inaccurate against it (typically to the point where dragon claws are more effective despite the damage reduction) unless its Defence level is severely reduced. The special attack's ability to hit up to ten enemies can prove useful as well; when on a Slayer task where stacking enemies up in one pile to cast multi-combat spells is efficient, such as smoke devils , the crystal halberd can deal a large amount of additional damage, often twice that of an Ice Barrage . It is often used for this purpose in efficient Barbarian Assault teams by the attacker.",
     "icon_url": "https://oldschool.runescape.wiki/images/Crystal_halberd.png?9e4ab",
     "special_cost": 30,
     "accuracy_multiplier": 1.25,
@@ -1012,7 +1057,14 @@
     "guaranteed_hit": false,
     "min_damage": null,
     "max_damage_cap": null,
-    "special_mechanics": {},
+    "special_mechanics": {
+      "skill_boosts": [
+        {
+          "skill": "fishing",
+          "amount": 3
+        }
+      ]
+    },
     "combat_stats": {
       "attack_bonuses": {
         "stab": 38,
@@ -1051,7 +1103,14 @@
     "guaranteed_hit": false,
     "min_damage": null,
     "max_damage_cap": null,
-    "special_mechanics": {},
+    "special_mechanics": {
+      "skill_boosts": [
+        {
+          "skill": "mining",
+          "amount": 3
+        }
+      ]
+    },
     "combat_stats": {
       "attack_bonuses": {
         "stab": 38,
@@ -1299,7 +1358,7 @@
     "weapon_name": "Dorgeshuun crossbow",
     "effect": "The Dorgeshuun crossbow has a special attack , Snipe (75%), which will never miss as long as the target has not been damaged previously or you weren't the last one to damage the target. [1] It lowers the target's Defence by the amount of damage dealt, similar to the Bandos godsword 's and bone dagger 's special attacks. The defence lowering is only applied when the target doesn't currently have their defence levels lowered. [2] The special attack requires completion of the quest Death to the Dorgeshuun .",
     "icon_url": "https://oldschool.runescape.wiki/images/Dorgeshuun_crossbow.png?c85b3",
-    "special_cost": null,
+    "special_cost": 75,
     "accuracy_multiplier": 1.0,
     "damage_multiplier": 1.0,
     "hit_count": 1,
@@ -1309,8 +1368,8 @@
     "special_mechanics": {
       "stat_drains": [
         {
-          "type": "general",
-          "description": "Drains opponent stats (details not parsed)"
+          "stat": "defence",
+          "type": "damage_based"
         }
       ]
     },
@@ -1391,7 +1450,14 @@
     "guaranteed_hit": false,
     "min_damage": null,
     "max_damage_cap": null,
-    "special_mechanics": {},
+    "special_mechanics": {
+      "skill_boosts": [
+        {
+          "skill": "woodcutting",
+          "amount": 3
+        }
+      ]
+    },
     "combat_stats": {
       "attack_bonuses": {
         "stab": -2,
@@ -1460,7 +1526,7 @@
   },
   {
     "weapon_name": "Dragon claws",
-    "effect": "These claws feature a special attack , Slice and Dice , which drains 50% of the special attack bar and hits an enemy four times in succession, which is commonly used by PKers as a finisher. The damage calculation rolls against the opponent's slash defence. [1] The damage dealt by the special attack depends on which of the four strikes miss. All fractions described below are rounded down. Due to a lack of sources, there may be minor errors in this description: Each of the four attacks has the same accuracy as an ordinary attack, until one of the attacks manages to successfully hit. After an attack hits, all remaining attacks will also successfully hit the target. All successful hits will deal damage, as described below. \"4-2-1-1\" . If the first attack hits, then its max hit will be 1 point less than the max hit of an ordinary attack. The minimum hit will be half of the ordinary max hit. The second hit will deal half of the first hit. The third hit will deal half of the second. The fourth hit will deal 1 more damage than the third hit. [2] A realistic example of a full attack is 35–17–8–9. \"0-4-2-2\" . If the first hit is 0 and the second one hits, then the second hit will deal between about 3/8 and 7/8 of the ordinary maximum hit. The remaining hits will follow the same process as above. An example of this situation is 0–30–15–16. \"0-0-3-3\" . If the first two attacks hit 0–0, the third attack will deal between about 1/4 and 3/4 of the ordinary max hit. The fourth hit still matches the third hit as usual. For example, 0–0–22–23. \"0-0-0-5\" . If the claws' first 3 hits are zeros, the last hit (if successful) will deal between 1/4 and 5/4 the ordinary max hit. e.g.: 0–0–0–46. \"0-0-0-0\" . If all hits miss, there is a ~2/3 chance of dealing 2 damage (1-1-0-0, 0-0-1-1, 1-0-1-0, or 0-1-0-1) and a ~1/3 chance of hitting 0–0–0–0. The shorthand names, like \"4-2-1-1\", give a rough idea of the total damage dealt, but are not fully accurate. The expected total damage is as follows [3] : If all attacks hit, the damage dealt is between 1x and 2x the ordinary max hit. This is 3 times more damage, on average, than an ordinary successful hit. If the second strike is the first to hit, the total is between 0.75x and 1.75x of the ordinary max hit, or about 2.5x of the ordinary successful hit. If the third strike is the first to hit, the total is between 0.5x and 1.5x of the ordinary max hit, or about 2x of the ordinary successful hit. If the fourth strike is the first to hit, the total is between 0.25x and 1.25x of the ordinary max hit, or about 1.5x of the ordinary successful hit. Against a weak enemy, where a hit is nearly guaranteed, a special attack from the dragon claws will deal about 3x as much as a normal attack. Against an enemy with extremely high defence, where most or all player attacks will typically miss, the expected damage can scale to as high as 9x the damage of a normal attack, because the repeated accuracy checks give a high chance of hitting an opponent that is normally very resistant. In practice, against most bosses, the average damage will be somewhere in between. For example, if the player has 50% accuracy with claws at a certain boss, then the special attack does as much damage on average as about five normal attacks. If the player is on a Slayer task (and using a Slayer helmet or Black mask ) wearing maximum strength gear, the highest possible hit sequence is 49–24–12–13, totalling up to 98 . Against players, the highest sequence is 44-22-11-12, totalling up to 89 . Although dragon dagger can hit higher (up to 108 and 100 respectively), its special attack rolls the two hits independently and it is less accurate, making high hits less consistent. Similarly, while crystal halberd can also hit very high in one special attack against a large monster, its slower attack speed and independent rolls make it perform worse on average.",
+    "effect": "These claws feature a special attack , Slice and Dice , which drains 50% of the special attack bar and hits an enemy four times in succession, which is commonly used by PKers as a finisher. The damage calculation rolls against the opponent's slash defence. [1] The damage dealt by the special attack depends on which of the four strikes miss. All fractions described below are rounded down. Due to a lack of sources, there may be minor errors in this description: Each of the four attacks has the same accuracy as an ordinary attack, until one of the attacks manages to successfully hit. After an attack hits, all remaining attacks will also successfully hit the target. All successful hits will deal damage, as described below. \"4-2-1-1\" . If the first attack hits, then its max hit will be 1 point less than the max hit of an ordinary attack. The minimum hit will be half of the ordinary max hit. The second hit will deal half of the first hit. The third hit will deal half of the second. The fourth hit will deal 1 more damage than the third hit. [2] A realistic example of a full attack is 35\u201317\u20138\u20139. \"0-4-2-2\" . If the first hit is 0 and the second one hits, then the second hit will deal between about 3/8 and 7/8 of the ordinary maximum hit. The remaining hits will follow the same process as above. An example of this situation is 0\u201330\u201315\u201316. \"0-0-3-3\" . If the first two attacks hit 0\u20130, the third attack will deal between about 1/4 and 3/4 of the ordinary max hit. The fourth hit still matches the third hit as usual. For example, 0\u20130\u201322\u201323. \"0-0-0-5\" . If the claws' first 3 hits are zeros, the last hit (if successful) will deal between 1/4 and 5/4 the ordinary max hit. e.g.: 0\u20130\u20130\u201346. \"0-0-0-0\" . If all hits miss, there is a ~2/3 chance of dealing 2 damage (1-1-0-0, 0-0-1-1, 1-0-1-0, or 0-1-0-1) and a ~1/3 chance of hitting 0\u20130\u20130\u20130. The shorthand names, like \"4-2-1-1\", give a rough idea of the total damage dealt, but are not fully accurate. The expected total damage is as follows [3] : If all attacks hit, the damage dealt is between 1x and 2x the ordinary max hit. This is 3 times more damage, on average, than an ordinary successful hit. If the second strike is the first to hit, the total is between 0.75x and 1.75x of the ordinary max hit, or about 2.5x of the ordinary successful hit. If the third strike is the first to hit, the total is between 0.5x and 1.5x of the ordinary max hit, or about 2x of the ordinary successful hit. If the fourth strike is the first to hit, the total is between 0.25x and 1.25x of the ordinary max hit, or about 1.5x of the ordinary successful hit. Against a weak enemy, where a hit is nearly guaranteed, a special attack from the dragon claws will deal about 3x as much as a normal attack. Against an enemy with extremely high defence, where most or all player attacks will typically miss, the expected damage can scale to as high as 9x the damage of a normal attack, because the repeated accuracy checks give a high chance of hitting an opponent that is normally very resistant. In practice, against most bosses, the average damage will be somewhere in between. For example, if the player has 50% accuracy with claws at a certain boss, then the special attack does as much damage on average as about five normal attacks. If the player is on a Slayer task (and using a Slayer helmet or Black mask ) wearing maximum strength gear, the highest possible hit sequence is 49\u201324\u201312\u201313, totalling up to 98 . Against players, the highest sequence is 44-22-11-12, totalling up to 89 . Although dragon dagger can hit higher (up to 108 and 100 respectively), its special attack rolls the two hits independently and it is less accurate, making high hits less consistent. Similarly, while crystal halberd can also hit very high in one special attack against a large monster, its slower attack speed and independent rolls make it perform worse on average.",
     "icon_url": "https://oldschool.runescape.wiki/images/Dragon_claws.png?c85b3",
     "special_cost": 50,
     "accuracy_multiplier": 1.5,
@@ -1682,7 +1748,14 @@
     "guaranteed_hit": false,
     "min_damage": null,
     "max_damage_cap": null,
-    "special_mechanics": {},
+    "special_mechanics": {
+      "skill_boosts": [
+        {
+          "skill": "fishing",
+          "amount": 3
+        }
+      ]
+    },
     "combat_stats": {
       "attack_bonuses": {
         "stab": 38,
@@ -1721,7 +1794,13 @@
     "guaranteed_hit": false,
     "min_damage": null,
     "max_damage_cap": null,
-    "special_mechanics": {},
+    "special_mechanics": {
+      "prayer": {
+        "drain": {
+          "type": "damage_based"
+        }
+      }
+    },
     "combat_stats": {
       "attack_bonuses": {
         "stab": 55,
@@ -1838,7 +1917,14 @@
     "guaranteed_hit": false,
     "min_damage": null,
     "max_damage_cap": null,
-    "special_mechanics": {},
+    "special_mechanics": {
+      "skill_boosts": [
+        {
+          "skill": "accuracy",
+          "amount": 25
+        }
+      ]
+    },
     "combat_stats": {
       "attack_bonuses": {
         "stab": 40,
@@ -1877,7 +1963,14 @@
     "guaranteed_hit": false,
     "min_damage": null,
     "max_damage_cap": null,
-    "special_mechanics": {},
+    "special_mechanics": {
+      "skill_boosts": [
+        {
+          "skill": "mining",
+          "amount": 3
+        }
+      ]
+    },
     "combat_stats": {
       "attack_bonuses": {
         "stab": 38,
@@ -1946,7 +2039,7 @@
   },
   {
     "weapon_name": "Dragon spear",
-    "effect": "The dragon spear has a special attack , Shove , which it shares with the Zamorakian spear and hasta . It pushes an opponent back and stuns them for 6 ticks (3.6 seconds), consuming 25% of the player's special attack energy. Furthermore, the special attack delays the next attack one can perform to 5 ticks (3.0 seconds) compared to the normal attack speed of 4 ticks (2.4seconds). The effects of this special do not stack, meaning that players cannot use the spear's special attack on a target who is already stunned. Stunned players are also given a one tick (0.6 seconds) period of immunity after a stun wears off in which they cannot be stunned again. This effectively means the special attack cannot be used on the same player more than once every 6 ticks. In addition to this, as soon as the stun wears off, the stunned player is also granted a 5 tick (3.0 seconds) period of immunity against being bound in place by binding spells like Entangle or Ice Barrage . Despite this, the special attack is popular in player killing as the brief stun causes all incoming damage to be stalled until it expires, after which all damage taken is applied at once. Under certain conditions, Shove can push the target diagonally past obstacles. This only occurs when pushing a target east or west, and if there is a free tile directly north or south of the obstacle — e.g. 1x1 obstacles, the corner of larger ones, or diagonal walls. Targets will not be pushed past obstacles when pushing to the north or south. Shove displays a preference for certain tiles; when pushing a target east or west past a 1x1 obstacle, the north or south free tile will always be chosen, respectively. On non-Castle Wars worlds, players within Castle Wars are able to shove targets back-to-back using this special attack. [1] In addition, it cannot be used against large monsters, such as giants , because they are too big to push back. If a player tries this, the special attack does not occur and no special attack energy is consumed. A message appears in the chat box, reading, \"That creature is too large to knock back!\" A general way to tell if the spear can use the \"Shove\" special attack is to determine how much space the target monster takes up. If it takes up more than one space, it cannot be shoved. For example, a player can shove an ice warrior , which takes up one space, but not an ice giant , which takes up four.",
+    "effect": "The dragon spear has a special attack , Shove , which it shares with the Zamorakian spear and hasta . It pushes an opponent back and stuns them for 6 ticks (3.6 seconds), consuming 25% of the player's special attack energy. Furthermore, the special attack delays the next attack one can perform to 5 ticks (3.0 seconds) compared to the normal attack speed of 4 ticks (2.4seconds). The effects of this special do not stack, meaning that players cannot use the spear's special attack on a target who is already stunned. Stunned players are also given a one tick (0.6 seconds) period of immunity after a stun wears off in which they cannot be stunned again. This effectively means the special attack cannot be used on the same player more than once every 6 ticks. In addition to this, as soon as the stun wears off, the stunned player is also granted a 5 tick (3.0 seconds) period of immunity against being bound in place by binding spells like Entangle or Ice Barrage . Despite this, the special attack is popular in player killing as the brief stun causes all incoming damage to be stalled until it expires, after which all damage taken is applied at once. Under certain conditions, Shove can push the target diagonally past obstacles. This only occurs when pushing a target east or west, and if there is a free tile directly north or south of the obstacle \u2014 e.g. 1x1 obstacles, the corner of larger ones, or diagonal walls. Targets will not be pushed past obstacles when pushing to the north or south. Shove displays a preference for certain tiles; when pushing a target east or west past a 1x1 obstacle, the north or south free tile will always be chosen, respectively. On non-Castle Wars worlds, players within Castle Wars are able to shove targets back-to-back using this special attack. [1] In addition, it cannot be used against large monsters, such as giants , because they are too big to push back. If a player tries this, the special attack does not occur and no special attack energy is consumed. A message appears in the chat box, reading, \"That creature is too large to knock back!\" A general way to tell if the spear can use the \"Shove\" special attack is to determine how much space the target monster takes up. If it takes up more than one space, it cannot be shoved. For example, a player can shove an ice warrior , which takes up one space, but not an ice giant , which takes up four.",
     "icon_url": "https://oldschool.runescape.wiki/images/Dragon_spear.png?cc5f3",
     "special_cost": 25,
     "accuracy_multiplier": 1.0,
@@ -2239,8 +2332,8 @@
     "effect": "The elder maul has a special attack , Pulverize , costing 50% special attack energy. Increasing the player's accuracy by 25%, a successful hit will reduce the target's Defence level by 35%, effectively acting as a superior version of the dragon warhammer 's special attack. Even then, due to the maul's stats, it is slightly more accurate than a dragon warhammer with an avernic defender , beating the pair by +12 crush bonus and +54 strength bonus. It does miss out on some damage as the dragon warhammer gets a 50% damage buff from the special. When used against Tekton , the first special attack from an elder maul is guaranteed to hit, however, if subsequent attacks were to fail to hit, it will instead reduce 5% of his Defence level. Defence level reductions will stack over multiple successful hits; each reduction is calculated from the current temporary level (so follow-up drains reduce fewer levels). The Defence level of the target after each respective hit, with no rounding, would be 65%, 42.25%, 27.5%, 17.85%, 11.6% then 7.5% of the original. However, fractional defence levels reduced by the special attack will be rounded down. For example, on a monster with 75 Defence, the first special attack will reduce 26 levels (rounded down from 26.25), leaving the enemy at 49 Defence. The next special attack will then reduce 17 levels (rounded down from 17.15), leaving the enemy at 32 Defence. Note: The special attack has a 1-tick delay over a regular attack, meaning if you are flinching a monster like Kalphite Queen you will be attacked. A player performs Pulverize without any other equipment. A player performs Pulverize whilst wearing a cape.",
     "icon_url": "https://oldschool.runescape.wiki/images/Elder_maul.png?0a875",
     "special_cost": 50,
-    "accuracy_multiplier": 1.0,
-    "damage_multiplier": 1.0,
+    "accuracy_multiplier": 1.25,
+    "damage_multiplier": 1.5,
     "hit_count": 1,
     "guaranteed_hit": true,
     "min_damage": null,
@@ -2248,8 +2341,8 @@
     "special_mechanics": {
       "stat_drains": [
         {
-          "type": "general",
-          "description": "Drains opponent stats (details not parsed)"
+          "stat": "defence",
+          "percentage": 50
         }
       ]
     },
@@ -2295,6 +2388,12 @@
       "healing": {
         "type": "flat",
         "value": 2
+      },
+      "prayer": {
+        "restore": {
+          "type": "percentage_damage",
+          "value": 50
+        }
       }
     },
     "combat_stats": {
@@ -2389,7 +2488,14 @@
     "guaranteed_hit": false,
     "min_damage": null,
     "max_damage_cap": null,
-    "special_mechanics": {},
+    "special_mechanics": {
+      "skill_boosts": [
+        {
+          "skill": "defence",
+          "amount": 8
+        }
+      ]
+    },
     "combat_stats": {
       "attack_bonuses": {
         "stab": 20,
@@ -2662,7 +2768,14 @@
     "guaranteed_hit": false,
     "min_damage": null,
     "max_damage_cap": null,
-    "special_mechanics": {},
+    "special_mechanics": {
+      "skill_boosts": [
+        {
+          "skill": "woodcutting",
+          "amount": 3
+        }
+      ]
+    },
     "combat_stats": {
       "attack_bonuses": {
         "stab": -2,
@@ -2701,7 +2814,14 @@
     "guaranteed_hit": false,
     "min_damage": null,
     "max_damage_cap": null,
-    "special_mechanics": {},
+    "special_mechanics": {
+      "skill_boosts": [
+        {
+          "skill": "fishing",
+          "amount": 3
+        }
+      ]
+    },
     "combat_stats": {
       "attack_bonuses": {
         "stab": 38,
@@ -2740,7 +2860,14 @@
     "guaranteed_hit": false,
     "min_damage": null,
     "max_damage_cap": null,
-    "special_mechanics": {},
+    "special_mechanics": {
+      "skill_boosts": [
+        {
+          "skill": "mining",
+          "amount": 3
+        }
+      ]
+    },
     "combat_stats": {
       "attack_bonuses": {
         "stab": 38,
@@ -2965,7 +3092,7 @@
   },
   {
     "weapon_name": "Magic comp bow",
-    "effect": "The magic comp bow's special attack, Powershot , is guaranteed to hit the target. This consumes 35% of the player's special attack energy. This special attack is also shared with the magic longbow , to the extent of copying the magic longbow's attack speed for this hit - this functionally makes the special attack 1 tick slower than the comp bow's regular attack. Powershot uses a custom form of damage calculation that does not take into account offensive Prayers (such as Eagle Eye ) when determining a player's maximum Ranged hit . [1] The following formula can be used to calculate the max hit of Powershot : Maximum Hit = ⌊ 0 . 5 + ( Visible Ranged Level + 1 0 ) * ( Ammo Ranged Strength + 6 4 ) 6 4 0 ⌋ [a] [b] [c] [d] ^ Only the player's visible ranged level matters. Boosts given through prayers and Void Knight armour are ignored. ^ A stance bonus of 10 is used regardless of attack style used. ^ The ranged strength bonus of the player's armour and gear is ignored. Only the ranged strength bonus of the player's ammo is used. In the case of Rune thrownaxes, the weapon's ranged strength is used instead. ^ The bonus damage usually provided by wearing a Slayer helmet (i), Salve amulet (i) or Salve amulet (ei) is ignored.",
+    "effect": "The magic comp bow's special attack, Powershot , is guaranteed to hit the target. This consumes 35% of the player's special attack energy. This special attack is also shared with the magic longbow , to the extent of copying the magic longbow's attack speed for this hit - this functionally makes the special attack 1 tick slower than the comp bow's regular attack. Powershot uses a custom form of damage calculation that does not take into account offensive Prayers (such as Eagle Eye ) when determining a player's maximum Ranged hit . [1] The following formula can be used to calculate the max hit of Powershot : Maximum Hit = \u230a 0 . 5 + ( Visible Ranged Level + 1 0 ) * ( Ammo Ranged Strength + 6 4 ) 6 4 0 \u230b [a] [b] [c] [d] ^ Only the player's visible ranged level matters. Boosts given through prayers and Void Knight armour are ignored. ^ A stance bonus of 10 is used regardless of attack style used. ^ The ranged strength bonus of the player's armour and gear is ignored. Only the ranged strength bonus of the player's ammo is used. In the case of Rune thrownaxes, the weapon's ranged strength is used instead. ^ The bonus damage usually provided by wearing a Slayer helmet (i), Salve amulet (i) or Salve amulet (ei) is ignored.",
     "icon_url": "https://oldschool.runescape.wiki/images/Magic_comp_bow.png?8bd5a",
     "special_cost": 35,
     "accuracy_multiplier": 1.0,
@@ -3004,7 +3131,7 @@
   },
   {
     "weapon_name": "Magic longbow",
-    "effect": "The magic longbow's special attack, Powershot , is guaranteed to hit the target. This consumes 35% of the player's special attack energy. This special attack is also shared with the magic comp bow . Powershot uses a custom form of damage calculation that does not take into account offensive Prayers (such as Eagle Eye ) when determining a player's maximum Ranged hit . [1] The following formula can be used to calculate the max hit of Powershot : Maximum Hit = ⌊ 0 . 5 + ( Visible Ranged Level + 1 0 ) * ( Ammo Ranged Strength + 6 4 ) 6 4 0 ⌋ [a] [b] [c] [d] ^ Only the player's visible ranged level matters. Boosts given through prayers and Void Knight armour are ignored. ^ A stance bonus of 10 is used regardless of attack style used. ^ The ranged strength bonus of the player's armour and gear is ignored. Only the ranged strength bonus of the player's ammo is used. In the case of Rune thrownaxes, the weapon's ranged strength is used instead. ^ The bonus damage usually provided by wearing a Slayer helmet (i), Salve amulet (i) or Salve amulet (ei) is ignored.",
+    "effect": "The magic longbow's special attack, Powershot , is guaranteed to hit the target. This consumes 35% of the player's special attack energy. This special attack is also shared with the magic comp bow . Powershot uses a custom form of damage calculation that does not take into account offensive Prayers (such as Eagle Eye ) when determining a player's maximum Ranged hit . [1] The following formula can be used to calculate the max hit of Powershot : Maximum Hit = \u230a 0 . 5 + ( Visible Ranged Level + 1 0 ) * ( Ammo Ranged Strength + 6 4 ) 6 4 0 \u230b [a] [b] [c] [d] ^ Only the player's visible ranged level matters. Boosts given through prayers and Void Knight armour are ignored. ^ A stance bonus of 10 is used regardless of attack style used. ^ The ranged strength bonus of the player's armour and gear is ignored. Only the ranged strength bonus of the player's ammo is used. In the case of Rune thrownaxes, the weapon's ranged strength is used instead. ^ The bonus damage usually provided by wearing a Slayer helmet (i), Salve amulet (i) or Salve amulet (ei) is ignored.",
     "icon_url": "https://oldschool.runescape.wiki/images/Magic_longbow.png?8bd5a",
     "special_cost": 35,
     "accuracy_multiplier": 1.0,
@@ -3043,7 +3170,7 @@
   },
   {
     "weapon_name": "Magic shortbow",
-    "effect": "This weapon also has a special attack , Snapshot , which will shoot two arrows in rapid succession, using 55% of a player's special attack energy. While the in-game tooltip states that Snapshot has reduced accuracy, it actually likely has an accuracy boost of 1 0 7 or about 43%. [1] Snapshot uses a custom form of damage calculation that does not take into account offensive Prayers (such as Eagle Eye ) when determining a player's maximum Ranged hit , [2] but its accuracy is still affected. [3] The following formula can be used to calculate the max hit of Snapshot : Maximum Hit = ⌊ 0 . 5 + (Visible Ranged Level + 1 0 ) * ( Ammo Ranged Strength + 6 4 ) 6 4 0 ⌋ [a] [b] [c] [d] ^ Only the player's visible ranged level matters. Boosts given through prayers and Void Knight armour are ignored. ^ A stance bonus of 10 is used regardless of attack style used. ^ The ranged strength bonus of the player's armour and gear is ignored. Only the ranged strength bonus of the player's ammo is used. In the case of Rune thrownaxes, the weapon's ranged strength is used instead. ^ The bonus damage usually provided by wearing a Slayer helmet (i), Salve amulet (i) or Salve amulet (ei) is ignored.",
+    "effect": "This weapon also has a special attack , Snapshot , which will shoot two arrows in rapid succession, using 55% of a player's special attack energy. While the in-game tooltip states that Snapshot has reduced accuracy, it actually likely has an accuracy boost of 1 0 7 or about 43%. [1] Snapshot uses a custom form of damage calculation that does not take into account offensive Prayers (such as Eagle Eye ) when determining a player's maximum Ranged hit , [2] but its accuracy is still affected. [3] The following formula can be used to calculate the max hit of Snapshot : Maximum Hit = \u230a 0 . 5 + (Visible Ranged Level + 1 0 ) * ( Ammo Ranged Strength + 6 4 ) 6 4 0 \u230b [a] [b] [c] [d] ^ Only the player's visible ranged level matters. Boosts given through prayers and Void Knight armour are ignored. ^ A stance bonus of 10 is used regardless of attack style used. ^ The ranged strength bonus of the player's armour and gear is ignored. Only the ranged strength bonus of the player's ammo is used. In the case of Rune thrownaxes, the weapon's ranged strength is used instead. ^ The bonus damage usually provided by wearing a Slayer helmet (i), Salve amulet (i) or Salve amulet (ei) is ignored.",
     "icon_url": "https://oldschool.runescape.wiki/images/Magic_shortbow.png?ed6d0",
     "special_cost": null,
     "accuracy_multiplier": 1.55,
@@ -3082,7 +3209,7 @@
   },
   {
     "weapon_name": "Magic shortbow (i)",
-    "effect": "This weapon retains the standard magic shortbow's special attack , Snapshot , which fires two arrows in rapid succession but with lowered accuracy, using 50% of the player's special attack energy. While the in-game tooltip states that Snapshot has reduced accuracy, it actually likely has an accuracy boost of 1 0 7 or about 43%. [1] Snapshot uses a custom form of damage calculation that does not take into account the slayer helmet (i)'s damage boost (on a Slayer task) and the offensive Prayers (such as Eagle Eye ) when determining a player's maximum Ranged hit , [2] but its accuracy is still affected. [3] The following formula can be used to calculate the max hit of Snapshot : Maximum Hit = ⌊ 0 . 5 + ( Visible Ranged Level + 1 0 ) * ( Ammo Ranged Strength + 6 4 ) 6 4 0 ⌋ [a] [b] [c] [d] ^ Only the player's visible ranged level matters. Boosts given through prayers and Void Knight armour are ignored. ^ A stance bonus of 10 is used regardless of attack style used. ^ The ranged strength bonus of the player's armour and gear is ignored. Only the ranged strength bonus of the player's ammo is used. In the case of Rune thrownaxes, the weapon's ranged strength is used instead. ^ The bonus damage usually provided by wearing a Slayer helmet (i), Salve amulet (i) or Salve amulet (ei) is ignored.",
+    "effect": "This weapon retains the standard magic shortbow's special attack , Snapshot , which fires two arrows in rapid succession but with lowered accuracy, using 50% of the player's special attack energy. While the in-game tooltip states that Snapshot has reduced accuracy, it actually likely has an accuracy boost of 1 0 7 or about 43%. [1] Snapshot uses a custom form of damage calculation that does not take into account the slayer helmet (i)'s damage boost (on a Slayer task) and the offensive Prayers (such as Eagle Eye ) when determining a player's maximum Ranged hit , [2] but its accuracy is still affected. [3] The following formula can be used to calculate the max hit of Snapshot : Maximum Hit = \u230a 0 . 5 + ( Visible Ranged Level + 1 0 ) * ( Ammo Ranged Strength + 6 4 ) 6 4 0 \u230b [a] [b] [c] [d] ^ Only the player's visible ranged level matters. Boosts given through prayers and Void Knight armour are ignored. ^ A stance bonus of 10 is used regardless of attack style used. ^ The ranged strength bonus of the player's armour and gear is ignored. Only the ranged strength bonus of the player's ammo is used. In the case of Rune thrownaxes, the weapon's ranged strength is used instead. ^ The bonus damage usually provided by wearing a Slayer helmet (i), Salve amulet (i) or Salve amulet (ei) is ignored.",
     "icon_url": "https://oldschool.runescape.wiki/images/Magic_shortbow_%28i%29.png?88e2c",
     "special_cost": null,
     "accuracy_multiplier": 1.5,
@@ -3511,7 +3638,7 @@
   },
   {
     "weapon_name": "Rune thrownaxe",
-    "effect": "The rune thrownaxe has a special attack , Chainhit , that ricochets off the target and hits multiple other opponents within a 3 tile radius (forming a 7x7 square centred on the target) at the moment the special attack is initiated. [1] Chainhit can only ricochet to other enemies in a multicombat area . This special attack can target up to 5 opponents, but a rune thrownaxe will not rebound back to its original target after chaining to another enemy. [2] Furthermore, an accuracy roll is made after each target hit by the thrownaxe, which will end the sequence if failed. [3] Each hit consumes 10% of the player's special attack energy, i.e. three hits consumes 30% energy. This special attack uses a custom form of damage calculation that does not take into account offensive Prayers (such as Eagle Eye ) when determining a player's maximum Ranged hit . [4] In addition, the attack speed of Chainhit is one tick slower than the rune thrownaxe's regular attack, meaning the attack interval is 5 ticks (3.0s) on the rapid style, and 6 ticks (3.6s) on accurate or longrange. The following formula can be used to calculate the max hit of Chainhit : Maximum Hit = ⌊ 0 . 5 + ( Visible Ranged Level + 1 0 ) * ( Ammo Ranged Strength + 6 4 ) 6 4 0 ⌋ [a] [b] [c] [d] ^ Only the player's visible ranged level matters. Boosts given through prayers and Void Knight armour are ignored. ^ A stance bonus of 10 is used regardless of attack style used. ^ The ranged strength bonus of the player's armour and gear is ignored. Only the ranged strength bonus of the player's ammo is used. In the case of Rune thrownaxes, the weapon's ranged strength is used instead. ^ The bonus damage usually provided by wearing a Slayer helmet (i), Salve amulet (i) or Salve amulet (ei) is ignored.",
+    "effect": "The rune thrownaxe has a special attack , Chainhit , that ricochets off the target and hits multiple other opponents within a 3 tile radius (forming a 7x7 square centred on the target) at the moment the special attack is initiated. [1] Chainhit can only ricochet to other enemies in a multicombat area . This special attack can target up to 5 opponents, but a rune thrownaxe will not rebound back to its original target after chaining to another enemy. [2] Furthermore, an accuracy roll is made after each target hit by the thrownaxe, which will end the sequence if failed. [3] Each hit consumes 10% of the player's special attack energy, i.e. three hits consumes 30% energy. This special attack uses a custom form of damage calculation that does not take into account offensive Prayers (such as Eagle Eye ) when determining a player's maximum Ranged hit . [4] In addition, the attack speed of Chainhit is one tick slower than the rune thrownaxe's regular attack, meaning the attack interval is 5 ticks (3.0s) on the rapid style, and 6 ticks (3.6s) on accurate or longrange. The following formula can be used to calculate the max hit of Chainhit : Maximum Hit = \u230a 0 . 5 + ( Visible Ranged Level + 1 0 ) * ( Ammo Ranged Strength + 6 4 ) 6 4 0 \u230b [a] [b] [c] [d] ^ Only the player's visible ranged level matters. Boosts given through prayers and Void Knight armour are ignored. ^ A stance bonus of 10 is used regardless of attack style used. ^ The ranged strength bonus of the player's armour and gear is ignored. Only the ranged strength bonus of the player's ammo is used. In the case of Rune thrownaxes, the weapon's ranged strength is used instead. ^ The bonus damage usually provided by wearing a Slayer helmet (i), Salve amulet (i) or Salve amulet (ei) is ignored.",
     "icon_url": "https://oldschool.runescape.wiki/images/Rune_thrownaxe.png?82a3a",
     "special_cost": 10,
     "accuracy_multiplier": 1.0,
@@ -3569,6 +3696,12 @@
       "healing": {
         "type": "percentage_damage",
         "value": 50
+      },
+      "prayer": {
+        "restore": {
+          "type": "flat",
+          "value": 10
+        }
       }
     },
     "combat_stats": {
@@ -3609,7 +3742,11 @@
     "guaranteed_hit": false,
     "min_damage": null,
     "max_damage_cap": null,
-    "special_mechanics": {},
+    "special_mechanics": {
+      "magic_damage": {
+        "type": "magic"
+      }
+    },
     "combat_stats": {
       "attack_bonuses": {
         "stab": 0,
@@ -3643,7 +3780,7 @@
     "icon_url": "https://oldschool.runescape.wiki/images/Saradomin%27s_blessed_sword.png?11815",
     "special_cost": 65,
     "accuracy_multiplier": 1.0,
-    "damage_multiplier": 1.0,
+    "damage_multiplier": 1.25,
     "hit_count": 1,
     "guaranteed_hit": false,
     "min_damage": null,
@@ -3722,7 +3859,7 @@
   },
   {
     "weapon_name": "Seercull",
-    "effect": "The Seercull has a special attack , Soulshot , which consumes 100% of the player's special attack energy. It is guaranteed to hit and lowers the opponent's Magic level equal to damage dealt. However, damage inflicted by Soulshot is only boosted strictly through ammunition and visible range level. Ranged prayers (such as Eagle Eye and Rigour ) and all other equipment providing range strength, including those with special effects such as any variants of: Void Knight equipment , salve amulet , or Slayer helmet , will all have no effect. The special attack will only drain the opponent's Magic level if it is not already reduced; consecutive use of Soulshot or Accursed Sceptre special attacks will have zero effect on their magic level until the stat has been fully restored, at which point it may be reapplied. [1] In PvP combat, the special attack gains use for its ability to lower the Magic level of a mage to prevent them from casting spells. However, this can be mitigated by use of super restore potions. The following formula can be used to calculate the max hit of Soulshot : Maximum Hit = ⌊ 0 . 5 + (Visible Ranged Level + 1 0 ) * ( Ammo Ranged Strength + 6 4 ) 6 4 0 ⌋ [a] ^ A stance bonus of 10 is used regardless of attack style used.",
+    "effect": "The Seercull has a special attack , Soulshot , which consumes 100% of the player's special attack energy. It is guaranteed to hit and lowers the opponent's Magic level equal to damage dealt. However, damage inflicted by Soulshot is only boosted strictly through ammunition and visible range level. Ranged prayers (such as Eagle Eye and Rigour ) and all other equipment providing range strength, including those with special effects such as any variants of: Void Knight equipment , salve amulet , or Slayer helmet , will all have no effect. The special attack will only drain the opponent's Magic level if it is not already reduced; consecutive use of Soulshot or Accursed Sceptre special attacks will have zero effect on their magic level until the stat has been fully restored, at which point it may be reapplied. [1] In PvP combat, the special attack gains use for its ability to lower the Magic level of a mage to prevent them from casting spells. However, this can be mitigated by use of super restore potions. The following formula can be used to calculate the max hit of Soulshot : Maximum Hit = \u230a 0 . 5 + (Visible Ranged Level + 1 0 ) * ( Ammo Ranged Strength + 6 4 ) 6 4 0 \u230b [a] ^ A stance bonus of 10 is used regardless of attack style used.",
     "icon_url": "https://oldschool.runescape.wiki/images/Seercull.png?c943f",
     "special_cost": 100,
     "accuracy_multiplier": 1.0,
@@ -3737,7 +3874,12 @@
           "type": "general",
           "description": "Drains opponent stats (details not parsed)"
         }
-      ]
+      ],
+      "prayer": {
+        "restore": {
+          "type": "damage_based"
+        }
+      }
     },
     "combat_stats": {
       "attack_bonuses": {
@@ -3768,7 +3910,7 @@
   },
   {
     "weapon_name": "Soulreaper axe",
-    "effect": "The Soulreaper axe has a special attack , Behead , which consumes all Soul Stacks. This attack does not cost special attack energy and can be used as long as the player has at least one Soul stack. For each Soul Stack consumed, Behead increases the player's accuracy and damage by 6% and heals them by 8 Hitpoints, effectively restoring any health spent to create those Soul stacks. Players are healed regardless of whether the attack was a successful hit or not. If a player is at full health and has active Soul stacks they can utilise them as a temporary health bank; using Behead to restore up to 40 hitpoints instantly when needed. Although the in-game description states Behead deals additional damage, the special attack's increased accuracy is the only significant benefit. This is because the Strength boost from Soul stacks is consumed first and a separate bonus is applied to the swing at a different stage in the damage calculation. This typically results in Behead dealing similar maximum hits as a player that continues to auto attack with the Soul stack boost active. It's unknown if this is intentional behaviour at this time , as this can result in Behead dealing slightly less damage than an auto attack would otherwise in some situations. The accuracy roll for Behead uses the attack bonus of the player's currently selected style, which is rolled against the corresponding defensive bonuses of an opponent – either slash or crush in this case. [1] This is in contrast to most other special attacks, which roll against the defensive bonuses of an opponent of a specific combat style regardless of the attacking combat style chosen (for example, the dragon dagger 's special attack will always roll against the opponent's slash defence, even if the attack style is set to stab). Equipping the Soulreaper axe replaces the special attack interface with a unique graphic that indicates the Soul stack resource, however player's special attack energy continues to regenerate in the background normally. Since the special attack only consumes Soul stacks, it's useful to combo Behead into special attacks from other weapons. Some notable examples being the dragon warhammer to reduce an enemy's stats, or weapons like the granite maul for high amounts of burst damage.",
+    "effect": "The Soulreaper axe has a special attack , Behead , which consumes all Soul Stacks. This attack does not cost special attack energy and can be used as long as the player has at least one Soul stack. For each Soul Stack consumed, Behead increases the player's accuracy and damage by 6% and heals them by 8 Hitpoints, effectively restoring any health spent to create those Soul stacks. Players are healed regardless of whether the attack was a successful hit or not. If a player is at full health and has active Soul stacks they can utilise them as a temporary health bank; using Behead to restore up to 40 hitpoints instantly when needed. Although the in-game description states Behead deals additional damage, the special attack's increased accuracy is the only significant benefit. This is because the Strength boost from Soul stacks is consumed first and a separate bonus is applied to the swing at a different stage in the damage calculation. This typically results in Behead dealing similar maximum hits as a player that continues to auto attack with the Soul stack boost active. It's unknown if this is intentional behaviour at this time , as this can result in Behead dealing slightly less damage than an auto attack would otherwise in some situations. The accuracy roll for Behead uses the attack bonus of the player's currently selected style, which is rolled against the corresponding defensive bonuses of an opponent \u2013 either slash or crush in this case. [1] This is in contrast to most other special attacks, which roll against the defensive bonuses of an opponent of a specific combat style regardless of the attacking combat style chosen (for example, the dragon dagger 's special attack will always roll against the opponent's slash defence, even if the attack style is set to stab). Equipping the Soulreaper axe replaces the special attack interface with a unique graphic that indicates the Soul stack resource, however player's special attack energy continues to regenerate in the background normally. Since the special attack only consumes Soul stacks, it's useful to combo Behead into special attacks from other weapons. Some notable examples being the dragon warhammer to reduce an enemy's stats, or weapons like the granite maul for high amounts of burst damage.",
     "icon_url": "https://oldschool.runescape.wiki/images/Soulreaper_axe.png?3f17a",
     "special_cost": null,
     "accuracy_multiplier": 1.06,
@@ -4157,8 +4299,8 @@
     "special_mechanics": {
       "stat_drains": [
         {
-          "type": "general",
-          "description": "Drains opponent stats (details not parsed)"
+          "stat": "defence",
+          "percentage": 10
         }
       ]
     },
@@ -4530,7 +4672,13 @@
     "guaranteed_hit": false,
     "min_damage": null,
     "max_damage_cap": null,
-    "special_mechanics": {},
+    "special_mechanics": {
+      "magic_damage": {
+        "type": "multiplier_range",
+        "min": 0.5,
+        "max": 1.5
+      }
+    },
     "combat_stats": {
       "attack_bonuses": {
         "stab": 70,
@@ -4569,7 +4717,13 @@
     "guaranteed_hit": false,
     "min_damage": null,
     "max_damage_cap": null,
-    "special_mechanics": {},
+    "special_mechanics": {
+      "magic_damage": {
+        "type": "multiplier_range",
+        "min": 0.5,
+        "max": 1.5
+      }
+    },
     "combat_stats": {
       "attack_bonuses": {
         "stab": 70,
@@ -4608,7 +4762,13 @@
     "guaranteed_hit": false,
     "min_damage": null,
     "max_damage_cap": null,
-    "special_mechanics": {},
+    "special_mechanics": {
+      "magic_damage": {
+        "type": "multiplier_range",
+        "min": 0.5,
+        "max": 1.5
+      }
+    },
     "combat_stats": {
       "attack_bonuses": {
         "stab": 70,
@@ -4638,7 +4798,7 @@
   },
   {
     "weapon_name": "Volatile nightmare staff",
-    "effect": "The volatile nightmare staff has a special attack , Immolate , that consumes 55% of the player's special attack energy to hit the target with 50% increased accuracy and deals a high amount of damage. The special attack does not consume runes. When calculating the max hit, Immolate acts like any other spell. The spell's max hit is calculated first and then rounded down (known in mathematics as \"floor\"). All magic damage gear, including the +15% from the staff is calculated separately. Because the staff has a magic damage bonus, the max hit seen in-game will always be higher than the spell's max hit. The max hit varies with visible Magic level according to the formula below. [1] The spell's max hit is limited to, at most, 58. This means that even though the max hit is based on the player's magic level, boosting above magic level 98 will not increase the max hit. It can be increased though by using additional magic damage gear including the Slayer helmet (i) when on a slayer task . Spell Max Hit = min ⁡ { ⌊ 5 8 * Magic Level 9 9 + 1 ⌋ , 5 8 } Staff Max Hit = ⌊ Spell Max Hit * 1 . 1 5 ⌋",
+    "effect": "The volatile nightmare staff has a special attack , Immolate , that consumes 55% of the player's special attack energy to hit the target with 50% increased accuracy and deals a high amount of damage. The special attack does not consume runes. When calculating the max hit, Immolate acts like any other spell. The spell's max hit is calculated first and then rounded down (known in mathematics as \"floor\"). All magic damage gear, including the +15% from the staff is calculated separately. Because the staff has a magic damage bonus, the max hit seen in-game will always be higher than the spell's max hit. The max hit varies with visible Magic level according to the formula below. [1] The spell's max hit is limited to, at most, 58. This means that even though the max hit is based on the player's magic level, boosting above magic level 98 will not increase the max hit. It can be increased though by using additional magic damage gear including the Slayer helmet (i) when on a slayer task . Spell Max Hit = min \u2061 { \u230a 5 8 * Magic Level 9 9 + 1 \u230b , 5 8 } Staff Max Hit = \u230a Spell Max Hit * 1 . 1 5 \u230b",
     "icon_url": "https://oldschool.runescape.wiki/images/Volatile_nightmare_staff.png?75a26",
     "special_cost": 55,
     "accuracy_multiplier": 1.5,
@@ -4647,7 +4807,11 @@
     "guaranteed_hit": false,
     "min_damage": null,
     "max_damage_cap": null,
-    "special_mechanics": {},
+    "special_mechanics": {
+      "magic_damage": {
+        "type": "magic"
+      }
+    },
     "combat_stats": {
       "attack_bonuses": {
         "stab": 0,
