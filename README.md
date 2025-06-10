@@ -55,8 +55,8 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 # Install dependencies
 pip install -r requirements.txt
 
-The backend relies on `aioodbc` for asynchronous SQL Server access. Ensure the
-system has the Microsoft ODBC driver installed.
+The backend relies on `pyodbc` for SQL Server access. Ensure the
+Microsoft ODBC driver is installed on your system.
 
 # Run development server
 uvicorn app.main:app --reload
@@ -198,9 +198,9 @@ environment variables:
 - `DB_MAX_RETRIES` – Number of connection retries for transient failures
   (default `3`).
 
-The async database layer uses `aioodbc`, so the appropriate ODBC driver must be
-installed on the host system. Ensure these environment variables are set before
-starting the API so the connection pool can connect successfully.
+The backend uses a small thread-based connection pool built on
+`pyodbc`. Ensure the Microsoft ODBC driver is installed and the above
+environment variables are configured before starting the API.
 
 🔄 API Reference
 Calculate DPS

@@ -4,7 +4,7 @@ import os
 CACHE_TTL_SECONDS = int(os.getenv("CACHE_TTL_SECONDS", "3600"))
 
 # Database connection pool settings
-# Ensure the pool size is always at least 1 to avoid aioodbc errors
+# Ensure the pool size is always at least 1 to avoid pool errors
 try:
     DB_POOL_SIZE = max(1, int(os.getenv("DB_POOL_SIZE", "5")))
 except ValueError:
