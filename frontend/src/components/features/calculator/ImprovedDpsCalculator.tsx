@@ -2,7 +2,7 @@
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Info } from 'lucide-react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useReferenceDataStore } from '@/store/reference-data-store';
 import { BossSelector } from './BossSelector';
 import { CombinedEquipmentDisplay } from './CombinedEquipmentDisplay';
@@ -16,6 +16,8 @@ import { CombatStyleTabs } from './CombatStyleTabs';
 import { DpsResultDisplay } from './DpsResultDisplay';
 import { useDpsCalculator } from '@/hooks/useDpsCalculator';
 import { useToast } from '@/hooks/use-toast';
+import RaidScalingPanel, { Raid, RaidScalingConfig } from '../simulation/RaidScalingPanel';
+import { useCalculatorStore } from '@/store/calculator-store';
 
 /**
  * ImprovedDpsCalculator - A redesigned OSRS DPS Calculator with better UI flow
@@ -41,6 +43,18 @@ export function ImprovedDpsCalculator() {
     currentBossForm,
   } = useDpsCalculator();
   const initData = useReferenceDataStore((s) => s.initData);
+  const selectedBoss = useCalculatorStore((s) => s.selectedBoss);
+  const [raidConfig, setRaidConfig] = useState<RaidScalingConfig>({ teamSize: 1 });
+
+  const RAID_NAME_TO_ID: Record<string, Raid> = {
+    'Chambers of Xeric': 'cox',
+    'Theatre of Blood': 'tob',
+    'Tombs of Amascut': 'toa',
+  };
+
+  const selectedRaid = selectedBoss?.raid_group
+    ? RAID_NAME_TO_ID[selectedBoss.raid_group]
+    : undefined;
 
   useEffect(() => {
     initData();
@@ -107,6 +121,13 @@ export function ImprovedDpsCalculator() {
         <div className="space-y-6 flex flex-col flex-grow">
           {/* Target selection section */}
           <BossSelector onSelectForm={handleBossUpdate} />
+          {selectedRaid && (
+            <RaidScalingPanel
+              raid={selectedRaid}
+              config={raidConfig}
+              onChange={setRaidConfig}
+            />
+          )}
           
           {/* Defensive reductions panel - with contained height */}
           <Card className="w-full border">
