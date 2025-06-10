@@ -77,6 +77,8 @@ class SpecialAttackCostExtractor:
         low_priority_patterns = [
             r'costs (\d+)%.*?energy',
             r'(\d+)%.*?special attack energy',
+            # Cases like "Backstab (75%)" where the cost appears in parentheses
+            r'\(\s*(\d{1,3})%\s*\)'
         ]
         
         for pattern in low_priority_patterns:
@@ -188,7 +190,9 @@ class DamageModifierExtractor:
             r'(\d+)%.*?damage.*?increase',
             # For the saradomin/zamorak godsword tests
             r'(\d+)% increased max hit',
-            r'increases max hit by (\d+)%'
+            r'increases\s+max hit by (\d+)%',
+            # Allow phrases like "increases the player's max hit by 25%"
+            r'increases[^\n]*?max hit by (\d+)%'
         ]
         
         for pattern in increase_patterns:
@@ -343,7 +347,11 @@ class StatDrainExtractor:
         
         # Check for percentage drains - FIXED for the failing test
         # The failing test: "lowers the opponent's Strength, Attack, and Defence levels by 5%"
-        percentage_pattern = r'(?:lowers|drains|reduces).*?opponent\'?s?\s+([^.]*?)(?:levels?\s+)?by\s+(\d+)%'
+        percentage_pattern = (
+            r'(?:lowers|drains|reduces).*?'
+            r'(?:opponent|target|enemy)\'?s?\s+([^.]*?)'
+            r'(?:levels?\s+)?by\s+(\d+)%'
+        )
         match = re.search(percentage_pattern, text_lower)
         if match:
             stats_text = match.group(1)
