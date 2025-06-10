@@ -131,7 +131,7 @@ async def get_bosses(
     """
     try:
 
-        bosses = boss_repository.get_all_bosses(limit=page_size, offset=(page - 1) * page_size)
+        bosses = await boss_repository.get_all_bosses_async(limit=page_size, offset=(page - 1) * page_size)
         
         # If no bosses are found in the database, return mock data
         if not bosses:
@@ -154,7 +154,7 @@ async def get_boss(boss_id: int, response: Response):
     Returns detailed information about a boss, including all of its forms if it has multiple forms.
     """
     try:
-        boss = boss_repository.get_boss(boss_id)
+        boss = await boss_repository.get_boss_async(boss_id)
         response.headers["Cache-Control"] = f"public, max-age={CACHE_TTL_SECONDS}"
 
         # If boss not found in the database, return mock data or 404
@@ -245,7 +245,7 @@ async def get_boss(boss_id: int, response: Response):
 async def get_boss_by_form(form_id: int, response: Response):
     """Get boss details using a form id."""
     try:
-        boss = boss_repository.get_boss_by_form(form_id)
+        boss = await boss_repository.get_boss_by_form_async(form_id)
         if not boss:
             raise HTTPException(status_code=404, detail="Boss form not found")
         response.headers["Cache-Control"] = f"public, max-age={CACHE_TTL_SECONDS}"
@@ -269,7 +269,7 @@ async def get_items(
     Returns a list of item summaries with basic information.
     """
     try:
-        items = item_repository.get_all_items(
+        items = await item_repository.get_all_items_async(
             combat_only=combat_only,
             tradeable_only=tradeable_only,
             limit=page_size,
@@ -299,7 +299,7 @@ async def get_item(item_id: int, response: Response):
     Returns detailed information about an item, including its combat stats.
     """
     try:
-        item = item_repository.get_item(item_id)
+        item = await item_repository.get_item_async(item_id)
         response.headers["Cache-Control"] = f"public, max-age={CACHE_TTL_SECONDS}"
 
         # If item not found in the database, return mock data or 404
@@ -453,7 +453,7 @@ async def search_bosses(query: str, limit: int | None = None):
     Returns a list of bosses that match the search query.
     """
     try:
-        results = boss_repository.search_bosses(query, limit=limit)
+        results = await boss_repository.search_bosses_async(query, limit=limit)
         return results
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Search failed: {str(e)}")
@@ -466,7 +466,7 @@ async def search_items(query: str, limit: int | None = None):
     Returns a list of items that match the search query.
     """
     try:
-        results = item_repository.search_items(query, limit=limit)
+        results = await item_repository.search_items_async(query, limit=limit)
         return results
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Search failed: {str(e)}")

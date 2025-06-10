@@ -189,6 +189,14 @@ request the server loads and caches the full boss and item lists, and all
 subsequent search requests are served from this in-memory cache so the
 database is only queried when a specific record is requested.
 
+Database connections are pooled. Tune pool behaviour with the following
+environment variables:
+
+- `DB_POOL_SIZE` – Maximum number of open connections (default `5`).
+- `DB_CONNECTION_TIMEOUT` – Connection timeout in seconds (default `30`).
+- `DB_MAX_RETRIES` – Number of connection retries for transient failures
+  (default `3`).
+
 🔄 API Reference
 Calculate DPS
 

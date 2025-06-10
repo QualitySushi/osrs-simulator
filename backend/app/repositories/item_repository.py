@@ -1,4 +1,5 @@
 from typing import Any, Dict, List, Optional
+import asyncio
 
 from cachetools import TTLCache, cached
 
@@ -54,3 +55,25 @@ def search_items(query: str, limit: int | None = None) -> List[Dict[str, Any]]:
     if limit is not None:
         return results[:limit]
     return results
+
+
+async def get_all_items_async(
+    combat_only: bool = True,
+    tradeable_only: bool = False,
+    limit: int | None = None,
+    offset: int | None = None,
+) -> List[Dict[str, Any]]:
+    return await db_service.get_all_items_async(
+        combat_only=combat_only,
+        tradeable_only=tradeable_only,
+        limit=limit,
+        offset=offset,
+    )
+
+
+async def get_item_async(item_id: int) -> Optional[Dict[str, Any]]:
+    return await db_service.get_item_async(item_id)
+
+
+async def search_items_async(query: str, limit: int | None = None) -> List[Dict[str, Any]]:
+    return await asyncio.to_thread(search_items, query, limit)
