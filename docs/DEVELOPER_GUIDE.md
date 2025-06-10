@@ -13,7 +13,7 @@ Additional documentation lives inside the `docs` folder.
 
 ## Database Schema
 
-The backend stores scraped game data in SQLite databases. An Entity Relationship Diagram (ERD) can be generated from the `database_schema.dot` file using Graphviz:
+The backend stores scraped game data in an Azure SQL Database. An Entity Relationship Diagram (ERD) can be generated from the `database_schema.dot` file using Graphviz:
 
 ```bash
 dot -Tpng docs/database_schema.dot -o database_schema.png
@@ -40,7 +40,7 @@ digraph ERD {
 - **Calculators** (`backend/app/calculators`) contain the core algorithms for melee, ranged and magic DPS.
 - **Services** (`backend/app/services`) provide thin wrappers used by the FastAPI endpoints.
 - **Repositories** (`backend/app/repositories`) interact with the database layer using `database.py`.
-- **Webscraper** (`backend/webscraper`) contains scripts that populate the SQLite databases from the Old School RuneScape Wiki.
+- **Webscraper** (`backend/webscraper`) contains scripts that scrape the Old School RuneScape Wiki and can populate SQLite databases for import into Azure SQL.
 
 The separation allows the same calculation logic to be reused across the application.
 

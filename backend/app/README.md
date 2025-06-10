@@ -14,7 +14,7 @@ Python 3.8+
 FastAPI
 Uvicorn
 Pydantic
-SQLite (for database)
+Azure SQL Database
 
 Installation
 
