@@ -2,6 +2,8 @@
 
 import MultiBossSimulation from '@/components/features/simulation/MultiBossSimulation';
 
+export const dynamic = 'force-dynamic';
+
 export default function SimulatePage() {
   return (
     <main id="main" className="container mx-auto py-8 px-4 pb-16">
