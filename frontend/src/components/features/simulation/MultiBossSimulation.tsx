@@ -63,8 +63,10 @@ export function MultiBossSimulation() {
   const [open, setOpen] = useState(false);
   const [isRunning, setIsRunning] = useState(false);
   const storeBosses = useReferenceDataStore((s) => s.bosses);
+  const storeBossForms = useReferenceDataStore((s) => s.bossForms);
   const initData = useReferenceDataStore((s) => s.initData);
   const addBosses = useReferenceDataStore((s) => s.addBosses);
+  const addBossForms = useReferenceDataStore((s) => s.addBossForms);
   const [bossIcons, setBossIcons] = useState<Record<number, string>>({});
 
   useEffect(() => {
@@ -197,8 +199,13 @@ export function MultiBossSimulation() {
     const sims: SimulationEntry[] = [];
     for (const boss of selectedBosses) {
       try {
-        const details = await bossesApi.getBossById(boss.id);
-        const form = details.forms?.[0];
+        let forms = storeBossForms[boss.id];
+        if (!forms) {
+          const details = await bossesApi.getBossById(boss.id);
+          forms = details.forms || [];
+          addBossForms(boss.id, forms);
+        }
+        const form = forms[0];
         if (!form) continue;
         const simParams = buildParams(form);
         const result = await calculatorApi.calculateDps(simParams);

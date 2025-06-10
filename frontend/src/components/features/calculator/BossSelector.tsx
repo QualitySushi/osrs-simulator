@@ -47,8 +47,10 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
   const setSelectedForm = useCalculatorStore((s) => s.setSelectedBossForm);
   const [bossIcons, setBossIcons] = useState<Record<number, string>>({});
   const storeBosses = useReferenceDataStore((s) => s.bosses);
+  const storeBossForms = useReferenceDataStore((s) => s.bossForms);
   const initData = useReferenceDataStore((s) => s.initData);
   const addBosses = useReferenceDataStore((s) => s.addBosses);
+  const addBossForms = useReferenceDataStore((s) => s.addBossForms);
   const { params, setParams, lockBoss, unlockBoss, bossLocked } = useCalculatorStore();
   const { toast } = useToast();
 
@@ -75,9 +77,14 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
   const { data: bossDetails, isLoading: isLoadingDetails } = useQuery({
     queryKey: ['boss', selectedBoss?.id],
     queryFn: () => selectedBoss ? bossesApi.getBossById(selectedBoss.id) : null,
-    enabled: !!selectedBoss,
+    enabled: !!selectedBoss && !storeBossForms[selectedBoss!.id],
     staleTime: Infinity,
+    onSuccess: (d) => addBossForms(d.id, d.forms || []),
   });
+
+  const combinedBossDetails = selectedBoss
+    ? { ...selectedBoss, forms: storeBossForms[selectedBoss.id] ?? bossDetails?.forms }
+    : null;
 
   // Fetch icons for all bosses when list loads
   useEffect(() => {
@@ -413,20 +420,20 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
                 Loading boss details...
               </div>
             ) : (<div className="flex items-center gap-2">
-              <Select
-                value={selectedForm?.id.toString() || ''}
-                onValueChange={(value: string) => {
-                    const form = bossDetails?.forms?.find(f => f.id.toString() === value);
-                    if (form) {
-                        handleSelectForm(form);
-                    }
-                }}
+                <Select
+                  value={selectedForm?.id.toString() || ''}
+                  onValueChange={(value: string) => {
+                      const form = combinedBossDetails?.forms?.find(f => f.id.toString() === value);
+                      if (form) {
+                          handleSelectForm(form);
+                      }
+                  }}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select a form/phase" />
                 </SelectTrigger>
                 <SelectContent>
-                  {(bossDetails?.forms ?? []).map((form) => (
+                  {(combinedBossDetails?.forms ?? []).map((form) => (
                     <SelectItem key={form.id} value={form.id.toString()}>
                       <img
                         src={form.icons?.[0]}

@@ -42,8 +42,10 @@ export function DirectBossSelector({ onSelectBoss, onSelectForm, className }: Di
   const [selectedForm, setSelectedForm] = useState<BossForm | null>(null);
   const [bossIcons, setBossIcons] = useState<Record<number, string>>({});
   const storeBosses = useReferenceDataStore((s) => s.bosses);
+  const storeBossForms = useReferenceDataStore((s) => s.bossForms);
   const initData = useReferenceDataStore((s) => s.initData);
   const addBosses = useReferenceDataStore((s) => s.addBosses);
+  const addBossForms = useReferenceDataStore((s) => s.addBossForms);
   const { params, setParams, lockBoss, unlockBoss, bossLocked } = useCalculatorStore();
   const { toast } = useToast();
   const commandRef = useRef<HTMLDivElement>(null);
@@ -68,9 +70,14 @@ export function DirectBossSelector({ onSelectBoss, onSelectForm, className }: Di
   const { data: bossDetails, isLoading: isLoadingDetails } = useQuery({
     queryKey: ['boss', selectedBoss?.id],
     queryFn: () => selectedBoss ? bossesApi.getBossById(selectedBoss.id) : null,
-    enabled: !!selectedBoss,
+    enabled: !!selectedBoss && !storeBossForms[selectedBoss!.id],
     staleTime: Infinity,
+    onSuccess: (d) => addBossForms(d.id, d.forms || []),
   });
+
+  const combinedBossDetails = selectedBoss
+    ? { ...selectedBoss, forms: storeBossForms[selectedBoss.id] ?? bossDetails?.forms }
+    : null;
 
   // Fetch icons for all bosses
   useEffect(() => {
@@ -318,7 +325,7 @@ export function DirectBossSelector({ onSelectBoss, onSelectForm, className }: Di
               <Select
                 value={selectedForm?.id.toString() || ''}
                 onValueChange={(value: string) => {
-                  const form = bossDetails?.forms?.find(f => f.id.toString() === value);
+                  const form = combinedBossDetails?.forms?.find(f => f.id.toString() === value);
                   if (form) {
                     handleSelectForm(form);
                   }
@@ -328,9 +335,9 @@ export function DirectBossSelector({ onSelectBoss, onSelectForm, className }: Di
                   <SelectValue placeholder="Select a form/phase" />
                 </SelectTrigger>
                 <SelectContent>
-                  {(bossDetails?.forms ?? []).map((form) => (
+                  {(combinedBossDetails?.forms ?? []).map((form) => (
                     <SelectItem key={form.id} value={form.id.toString()}>
-                      {form.form_name || `${bossDetails?.name} (${form.combat_level || 'Unknown'})`}
+                      {form.form_name || `${combinedBossDetails?.name} (${form.combat_level || 'Unknown'})`}
                     </SelectItem>
                   ))}
                 </SelectContent>
