@@ -79,7 +79,10 @@ class SpecialAttackCostExtractor:
         low_priority_patterns = [
             r'costs (\d+)%.*?energy',
             r'(\d+)%.*?special attack energy',
-            # Lower priority patterns without explicit mention of special attack
+
+            # Cases like "Backstab (75%)" where the cost appears in parentheses
+            r'\(\s*(\d{1,3})%\s*\)'
+
         ]
         
         for pattern in low_priority_patterns:
