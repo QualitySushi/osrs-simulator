@@ -2,7 +2,6 @@
 
 ```
 osrs-simulator/
-├── api/                        # Azure Function App wrappers around the backend
 ├── backend/
 │   ├── app/
 │   │   ├── calculators/        # DPS calculators for each combat style

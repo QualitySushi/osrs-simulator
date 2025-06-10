@@ -46,13 +46,8 @@ def get_boss_by_form(form_id: int) -> Optional[Dict[str, Any]]:
 
 
 def search_bosses(query: str, limit: int | None = None) -> List[Dict[str, Any]]:
-    """Search the cached boss list."""
-    bosses = _load_all_bosses()
-    q = query.lower()
-    results = [b for b in bosses if q in b["name"].lower()]
-    if limit is not None:
-        return results[:limit]
-    return results
+    """Search bosses directly using the database service."""
+    return db_service.search_bosses(query, limit)
 
 
 async def get_all_bosses_async(
@@ -73,4 +68,4 @@ async def get_boss_by_form_async(form_id: int) -> Optional[Dict[str, Any]]:
 
 
 async def search_bosses_async(query: str, limit: int | None = None) -> List[Dict[str, Any]]:
-    return await asyncio.to_thread(search_bosses, query, limit)
+    return await db_service.search_bosses_async(query, limit)

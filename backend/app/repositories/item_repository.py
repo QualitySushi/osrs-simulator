@@ -48,13 +48,8 @@ def get_item(item_id: int) -> Optional[Dict[str, Any]]:
 
 
 def search_items(query: str, limit: int | None = None) -> List[Dict[str, Any]]:
-    """Search the cached item list."""
-    items = _load_all_items()
-    q = query.lower()
-    results = [i for i in items if q in i["name"].lower()]
-    if limit is not None:
-        return results[:limit]
-    return results
+    """Search items directly using the database service."""
+    return db_service.search_items(query, limit)
 
 
 async def get_all_items_async(
@@ -76,4 +71,4 @@ async def get_item_async(item_id: int) -> Optional[Dict[str, Any]]:
 
 
 async def search_items_async(query: str, limit: int | None = None) -> List[Dict[str, Any]]:
-    return await asyncio.to_thread(search_items, query, limit)
+    return await db_service.search_items_async(query, limit)

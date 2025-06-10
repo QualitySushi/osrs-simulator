@@ -13,6 +13,7 @@ class TestItemRepositoryCaching(unittest.TestCase):
         self.item_service = MagicMock()
         self.item_service.get_all_items.return_value = self.mock_items
         self.item_service.get_item.return_value = self.mock_items[0]
+        self.item_service.search_items.return_value = [self.mock_items[0]]
 
         # Clear caches and patch the db service
         item_repository._all_items_cache.clear()
@@ -38,8 +39,8 @@ class TestItemRepositoryCaching(unittest.TestCase):
         self.assertEqual(self.item_service.get_item.call_count, 1)
 
     def test_search_items(self):
-        item_repository._all_items_cache['all'] = self.mock_items
         results = item_repository.search_items('dragon')
+        self.item_service.search_items.assert_called_with('dragon', None)
         self.assertEqual(len(results), 1)
         self.assertEqual(results[0]['id'], 1)
 
@@ -52,6 +53,7 @@ class TestBossRepositoryCaching(unittest.TestCase):
         self.boss_service = MagicMock()
         self.boss_service.get_all_bosses.return_value = self.mock_bosses
         self.boss_service.get_boss.return_value = self.mock_bosses[0]
+        self.boss_service.search_bosses.return_value = [self.mock_bosses[0]]
 
         boss_repository._all_bosses_cache.clear()
         boss_repository._boss_cache.clear()
@@ -74,8 +76,8 @@ class TestBossRepositoryCaching(unittest.TestCase):
         self.assertEqual(self.boss_service.get_boss.call_count, 1)
 
     def test_search_bosses(self):
-        boss_repository._all_bosses_cache['all'] = self.mock_bosses
         results = boss_repository.search_bosses('zul')
+        self.boss_service.search_bosses.assert_called_with('zul', None)
         self.assertEqual(len(results), 1)
         self.assertEqual(results[0]['id'], 1)
 
