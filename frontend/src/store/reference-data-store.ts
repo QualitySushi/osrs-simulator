@@ -2,6 +2,7 @@
 
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
+import { safeStorage } from '@/utils/safeStorage';
 import { bossesApi, itemsApi } from '@/services/api';
 import { Boss, BossForm, Item } from '@/types/calculator';
 
@@ -83,7 +84,7 @@ export const useReferenceDataStore = create<ReferenceDataState>()(
     }),
     {
       name: 'osrs-reference-data',
-      storage: createJSONStorage(() => localStorage),
+      storage: createJSONStorage(() => safeStorage),
       partialize: (state) => ({
         bosses: state.bosses,
         bossForms: state.bossForms,

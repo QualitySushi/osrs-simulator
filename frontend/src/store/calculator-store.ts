@@ -1,5 +1,6 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { persist, createJSONStorage } from 'zustand/middleware';
+import { safeStorage } from '@/utils/safeStorage';
 import {
   CalculatorParams,
   DpsResult,
@@ -214,6 +215,7 @@ export const useCalculatorStore = create<CalculatorState>()(
     }),
     {
       name: 'osrs-calculator-storage',
+      storage: createJSONStorage(() => safeStorage),
       partialize: (state) => ({
         params: state.params,
         gearLocked: state.gearLocked,
