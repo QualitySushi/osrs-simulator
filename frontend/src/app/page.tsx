@@ -1,8 +1,6 @@
 // page.tsx - Updated version with proper bottom padding on main content
 import { ImprovedDpsCalculator } from '@/components/features/calculator/ImprovedDpsCalculator';
 
-export const dynamic = 'force-dynamic';
-
 export default function Home() {
   return (
     <main id="main" className="container mx-auto py-8 px-4 pb-16"> {/* Added extra bottom padding */}
