@@ -66,7 +66,9 @@ export function ItemSelector({ slot, onSelectItem }: ItemSelectorProps) {
 
   // Items from store filtered by slot
   const filteredItems = slot
-    ? storeItems.filter((item) => item.slot === slot)
+    ? slot === 'spec'
+      ? storeItems.filter((item) => item.has_special_attack)
+      : storeItems.filter((item) => item.slot === slot)
     : storeItems;
 
   const itemsToDisplay = searchTerm.length > 0 ? searchResults ?? [] : filteredItems;
@@ -90,6 +92,7 @@ export function ItemSelector({ slot, onSelectItem }: ItemSelectorProps) {
   };
 
   const updateStatsFromItem = (item: Item, combatStyle: CombatStyle) => {
+    if (slot === 'spec') return;
     if (!item.combat_stats) return;
     
     const { attack_bonuses, other_bonuses } = item.combat_stats;

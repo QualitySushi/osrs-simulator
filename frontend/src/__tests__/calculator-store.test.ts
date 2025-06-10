@@ -38,4 +38,11 @@ describe('calculator store', () => {
     });
     expect(Object.keys(useCalculatorStore.getState().loadout).length).toBe(0);
   });
+
+  it('stores spec weapon', () => {
+    act(() => {
+      useCalculatorStore.getState().setLoadout({ spec: { id: 2, name: 'Dragon dagger' } } as any);
+    });
+    expect(useCalculatorStore.getState().loadout.spec?.name).toBe('Dragon dagger');
+  });
 });
