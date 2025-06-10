@@ -90,8 +90,14 @@ export function MultiBossSimulation() {
   });
 
   useEffect(() => {
-    setSelectedBosses([]);
-  }, [selectedRaid]);
+    if (!selectedRaid) {
+      setSelectedBosses([]);
+      return;
+    }
+    const raidName = RAID_NAME_MAP[selectedRaid];
+    const bossesForRaid = storeBosses.filter((b) => b.raid_group === raidName);
+    setSelectedBosses(bossesForRaid);
+  }, [selectedRaid, storeBosses]);
 
   const filteredBosses = (searchTerm.length > 0 ? searchResults ?? [] : storeBosses).filter(
     (b) => !selectedRaid || b.raid_group === RAID_NAME_MAP[selectedRaid]
