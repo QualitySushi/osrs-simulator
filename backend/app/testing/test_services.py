@@ -84,6 +84,18 @@ class TestSettings(unittest.TestCase):
         settings = importlib.reload(importlib.import_module('app.config.settings'))
         self.assertEqual(settings.CACHE_TTL_SECONDS, 123)
 
+    def test_db_pool_size_minimum(self):
+        """DB_POOL_SIZE should never be less than 1."""
+        import importlib, os
+        orig = os.environ.get('DB_POOL_SIZE')
+        os.environ['DB_POOL_SIZE'] = '0'
+        settings = importlib.reload(importlib.import_module('app.config.settings'))
+        self.assertEqual(settings.DB_POOL_SIZE, 1)
+        if orig is None:
+            del os.environ['DB_POOL_SIZE']
+        else:
+            os.environ['DB_POOL_SIZE'] = orig
+
 
 if __name__ == '__main__':
     unittest.main()
