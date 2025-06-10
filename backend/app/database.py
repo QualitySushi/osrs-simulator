@@ -369,16 +369,19 @@ class AzureSQLDatabaseService:
         try:
             with self.connection() as conn:
                 cursor = conn.cursor()
-            
-            cursor.execute("""
+
+                cursor.execute(
+                    """
                 SELECT id, name, has_special_attack, special_attack_text,
                        has_passive_effect, passive_effect_text, has_combat_stats,
                        is_tradeable, slot, combat_stats, icons
                 FROM items
                 WHERE id = ?
-            """, (item_id,))
-            
-            row = cursor.fetchone()
+                """,
+                    (item_id,),
+                )
+
+                row = cursor.fetchone()
             if not row:
                 return None
             
