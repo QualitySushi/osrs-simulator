@@ -52,6 +52,13 @@ export const bossesApi = {
     return data;
   },
 
+  getBossesWithForms: async (
+    params?: { page?: number; page_size?: number }
+  ): Promise<Boss[]> => {
+    const { data } = await apiClient.get('/bosses/full', { params });
+    return data;
+  },
+
   getBossById: async (id: number): Promise<Boss> => {
     try {
       const { data } = await apiClient.get(`/boss/${id}`);
