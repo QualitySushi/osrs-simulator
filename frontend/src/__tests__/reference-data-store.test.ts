@@ -60,4 +60,20 @@ describe('reference data store', () => {
     expect(mockedBossApi.getBossForms).toHaveBeenCalledTimes(0);
     expect(mockedItemsApi.getAllItems).toHaveBeenCalledTimes(1);
   });
+
+  it('deduplicates bosses and items', () => {
+    act(() => {
+      const store = getStore();
+      store.addBosses([{ id: 1, name: 'A' } as any]);
+      store.addBosses([{ id: 1, name: 'B' } as any, { id: 2, name: 'C' } as any]);
+      store.addItems([{ id: 10, name: 'X' } as any]);
+      store.addItems([{ id: 10, name: 'Y' } as any, { id: 11, name: 'Z' } as any]);
+    });
+
+    const state = getStore();
+    expect(state.bosses).toHaveLength(2);
+    expect(state.items).toHaveLength(2);
+    expect(state.bosses.find((b) => b.id === 1)?.name).toBe('B');
+    expect(state.items.find((i) => i.id === 10)?.name).toBe('Y');
+  });
 });
