@@ -1,6 +1,7 @@
 'use client';
 
 import { CombinedEquipmentDisplay } from '@/components/features/calculator/CombinedEquipmentDisplay';
+import { SpecialAttackWeaponSelector } from './SpecialAttackWeaponSelector';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -76,10 +77,11 @@ export function EquipmentPanel({ onEquipmentUpdate, bossForm }: EquipmentPanelPr
           </Alert>
         )}
         
-        <CombinedEquipmentDisplay 
+        <CombinedEquipmentDisplay
           onEquipmentUpdate={handleEquipmentUpdate}
           bossForm={bossForm}
         />
+        <SpecialAttackWeaponSelector />
       </CardContent>
     </Card>
   );
