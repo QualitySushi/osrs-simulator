@@ -47,6 +47,15 @@ export function Navigation() {
             >
               Import
             </Link>
+            <Link
+              href="/simulate"
+              className={cn(
+                'text-sm transition-colors hover:text-primary',
+                pathname === '/simulate' ? 'text-foreground font-medium' : 'text-muted-foreground'
+              )}
+            >
+              Simulate
+            </Link>
           </div>
         </div>
         
