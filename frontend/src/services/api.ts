@@ -129,4 +129,9 @@ export const itemsApi = {
     const { data } = await apiClient.get('/search/items', { params });
     return data;
   },
+
+  getSpecialAttacks: async (): Promise<any[]> => {
+    const { data } = await apiClient.get('/special-attacks');
+    return data;
+  },
 };

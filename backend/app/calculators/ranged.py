@@ -134,20 +134,25 @@ class RangedCalculator:
         
         # Now apply the Twisted Bow accuracy modifier separately
         attack_roll = math.floor(attack_roll * tbow_accuracy_multiplier)
+        attack_roll = math.floor(attack_roll * params.get("accuracy_multiplier", 1.0))
 
         # Step 5: Defence Roll
         def_roll = (params["target_defence_level"] + 9) * (params["target_defence_bonus"] + EQUIPMENT_BONUS_OFFSET)
 
         # Step 6: Hit Chance
-        if attack_roll > def_roll:
-            hit_chance = 1 - (def_roll + 2) / (2 * (attack_roll + 1))
+        if params.get("guaranteed_hit"):
+            hit_chance = 1.0
         else:
-            hit_chance = attack_roll / (2 * (def_roll + 1))
+            if attack_roll > def_roll:
+                hit_chance = 1 - (def_roll + 2) / (2 * (attack_roll + 1))
+            else:
+                hit_chance = attack_roll / (2 * (def_roll + 1))
 
-        hit_chance = max(0, min(1, hit_chance))
+            hit_chance = max(0, min(1, hit_chance))
 
         # Step 7: Average Hit and DPS
         avg_hit = hit_chance * (max_hit + 1) / 2
+        avg_hit *= params.get("hit_count", 1)
         dps = avg_hit / params["attack_speed"]
 
         if params.get("debug"):

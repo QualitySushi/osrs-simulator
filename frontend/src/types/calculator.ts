@@ -40,6 +40,9 @@ export interface BaseCalculatorParams {
   salve_bonus?: number;
   gear_multiplier?: number;
   special_multiplier?: number;
+  accuracy_multiplier?: number;
+  hit_count?: number;
+  guaranteed_hit?: boolean;
   attack_style_bonus?: number; // Add this field which is in the backend model
   equipment?: EquipmentLoadout;
   weapon_name?: string;

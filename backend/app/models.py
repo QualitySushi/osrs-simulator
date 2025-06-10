@@ -145,6 +145,9 @@ class DpsParameters(BaseModel):
     attack_speed: float = 2.4
     gear_multiplier: float = 1.0
     special_multiplier: float = 1.0
+    accuracy_multiplier: float = 1.0
+    hit_count: int = 1
+    guaranteed_hit: bool = False
     attack_style_bonus: Optional[int] = Field(default=0)
     special_attack_cost: Optional[int] = None
     special_rotation: Optional[float] = None
