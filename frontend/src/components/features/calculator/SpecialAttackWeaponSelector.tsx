@@ -1,3 +1,4 @@
+'use client';
 import { Label } from '@/components/ui/label';
 import { useCalculatorStore } from '@/store/calculator-store';
 import { itemsApi } from '@/services/api';
