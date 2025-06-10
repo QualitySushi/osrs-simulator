@@ -321,26 +321,26 @@ class AzureSQLDatabaseService:
         try:
             with self.connection() as conn:
                 cursor = conn.cursor()
-            
-            query = """
-                SELECT id, name, has_special_attack, has_passive_effect,
-                       has_combat_stats, is_tradeable, slot, icons
-                FROM items
-                WHERE 1=1
-            """
-            params = []
-            
-            if combat_only:
-                query += " AND has_combat_stats = 1"
-            if tradeable_only:
-                query += " AND is_tradeable = 1"
-                
-            query += " ORDER BY name"
 
-            if limit is not None:
-                off = offset or 0
-                query += " OFFSET ? ROWS FETCH NEXT ? ROWS ONLY"
-                params.extend([off, limit])
+                query = """
+                    SELECT id, name, has_special_attack, has_passive_effect,
+                           has_combat_stats, is_tradeable, slot, icons
+                    FROM items
+                    WHERE 1=1
+                """
+                params = []
+
+                if combat_only:
+                    query += " AND has_combat_stats = 1"
+                if tradeable_only:
+                    query += " AND is_tradeable = 1"
+
+                query += " ORDER BY name"
+
+                if limit is not None:
+                    off = offset or 0
+                    query += " OFFSET ? ROWS FETCH NEXT ? ROWS ONLY"
+                    params.extend([off, limit])
 
                 cursor.execute(query, params)
 
@@ -351,19 +351,21 @@ class AzureSQLDatabaseService:
                     if row[7]:  # icons column
                         try:
                             icons = json.loads(row[7])
-                        except:
+                        except Exception:
                             pass
 
-                    items.append({
-                        "id": row[0],
-                        "name": row[1],
-                        "has_special_attack": bool(row[2]),
-                        "has_passive_effect": bool(row[3]),
-                        "has_combat_stats": bool(row[4]),
-                        "is_tradeable": bool(row[5]),
-                        "slot": row[6],
-                        "icons": icons,
-                    })
+                    items.append(
+                        {
+                            "id": row[0],
+                            "name": row[1],
+                            "has_special_attack": bool(row[2]),
+                            "has_passive_effect": bool(row[3]),
+                            "has_combat_stats": bool(row[4]),
+                            "is_tradeable": bool(row[5]),
+                            "slot": row[6],
+                            "icons": icons,
+                        }
+                    )
 
                 return items
             
