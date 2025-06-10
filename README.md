@@ -96,7 +96,7 @@ Backend Architecture
 
 The backend is built with FastAPI and uses:
 
-    SQLite for database storage
+    Azure SQL Database for persistent storage
     Pydantic for data validation
     Custom calculators for combat style-specific logic
     Data scrapers for maintaining up-to-date game information
@@ -152,35 +152,21 @@ When deploying the frontend, the workflow also requires a secret named
 deployment token for your Azure Static Web App.
 Database Setup
 
-The application uses four SQLite databases stored in Azure Blob Storage:
+The backend now connects directly to an Azure SQL Database. Configure the
+connection string using the `SQLAZURECONNSTR_DefaultConnection` environment
+variable or provide the individual parameters:
 
-    osrs_all_items.db: All items
-    osrs_combat_items.db: Combat items
-    osrs_tradeable_items.db: Tradeable items
-    osrs_bosses.db: Boss data
+    AZURE_SQL_SERVER
+    AZURE_SQL_DATABASE
+    AZURE_SQL_USERNAME
+    AZURE_SQL_PASSWORD
 
-Set the `AZURE_STORAGE_CONNECTION_STRING` environment variable so the backend
-can download these files. By default the container name is `databases`, but you
-can override it with `AZURE_STORAGE_CONTAINER_NAME`.
+When running in Azure App Service you can omit the username and password and
+authenticate via Managed Identity.
 
-These databases can be generated using the provided scrapers:
-
-bash
-
-python osrs_item_scraper.py
-python extract.py
-
-The GitHub workflow `generate-databases.yml` runs these scrapers weekly and
-uploads the resulting `.db` files as artifacts.
-
-The backend automatically searches for the databases in a few locations. By
-default it looks in `backend/db`, but it will also check `backend/app/db`, the
-current working directory's `db` folder, or a directory specified by the
-`OSRS_DB_DIR` environment variable. This means you can launch the server from
-any directory as long as the databases are located in one of these places.
-If the databases are not found locally and `AZURE_STORAGE_CONNECTION_STRING` is
-set, the backend will download the files from Azure Blob Storage and cache them
-in the first writable search directory so subsequent requests are fast.
+The scraper utilities still produce SQLite databases. Use
+`webscraper/runescape-items/migrate_sql_to_azure.py` to import this data into
+the Azure SQL instance.
 
 The API also caches boss and item lookups in memory. Set the
 `CACHE_TTL_SECONDS` environment variable to control how long (in seconds)
