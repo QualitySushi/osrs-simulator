@@ -14,9 +14,10 @@ function getStore() {
 describe('reference data store', () => {
   beforeEach(() => {
     act(() => {
-      useReferenceDataStore.setState({ bosses: [], items: [], initialized: false });
+      useReferenceDataStore.setState({ bosses: [], bossForms: {}, items: [], initialized: false });
     });
     mockedBossApi.getAllBosses.mockReset();
+    mockedBossApi.getBossForms.mockReset();
     mockedItemsApi.getAllItems.mockReset();
   });
 
@@ -24,6 +25,8 @@ describe('reference data store', () => {
     mockedBossApi.getAllBosses
       .mockResolvedValueOnce([{ id: 1, name: 'Boss' } as any])
       .mockResolvedValueOnce([]);
+
+    mockedBossApi.getBossForms.mockResolvedValueOnce([{ id: 10, boss_id: 1 } as any]);
 
     mockedItemsApi.getAllItems
       .mockResolvedValueOnce([{ id: 2, name: 'Item' } as any])
@@ -35,13 +38,16 @@ describe('reference data store', () => {
 
     const state = getStore();
     expect(state.bosses).toHaveLength(1);
+    expect(state.bossForms[1]).toHaveLength(1);
     expect(state.items).toHaveLength(1);
     expect(mockedBossApi.getAllBosses).toHaveBeenCalledTimes(1);
+    expect(mockedBossApi.getBossForms).toHaveBeenCalledTimes(1);
     expect(mockedItemsApi.getAllItems).toHaveBeenCalledTimes(1);
   });
 
   it('does not load again when initialized', async () => {
     mockedBossApi.getAllBosses.mockResolvedValue([]);
+    mockedBossApi.getBossForms.mockResolvedValue([]);
     mockedItemsApi.getAllItems.mockResolvedValue([]);
 
     await act(async () => {
@@ -53,6 +59,7 @@ describe('reference data store', () => {
     });
 
     expect(mockedBossApi.getAllBosses).toHaveBeenCalledTimes(1);
+    expect(mockedBossApi.getBossForms).toHaveBeenCalledTimes(0);
     expect(mockedItemsApi.getAllItems).toHaveBeenCalledTimes(1);
   });
 });

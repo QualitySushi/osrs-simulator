@@ -3,15 +3,17 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { bossesApi, itemsApi } from '@/services/api';
-import { Boss, Item } from '@/types/calculator';
+import { Boss, BossForm, Item } from '@/types/calculator';
 
 interface ReferenceDataState {
   bosses: Boss[];
+  bossForms: Record<number, BossForm[]>;
   items: Item[];
   initialized: boolean;
   timestamp: number;
   initData: () => Promise<void>;
   addBosses: (b: Boss[]) => void;
+  addBossForms: (id: number, forms: BossForm[]) => void;
   addItems: (i: Item[]) => void;
 }
 
@@ -21,6 +23,7 @@ export const useReferenceDataStore = create<ReferenceDataState>()(
   persist(
     (set, get) => ({
       bosses: [],
+      bossForms: {},
       items: [],
       initialized: false,
       timestamp: 0,
@@ -34,6 +37,16 @@ export const useReferenceDataStore = create<ReferenceDataState>()(
             const data = await bossesApi.getAllBosses({ page, page_size: pageSize });
             if (!data.length) break;
             set((state) => ({ bosses: [...state.bosses, ...data] }));
+            for (const b of data) {
+              try {
+                const forms = await bossesApi.getBossForms(b.id);
+                if (forms.length) {
+                  set((state) => ({ bossForms: { ...state.bossForms, [b.id]: forms } }));
+                }
+              } catch {
+                /* ignore */
+              }
+            }
             if (data.length < pageSize) break;
             page += 1;
           } catch {
@@ -61,6 +74,9 @@ export const useReferenceDataStore = create<ReferenceDataState>()(
       addBosses(b) {
         set((state) => ({ bosses: [...state.bosses, ...b] }));
       },
+      addBossForms(id, forms) {
+        set((state) => ({ bossForms: { ...state.bossForms, [id]: forms } }));
+      },
       addItems(i) {
         set((state) => ({ items: [...state.items, ...i] }));
       },
@@ -70,6 +86,7 @@ export const useReferenceDataStore = create<ReferenceDataState>()(
       storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({
         bosses: state.bosses,
+        bossForms: state.bossForms,
         items: state.items,
         timestamp: state.timestamp,
       }),
@@ -77,7 +94,7 @@ export const useReferenceDataStore = create<ReferenceDataState>()(
         if (!stored) return;
         const expired = Date.now() - stored.timestamp > REFERENCE_TTL_MS;
         if (expired) {
-          state.setState({ bosses: [], items: [], initialized: false, timestamp: Date.now() });
+          state.setState({ bosses: [], bossForms: {}, items: [], initialized: false, timestamp: Date.now() });
         } else {
           state.setState({ initialized: true });
         }
