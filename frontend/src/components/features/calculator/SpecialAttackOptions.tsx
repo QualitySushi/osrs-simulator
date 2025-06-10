@@ -1,15 +1,18 @@
 'use client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
-import { useCalculatorStore } from '@/store/calculator-store';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 import { Swords } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { itemsApi } from '@/services/api';
 
 export function SpecialAttackOptions() {
-  const { params, setParams } = useCalculatorStore();
   const { data: specials } = useQuery(['special-attacks'], itemsApi.getSpecialAttacks);
 
   return (
@@ -20,73 +23,31 @@ export function SpecialAttackOptions() {
           Special Attacks
         </CardTitle>
       </CardHeader>
-      <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="space-y-1">
-          <Label>Select Special Attack</Label>
-          <select
-            className="w-full rounded border px-2 py-1 text-sm"
-            value={params.weapon_name || ''}
-            onChange={(e) => {
-              const spec = specials?.find((s) => s.weapon_name === e.target.value);
-              if (spec) {
-                setParams({
-                  weapon_name: spec.weapon_name,
-                  special_attack_cost: spec.special_cost,
-                  special_multiplier: spec.damage_multiplier,
-                  accuracy_multiplier: spec.accuracy_multiplier,
-                  hit_count: spec.hit_count,
-                  guaranteed_hit: spec.guaranteed_hit,
-                });
-              } else {
-                setParams({ weapon_name: undefined });
-              }
-            }}
-          >
-            <option value="">-- None --</option>
+      <CardContent>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Weapon</TableHead>
+              <TableHead className="text-right">Special Cost</TableHead>
+              <TableHead className="text-right">Accuracy Multiplier</TableHead>
+              <TableHead className="text-right">Damage Multiplier</TableHead>
+              <TableHead className="text-right">Hit Count</TableHead>
+              <TableHead className="text-right">Guaranteed Hit</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
             {specials?.map((s) => (
-              <option key={s.weapon_name} value={s.weapon_name}>
-                {s.weapon_name}
-              </option>
+              <TableRow key={s.weapon_name}>
+                <TableCell className="font-medium">{s.weapon_name}</TableCell>
+                <TableCell className="text-right">{s.special_cost}</TableCell>
+                <TableCell className="text-right">{s.accuracy_multiplier}</TableCell>
+                <TableCell className="text-right">{s.damage_multiplier}</TableCell>
+                <TableCell className="text-right">{s.hit_count}</TableCell>
+                <TableCell className="text-right">{s.guaranteed_hit ? 'Yes' : 'No'}</TableCell>
+              </TableRow>
             ))}
-          </select>
-        </div>
-        <div className="space-y-1">
-          <Label>Special Cost</Label>
-          <Input
-            type="number"
-            min={0}
-            max={100}
-            value={params.special_attack_cost ?? 0}
-            onChange={(e) =>
-              setParams({ special_attack_cost: parseInt(e.target.value) || 0 })
-            }
-          />
-        </div>
-        <div className="flex items-center gap-2">
-          <Switch
-            checked={!!params.lightbearer}
-            onCheckedChange={(v) => setParams({ lightbearer: v })}
-          />
-          <Label>Lightbearer</Label>
-        </div>
-        <div className="flex items-center gap-2">
-          <Switch
-            checked={!!params.surge_potion}
-            onCheckedChange={(v) => setParams({ surge_potion: v })}
-          />
-          <Label>Surge Potion</Label>
-        </div>
-        <div className="space-y-1">
-          <Label>Duration (s)</Label>
-          <Input
-            type="number"
-            min={1}
-            value={params.duration ?? 60}
-            onChange={(e) =>
-              setParams({ duration: parseFloat(e.target.value) || 60 })
-            }
-          />
-        </div>
+          </TableBody>
+        </Table>
       </CardContent>
     </Card>
   );
