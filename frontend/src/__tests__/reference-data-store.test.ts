@@ -16,17 +16,15 @@ describe('reference data store', () => {
     act(() => {
       useReferenceDataStore.setState({ bosses: [], bossForms: {}, items: [], initialized: false });
     });
-    mockedBossApi.getAllBosses.mockReset();
+    mockedBossApi.getBossesWithForms.mockReset();
     mockedBossApi.getBossForms.mockReset();
     mockedItemsApi.getAllItems.mockReset();
   });
 
   it('loads data from APIs', async () => {
-    mockedBossApi.getAllBosses
-      .mockResolvedValueOnce([{ id: 1, name: 'Boss' } as any])
+    mockedBossApi.getBossesWithForms
+      .mockResolvedValueOnce([{ id: 1, name: 'Boss', forms: [{ id: 10, boss_id: 1 }] } as any])
       .mockResolvedValueOnce([]);
-
-    mockedBossApi.getBossForms.mockResolvedValueOnce([{ id: 10, boss_id: 1 } as any]);
 
     mockedItemsApi.getAllItems
       .mockResolvedValueOnce([{ id: 2, name: 'Item' } as any])
@@ -40,13 +38,13 @@ describe('reference data store', () => {
     expect(state.bosses).toHaveLength(1);
     expect(state.bossForms[1]).toHaveLength(1);
     expect(state.items).toHaveLength(1);
-    expect(mockedBossApi.getAllBosses).toHaveBeenCalledTimes(1);
-    expect(mockedBossApi.getBossForms).toHaveBeenCalledTimes(1);
+    expect(mockedBossApi.getBossesWithForms).toHaveBeenCalledTimes(1);
+    expect(mockedBossApi.getBossForms).toHaveBeenCalledTimes(0);
     expect(mockedItemsApi.getAllItems).toHaveBeenCalledTimes(1);
   });
 
   it('does not load again when initialized', async () => {
-    mockedBossApi.getAllBosses.mockResolvedValue([]);
+    mockedBossApi.getBossesWithForms.mockResolvedValue([]);
     mockedBossApi.getBossForms.mockResolvedValue([]);
     mockedItemsApi.getAllItems.mockResolvedValue([]);
 
@@ -58,7 +56,7 @@ describe('reference data store', () => {
       await getStore().initData();
     });
 
-    expect(mockedBossApi.getAllBosses).toHaveBeenCalledTimes(1);
+    expect(mockedBossApi.getBossesWithForms).toHaveBeenCalledTimes(1);
     expect(mockedBossApi.getBossForms).toHaveBeenCalledTimes(0);
     expect(mockedItemsApi.getAllItems).toHaveBeenCalledTimes(1);
   });

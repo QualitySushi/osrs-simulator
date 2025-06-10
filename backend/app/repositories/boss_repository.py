@@ -94,3 +94,17 @@ async def get_boss_by_form_async(form_id: int) -> Optional[Dict[str, Any]]:
 
 async def search_bosses_async(query: str, limit: int | None = None) -> List[Dict[str, Any]]:
     return await db_service.search_bosses_async(query, limit)
+
+
+async def get_bosses_with_forms_async(
+    limit: int | None = None, offset: int | None = None
+) -> List[Dict[str, Any]]:
+    """Return multiple bosses with all forms included."""
+    bosses = await get_all_bosses_async(limit=limit, offset=offset)
+    if not bosses:
+        return []
+
+    results = await asyncio.gather(
+        *[get_boss_async(boss["id"]) for boss in bosses]
+    )
+    return [b for b in results if b is not None]

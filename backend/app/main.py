@@ -146,6 +146,24 @@ async def get_bosses(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to retrieve bosses: {str(e)}")
 
+
+@app.get("/bosses/full", response_model=List[Boss], tags=["Bosses"])
+async def get_bosses_full(
+    page: int = Query(1, ge=1, description="Page number"),
+    page_size: int = Query(50, ge=1, le=100, description="Results per page"),
+):
+    """Get a paginated list of bosses including their forms."""
+    try:
+        bosses = await boss_repository.get_bosses_with_forms_async(
+            limit=page_size,
+            offset=(page - 1) * page_size,
+        )
+        if not bosses:
+            return []
+        return bosses
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to retrieve bosses: {str(e)}")
+
 @app.get("/boss/{boss_id}", response_model=Boss, tags=["Bosses"])
 async def get_boss(boss_id: int, response: Response):
     """

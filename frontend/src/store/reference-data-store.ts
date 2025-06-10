@@ -35,18 +35,17 @@ export const useReferenceDataStore = create<ReferenceDataState>()(
         let page = 1;
         while (true) {
           try {
-            const data = await bossesApi.getAllBosses({ page, page_size: pageSize });
+            const data = await bossesApi.getBossesWithForms({ page, page_size: pageSize });
             if (!data.length) break;
             set((state) => ({ bosses: [...state.bosses, ...data] }));
+            const formsMap: Record<number, BossForm[]> = {};
             for (const b of data) {
-              try {
-                const forms = await bossesApi.getBossForms(b.id);
-                if (forms.length) {
-                  set((state) => ({ bossForms: { ...state.bossForms, [b.id]: forms } }));
-                }
-              } catch {
-                /* ignore */
+              if (b.forms && b.forms.length) {
+                formsMap[b.id] = b.forms;
               }
+            }
+            if (Object.keys(formsMap).length) {
+              set((state) => ({ bossForms: { ...state.bossForms, ...formsMap } }));
             }
             if (data.length < pageSize) break;
             page += 1;
