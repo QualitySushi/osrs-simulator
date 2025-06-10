@@ -342,19 +342,20 @@ class AzureSQLDatabaseService:
                 query += " OFFSET ? ROWS FETCH NEXT ? ROWS ONLY"
                 params.extend([off, limit])
 
-                cursor.execute(query, params)
+            cursor.execute(query, params)
 
-                items = []
-                for row in cursor.fetchall():
-                    # Parse icons JSON
-                    icons = []
-                    if row[7]:  # icons column
-                        try:
-                            icons = json.loads(row[7])
-                        except:
-                            pass
+            items = []
+            for row in cursor.fetchall():
+                # Parse icons JSON
+                icons = []
+                if row[7]:  # icons column
+                    try:
+                        icons = json.loads(row[7])
+                    except Exception:
+                        pass
 
-                    items.append({
+                items.append(
+                    {
                         "id": row[0],
                         "name": row[1],
                         "has_special_attack": bool(row[2]),
@@ -363,9 +364,10 @@ class AzureSQLDatabaseService:
                         "is_tradeable": bool(row[5]),
                         "slot": row[6],
                         "icons": icons,
-                    })
+                    }
+                )
 
-                return items
+            return items
             
         except Exception as e:
             print(f"Error getting items: {e}")
