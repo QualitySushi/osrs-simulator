@@ -1,0 +1,655 @@
+[
+  {
+    "weapon_name": "3rd age axe",
+    "effect": "The 3rd age axe has a special attack , Lumber Up , that it shares with the dragon , infernal , and crystal axes and their variants. It temporarily boosts the player's Woodcutting level by 3, consuming 100% of the player's special attack energy. The boost degrades every 60 seconds, with the player's Woodcutting level returning to normal after 3 minutes. Using Preserve can increase the duration by 50%. The special attack can be used to allow players to chop with the axe itself starting at level 58 Woodcutting, although it cannot be used without the level 65 Attack required to wield the axe. Note that any levels boosted above 99 with the special attack will be treated as 99. Therefore, you will start to receive diminishing returns with the special attack at level 97 and 98 [1] , with visible boosts past level 99 only influencing the pet and clue nest chances. [2]",
+    "icon_url": "https://oldschool.runescape.wiki/images/3rd_age_axe.png?6fa46",
+    "special_cost": 100,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "skill_boosts": [
+        {
+          "skill": "woodcutting",
+          "amount": 3
+        }
+      ]
+    },
+    "combat_stats": {
+      "attack_bonuses": {
+        "stab": -2,
+        "slash": 38,
+        "crush": 32,
+        "magic": 0,
+        "ranged": 0
+      },
+      "defence_bonuses": {
+        "stab": 0,
+        "slash": 1,
+        "crush": 0,
+        "magic": 0,
+        "ranged": 0
+      },
+      "other_bonuses": {
+        "strength": 42,
+        "ranged_strength": 0,
+        "magic_damage": "+0%",
+        "prayer": 0
+      },
+      "combat_styles": [],
+      "slot": null
+    },
+    "last_updated": "2025-06-10 06:32:39",
+    "parser_version": "3.0"
+  },
+  {
+    "weapon_name": "3rd age felling axe",
+    "effect": "The 3rd age felling axe has a special attack , Lumber Up , that it shares with the dragon , infernal , 3rd age , and crystal axes and their variants. It temporarily boosts the player's Woodcutting level by 3, consuming 100% of the player's special attack energy. The boost degrades every 60 seconds, with the player's Woodcutting level returning to normal after 3 minutes. Using Preserve can increase the duration by 50%. The special attack can be used to allow players to chop with the axe itself starting at level 58 Woodcutting, although it cannot be used without the level 65 Attack required to wield the axe. Note that any levels boosted above 99 with the special attack will be treated as 99. Therefore, you will start to receive diminishing returns with the special attack at level 97 and 98 [1] , with visible boosts past level 99 only influencing the pet and clue nest chances. [2]",
+    "icon_url": "https://oldschool.runescape.wiki/images/3rd_age_felling_axe.png?2d377",
+    "special_cost": 100,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "skill_boosts": [
+        {
+          "skill": "woodcutting",
+          "amount": 3
+        }
+      ]
+    },
+    "combat_stats": {
+      "attack_bonuses": {
+        "stab": -3,
+        "slash": 60,
+        "crush": 51,
+        "magic": 0,
+        "ranged": 0
+      },
+      "defence_bonuses": {
+        "stab": 0,
+        "slash": 1,
+        "crush": 0,
+        "magic": 0,
+        "ranged": 0
+      },
+      "other_bonuses": {
+        "strength": 67,
+        "ranged_strength": 0,
+        "magic_damage": "+0%",
+        "prayer": 0
+      },
+      "combat_styles": [],
+      "slot": "2h"
+    },
+    "last_updated": "2025-06-10 06:32:40",
+    "parser_version": "3.0"
+  },
+  {
+    "weapon_name": "Abyssal bludgeon",
+    "effect": "The abyssal bludgeon has a special attack , Penance , which increases damage dealt by 0.5% for every prayer point that the wielder is missing, consuming 50% of the wielder's special attack energy.",
+    "icon_url": "https://oldschool.runescape.wiki/images/Abyssal_bludgeon.png?b10f5",
+    "special_cost": 50,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {},
+    "combat_stats": {
+      "attack_bonuses": {
+        "stab": 0,
+        "slash": 0,
+        "crush": 102,
+        "magic": 0,
+        "ranged": 0
+      },
+      "defence_bonuses": {
+        "stab": 0,
+        "slash": 0,
+        "crush": 0,
+        "magic": 0,
+        "ranged": 0
+      },
+      "other_bonuses": {
+        "strength": 85,
+        "ranged_strength": 0,
+        "magic_damage": "+0%",
+        "prayer": 0
+      },
+      "combat_styles": [],
+      "slot": "2h"
+    },
+    "last_updated": "2025-06-10 06:32:41",
+    "parser_version": "3.0"
+  },
+  {
+    "weapon_name": "Abyssal dagger",
+    "effect": "The abyssal dagger has a special attack , Abyssal Puncture , which hits twice in quick succession with a 25% increase in accuracy and 15% reduced damage, consuming 25% of the player's special attack energy. A single attack roll is performed, meaning that either both hits are successful, or both hits miss. The damage calculation rolls against the opponent's slash defence. The highest the dagger can possibly hit with its special attack is 44-44 against players and 50-50 while using a salve amulet (e) against undead creatures. The abyssal dagger's special attack is notably weaker than the dragon dagger 's; this is evident when comparing the abyssal dagger's max hit of 44-44, to the dragon dagger's max hit of 50-50. However, it is more accurate against higher defence monsters due to its higher attack bonuses. This makes it a more accurate option at the cost of max hits.",
+    "icon_url": "https://oldschool.runescape.wiki/images/Abyssal_dagger.png?c04be",
+    "special_cost": 25,
+    "accuracy_multiplier": 1.25,
+    "damage_multiplier": 0.85,
+    "hit_count": 2,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {},
+    "combat_stats": {
+      "attack_bonuses": {
+        "stab": 75,
+        "slash": 40,
+        "crush": -4,
+        "magic": 1,
+        "ranged": 0
+      },
+      "defence_bonuses": {
+        "stab": 0,
+        "slash": 0,
+        "crush": 0,
+        "magic": 1,
+        "ranged": 0
+      },
+      "other_bonuses": {
+        "strength": 75,
+        "ranged_strength": 0,
+        "magic_damage": "+0%",
+        "prayer": 0
+      },
+      "combat_styles": [],
+      "slot": null
+    },
+    "last_updated": "2025-06-10 06:32:42",
+    "parser_version": "3.0"
+  },
+  {
+    "weapon_name": "Abyssal tentacle",
+    "effect": "The abyssal tentacle has a special attack , Binding Tentacle , which consumes 50% of the player's special attack energy. Regardless of whether the hit is successful , the target will be bound for 5 seconds, and there will be approximately a 50% chance of applying poison, starting at 4 damage.",
+    "icon_url": "https://oldschool.runescape.wiki/images/Abyssal_tentacle.png?c04be",
+    "special_cost": 50,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "binding": {
+        "type": "bind",
+        "duration": 5.0
+      }
+    },
+    "combat_stats": {
+      "attack_bonuses": {
+        "stab": 0,
+        "slash": 90,
+        "crush": 0,
+        "magic": 0,
+        "ranged": 0
+      },
+      "defence_bonuses": {
+        "stab": 0,
+        "slash": 0,
+        "crush": 0,
+        "magic": 0,
+        "ranged": 0
+      },
+      "other_bonuses": {
+        "strength": 86,
+        "ranged_strength": 0,
+        "magic_damage": "+0%",
+        "prayer": 0
+      },
+      "combat_styles": [],
+      "slot": null
+    },
+    "last_updated": "2025-06-10 06:32:43",
+    "parser_version": "3.0"
+  },
+  {
+    "weapon_name": "Abyssal whip",
+    "effect": "The abyssal whip has a special attack , Energy Drain , which consumes 50% of the player's special attack energy, increases accuracy by 25%, and in PvP , transfers 10% of the target's run energy to the wielder. The target player will receive the message, \"You feel drained!\" in their chat window. The accuracy roll for Energy Drain is made against an opponents slash defence. [1]",
+    "icon_url": "https://oldschool.runescape.wiki/images/Abyssal_whip.png?727e9",
+    "special_cost": 50,
+    "accuracy_multiplier": 1.5,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {},
+    "combat_stats": {
+      "attack_bonuses": {
+        "stab": 0,
+        "slash": 82,
+        "crush": 0,
+        "magic": 0,
+        "ranged": 0
+      },
+      "defence_bonuses": {
+        "stab": 0,
+        "slash": 0,
+        "crush": 0,
+        "magic": 0,
+        "ranged": 0
+      },
+      "other_bonuses": {
+        "strength": 82,
+        "ranged_strength": 0,
+        "magic_damage": "+0%",
+        "prayer": 0
+      },
+      "combat_styles": [],
+      "slot": null
+    },
+    "last_updated": "2025-06-10 06:32:44",
+    "parser_version": "3.0"
+  },
+  {
+    "weapon_name": "Accursed sceptre",
+    "effect": "The accursed sceptre has a special attack , Condemn , which consumes 50% of the player's special attack energy and 1 revenant ether (whether it hits or not). The special attack hits an enemy with a 50% increase to max hit and accuracy, and upon a successful hit , also drains the target's Defence and Magic by 15%, regardless of the damage inflicted. [1] If the target's levels have already been reduced Condemn will only drain them to a maximum of 15%. As a result, multiple special attacks do not stack. For example, a target with level 80 Defence and Magic cannot have their stats drained lower than 68 if using Condemn.",
+    "icon_url": "https://oldschool.runescape.wiki/images/Accursed_sceptre_%28u%29.png?7a41c",
+    "special_cost": 50,
+    "accuracy_multiplier": 1.5,
+    "damage_multiplier": 1.5,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "stat_drains": [
+        {
+          "type": "general",
+          "description": "Drains opponent stats (details not parsed)"
+        }
+      ]
+    },
+    "combat_stats": {
+      "attack_bonuses": {
+        "stab": 0,
+        "slash": 0,
+        "crush": 0,
+        "magic": 22,
+        "ranged": 0
+      },
+      "defence_bonuses": {
+        "stab": 0,
+        "slash": 0,
+        "crush": 0,
+        "magic": 20,
+        "ranged": 0
+      },
+      "other_bonuses": {
+        "strength": 0,
+        "ranged_strength": 0,
+        "magic_damage": "+0%",
+        "prayer": 0
+      },
+      "combat_styles": [],
+      "slot": null
+    },
+    "last_updated": "2025-06-10 06:32:44",
+    "parser_version": "3.0"
+  },
+  {
+    "weapon_name": "Ancient godsword",
+    "effect": "Like all godswords, the ancient godsword has a special attack : Blood Sacrifice . In addition to doubled accuracy, it inflicts damage with a 10% higher maximum hit than a normal attack, consuming 50% of the player's special attack energy. Upon a successful hit , the target will be marked for sacrifice and will have eight ticks (4.8 seconds) to move at least five tiles away from the attacker. If the target fails to do so, they will take 25 magic damage, and the attacker will be healed for 15% of the target's max Hitpoints level, up to a cap of 25 against NPCs and 15 against players. The sacrifice must deal the full 25 damage in order to receive the full healing effect, otherwise the attacker will only be healed for the damage done by the sacrifice up to the max of 15%. Praying Protect from Magic will not reduce the sacrifice damage. The magic damage will always hit 0 on cyclopes in the Warriors' Guild , as with all non-melee damage there. It is possible to stack the special attack on the same target, dealing 25 damage before the effect of the second special attack activates, resulting in a total damage of 50.",
+    "icon_url": "https://oldschool.runescape.wiki/images/Ancient_godsword.png?d99b1",
+    "special_cost": 50,
+    "accuracy_multiplier": 2.0,
+    "damage_multiplier": 1.1,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "healing": {
+        "type": "percentage_damage",
+        "value": 15,
+        "cap": 25
+      }
+    },
+    "combat_stats": {
+      "attack_bonuses": {
+        "stab": 0,
+        "slash": 132,
+        "crush": 80,
+        "magic": 0,
+        "ranged": 0
+      },
+      "defence_bonuses": {
+        "stab": 0,
+        "slash": 0,
+        "crush": 0,
+        "magic": 0,
+        "ranged": 0
+      },
+      "other_bonuses": {
+        "strength": 132,
+        "ranged_strength": 0,
+        "magic_damage": "+0%",
+        "prayer": 8
+      },
+      "combat_styles": [],
+      "slot": "2h"
+    },
+    "last_updated": "2025-06-10 06:32:45",
+    "parser_version": "3.0"
+  },
+  {
+    "weapon_name": "Ancient mace",
+    "effect": "The ancient mace has a special attack , Favour of the War God , requiring 100% special attack energy, that hits through Protect from Melee and drains the Prayer points of the opponent by 100% of the amount hit, recharging the user's prayer points by the same amount. This can raise your current Prayer points to above your maximum Prayer level - up to the amount of damage inflicted by the attack. The accuracy roll of the special attack is based on the attack bonus of the player's current style, which is rolled against an enemy's crush defence. [2] The special attack will restore prayer even if used against a target that has immunity to conventional weaponry such as Turoths and Kurasks , making this a useful special attack on slayer trips for restoring prayer. It is a useful tool while in the Nightmare Zone for restoring prayer after activating a power surge power-up, which gives the player infinite special attack energy. To maximise the number of prayer points restored, activating a strength-boosting prayer and drinking strength boosting potions before using the special attack is advised.",
+    "icon_url": "https://oldschool.runescape.wiki/images/Ancient_mace.png?0b6b6",
+    "special_cost": 100,
+    "accuracy_multiplier": 2.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "prayer": {
+        "restore": {
+          "type": "damage_based"
+        },
+        "drain": {
+          "type": "damage_based"
+        }
+      }
+    },
+    "combat_stats": {
+      "attack_bonuses": {
+        "stab": 10,
+        "slash": -2,
+        "crush": 16,
+        "magic": 0,
+        "ranged": 0
+      },
+      "defence_bonuses": {
+        "stab": 0,
+        "slash": 0,
+        "crush": 0,
+        "magic": 0,
+        "ranged": 0
+      },
+      "other_bonuses": {
+        "strength": 14,
+        "ranged_strength": 0,
+        "magic_damage": "+0%",
+        "prayer": 3
+      },
+      "combat_styles": [],
+      "slot": null
+    },
+    "last_updated": "2025-06-10 06:32:46",
+    "parser_version": "3.0"
+  },
+  {
+    "weapon_name": "Arclight",
+    "effect": "Arclight retains Darklight's special attack , Weaken , which consumes 50% of the player's special attack energy and lowers the opponent's Strength , Attack , and Defence levels by 5% (10% for demons ) of their base level + 1. [1] The accuracy roll for Weaken is made against an opponent's stab defence, [2] and its drain effect only applies to successful hits . Weaken will stack additively upon successful hits unlike the dragon warhammer , which stacks multiplicatively. Two successful special attacks thus reduce an opponent's Strength, Attack and Defence by 10% + 2, or 20% + 2 against demonic targets.",
+    "icon_url": "https://oldschool.runescape.wiki/images/Arclight_%28inactive%29.png?2f1b2",
+    "special_cost": 50,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "stat_drains": [
+        {
+          "stat": "strength",
+          "percentage": 5
+        },
+        {
+          "stat": "attack",
+          "percentage": 5
+        },
+        {
+          "stat": "defence",
+          "percentage": 5
+        }
+      ]
+    },
+    "combat_stats": {
+      "attack_bonuses": {
+        "stab": 10,
+        "slash": 16,
+        "crush": -2,
+        "magic": 0,
+        "ranged": 0
+      },
+      "defence_bonuses": {
+        "stab": 0,
+        "slash": 3,
+        "crush": 2,
+        "magic": 2,
+        "ranged": 0
+      },
+      "other_bonuses": {
+        "strength": 13,
+        "ranged_strength": 0,
+        "magic_damage": "+0%",
+        "prayer": 0
+      },
+      "combat_styles": [],
+      "slot": null
+    },
+    "last_updated": "2025-06-10 06:32:47",
+    "parser_version": "3.0"
+  },
+  {
+    "weapon_name": "Armadyl crossbow",
+    "effect": "The Armadyl crossbow has a special attack , Armadyl Eye , which consumes 50% of the player's special attack energy. Armadyl Eye will, for one shot, double the player's overall accuracy (level + gear accuracy), as well as doubling the base chance of an enchanted bolt 's special effect to occur. For example, when performing the special attack with enchanted diamond bolts , the bolt's special effect, Armour Piercing , would have a 20% chance of activating instead of 10%. If the Hard Kandarin Diary has been completed, the additional chance given from the diary reward is also added, [1] meaning the chance of activating for that shot is increased from 10% to a total of 21%.",
+    "icon_url": "https://oldschool.runescape.wiki/images/Armadyl_crossbow.png?c60fb",
+    "special_cost": 50,
+    "accuracy_multiplier": 2.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {},
+    "combat_stats": {
+      "attack_bonuses": {
+        "stab": 0,
+        "slash": 0,
+        "crush": 0,
+        "magic": 0,
+        "ranged": 100
+      },
+      "defence_bonuses": {
+        "stab": 0,
+        "slash": 0,
+        "crush": 0,
+        "magic": 0,
+        "ranged": 0
+      },
+      "other_bonuses": {
+        "strength": 0,
+        "ranged_strength": 0,
+        "magic_damage": "+0%",
+        "prayer": 1
+      },
+      "combat_styles": [],
+      "slot": null
+    },
+    "last_updated": "2025-06-10 06:32:48",
+    "parser_version": "3.0"
+  },
+  {
+    "weapon_name": "Armadyl crossbow (Last Man Standing)",
+    "effect": "The Armadyl crossbow has a special attack , Armadyl Eye , which consumes 50% of the player's special attack energy. Armadyl Eye will, for one shot, doubles the player's overall accuracy (level + gear accuracy), as well as the chance of an enchanted bolt 's special effect to occur. For example, when performing the special attack with enchanted diamond bolts , the bolt's special effect, Armour Piercing , would have a 20% chance of activating instead of 10%. If the Hard Kandarin Diary has been completed, the chance of activating for that shot is increased from 11% to 21%.",
+    "icon_url": "https://oldschool.runescape.wiki/images/Armadyl_crossbow_%28Last_Man_Standing%29.png?e56f0",
+    "special_cost": 50,
+    "accuracy_multiplier": 2.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {},
+    "combat_stats": {
+      "attack_bonuses": {
+        "stab": 0,
+        "slash": 0,
+        "crush": 0,
+        "magic": 0,
+        "ranged": 100
+      },
+      "defence_bonuses": {
+        "stab": 0,
+        "slash": 0,
+        "crush": 0,
+        "magic": 0,
+        "ranged": 0
+      },
+      "other_bonuses": {
+        "strength": 0,
+        "ranged_strength": 0,
+        "magic_damage": "+0%",
+        "prayer": 1
+      },
+      "combat_styles": [],
+      "slot": null
+    },
+    "last_updated": "2025-06-10 06:32:49",
+    "parser_version": "3.0"
+  },
+  {
+    "weapon_name": "Armadyl godsword",
+    "effect": "Like all godswords, the Armadyl godsword has a special attack , The Judgement . In addition to doubled accuracy, it inflicts damage with a 37.5% higher maximum hit than a normal attack (125% multiplied by the hidden 110% every godsword special possesses, the calculation uses integer values after the multiplication of 1.1 the value gets rounded down and then multiplied by 1.25), consuming 50% of the player's special attack energy. The Judgement rolls against the opponent's slash defence roll. The Judgement is capable of dealing a very large amount of damage; under ideal conditions, a player can potentially deal over 70 damage to a monster with the special attack, or just over 90 damage when utilising the effects of a black mask or a Castle wars bracelet . Because of this, the Armadyl godsword is very popular for many combat situations. In PvP scenarios the Armadyl godsword is most commonly used as a \"knock-out\" weapon, as the special is often capable of finishing an injured player in one large blow. In PvM scenarios its high hits are advantageous when fighting boss monsters such as General Graardor , especially when several players are competing to deal the most damage in order to secure a drop. The special attack animation 's colours can be changed to gold, which costs 75 Last Man Standing points. Once unlocked, the gold trim can be toggled at Justine's stuff for the Last Shopper Standing whenever the player desires.",
+    "icon_url": "https://oldschool.runescape.wiki/images/Armadyl_godsword.png?e56f0",
+    "special_cost": 50,
+    "accuracy_multiplier": 2.0,
+    "damage_multiplier": 1.05,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {},
+    "combat_stats": {
+      "attack_bonuses": {
+        "stab": 0,
+        "slash": 132,
+        "crush": 80,
+        "magic": 0,
+        "ranged": 0
+      },
+      "defence_bonuses": {
+        "stab": 0,
+        "slash": 0,
+        "crush": 0,
+        "magic": 0,
+        "ranged": 0
+      },
+      "other_bonuses": {
+        "strength": 132,
+        "ranged_strength": 0,
+        "magic_damage": "+0%",
+        "prayer": 8
+      },
+      "combat_styles": [],
+      "slot": "2h"
+    },
+    "last_updated": "2025-06-10 06:32:50",
+    "parser_version": "3.0"
+  },
+  {
+    "weapon_name": "Armadyl godsword (Last Man Standing)",
+    "effect": "The Armadyl godsword has a special attack , The Judgement . In addition to doubled accuracy, it inflicts damage with a 37.5% (125% multiplied by the hidden 110% every godsword special possesses, the calculation uses integer values after the multiplication of 1.1 the value gets rounded down and then multiplied by 1.25) higher maximum hit than a normal attack, consuming 50% of the player's special attack energy. The Judgement is capable of dealing a very large amount of damage; under ideal conditions, a player can potentially deal over 70 damage in a single blow. In PvP scenarios the Armadyl godsword is most commonly used as a \"knock-out\" weapon, as the special is often capable of finishing an injured player in one large blow.",
+    "icon_url": "https://oldschool.runescape.wiki/images/Armadyl_godsword_%28Last_Man_Standing%29.png?e56f0",
+    "special_cost": 50,
+    "accuracy_multiplier": 2.0,
+    "damage_multiplier": 1.05,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {},
+    "combat_stats": {
+      "attack_bonuses": {
+        "stab": 0,
+        "slash": 132,
+        "crush": 80,
+        "magic": 0,
+        "ranged": 0
+      },
+      "defence_bonuses": {
+        "stab": 0,
+        "slash": 0,
+        "crush": 0,
+        "magic": 0,
+        "ranged": 0
+      },
+      "other_bonuses": {
+        "strength": 132,
+        "ranged_strength": 0,
+        "magic_damage": "+0%",
+        "prayer": 8
+      },
+      "combat_styles": [],
+      "slot": "2h"
+    },
+    "last_updated": "2025-06-10 06:32:50",
+    "parser_version": "3.0"
+  },
+  {
+    "weapon_name": "Bandos godsword",
+    "effect": "The Bandos godsword's special attack , Warstrike , has doubled accuracy, inflicts 21% more damage and drains the opponent's combat levels equivalent to the damage hit in the following order: Defence , Strength , Prayer , Attack , Magic , Ranged . Warstrike consumes 50% of the wielder's special attack energy. Warstrike rolls against the opponent's slash defence roll. For example, if Warstrike inflicts 50 damage on a foe with 30 in all combat stats, it would drain 30 Defence and 20 Strength levels (leaving the target with 0 Defence and 10 Strength). Against Tekton , it drains his combat skills by 10 (following the stat drain order) if it fails to hit. The special attack is similar in effect to the Dorgeshuun crossbow , bone dagger , dragon warhammer , elder maul , barrelchest anchor , and darklight . The special attack animation 's colours can be changed to gold, which costs 75 Last Man Standing points. Once unlocked, the gold trim can be toggled at Justine's stuff for the Last Shopper Standing whenever the player desires.",
+    "icon_url": "https://oldschool.runescape.wiki/images/Bandos_godsword.png?22c06",
+    "special_cost": 50,
+    "accuracy_multiplier": 2.0,
+    "damage_multiplier": 1.21,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "stat_drains": [
+        {
+          "type": "damage_based",
+          "description": "Drains combat stats equal to damage dealt"
+        }
+      ],
+      "prayer": {
+        "drain": {
+          "type": "damage_based"
+        }
+      }
+    },
+    "combat_stats": {
+      "attack_bonuses": {
+        "stab": 0,
+        "slash": 132,
+        "crush": 80,
+        "magic": 0,
+        "ranged": 0
+      },
+      "defence_bonuses": {
+        "stab": 0,
+        "slash": 0,
+        "crush": 0,
+        "magic": 0,
+        "ranged": 0
+      },
+      "other_bonuses": {
+        "strength": 132,
+        "ranged_strength": 0,
+        "magic_damage": "+0%",
+        "prayer": 8
+      },
+      "combat_styles": [],
+      "slot": "2h"
+    },
+    "last_updated": "2025-06-10 06:32:51",
+    "parser_version": "3.0"
+  }
+]
