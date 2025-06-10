@@ -19,6 +19,15 @@ def _load_all_bosses() -> List[Dict[str, Any]]:
     return bosses
 
 
+async def _load_all_bosses_async() -> List[Dict[str, Any]]:
+    """Async helper to load all bosses and cache them."""
+    bosses = _all_bosses_cache.get("all")
+    if bosses is None:
+        bosses = await db_service.get_all_bosses_async()
+        _all_bosses_cache["all"] = bosses
+    return bosses
+
+
 def get_all_bosses(
     limit: int | None = None, offset: int | None = None
 ) -> List[Dict[str, Any]]:
@@ -53,11 +62,27 @@ def search_bosses(query: str, limit: int | None = None) -> List[Dict[str, Any]]:
 async def get_all_bosses_async(
     limit: int | None = None, offset: int | None = None
 ) -> List[Dict[str, Any]]:
-    return await db_service.get_all_bosses_async(limit=limit, offset=offset)
+    """Async version of :func:`get_all_bosses` with caching."""
+    bosses = await _load_all_bosses_async()
+
+    if limit is not None or offset is not None:
+        off = offset or 0
+        if limit is None:
+            return bosses[off:]
+        return bosses[off : off + limit]
+    return bosses
 
 
 async def get_boss_async(boss_id: int) -> Optional[Dict[str, Any]]:
-    return await db_service.get_boss_async(boss_id)
+    """Async version of :func:`get_boss` with cache fallback."""
+    boss = _boss_cache.get(boss_id)
+    if boss is not None:
+        return boss
+
+    boss = await db_service.get_boss_async(boss_id)
+    if boss is not None:
+        _boss_cache[boss_id] = boss
+    return boss
 
 
 async def get_boss_by_form_async(form_id: int) -> Optional[Dict[str, Any]]:
