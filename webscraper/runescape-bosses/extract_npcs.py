@@ -18,6 +18,13 @@ HEADERS = {
 RESUME_FILE = "npc_resume.txt"
 NPC_LIST_FILE = "valid_npcs.json"
 
+# When not using the SQLite database we aggregate the scraped data
+# and write it to this JSON file at the end.
+OUTPUT_JSON = "npcs_data.json"
+
+# List that will store the results before writing them to disk.
+npcs_output = []
+
 # === Manual Raid Boss Grouping ===
 RAID_BOSS_GROUPS = {
     "Maiden of Sugadinti": "Theatre of Blood",
@@ -440,7 +447,7 @@ def extract_npc_forms(soup, npc_name):
                 if src not in icons:
                     icons.append(src)
             if icons:
-                form_data['icons'] = json.dumps(icons)
+                form_data['icons'] = icons
 
             forms.append(form_data)
 
@@ -449,79 +456,13 @@ def extract_npc_forms(soup, npc_name):
 
     return forms, examine_texts
 
-def save_npc(conn, cursor, npc_data, forms_data):
-    """Save NPC data to the database"""
-    try:
-        # Insert or update main NPC record
-        cursor.execute("""
-            INSERT OR REPLACE INTO npcs 
-            (id, name, raid_group, examine, release_date, location, slayer_level, slayer_xp, slayer_category, 
-             wiki_url, has_multiple_forms, raw_html, last_updated)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
-        """, (
-            npc_data['id'],
-            npc_data.get('name'),
-            npc_data.get('raid_group'),
-            npc_data.get('examine'),
-            npc_data.get('release_date'),
-            npc_data.get('location'),
-            npc_data.get('slayer_level'),
-            npc_data.get('slayer_xp'),
-            npc_data.get('slayer_category'),
-            npc_data.get('wiki_url'),
-            npc_data.get('has_multiple_forms', False),
-            npc_data.get('raw_html')
-        ))
-        
-        # Clear existing forms
-        cursor.execute("DELETE FROM npc_forms WHERE npc_id = ?", (npc_data['id'],))
-        
-        # Insert forms
-        if forms_data:
-            for form_index, form_data in enumerate(forms_data):
-                cursor.execute("""
-                    INSERT INTO npc_forms 
-                    (npc_id, form_name, form_order, combat_level, hitpoints, max_hit, attack_speed, 
-                     attack_style, attack_level, strength_level, defence_level, magic_level, 
-                     ranged_level, aggressive_attack_bonus, aggressive_strength_bonus, 
-                     aggressive_magic_bonus, aggressive_magic_strength_bonus, aggressive_ranged_bonus, 
-                     aggressive_ranged_strength_bonus, defence_stab, defence_slash, defence_crush, 
-                     defence_magic, elemental_weakness_type, elemental_weakness_percent, 
-                     defence_ranged_light, defence_ranged_standard, defence_ranged_heavy, 
-                     attribute, xp_bonus, aggressive, poisonous, poison_immunity, venom_immunity, 
-                     melee_immunity, magic_immunity, ranged_immunity, cannon_immunity, 
-                     thrall_immunity, special_mechanics, image_url, icons, size, assigned_by)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                """, (
-                    npc_data['id'], form_data.get('form_name', 'Default'), form_index + 1,
-                    form_data.get('combat_level'), form_data.get('hitpoints'), form_data.get('max_hit'),
-                    form_data.get('attack_speed'), form_data.get('attack_style'), 
-                    form_data.get('attack_level'), form_data.get('strength_level'),
-                    form_data.get('defence_level'), form_data.get('magic_level'),
-                    form_data.get('ranged_level'), form_data.get('aggressive_attack_bonus'),
-                    form_data.get('aggressive_strength_bonus'), form_data.get('aggressive_magic_bonus'),
-                    form_data.get('aggressive_magic_strength_bonus'), form_data.get('aggressive_ranged_bonus'),
-                    form_data.get('aggressive_ranged_strength_bonus'), form_data.get('defence_stab'),
-                    form_data.get('defence_slash'), form_data.get('defence_crush'),
-                    form_data.get('defence_magic'), form_data.get('elemental_weakness_type'),
-                    form_data.get('elemental_weakness_percent'), form_data.get('defence_ranged_light'),
-                    form_data.get('defence_ranged_standard'), form_data.get('defence_ranged_heavy'),
-                    form_data.get('attribute'), form_data.get('xp_bonus'), form_data.get('aggressive'),
-                    form_data.get('poisonous'), form_data.get('poison_immunity'),
-                    form_data.get('venom_immunity'), form_data.get('melee_immunity'),
-                    form_data.get('magic_immunity'), form_data.get('ranged_immunity'),
-                    form_data.get('cannon_immunity'), form_data.get('thrall_immunity'),
-                    form_data.get('special_mechanics'), form_data.get('image_url'),
-                    form_data.get('icons'), form_data.get('size'), form_data.get('assigned_by')
-                ))
-        
-        conn.commit()
-        log(f"Saved NPC {npc_data['id']}: {npc_data.get('name')} with {len(forms_data)} forms", "SUCCESS")
-        return True
-    except Exception as e:
-        conn.rollback()
-        log(f"Failed to save NPC {npc_data.get('id')}: {e}", "ERROR")
-        return False
+def save_npc(npc_data, forms_data):
+    """Store scraped NPC data in the global list for JSON export."""
+    npc_record = npc_data.copy()
+    npc_record["forms"] = forms_data
+    npcs_output.append(npc_record)
+    log(f"Saved NPC {npc_data['id']}: {npc_data.get('name')} with {len(forms_data)} forms", "SUCCESS")
+    return True
 
 def get_npc_data(npc_id, npc_name, wiki_url=None):
     """Fetch data for a single NPC using either the wiki URL or NPC name"""
@@ -626,9 +567,7 @@ def get_npc_data(npc_id, npc_name, wiki_url=None):
 def main():
     log("=== OSRS NPC Scraper Started ===")
     
-    # Initialize database
-    conn, cursor = init_db()
-    log("Database initialized")
+    # No database required when exporting to JSON
     
     # Load NPC list
     npcs = load_npc_list()
@@ -647,7 +586,7 @@ def main():
     for i, npc in enumerate(npcs):
         npc_id = npc["id"]
         npc_name = npc["name"]
-        wiki_url = npc.get("wiki_url")
+        wiki_url = npc.get("wiki_url") or npc.get("link") or npc.get("url")
         
         # Resume logic
         if resume_point and not should_resume:
@@ -660,23 +599,12 @@ def main():
         log(f"Processing [{i+1}/{len(npcs)}]: ID {npc_id} - {npc_name}")
         processed_count += 1
         
-        # Check if NPC already exists and is recent
-        cursor.execute("""
-            SELECT last_updated FROM npcs 
-            WHERE id = ? AND last_updated > datetime('now', '-7 days')
-        """, (npc_id,))
-        
-        if cursor.fetchone():
-            log(f"Skipping {npc_id} (recently updated)")
-            save_resume(npc_id)
-            continue
-        
         # Get NPC data
         npc_data, forms_data = get_npc_data(npc_id, npc_name, wiki_url)
         
         if npc_data and forms_data:
-            # Save to database
-            success = save_npc(conn, cursor, npc_data, forms_data)
+            # Record the NPC for JSON output
+            success = save_npc(npc_data, forms_data)
             if success:
                 success_count += 1
         else:
@@ -692,33 +620,12 @@ def main():
         if processed_count % 100 == 0:
             log(f"Progress: {processed_count} processed, {success_count} successful")
     
-    # Final database stats
+    # Final stats and write to JSON file
     log("=== Scraping Complete ===")
-    cursor.execute("SELECT COUNT(*) FROM npcs")
-    npc_count = cursor.fetchone()[0]
-    cursor.execute("SELECT COUNT(*) FROM npc_forms")
-    form_count = cursor.fetchone()[0]
-    
-    log(f"Results: {npc_count} NPCs, {form_count} forms, {success_count}/{processed_count} successful")
-    
-    # Data quality analysis
-    cursor.execute("""
-    SELECT 
-        COUNT(*) AS total_forms,
-        SUM(CASE WHEN hitpoints IS NULL THEN 1 ELSE 0 END) AS missing_hp,
-        SUM(CASE WHEN combat_level IS NULL THEN 1 ELSE 0 END) AS missing_combat,
-        SUM(CASE WHEN attack_level IS NULL THEN 1 ELSE 0 END) AS missing_atk,
-        SUM(CASE WHEN defence_level IS NULL THEN 1 ELSE 0 END) AS missing_def
-    FROM 
-        npc_forms
-    """)
-    stats = cursor.fetchone()
-    
-    if stats[0] > 0:
-        log(f"Data quality: Missing - Combat: {stats[2]}/{stats[0]} | HP: {stats[1]}/{stats[0]} | ATK: {stats[3]}/{stats[0]} | DEF: {stats[4]}/{stats[0]}")
-    
-    # Close database connection
-    conn.close()
+    log(f"Results: {success_count}/{processed_count} successful")
+
+    with open(OUTPUT_JSON, "w", encoding="utf-8") as f:
+        json.dump(npcs_output, f, ensure_ascii=False, indent=2)
     
     # Clean up resume file
     if os.path.exists(RESUME_FILE):

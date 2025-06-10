@@ -5,6 +5,7 @@ import logging
 import json
 import os
 import re
+from urllib.parse import unquote, urlparse
 from bs4 import BeautifulSoup
 
 # === Config ===
@@ -16,6 +17,10 @@ HEADERS = {"User-Agent": "osrs-item-scraper/1.0 (https://example.com; contact@ex
 DB_ALL = "osrs_all_items.db"
 DB_COMBAT = "osrs_combat_items.db"
 DB_TRADEABLE = "osrs_tradeable_items.db"
+
+# When running outside of the database mode we output the scraped
+# information to a single JSON file.
+OUTPUT_JSON = "items_data.json"
 
 # === Logging ===
 logging.basicConfig(
@@ -594,16 +599,31 @@ def extract_infobox_and_effects(html_content):
     return result, soup.prettify()
 
 
-def get_osrs_item_data(item_name):
+def extract_page_name_from_url(url):
+    """Extract the wiki page name from a full OSRS Wiki URL."""
+    if not url:
+        return None
+
+    parsed = urlparse(url)
+    path = parsed.path
+
+    if "/w/" in path:
+        return unquote(path.split("/w/")[-1])
+
+    return None
+
+
+def get_osrs_item_data(item_name, wiki_url=None):
     """Fetch an item's wiki page and parse its infobox and related data.
 
-    Item names in ``valid_items.json`` sometimes include a ``#Charged`` or
-    ``#Uncharged`` suffix to represent different charge states. Previously the
-    scraper passed these names directly to the wiki which returned the main page
-    for the item, so both variants ended up with identical stats.  To better
-    distinguish them we strip the suffix when requesting the page and, if the
-    item represents an uncharged variant, we explicitly clear any combat stats
-    extracted from the charged page.
+    ``wiki_url`` can be provided to specify the exact page to fetch. Item names
+    in ``valid_items.json`` sometimes include a ``#Charged`` or ``#Uncharged``
+    suffix to represent different charge states. Previously the scraper passed
+    these names directly to the wiki which returned the main page for the item,
+    so both variants ended up with identical stats. To better distinguish them
+    we strip the suffix when requesting the page and, if the item represents an
+    uncharged variant, we explicitly clear any combat stats extracted from the
+    charged page.
     """
 
     base_name = item_name
@@ -611,9 +631,17 @@ def get_osrs_item_data(item_name):
     if "#" in item_name:
         base_name, variant = item_name.split("#", 1)
 
+    if wiki_url:
+        page_name = extract_page_name_from_url(wiki_url)
+    else:
+        page_name = None
+
+    if not page_name:
+        page_name = base_name
+
     params = {
         "action": "parse",
-        "page": base_name.replace(" ", "_"),
+        "page": page_name.replace(" ", "_"),
         "prop": "text",
         "format": "json",
     }
@@ -841,6 +869,44 @@ def get_item_from_db(path, name):
     return None
 
 
+# === JSON Output ===
+items_output = []
+
+
+def record_item(
+    item_id,
+    name,
+    special,
+    special_text,
+    passive,
+    passive_text,
+    has_combat_stats,
+    tradeable,
+    slot,
+    icons,
+    combat_stats,
+    html,
+):
+    """Store a single scraped item in the global list for later JSON export."""
+
+    items_output.append(
+        {
+            "id": item_id,
+            "name": name,
+            "has_special_attack": bool(special),
+            "special_attack_text": special_text,
+            "has_passive_effect": bool(passive),
+            "passive_effect_text": passive_text,
+            "has_combat_stats": bool(has_combat_stats),
+            "is_tradeable": bool(tradeable),
+            "slot": slot,
+            "icons": icons,
+            "combat_stats": combat_stats,
+            "raw_html": html,
+        }
+    )
+
+
 # === Main Processing ===
 def process_all_items():
     with open(VALID_JSON, "r", encoding="utf-8") as f:
@@ -889,9 +955,10 @@ def process_all_items():
     for i, item in enumerate(items[index:], start=index):
         item_id = item["id"]
         name = item["name"]
+        wiki_url = item.get("wiki_url") or item.get("link") or item.get("url")
 
         log(f"[{i+1}/{len(items)}] {name} (ID: {item_id})")
-        parsed, raw_html = get_osrs_item_data(name)
+        parsed, raw_html = get_osrs_item_data(name, wiki_url)
         if not parsed:
             save_resume(i)
             continue
@@ -912,9 +979,8 @@ def process_all_items():
         special_text = parsed["special_attack"]
         passive_text = parsed["passive_effect"]
 
-        # Save to all DBs
-        save_to_db(
-            DB_ALL,
+        # Record item data for JSON output
+        record_item(
             item_id,
             name,
             has_special,
@@ -929,45 +995,15 @@ def process_all_items():
             raw_html,
         )
 
-        if has_special or has_passive or has_combat_stats:
-            save_to_db(
-                DB_COMBAT,
-                item_id,
-                name,
-                has_special,
-                special_text,
-                has_passive,
-                passive_text,
-                has_combat_stats,
-                is_tradeable,
-                slot,
-                parsed["icons"],
-                parsed["combat_stats"],
-                raw_html,
-            )
-
-        if is_tradeable:
-            save_to_db(
-                DB_TRADEABLE,
-                item_id,
-                name,
-                has_special,
-                special_text,
-                has_passive,
-                passive_text,
-                has_combat_stats,
-                is_tradeable,
-                slot,
-                parsed["icons"],
-                parsed["combat_stats"],
-                raw_html,
-            )
-
         log(
             f"✔ Saved. Special: {has_special}, Passive: {has_passive}, Stats: {has_stats}, Tradeable: {is_tradeable}, Slot: {slot}"
         )
         save_resume(i + 1)
         time.sleep(0.25)
+
+    # Write collected data to disk
+    with open(OUTPUT_JSON, "w", encoding="utf-8") as f:
+        json.dump(items_output, f, ensure_ascii=False, indent=2)
 
 
 # === Test just the Twisted bow and Dragon claws ===
@@ -1116,12 +1152,10 @@ def test_items():
 
 # === Entrypoint ===
 if __name__ == "__main__":
-    log("=== Initializing OSRS Multi-DB Scraper ===")
-    init_db(DB_ALL)
-    init_db(DB_COMBAT)
-    init_db(DB_TRADEABLE)
+    log("=== OSRS Item Scraper ===")
     process_all_items()
-    log("=== Done ===")
+    log(f"Wrote scraped data to {OUTPUT_JSON}")
+
 
     # Test specific items instead
     # test_items()
