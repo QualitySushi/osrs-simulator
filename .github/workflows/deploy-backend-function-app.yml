@@ -27,20 +27,9 @@ jobs:
       uses: actions/setup-python@v4
       with:
         python-version: ${{ env.PYTHON_VERSION }}
-        cache: 'pip'
-        cache-dependency-path: '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/requirements.txt'
 
-    - name: 'Create and start virtual environment'
-      run: |
-        cd ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
-        python -m venv venv
-        source venv/bin/activate
-
-    - name: 'Install dependencies'
-      run: |
-        cd ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
-        source venv/bin/activate
-        pip install -r requirements.txt
+    # Oryx on Azure will install dependencies from requirements.txt
+    # so we don't create or ship a virtualenv in the deployment package
 
     - name: 'Deploy to Azure App Service'
       uses: azure/webapps-deploy@v2
