@@ -17,6 +17,8 @@ from osrs_parser import (
     HealingExtractor,
     BindingExtractor,
     AreaOfEffectExtractor,
+    PrayerEffectExtractor,
+    SkillBoostExtractor,
     parse_special_attack
 )
 
@@ -341,6 +343,40 @@ class TestAreaOfEffectExtractor:
         assert result['radius'] == 2
 
 
+class TestPrayerEffectExtractor:
+    """Test prayer drain and restoration extraction"""
+
+    def setup_method(self):
+        self.extractor = PrayerEffectExtractor()
+
+    def test_percentage_restore(self):
+        text = "restoring the caster's prayer points by 50% of the damage dealt"
+        result = self.extractor.extract(text)
+        assert result['restore']['type'] == 'percentage_damage'
+        assert result['restore']['value'] == 50
+
+    def test_damage_based_drain_and_restore(self):
+        text = (
+            "drains the Prayer points of the opponent by 100% of the amount hit, "
+            "recharging the user's prayer points by the same amount"
+        )
+        result = self.extractor.extract(text)
+        assert result['restore']['type'] == 'damage_based'
+        assert result['drain']['type'] == 'damage_based'
+
+
+class TestSkillBoostExtractor:
+    """Test skill boost extraction"""
+
+    def setup_method(self):
+        self.extractor = SkillBoostExtractor()
+
+    def test_simple_boost(self):
+        text = "temporarily boosts the player's Woodcutting level by 3"
+        result = self.extractor.extract(text)
+        assert result == [{'skill': 'woodcutting', 'amount': 3}]
+
+
 class TestIntegrationCases:
     """Test complete parsing of known weapons"""
     
@@ -439,6 +475,43 @@ class TestIntegrationCases:
         assert result['accuracy_multiplier'] == 1.2
         assert result['special_mechanics']['area_of_effect']['type'] == 'multi_target'
         assert result['special_mechanics']['area_of_effect']['max_targets'] == 10
+
+    def test_eldritch_nightmare_staff(self):
+        """Test Eldritch nightmare staff prayer restoration"""
+        text = (
+            "The eldritch nightmare staff has a special attack that consumes 55% "
+            "special attack energy and restores the caster's prayer points by 50% "
+            "of the damage dealt."
+        )
+
+        result = parse_special_attack(text, "Eldritch nightmare staff")
+
+        assert result['special_cost'] == 55
+        assert result['special_mechanics']['prayer']['restore']['type'] == 'percentage_damage'
+        assert result['special_mechanics']['prayer']['restore']['value'] == 50
+
+    def test_ancient_mace(self):
+        """Test Ancient mace prayer drain and restore"""
+        text = (
+            "The ancient mace drains the Prayer points of the opponent by 100% of the amount hit, "
+            "recharging the user's prayer points by the same amount, consuming 100% special attack energy."
+        )
+
+        result = parse_special_attack(text, "Ancient mace")
+
+        assert result['special_cost'] == 100
+        assert result['special_mechanics']['prayer']['drain']['type'] == 'damage_based'
+        assert result['special_mechanics']['prayer']['restore']['type'] == 'damage_based'
+
+    def test_excalibur(self):
+        """Test Excalibur defence boost"""
+        text = "Excalibur has a special attack which temporarily increases the player's Defence by 8, consuming 100% special attack energy."
+
+        result = parse_special_attack(text, "Excalibur")
+
+        assert result['special_cost'] == 100
+        assert result['special_mechanics']['skill_boosts'][0]['skill'] == 'defence'
+        assert result['special_mechanics']['skill_boosts'][0]['amount'] == 8
 
 
 class TestEdgeCases:

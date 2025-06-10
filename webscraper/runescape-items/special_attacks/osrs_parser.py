@@ -4,6 +4,7 @@ Replace your osrs_parser.py with this exact code
 """
 
 import re
+
 from typing import Dict, Any, Optional, List, Tuple
 from dataclasses import dataclass
 from bs4 import BeautifulSoup
@@ -399,8 +400,41 @@ class HealingExtractor:
         # Flat healing
         if match := re.search(r'heals?.*?(\d+) (?:hitpoints|hp)', text_lower):
             return {'type': 'flat', 'value': int(match.group(1))}
-        
         return None
+
+class PrayerEffectExtractor:
+    """Extract prayer drain/restoration effects"""
+
+    def extract(self, text: str) -> Optional[Dict[str, Any]]:
+        if not text:
+            return None
+
+        text_lower = text.lower()
+        result: Dict[str, Any] = {}
+
+        if match := re.search(r'(?:restor(?:es|ing)|recharg(?:es|ing)).*?(\d+) prayer', text_lower):
+            result['restore'] = {'type': 'flat', 'value': int(match.group(1))}
+
+        if match := re.search(r'(?:restor(?:es|ing)|recharg(?:es|ing)).*?prayer.*?(\d+)%.*?damage', text_lower):
+            result['restore'] = {'type': 'percentage_damage', 'value': int(match.group(1))}
+
+        if ('restore' in text_lower or 'recharg' in text_lower) and 'prayer' in text_lower and (
+            'same amount' in text_lower or 'equal to the damage' in text_lower or 'equal to damage dealt' in text_lower or 'amount hit' in text_lower
+        ):
+            result['restore'] = {'type': 'damage_based'}
+
+        if match := re.search(r'drains?[^%]*prayer[^%]*by\s*(\d+)%', text_lower):
+            value = int(match.group(1))
+            if 'amount hit' in text_lower or 'damage' in text_lower:
+                result['drain'] = {'type': 'damage_based'}
+            else:
+                result['drain'] = {'type': 'percentage', 'value': value}
+        elif match := re.search(r'drains?[^\d]*(\d+) prayer', text_lower):
+            result['drain'] = {'type': 'flat', 'value': int(match.group(1))}
+        elif 'drains' in text_lower and 'prayer' in text_lower and ('damage' in text_lower or 'amount hit' in text_lower):
+            result['drain'] = {'type': 'damage_based'}
+
+        return result if result else None
 
 
 class BindingExtractor:
@@ -465,6 +499,24 @@ class AreaOfEffectExtractor:
         return None
 
 
+class SkillBoostExtractor:
+    """Extract skill boost effects for the wielder"""
+
+    def extract(self, text: str) -> Optional[List[Dict[str, Any]]]:
+        if not text:
+            return None
+
+        text_lower = text.lower()
+        boosts = []
+        pattern = r'(?:boosts?|increases?) the player(?:\'s)? (\w+) (?:level )?by (\d+)'
+        for match in re.finditer(pattern, text_lower):
+
+            skill, amt = match.groups()
+            boosts.append({'skill': skill, 'amount': int(amt)})
+
+
+        return boosts if boosts else None
+
 class SpecialMechanicsExtractor:
     """Specialized class for extracting special mechanics"""
     
@@ -473,6 +525,8 @@ class SpecialMechanicsExtractor:
         self.healing_extractor = HealingExtractor()
         self.binding_extractor = BindingExtractor()
         self.aoe_extractor = AreaOfEffectExtractor()
+        self.prayer_extractor = PrayerEffectExtractor()
+        self.skill_boost_extractor = SkillBoostExtractor()
     
     def extract_mechanics(self, text: str, weapon_name: str) -> Dict[str, Any]:
         """Extract all special mechanics"""
@@ -486,10 +540,16 @@ class SpecialMechanicsExtractor:
         
         if binding := self.binding_extractor.extract(text):
             mechanics['binding'] = binding
-        
+
         if aoe := self.aoe_extractor.extract(text):
             mechanics['area_of_effect'] = aoe
-        
+
+        if prayer := self.prayer_extractor.extract(text):
+            mechanics['prayer'] = prayer
+
+        if boosts := self.skill_boost_extractor.extract(text):
+            mechanics['skill_boosts'] = boosts
+
         return mechanics
 
 
