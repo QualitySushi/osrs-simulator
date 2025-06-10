@@ -11,6 +11,7 @@ on:
 
 env:
   AZURE_WEBAPP_NAME: 'ScapeLab-API'  # Your full app name
+  AZURE_WEBAPP_URL: 'scapelab-api-dvawaebtdze3brf0.canadacentral-01.azurewebsites.net'
   AZURE_WEBAPP_PACKAGE_PATH: './backend'
   PYTHON_VERSION: '3.12'
 
@@ -54,10 +55,10 @@ jobs:
         sleep 30
         
         # Test root endpoint
-        curl -f https://${{ env.AZURE_WEBAPP_NAME }}.azurewebsites.net/ || echo "Root endpoint failed"
-        
+        curl -f https://${{ env.AZURE_WEBAPP_URL }}/ || echo "Root endpoint failed"
+
         # Test health/docs endpoint
-        curl -f https://${{ env.AZURE_WEBAPP_NAME }}.azurewebsites.net/docs || echo "Docs endpoint failed"
-        
+        curl -f https://${{ env.AZURE_WEBAPP_URL }}/docs || echo "Docs endpoint failed"
+
         # Test bosses endpoint
-        curl -f https://${{ env.AZURE_WEBAPP_NAME }}.azurewebsites.net/bosses || echo "Bosses endpoint failed"
+        curl -f https://${{ env.AZURE_WEBAPP_URL }}/bosses || echo "Bosses endpoint failed"

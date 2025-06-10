@@ -145,7 +145,7 @@ For production, set this to your deployed API URL. The deployment workflows
 expect a repository secret named `BACKEND_URL` which will be exposed as
 `NEXT_PUBLIC_API_URL` during the frontend build.
 Ensure this secret contains the URL of your deployed FastAPI service, for example
-`https://scapelab-api.azurewebsites.net`.
+`https://scapelab-api-dvawaebtdze3brf0.canadacentral-01.azurewebsites.net`.
 
 When deploying the frontend, the workflow also requires a secret named
 `AZURE_STATIC_WEB_APPS_API_TOKEN_YELLOW_STONE_0DAF36A0F` containing the
