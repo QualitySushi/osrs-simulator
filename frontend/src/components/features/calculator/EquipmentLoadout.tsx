@@ -31,6 +31,8 @@ const EQUIPMENT_SLOTS = [
   { name: 'Hands', slot: 'hands', icon: '🧤' },
   { name: 'Feet', slot: 'feet', icon: '👢' },
   { name: 'Ring', slot: 'ring', icon: '💍' },
+  // Special attack weapon slot
+  { name: 'Spec', slot: 'spec', icon: '🗡️' },
 ];
 
 const SPELL_MAX_HITS: Record<string, number> = {
@@ -49,9 +51,9 @@ const SPELL_MAX_HITS: Record<string, number> = {
 const TWO_HANDED_SLOT = { name: 'Two-Handed', slot: '2h', icon: '🗡️' };
 
 const SLOT_GROUPS = {
-  melee: ['mainhand', 'offhand', '2h', 'head', 'cape', 'neck', 'body', 'legs', 'hands', 'feet', 'ring', 'ammo'],
-  ranged: ['mainhand', 'offhand', '2h', 'head', 'cape', 'neck', 'body', 'legs', 'hands', 'feet', 'ring', 'ammo'],
-  magic: ['mainhand', 'offhand', '2h', 'head', 'cape', 'neck', 'body', 'legs', 'hands', 'feet', 'ring', 'ammo'],
+  melee: ['mainhand', 'offhand', '2h', 'head', 'cape', 'neck', 'body', 'legs', 'hands', 'feet', 'ring', 'ammo', 'spec'],
+  ranged: ['mainhand', 'offhand', '2h', 'head', 'cape', 'neck', 'body', 'legs', 'hands', 'feet', 'ring', 'ammo', 'spec'],
+  magic: ['mainhand', 'offhand', '2h', 'head', 'cape', 'neck', 'body', 'legs', 'hands', 'feet', 'ring', 'ammo', 'spec'],
 };
 
 interface EquipmentLoadoutProps {
