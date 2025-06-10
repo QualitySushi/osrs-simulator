@@ -143,14 +143,16 @@ export function AttackStyleSelector({
               <TooltipProvider key={style}>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <TabsTrigger
-                      value={style}
-                      onClick={() => onSelectAttackStyle(style)}
-                      className="capitalize text-xs"
-                    >
-                      {styleInfo.name}
-                      {combatStyle !== "melee" && ` (${styleInfo.attackType})`}
-                    </TabsTrigger>
+                    <span className="contents">
+                      <TabsTrigger
+                        value={style}
+                        onClick={() => onSelectAttackStyle(style)}
+                        className="capitalize text-xs"
+                      >
+                        {styleInfo.name}
+                        {combatStyle !== "melee" && ` (${styleInfo.attackType})`}
+                      </TabsTrigger>
+                    </span>
                   </TooltipTrigger>
                   <TooltipContent>
                     <p>{styleInfo.description}</p>
