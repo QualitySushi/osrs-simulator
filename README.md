@@ -78,6 +78,17 @@ Additional documentation can be found in the `docs/` folder:
     docs/ARCHITECTURE.md - High level component diagram
     docs/WIREFRAME.md    - Basic UI wireframe
 
+Updating Special Attack Data
+----------------------------
+
+The `scripts/reparse_special_attacks.py` helper can re-run the
+special attack parser against the stored dataset and optionally
+write any updates back to the JSON file.
+
+```bash
+python scripts/reparse_special_attacks.py --write
+```
+
 Technical Documentation
 Frontend Architecture
 

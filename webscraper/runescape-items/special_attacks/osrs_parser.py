@@ -63,6 +63,8 @@ class SpecialAttackCostExtractor:
             r'uses (\d+)%.*?special attack',
             r'drains (\d+)%.*?special attack bar',
             r'consumes (\d+)% special attack energy',
+            # Parenthesized costs like "Backstab (75%)"
+            r'\(\s*(\d{1,3})%\s*\)'
         ]
         
         # Try high-priority patterns first - these should catch the Saradomin godsword case
@@ -77,6 +79,7 @@ class SpecialAttackCostExtractor:
         low_priority_patterns = [
             r'costs (\d+)%.*?energy',
             r'(\d+)%.*?special attack energy',
+            # Lower priority patterns without explicit mention of special attack
         ]
         
         for pattern in low_priority_patterns:
@@ -188,7 +191,9 @@ class DamageModifierExtractor:
             r'(\d+)%.*?damage.*?increase',
             # For the saradomin/zamorak godsword tests
             r'(\d+)% increased max hit',
-            r'increases max hit by (\d+)%'
+            r'increases\s+max hit by (\d+)%',
+            # Allow phrases like "increases the player's max hit by 25%"
+            r'increases[^\n]*?max hit by (\d+)%'
         ]
         
         for pattern in increase_patterns:
@@ -343,7 +348,11 @@ class StatDrainExtractor:
         
         # Check for percentage drains - FIXED for the failing test
         # The failing test: "lowers the opponent's Strength, Attack, and Defence levels by 5%"
-        percentage_pattern = r'(?:lowers|drains|reduces).*?opponent\'?s?\s+([^.]*?)(?:levels?\s+)?by\s+(\d+)%'
+        percentage_pattern = (
+            r'(?:lowers|drains|reduces).*?'
+            r'(?:opponent|target|enemy)\'?s?\s+([^.]*?)'
+            r'(?:levels?\s+)?by\s+(\d+)%'
+        )
         match = re.search(percentage_pattern, text_lower)
         if match:
             stats_text = match.group(1)
@@ -432,9 +441,41 @@ class PrayerEffectExtractor:
         elif match := re.search(r'drains?[^\d]*(\d+) prayer', text_lower):
             result['drain'] = {'type': 'flat', 'value': int(match.group(1))}
         elif 'drains' in text_lower and 'prayer' in text_lower and ('damage' in text_lower or 'amount hit' in text_lower):
-            result['drain'] = {'type': 'damage_based'}
+            if 'combat' in text_lower and ('levels' in text_lower or 'stats' in text_lower or 'skills' in text_lower):
+                pass
+            else:
+                result['drain'] = {'type': 'damage_based'}
 
         return result if result else None
+
+
+class MagicDamageExtractor:
+    """Extract magic damage effects or conversions"""
+
+    def extract(self, text: str) -> Optional[Dict[str, Any]]:
+        if not text:
+            return None
+
+        text_lower = text.lower()
+
+        # Flat magic damage such as "take 25 magic damage"
+        if match := re.search(r'(\d+)\s*magic damage', text_lower):
+            return {'type': 'flat', 'value': int(match.group(1))}
+
+        # Damage range based on melee max hit e.g. "magic damage between 50-150% of the wielder's maximum melee hit"
+        if match := re.search(r'magic damage between\s*(\d+)-(\d+)% of the wielder\'s maximum melee hit', text_lower):
+            low, high = match.groups()
+            return {
+                'type': 'multiplier_range',
+                'min': int(low) / 100,
+                'max': int(high) / 100,
+            }
+
+        # General case: explicitly states it deals magic damage
+        if re.search(r'(?:deals|dealing|deal|hits|inflicts).*?magic damage', text_lower):
+            return {'type': 'magic'}
+
+        return None
 
 
 class BindingExtractor:
@@ -527,6 +568,7 @@ class SpecialMechanicsExtractor:
         self.aoe_extractor = AreaOfEffectExtractor()
         self.prayer_extractor = PrayerEffectExtractor()
         self.skill_boost_extractor = SkillBoostExtractor()
+        self.magic_damage_extractor = MagicDamageExtractor()
     
     def extract_mechanics(self, text: str, weapon_name: str) -> Dict[str, Any]:
         """Extract all special mechanics"""
@@ -549,6 +591,9 @@ class SpecialMechanicsExtractor:
 
         if boosts := self.skill_boost_extractor.extract(text):
             mechanics['skill_boosts'] = boosts
+
+        if magic := self.magic_damage_extractor.extract(text):
+            mechanics['magic_damage'] = magic
 
         return mechanics
 
