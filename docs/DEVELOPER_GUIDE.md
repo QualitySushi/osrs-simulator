@@ -8,7 +8,6 @@ The project is split into three main parts:
 
 1. **backend** – A FastAPI application providing DPS calculations and data APIs.
 2. **frontend** – A Next.js application that consumes the API and provides the user interface.
-3. **api** – Azure Function wrappers around the backend for serverless deployments.
 
 Additional documentation lives inside the `docs` folder.
 
@@ -39,11 +38,11 @@ digraph ERD {
 ## Application Layers
 
 - **Calculators** (`backend/app/calculators`) contain the core algorithms for melee, ranged and magic DPS.
-- **Services** (`backend/app/services`) provide thin wrappers used by both FastAPI and the Azure Function handlers.
+- **Services** (`backend/app/services`) provide thin wrappers used by the FastAPI endpoints.
 - **Repositories** (`backend/app/repositories`) interact with the database layer using `database.py`.
 - **Webscraper** (`backend/webscraper`) contains scripts that populate the SQLite databases from the Old School RuneScape Wiki.
 
-The separation allows the same calculation logic to be reused by the REST API and the serverless functions.
+The separation allows the same calculation logic to be reused across the application.
 
 ## Testing
 
