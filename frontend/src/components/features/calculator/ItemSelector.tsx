@@ -50,7 +50,7 @@ export function ItemSelector({ slot, onSelectItem }: ItemSelectorProps) {
     isLoading,
   } = useQuery({
     queryKey: ['item-search', searchTerm],
-    queryFn: () => itemsApi.searchItems(searchTerm, 50),
+    queryFn: () => itemsApi.searchItems(searchTerm),
     enabled: searchTerm.length > 0,
     staleTime: Infinity,
     onSuccess: (d) => addItems(d),
