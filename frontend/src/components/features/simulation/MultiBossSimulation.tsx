@@ -16,6 +16,14 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import RaidScalingPanel, { Raid, RaidScalingConfig } from './RaidScalingPanel';
+import {
   Table,
   TableBody,
   TableCell,
@@ -41,11 +49,24 @@ interface SimulationEntry {
   result: DpsResult;
 }
 
+const RAID_OPTIONS: { id: Raid; name: string }[] = [
+  { id: 'cox', name: 'Chambers of Xeric' },
+  { id: 'tob', name: 'Theatre of Blood' },
+  { id: 'toa', name: 'Tombs of Amascut' },
+];
+
+const RAID_NAME_MAP = RAID_OPTIONS.reduce<Record<Raid, string>>((acc, r) => {
+  acc[r.id] = r.name;
+  return acc;
+}, {} as Record<Raid, string>);
+
 export function MultiBossSimulation() {
   const params = useCalculatorStore((s) => s.params);
   const loadout = useCalculatorStore((s) => s.loadout);
 
   const [selectedBosses, setSelectedBosses] = useState<Boss[]>([]);
+  const [selectedRaid, setSelectedRaid] = useState<Raid | ''>('');
+  const [raidConfig, setRaidConfig] = useState<RaidScalingConfig>({ teamSize: 1 });
   const [results, setResults] = useState<SimulationEntry[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [open, setOpen] = useState(false);
@@ -74,6 +95,14 @@ export function MultiBossSimulation() {
     staleTime: Infinity,
     onSuccess: (d) => addBosses(d),
   });
+
+  useEffect(() => {
+    setSelectedBosses([]);
+  }, [selectedRaid]);
+
+  const filteredBosses = (searchTerm.length > 0 ? searchResults ?? [] : storeBosses).filter(
+    (b) => !selectedRaid || b.raid_group === RAID_NAME_MAP[selectedRaid]
+  );
 
   const addBoss = (boss: Boss) => {
     if (selectedBosses.find((b) => b.id === boss.id)) return;
@@ -198,6 +227,19 @@ export function MultiBossSimulation() {
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-2">
+          <label className="text-sm font-medium">Raid</label>
+          <Select value={selectedRaid} onValueChange={(v) => setSelectedRaid(v as Raid)}>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Select raid" />
+            </SelectTrigger>
+            <SelectContent>
+              {RAID_OPTIONS.map((r) => (
+                <SelectItem key={r.id} value={r.id}>{r.name}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="space-y-2">
           <label className="text-sm font-medium">Add Bosses</label>
           <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
@@ -225,7 +267,7 @@ export function MultiBossSimulation() {
                         Loading...
                       </div>
                     ) : (
-                      (searchTerm.length > 0 ? searchResults ?? [] : storeBosses).map((boss) => (
+                      filteredBosses.map((boss) => (
                         <CommandItem key={boss.id} value={boss.name} onSelect={() => addBoss(boss)}>
                           {bossIcons[boss.id] && (
                             <img src={bossIcons[boss.id]} alt="icon" className="w-4 h-4 mr-2 inline-block" />
@@ -240,6 +282,9 @@ export function MultiBossSimulation() {
             </PopoverContent>
           </Popover>
         </div>
+        {selectedRaid && (
+          <RaidScalingPanel raid={selectedRaid as Raid} config={raidConfig} onChange={setRaidConfig} />
+        )}
         {selectedBosses.length > 0 && (
           <div className="flex flex-wrap gap-2">
             {selectedBosses.map((b) => (
