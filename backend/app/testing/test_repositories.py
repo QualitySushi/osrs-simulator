@@ -1,5 +1,6 @@
 import unittest
-from unittest.mock import MagicMock
+import asyncio
+from unittest.mock import MagicMock, AsyncMock
 
 from app.repositories import item_repository, boss_repository
 
@@ -80,6 +81,57 @@ class TestBossRepositoryCaching(unittest.TestCase):
         self.boss_service.search_bosses.assert_called_with('zul', None)
         self.assertEqual(len(results), 1)
         self.assertEqual(results[0]['id'], 1)
+
+
+class TestAsyncRepositoryCaching(unittest.TestCase):
+    def setUp(self):
+        self.mock_items = [
+            {"id": 1, "name": "Dragon scimitar", "has_combat_stats": True, "is_tradeable": True}
+        ]
+        self.item_service = MagicMock()
+        self.item_service.get_all_items_async = AsyncMock(return_value=self.mock_items)
+        self.item_service.get_item_async = AsyncMock(return_value=self.mock_items[0])
+
+        item_repository._all_items_cache.clear()
+        item_repository._item_cache.clear()
+        self.orig_item_service = item_repository.db_service
+        item_repository.db_service = self.item_service
+
+        self.mock_bosses = [
+            {"id": 1, "name": "Zulrah", "raid_group": None, "location": "Zul-Andra", "has_multiple_forms": True}
+        ]
+        self.boss_service = MagicMock()
+        self.boss_service.get_all_bosses_async = AsyncMock(return_value=self.mock_bosses)
+        self.boss_service.get_boss_async = AsyncMock(return_value=self.mock_bosses[0])
+
+        boss_repository._all_bosses_cache.clear()
+        boss_repository._boss_cache.clear()
+        self.orig_boss_service = boss_repository.db_service
+        boss_repository.db_service = self.boss_service
+
+    def tearDown(self):
+        item_repository.db_service = self.orig_item_service
+        boss_repository.db_service = self.orig_boss_service
+
+    def test_item_async_cached(self):
+        asyncio.run(item_repository.get_item_async(1))
+        asyncio.run(item_repository.get_item_async(1))
+        self.assertEqual(self.item_service.get_item_async.call_count, 1)
+
+    def test_all_items_async_cached(self):
+        asyncio.run(item_repository.get_all_items_async())
+        asyncio.run(item_repository.get_all_items_async())
+        self.assertEqual(self.item_service.get_all_items_async.call_count, 1)
+
+    def test_boss_async_cached(self):
+        asyncio.run(boss_repository.get_boss_async(1))
+        asyncio.run(boss_repository.get_boss_async(1))
+        self.assertEqual(self.boss_service.get_boss_async.call_count, 1)
+
+    def test_all_bosses_async_cached(self):
+        asyncio.run(boss_repository.get_all_bosses_async())
+        asyncio.run(boss_repository.get_all_bosses_async())
+        self.assertEqual(self.boss_service.get_all_bosses_async.call_count, 1)
 
 
 if __name__ == '__main__':
