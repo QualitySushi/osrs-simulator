@@ -1,6 +1,4 @@
-
 'use client';
-
 import { useState } from 'react';
 import { useCalculatorStore } from '@/store/calculator-store';
 import { itemsApi } from '@/services/api';

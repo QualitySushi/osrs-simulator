@@ -1,37 +1,38 @@
 'use client';
 
 import { create } from 'zustand';
-// No persistence to avoid localStorage quota errors
+import { persist, createJSONStorage } from 'zustand/middleware';
+import { safeStorage } from '@/utils/safeStorage';
 import { bossesApi, itemsApi } from '@/services/api';
 import { Boss, BossForm, Item } from '@/types/calculator';
-import { safeStorage } from '@/utils/safeStorage';
-
-// Clean up old persisted data that could exceed the quota
-safeStorage.removeItem('osrs-reference-data');
 
 interface ReferenceDataState {
   bosses: Boss[];
   bossForms: Record<number, BossForm[]>;
   items: Item[];
   initialized: boolean;
+  timestamp: number;
   initData: () => Promise<void>;
   addBosses: (b: Boss[]) => void;
   addBossForms: (id: number, forms: BossForm[]) => void;
   addItems: (i: Item[]) => void;
 }
 
+const REFERENCE_TTL_MS = 12 * 60 * 60 * 1000; // 12 hours
 
 export const useReferenceDataStore = create<ReferenceDataState>()(
-  (set, get) => ({
-    bosses: [],
-    bossForms: {},
-    items: [],
-    initialized: false,
-    async initData() {
-      if (get().initialized) return;
-      set({ initialized: true });
-      const pageSize = 50;
-      let page = 1;
+  persist(
+    (set, get) => ({
+      bosses: [],
+      bossForms: {},
+      items: [],
+      initialized: false,
+      timestamp: 0,
+      async initData() {
+        if (get().initialized) return;
+        set({ initialized: true, timestamp: Date.now() });
+        const pageSize = 50;
+        let page = 1;
         while (true) {
           try {
             const data = await bossesApi.getBossesWithForms({ page, page_size: pageSize });
@@ -71,22 +72,33 @@ export const useReferenceDataStore = create<ReferenceDataState>()(
         }
       },
       addBosses(b) {
-        set((state) => {
-          const map = new Map(state.bosses.map((boss) => [boss.id, boss]));
-          b.forEach((boss) => map.set(boss.id, boss));
-          return { bosses: Array.from(map.values()) };
-        });
+        set((state) => ({ bosses: [...state.bosses, ...b] }));
       },
       addBossForms(id, forms) {
         set((state) => ({ bossForms: { ...state.bossForms, [id]: forms } }));
       },
       addItems(i) {
-        set((state) => {
-          const map = new Map(state.items.map((item) => [item.id, item]));
-          i.forEach((item) => map.set(item.id, item));
-          return { items: Array.from(map.values()) };
-        });
+        set((state) => ({ items: [...state.items, ...i] }));
       },
-    })
+    }),
+    {
+      name: 'osrs-reference-data',
+      storage: createJSONStorage(() => safeStorage),
+      partialize: (state) => ({
+        bosses: state.bosses,
+        bossForms: state.bossForms,
+        items: state.items,
+        timestamp: state.timestamp,
+      }),
+      onRehydrateStorage: (state) => (stored) => {
+        if (!stored) return;
+        const expired = Date.now() - stored.timestamp > REFERENCE_TTL_MS;
+        if (expired) {
+          state.setState({ bosses: [], bossForms: {}, items: [], initialized: false, timestamp: Date.now() });
+        } else {
+          state.setState({ initialized: true });
+        }
+      },
+    }
+  )
 );
-
