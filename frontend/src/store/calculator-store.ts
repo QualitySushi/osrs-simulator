@@ -249,7 +249,7 @@ export const useCalculatorStore = create<CalculatorState>()(
 );
 
 // After hydration, populate objects from persisted IDs
-useCalculatorStore.persist.onFinishHydration(async (state) => {
+useCalculatorStore.persist?.onFinishHydration?.(async (state) => {
   if (!state) return;
   const { loadoutIds, selectedBossId, selectedBossFormId } = state as any;
   const refStore = useReferenceDataStore.getState();
