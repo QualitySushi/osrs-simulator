@@ -16,6 +16,7 @@ Key Features
     DPS Comparison: Save and compare multiple equipment setups
     Passive Effects: Automatic detection of relevant passive effects for your setup
     Prayer & Potions: Account for all combat boosting prayers and potions
+    Special Attack Usage: The calculator automatically triggers special attacks whenever enough energy is available, simulating regeneration over time
 
 🚀 Getting Started
 Prerequisites
@@ -70,6 +71,7 @@ Usage Guide
     Choose Equipment: Select gear for each slot
     Select Target: Pick a boss or enter custom defense stats
     Apply Modifiers: Select prayers, potions, and special attacks
+    Special Attacks are automatically used whenever enough energy is available; energy regeneration is handled for you
     Calculate: View your expected DPS and other stats
     Compare: Save setups to compare different loadouts
 

@@ -70,7 +70,6 @@ const defaultMeleeParams: MeleeCalculatorParams = {
   hit_count: 1,
   guaranteed_hit: false,
   special_attack_cost: 0,
-  special_rotation: 0,
   lightbearer: false,
   surge_potion: false,
   duration: 60,
@@ -95,7 +94,6 @@ const defaultRangedParams: RangedCalculatorParams = {
   hit_count: 1,
   guaranteed_hit: false,
   special_attack_cost: 0,
-  special_rotation: 0,
   lightbearer: false,
   surge_potion: false,
   duration: 60,
@@ -136,7 +134,6 @@ const defaultMagicParams: MagicCalculatorParams = {
   hit_count: 1,
   guaranteed_hit: false,
   special_attack_cost: 0,
-  special_rotation: 0,
   lightbearer: false,
   surge_potion: false,
   duration: 60

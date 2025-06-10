@@ -49,7 +49,6 @@ export interface BaseCalculatorParams {
   equipment?: EquipmentLoadout;
   weapon_name?: string;
   special_attack_cost?: number;
-  special_rotation?: number;
   lightbearer?: boolean;
   surge_potion?: boolean;
   duration?: number;

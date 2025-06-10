@@ -26,8 +26,8 @@ class DpsCalculator:
         else:
             raise ValueError(f"Invalid combat style: {combat_style}")
 
-        # If no special rotation requested, just return normal DPS
-        if params.get("special_attack_cost") is None or params.get("special_rotation") is None:
+        # If no special attack provided, just return normal DPS
+        if params.get("special_attack_cost") is None:
             return calculator.calculate_dps(params)
 
         # Calculate regular and special attack damage per hit
@@ -53,7 +53,6 @@ class DpsCalculator:
         regen_rate *= regen_mult
 
         cost = params.get("special_attack_cost", 0)
-        rotation = params.get("special_rotation", 0.0)
         duration = params.get("duration", 60.0)
 
         energy = 100.0
@@ -63,7 +62,7 @@ class DpsCalculator:
         total_damage = 0.0
 
         while time < duration - 1e-9:
-            if energy >= cost and special_count / (attack_count + 1e-9) < rotation:
+            if energy >= cost:
                 total_damage += special_damage
                 energy = max(0.0, energy - cost)
                 special_count += 1

@@ -150,7 +150,6 @@ class DpsParameters(BaseModel):
     guaranteed_hit: bool = False
     attack_style_bonus: Optional[int] = Field(default=0)
     special_attack_cost: Optional[int] = None
-    special_rotation: Optional[float] = None
     lightbearer: Optional[bool] = None
     surge_potion: Optional[bool] = None
     duration: Optional[float] = None
