@@ -59,6 +59,11 @@ const defaultMeleeParams: MeleeCalculatorParams = {
   void_melee: false,
   gear_multiplier: 1.0,
   special_multiplier: 1.0,
+  special_attack_cost: 0,
+  special_rotation: 0,
+  lightbearer: false,
+  surge_potion: false,
+  duration: 60,
   target_defence_level: 200,
   target_defence_bonus: 30,
   attack_speed: 2.4
@@ -76,6 +81,11 @@ const defaultRangedParams: RangedCalculatorParams = {
   void_ranged: false,
   gear_multiplier: 1.0,
   special_multiplier: 1.0,
+  special_attack_cost: 0,
+  special_rotation: 0,
+  lightbearer: false,
+  surge_potion: false,
+  duration: 60,
   target_defence_level: 200,
   target_defence_bonus: 150,
   attack_speed: 2.4
@@ -108,7 +118,12 @@ const defaultMagicParams: MagicCalculatorParams = {
   spell_type: 'offensive',
   god_spell_charged: false,
   gear_multiplier: 1.0,
-  special_multiplier: 1.0
+  special_multiplier: 1.0,
+  special_attack_cost: 0,
+  special_rotation: 0,
+  lightbearer: false,
+  surge_potion: false,
+  duration: 60
 };
 
 export const useCalculatorStore = create<CalculatorState>()(

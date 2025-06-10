@@ -43,6 +43,11 @@ export interface BaseCalculatorParams {
   attack_style_bonus?: number; // Add this field which is in the backend model
   equipment?: EquipmentLoadout;
   weapon_name?: string;
+  special_attack_cost?: number;
+  special_rotation?: number;
+  lightbearer?: boolean;
+  surge_potion?: boolean;
+  duration?: number;
 }
 
 // Shared fields across styles
@@ -148,6 +153,9 @@ export interface DpsResult {
   effective_str?: number;
   effective_atk?: number;
   damage_multiplier?: number;
+  special_attacks?: number;
+  duration?: number;
+  special_attack_dps?: number;
 }
 
 // Expanded DPS result with additional information

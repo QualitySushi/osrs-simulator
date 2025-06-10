@@ -136,3 +136,12 @@ class TestAsyncRepositoryCaching(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+class TestSpecialAttackRepository(unittest.TestCase):
+    def test_get_special_attack(self):
+        from app.repositories import special_attack_repository
+        data = special_attack_repository.get_special_attack("Dragon dagger")
+        self.assertIsNotNone(data)
+        self.assertEqual(data["cost"], 25)
+
+

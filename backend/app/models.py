@@ -14,6 +14,9 @@ class DpsResult(BaseModel):
     effective_str: Optional[int] = None
     effective_atk: Optional[int] = None
     damage_multiplier: Optional[float] = None
+    special_attacks: Optional[int] = None
+    duration: Optional[float] = None
+    special_attack_dps: Optional[float] = None
 
 
 class BossForm(BaseModel):
@@ -143,6 +146,11 @@ class DpsParameters(BaseModel):
     gear_multiplier: float = 1.0
     special_multiplier: float = 1.0
     attack_style_bonus: Optional[int] = Field(default=0)
+    special_attack_cost: Optional[int] = None
+    special_rotation: Optional[float] = None
+    lightbearer: Optional[bool] = None
+    surge_potion: Optional[bool] = None
+    duration: Optional[float] = None
 
     # Melee parameters
     strength_level: Optional[int] = None

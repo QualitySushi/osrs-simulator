@@ -16,11 +16,19 @@ export function DpsResultDisplay({ params, results, appliedPassiveEffects }: Dps
         <Calculator className="h-5 w-5 mr-2 text-primary" />
         Calculation Results
       </h2>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card className="bg-muted/30 border">
           <CardContent className="pt-6">
-            <div className="text-sm font-medium text-muted-foreground">DPS</div>
-            <div className="text-3xl font-bold text-primary">{results.dps.toFixed(2)}</div>
+            <div className="text-sm font-medium text-muted-foreground">Total DPS</div>
+            <div className="text-3xl font-bold text-primary">
+              {(results.dps + (results.special_attack_dps ?? 0)).toFixed(2)}
+            </div>
+            {results.special_attack_dps !== undefined && (
+              <div className="text-xs text-muted-foreground">
+                Base {results.dps.toFixed(2)} + Special{' '}
+                {results.special_attack_dps.toFixed(2)}
+              </div>
+            )}
           </CardContent>
         </Card>
         <Card className="bg-muted/30 border">
@@ -35,6 +43,14 @@ export function DpsResultDisplay({ params, results, appliedPassiveEffects }: Dps
             <div className="text-3xl font-bold text-primary">{(results.hit_chance * 100).toFixed(1)}%</div>
           </CardContent>
         </Card>
+        {results.special_attack_dps !== undefined && (
+          <Card className="bg-muted/30 border">
+            <CardContent className="pt-6">
+              <div className="text-sm font-medium text-muted-foreground">Special Attacks</div>
+              <div className="text-3xl font-bold text-primary">{results.special_attacks ?? 0}</div>
+            </CardContent>
+          </Card>
+        )}
       </div>
     </div>
   );
