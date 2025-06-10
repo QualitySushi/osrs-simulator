@@ -65,7 +65,7 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
     isLoading,
   } = useQuery({
     queryKey: ['boss-search', searchTerm],
-    queryFn: () => bossesApi.searchBosses(searchTerm, 50),
+    queryFn: () => bossesApi.searchBosses(searchTerm),
     enabled: searchTerm.length > 0,
     staleTime: Infinity,
     onSuccess: (d) => addBosses(d),

@@ -68,9 +68,11 @@ export const bossesApi = {
   },
 
   searchBosses: async (query: string, limit?: number): Promise<Boss[]> => {
-    const { data } = await apiClient.get('/search/bosses', {
-      params: { query, limit },
-    });
+    const params: Record<string, unknown> = { query };
+    if (limit !== undefined) {
+      params.limit = limit;
+    }
+    const { data } = await apiClient.get('/search/bosses', { params });
     return data;
   },
 };
@@ -97,9 +99,11 @@ export const itemsApi = {
   },
 
   searchItems: async (query: string, limit?: number): Promise<Item[]> => {
-    const { data } = await apiClient.get('/search/items', {
-      params: { query, limit },
-    });
+    const params: Record<string, unknown> = { query };
+    if (limit !== undefined) {
+      params.limit = limit;
+    }
+    const { data } = await apiClient.get('/search/items', { params });
     return data;
   },
 };

@@ -58,7 +58,7 @@ export function DirectBossSelector({ onSelectBoss, onSelectForm, className }: Di
     isLoading,
   } = useQuery({
     queryKey: ['boss-search', searchQuery],
-    queryFn: () => bossesApi.searchBosses(searchQuery, 50),
+    queryFn: () => bossesApi.searchBosses(searchQuery),
     enabled: searchQuery.length > 0,
     staleTime: Infinity,
     onSuccess: (d) => addBosses(d),
