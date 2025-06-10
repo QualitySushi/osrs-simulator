@@ -89,7 +89,8 @@ export function CombinedEquipmentDisplay({ onEquipmentUpdate, bossForm }: Combin
     let rangedAtk = 0, rangedStr = 0;
     let magicAtk = 0, magicDmg = 0;
 
-    Object.entries(loadout).forEach(([_, item]) => {
+    Object.entries(loadout).forEach(([slot, item]) => {
+      if (slot === 'spec') return;
       if (!item?.combat_stats) return;
 
       const { attack_bonuses = {}, other_bonuses = {} } = item.combat_stats;

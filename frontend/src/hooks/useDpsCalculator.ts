@@ -38,7 +38,8 @@ export function useDpsCalculator() {
   }, [params.combat_style]);
 
   const calculateEffects = useCallback(() => {
-    return calculatePassiveEffectBonuses(params, currentLoadout, currentBossForm);
+    const { spec, ...loadoutNoSpec } = currentLoadout as any;
+    return calculatePassiveEffectBonuses(params, loadoutNoSpec, currentBossForm);
   }, [params, currentLoadout, currentBossForm]);
 
   useEffect(() => {

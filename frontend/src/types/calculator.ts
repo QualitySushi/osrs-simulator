@@ -14,7 +14,8 @@ export type EquipmentSlot =
   | 'hands'
   | 'feet'
   | 'ring'
-  | '2h';
+  | '2h'
+  | 'spec';
 
 // Equipment loadout interface
 export interface EquipmentLoadout {
@@ -30,6 +31,7 @@ export interface EquipmentLoadout {
   feet?: Item | null;
   ring?: Item | null;
   '2h'?: Item | null;
+  spec?: Item | null;
 }
 
 // Base parameters for all combat styles
@@ -47,7 +49,6 @@ export interface BaseCalculatorParams {
   equipment?: EquipmentLoadout;
   weapon_name?: string;
   special_attack_cost?: number;
-  special_rotation?: number;
   lightbearer?: boolean;
   surge_potion?: boolean;
   duration?: number;

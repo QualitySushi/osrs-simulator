@@ -50,16 +50,15 @@ export function PassiveEffectsDisplay({ loadout, target }: PassiveEffectsDisplay
     ];
 
     // Get equipped items with passive effects - enhanced detection
-    const itemsWithPassiveEffects = Object.values(loadout)
-      .filter(item => {
-        if (!item) return false;
-        
-        // Check database flag OR known item names
-        return item.has_passive_effect || 
-              KNOWN_PASSIVE_ITEMS.some(keyword => 
-                item.name.toLowerCase().includes(keyword)
-              );
-      }) as Item[];
+    const itemsWithPassiveEffects = Object.entries(loadout)
+      .filter(([slot, item]) => slot !== 'spec' && !!item)
+      .map(([_, item]) => item as Item)
+      .filter(item =>
+        item.has_passive_effect ||
+        KNOWN_PASSIVE_ITEMS.some(keyword =>
+          item.name.toLowerCase().includes(keyword)
+        )
+      );
     
     if (process.env.NODE_ENV !== 'production') {
       console.log('[DEBUG] Items with passive effects:', itemsWithPassiveEffects);
@@ -72,7 +71,8 @@ export function PassiveEffectsDisplay({ loadout, target }: PassiveEffectsDisplay
     }
     
     // Calculate the passive effect bonuses
-    const bonuses = calculatePassiveEffectBonuses(params, loadout, target);
+    const { spec, ...loadoutNoSpec } = loadout as any;
+    const bonuses = calculatePassiveEffectBonuses(params, loadoutNoSpec, target);
     
     // If no applicable effects, don't show anything
     if (!bonuses.isApplicable) {

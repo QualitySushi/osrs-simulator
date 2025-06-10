@@ -15,6 +15,7 @@ import { ItemSelector } from './ItemSelector';
 import { Item } from '@/types/calculator';
 import { useToast } from '@/hooks/use-toast';
 import { itemsApi } from '@/services/api';
+import { useCalculatorStore } from '@/store/calculator-store';
 
 const EQUIPMENT_SLOTS = {
   head: { name: 'Head', position: 'top-center' },
@@ -28,7 +29,8 @@ const EQUIPMENT_SLOTS = {
   hands: { name: 'Hands', position: 'left-bottom' },
   feet: { name: 'Feet', position: 'bottom-center' },
   ring: { name: 'Ring', position: 'right-bottom' },
-  '2h': { name: 'Two-Handed', position: 'left-middle-2h' }
+  '2h': { name: 'Two-Handed', position: 'left-middle-2h' },
+  spec: { name: 'Spec', position: 'right-top' }
 };
 
 const POSITION_TO_GRID: Record<string, string> = {
@@ -36,6 +38,7 @@ const POSITION_TO_GRID: Record<string, string> = {
   'left-top': 'col-start-1 row-start-2',
   'center-top-2': 'col-start-2 row-start-2',
   'right-top-2': 'col-start-3 row-start-2',
+  'right-top': 'col-start-3 row-start-1',
   'left-middle': 'col-start-1 row-start-3',
   'left-middle-2h': 'col-start-1 row-start-3',
   'right-middle': 'col-start-3 row-start-3',
@@ -55,6 +58,7 @@ interface EquipmentGridProps {
 
 export function EquipmentGrid({ loadout, show2hOption, combatStyle, onUpdateLoadout }: EquipmentGridProps) {
   const { toast } = useToast();
+  const setParams = useCalculatorStore((s) => s.setParams);
   const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
@@ -74,6 +78,9 @@ export function EquipmentGrid({ loadout, show2hOption, combatStyle, onUpdateLoad
     if (!item) {
       delete updated[slot];
       onUpdateLoadout(updated);
+      if (slot === 'spec') {
+        setParams({ weapon_name: undefined });
+      }
       toast.success(`Removed item from ${slot}`);
       setIsDialogOpen(false);
       return;
@@ -92,6 +99,24 @@ export function EquipmentGrid({ loadout, show2hOption, combatStyle, onUpdateLoad
       } else {
         if (slot === 'mainhand' || slot === 'offhand') delete updated['2h'];
         updated[slot] = fullItem;
+      }
+
+      if (slot === 'spec') {
+        itemsApi.getSpecialAttacks().then((specials) => {
+          const spec = specials.find((s) => s.weapon_name === fullItem.name);
+          if (spec) {
+            setParams({
+              weapon_name: spec.weapon_name,
+              special_attack_cost: spec.special_cost,
+              special_multiplier: spec.damage_multiplier,
+              accuracy_multiplier: spec.accuracy_multiplier,
+              hit_count: spec.hit_count,
+              guaranteed_hit: spec.guaranteed_hit,
+            });
+          } else {
+            setParams({ weapon_name: undefined });
+          }
+        });
       }
 
       onUpdateLoadout(updated);

@@ -1,6 +1,9 @@
 import { create } from 'zustand';
 // No persistence to avoid localStorage quota errors
 import { safeStorage } from '@/utils/safeStorage';
+import { idbStorage } from '@/utils/idbStorage';
+import { useReferenceDataStore } from './reference-data-store';
+import { itemsApi, bossesApi } from '@/services/api';
 import {
   CalculatorParams,
   DpsResult,
@@ -23,8 +26,12 @@ interface CalculatorState {
   gearLocked: boolean;
   bossLocked: boolean;
   loadout: Record<string, Item | null>;
+  /** IDs for persisted loadout */
+  loadoutIds: Record<string, number | null>;
   selectedBoss: Boss | null;
+  selectedBossId: number | null;
   selectedBossForm: BossForm | null;
+  selectedBossFormId: number | null;
 
   setParams: (params: Partial<CalculatorParams>) => void;
   switchCombatStyle: (style: 'melee' | 'ranged' | 'magic') => void;
@@ -63,7 +70,6 @@ const defaultMeleeParams: MeleeCalculatorParams = {
   hit_count: 1,
   guaranteed_hit: false,
   special_attack_cost: 0,
-  special_rotation: 0,
   lightbearer: false,
   surge_potion: false,
   duration: 60,
@@ -88,7 +94,6 @@ const defaultRangedParams: RangedCalculatorParams = {
   hit_count: 1,
   guaranteed_hit: false,
   special_attack_cost: 0,
-  special_rotation: 0,
   lightbearer: false,
   surge_potion: false,
   duration: 60,
@@ -129,7 +134,6 @@ const defaultMagicParams: MagicCalculatorParams = {
   hit_count: 1,
   guaranteed_hit: false,
   special_attack_cost: 0,
-  special_rotation: 0,
   lightbearer: false,
   surge_potion: false,
   duration: 60
@@ -146,8 +150,11 @@ export const useCalculatorStore = create<CalculatorState>()(
       gearLocked: false,
       bossLocked: false,
       loadout: {},
+      loadoutIds: {},
       selectedBoss: null,
+      selectedBossId: null,
       selectedBossForm: null,
+      selectedBossFormId: null,
 
       setParams: (newParams: Partial<CalculatorParams>) => set((state): Partial<CalculatorState> => {
         const currentStyle = state.params.combat_style;
@@ -240,3 +247,54 @@ export const useCalculatorStore = create<CalculatorState>()(
       setSelectedBossForm: (form) => set({ selectedBossForm: form })
     })
 );
+
+// After hydration, populate objects from persisted IDs
+useCalculatorStore.persist.onFinishHydration(async (state) => {
+  if (!state) return;
+  const { loadoutIds, selectedBossId, selectedBossFormId } = state as any;
+  const refStore = useReferenceDataStore.getState();
+  const loadout: Record<string, Item | null> = {};
+  for (const [slot, id] of Object.entries(loadoutIds ?? {})) {
+    if (id == null) {
+      loadout[slot] = null;
+      continue;
+    }
+    let item = refStore.items.find((i) => i.id === id) ?? null;
+    if (!item) {
+      try {
+        item = await itemsApi.getItemById(id);
+        refStore.addItems([item]);
+      } catch {
+        item = null;
+      }
+    }
+    loadout[slot] = item;
+  }
+  let selectedBoss: Boss | null = null;
+  if (selectedBossId != null) {
+    selectedBoss = refStore.bosses.find((b) => b.id === selectedBossId) ?? null;
+    if (!selectedBoss) {
+      try {
+        selectedBoss = await bossesApi.getBossById(selectedBossId);
+        refStore.addBosses([selectedBoss]);
+      } catch {
+        selectedBoss = null;
+      }
+    }
+  }
+  let selectedBossForm: BossForm | null = null;
+  if (selectedBossId != null && selectedBossFormId != null) {
+    const forms = refStore.bossForms[selectedBossId] ?? [];
+    selectedBossForm = forms.find((f) => f.id === selectedBossFormId) ?? null;
+    if (!selectedBossForm) {
+      try {
+        const fetched = await bossesApi.getBossForms(selectedBossId);
+        refStore.addBossForms(selectedBossId, fetched);
+        selectedBossForm = fetched.find((f) => f.id === selectedBossFormId) ?? null;
+      } catch {
+        selectedBossForm = null;
+      }
+    }
+  }
+  useCalculatorStore.setState({ loadout, selectedBoss, selectedBossForm });
+});

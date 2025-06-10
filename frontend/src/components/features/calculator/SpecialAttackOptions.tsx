@@ -62,18 +62,6 @@ export function SpecialAttackOptions() {
             }
           />
         </div>
-        <div className="space-y-1">
-          <Label>Rotation (%)</Label>
-          <Input
-            type="number"
-            min={0}
-            max={100}
-            value={Math.round((params.special_rotation ?? 0) * 100)}
-            onChange={(e) =>
-              setParams({ special_rotation: (parseFloat(e.target.value) || 0) / 100 })
-            }
-          />
-        </div>
         <div className="flex items-center gap-2">
           <Switch
             checked={!!params.lightbearer}
