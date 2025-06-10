@@ -14,6 +14,7 @@ import { PresetSelector } from './PresetSelector';
 import { CalculatorForms } from './CalculatorForms';
 import { CombatStyleTabs } from './CombatStyleTabs';
 import { DpsResultDisplay } from './DpsResultDisplay';
+import { SpecialAttackOptions } from './SpecialAttackOptions';
 import { useDpsCalculator } from '@/hooks/useDpsCalculator';
 import { useToast } from '@/hooks/use-toast';
 import RaidScalingPanel, { RaidScalingConfig } from '../simulation/RaidScalingPanel';
@@ -110,6 +111,7 @@ export function ImprovedDpsCalculator() {
           <CombinedEquipmentDisplay onEquipmentUpdate={handleEquipmentUpdate} bossForm={currentBossForm} />
           {/* Prayer/Potion selector */}
           <PrayerPotionSelector className="flex-grow" />
+          <SpecialAttackOptions />
         </div>
 
         {/* Right column */}

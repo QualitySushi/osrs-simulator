@@ -58,6 +58,35 @@ class TestDpsCalculator(unittest.TestCase):
         with self.assertRaises(KeyError):
             MeleeCalculator.calculate_dps({"combat_style": "melee"})
 
+    def test_special_rotation_simulation(self):
+        """Special attack rotation should simulate energy and count specials."""
+        params = {
+            "combat_style": "melee",
+            "strength_level": 99,
+            "strength_boost": 0,
+            "strength_prayer": 1.0,
+            "attack_level": 99,
+            "attack_boost": 0,
+            "attack_prayer": 1.0,
+            "melee_strength_bonus": 80,
+            "melee_attack_bonus": 80,
+            "attack_style_bonus_strength": 3,
+            "attack_style_bonus_attack": 0,
+            "attack_speed": 2.4,
+            "target_defence_level": 100,
+            "target_defence_bonus": 50,
+            "special_multiplier": 1.2,
+            "special_attack_cost": 50,
+            "special_rotation": 0.5,
+            "duration": 60,
+        }
+
+        result = DpsCalculator.calculate_dps(params)
+        self.assertIn("special_attacks", result)
+        self.assertEqual(result["special_attacks"], 2)
+        self.assertIn("special_attack_dps", result)
+        self.assertGreater(result["special_attack_dps"], 0)
+
 
 class TestMeleeCalculator(unittest.TestCase):
     """Test the Melee Calculator functionality."""
