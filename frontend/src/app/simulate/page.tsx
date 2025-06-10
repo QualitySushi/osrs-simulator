@@ -3,7 +3,6 @@ export const dynamic = 'force-dynamic';
 
 import MultiBossSimulation from '@/components/features/simulation/MultiBossSimulation';
 
-
 export default function SimulatePage() {
   return (
     <main id="main" className="container mx-auto py-8 px-4 pb-16">
