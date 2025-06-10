@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { persist, createJSONStorage } from 'zustand/middleware';
+// No persistence to avoid localStorage quota errors
 import { safeStorage } from '@/utils/safeStorage';
 import {
   CalculatorParams,
@@ -135,9 +135,11 @@ const defaultMagicParams: MagicCalculatorParams = {
   duration: 60
 };
 
+// Clean up old persisted data that could exceed the quota
+safeStorage.removeItem('osrs-calculator-storage');
+
 export const useCalculatorStore = create<CalculatorState>()(
-  persist(
-    (set) => ({
+  (set) => ({
       params: defaultMeleeParams,
       results: null,
       comparisonResults: [],
@@ -236,18 +238,5 @@ export const useCalculatorStore = create<CalculatorState>()(
       setLoadout: (loadout) => set({ loadout }),
       setSelectedBoss: (boss) => set({ selectedBoss: boss }),
       setSelectedBossForm: (form) => set({ selectedBossForm: form })
-    }),
-    {
-      name: 'osrs-calculator-storage',
-      storage: createJSONStorage(() => safeStorage),
-      partialize: (state) => ({
-        params: state.params,
-        gearLocked: state.gearLocked,
-        bossLocked: state.bossLocked,
-        loadout: state.loadout,
-        selectedBoss: state.selectedBoss,
-        selectedBossForm: state.selectedBossForm
-      })
-    }
-  )
+    })
 );
