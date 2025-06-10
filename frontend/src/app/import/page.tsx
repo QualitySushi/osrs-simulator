@@ -1,6 +1,6 @@
+
 "use client";
 export const dynamic = 'force-dynamic';
-
 import { useState } from 'react';
 import { useCalculatorStore } from '@/store/calculator-store';
 import { itemsApi } from '@/services/api';
