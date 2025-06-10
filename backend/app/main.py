@@ -155,84 +155,9 @@ async def get_boss(boss_id: int, response: Response):
     """
     try:
         boss = await boss_repository.get_boss_async(boss_id)
-        response.headers["Cache-Control"] = f"public, max-age={CACHE_TTL_SECONDS}"
-
-        # If boss not found in the database, return mock data or 404
         if not boss:
-            # Mock data for sample bosses
-            if boss_id == 1:  # Zulrah
-                return {
-                    "id": 1,
-                    "name": "Zulrah",
-                    "raid_group": None,
-                    "location": "Zul-Andra",
-                    "examine": "The great serpent of the poison waste.",
-                    "has_multiple_forms": True,
-                    "forms": [
-                        {
-                            "id": 1,
-                            "boss_id": 1,
-                            "form_name": "Green Form",
-                            "form_order": 1,
-                            "combat_level": 725,
-                            "hitpoints": 500,
-                            "defence_level": 300,
-                            "magic_level": 300,
-                            "ranged_level": 300,
-                            "defence_stab": 55,
-                            "defence_slash": 55,
-                            "defence_crush": 55,
-                            "defence_magic": 0,
-                            "defence_ranged_standard": 300
-                        },
-                        {
-                            "id": 2,
-                            "boss_id": 1,
-                            "form_name": "Blue Form",
-                            "form_order": 2,
-                            "combat_level": 725,
-                            "hitpoints": 500,
-                            "defence_level": 300,
-                            "magic_level": 300,
-                            "ranged_level": 300,
-                            "defence_stab": 55,
-                            "defence_slash": 55,
-                            "defence_crush": 55,
-                            "defence_magic": 300,
-                            "defence_ranged_standard": 0
-                        }
-                    ]
-                }
-            elif boss_id == 2:  # Vorkath
-                return {
-                    "id": 2,
-                    "name": "Vorkath",
-                    "raid_group": None,
-                    "location": "Ungael",
-                    "examine": "An undead dragon.",
-                    "has_multiple_forms": False,
-                    "forms": [
-                        {
-                            "id": 3,
-                            "boss_id": 2,
-                            "form_name": "Default",
-                            "form_order": 1,
-                            "combat_level": 732,
-                            "hitpoints": 750,
-                            "defence_level": 214,
-                            "magic_level": 150,
-                            "ranged_level": 150,
-                            "defence_stab": 20,
-                            "defence_slash": 20,
-                            "defence_crush": 20,
-                            "defence_magic": 240,
-                            "defence_ranged_standard": 0
-                        }
-                    ]
-                }
-            else:
-                raise HTTPException(status_code=404, detail="Boss not found")
-        
+            raise HTTPException(status_code=404, detail="Boss not found")
+
         response.headers["Cache-Control"] = f"public, max-age={CACHE_TTL_SECONDS}"
         return boss
     except HTTPException:
