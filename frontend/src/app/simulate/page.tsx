@@ -1,8 +1,7 @@
 'use client';
+export const dynamic = 'force-dynamic';
 
 import MultiBossSimulation from '@/components/features/simulation/MultiBossSimulation';
-
-export const dynamic = 'force-dynamic';
 
 export default function SimulatePage() {
   return (
