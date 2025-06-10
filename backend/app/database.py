@@ -423,34 +423,34 @@ class AzureSQLDatabaseService:
             with self.connection() as conn:
                 cursor = conn.cursor()
 
-            sql = (
-                "SELECT id, name, raid_group, location\n"
-                "FROM bosses\n"
-                "WHERE name LIKE ?\n"
-                "ORDER BY name"
-            )
-            params: list[Any] = [f"%{query}%"]
-            if limit is not None:
                 sql = (
-                    "SELECT TOP (?) id, name, raid_group, location\n"
+                    "SELECT id, name, raid_group, location\n"
                     "FROM bosses\n"
                     "WHERE name LIKE ?\n"
                     "ORDER BY name"
                 )
-                params.insert(0, limit)
+                params: list[Any] = [f"%{query}%"]
+                if limit is not None:
+                    sql = (
+                        "SELECT TOP (?) id, name, raid_group, location\n"
+                        "FROM bosses\n"
+                        "WHERE name LIKE ?\n"
+                        "ORDER BY name"
+                    )
+                    params.insert(0, limit)
 
-            cursor.execute(sql, params)
-            
-            bosses = []
-            for row in cursor.fetchall():
-                bosses.append(
-                    {
-                        "id": row[0],
-                        "name": row[1],
-                        "raid_group": row[2],
-                        "location": row[3],
-                    }
-                )
+                cursor.execute(sql, params)
+
+                bosses = []
+                for row in cursor.fetchall():
+                    bosses.append(
+                        {
+                            "id": row[0],
+                            "name": row[1],
+                            "raid_group": row[2],
+                            "location": row[3],
+                        }
+                    )
 
             return bosses
             
@@ -464,47 +464,47 @@ class AzureSQLDatabaseService:
             with self.connection() as conn:
                 cursor = conn.cursor()
 
-            sql = (
-                "SELECT id, name, has_special_attack, has_passive_effect,\n"
-                "       has_combat_stats, is_tradeable, slot, icons\n"
-                "FROM items\n"
-                "WHERE name LIKE ?\n"
-                "ORDER BY name"
-            )
-            params: list[Any] = [f"%{query}%"]
-            if limit is not None:
                 sql = (
-                    "SELECT TOP (?) id, name, has_special_attack, has_passive_effect,\n"
+                    "SELECT id, name, has_special_attack, has_passive_effect,\n"
                     "       has_combat_stats, is_tradeable, slot, icons\n"
                     "FROM items\n"
                     "WHERE name LIKE ?\n"
                     "ORDER BY name"
                 )
-                params.insert(0, limit)
+                params: list[Any] = [f"%{query}%"]
+                if limit is not None:
+                    sql = (
+                        "SELECT TOP (?) id, name, has_special_attack, has_passive_effect,\n"
+                        "       has_combat_stats, is_tradeable, slot, icons\n"
+                        "FROM items\n"
+                        "WHERE name LIKE ?\n"
+                        "ORDER BY name"
+                    )
+                    params.insert(0, limit)
 
-            cursor.execute(sql, params)
-            
-            items = []
-            for row in cursor.fetchall():
-                icons = []
-                if row[7]:
-                    try:
-                        icons = json.loads(row[7])
-                    except Exception:
-                        pass
+                cursor.execute(sql, params)
 
-                items.append(
-                    {
-                        "id": row[0],
-                        "name": row[1],
-                        "has_special_attack": bool(row[2]),
-                        "has_passive_effect": bool(row[3]),
-                        "has_combat_stats": bool(row[4]),
-                        "is_tradeable": bool(row[5]),
-                        "slot": row[6],
-                        "icons": icons,
-                    }
-                )
+                items = []
+                for row in cursor.fetchall():
+                    icons = []
+                    if row[7]:
+                        try:
+                            icons = json.loads(row[7])
+                        except Exception:
+                            pass
+
+                    items.append(
+                        {
+                            "id": row[0],
+                            "name": row[1],
+                            "has_special_attack": bool(row[2]),
+                            "has_passive_effect": bool(row[3]),
+                            "has_combat_stats": bool(row[4]),
+                            "is_tradeable": bool(row[5]),
+                            "slot": row[6],
+                            "icons": icons,
+                        }
+                    )
 
             return items
 
