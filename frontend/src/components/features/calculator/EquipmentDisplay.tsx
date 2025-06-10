@@ -28,6 +28,7 @@ const EQUIPMENT_SLOTS = {
   feet: { name: 'Feet', position: 'bottom-center', icon: '👢' },
   ring: { name: 'Ring', position: 'right-bottom', icon: '💍' },
   '2h': { name: 'Two-Handed', position: 'left-middle-2h', icon: '🗡️' },
+  spec: { name: 'Spec', position: 'right-top', icon: '🗡️' },
 };
 
 const POSITION_TO_GRID: Record<string, string> = {
