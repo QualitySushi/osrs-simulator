@@ -22,7 +22,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import RaidScalingPanel, { Raid, RaidScalingConfig } from './RaidScalingPanel';
+import RaidScalingPanel, { RaidScalingConfig } from './RaidScalingPanel';
+import { Raid, RAID_OPTIONS, RAID_NAME_MAP } from '@/types/raid';
 import {
   Table,
   TableBody,
@@ -49,16 +50,6 @@ interface SimulationEntry {
   result: DpsResult;
 }
 
-const RAID_OPTIONS: { id: Raid; name: string }[] = [
-  { id: 'cox', name: 'Chambers of Xeric' },
-  { id: 'tob', name: 'Theatre of Blood' },
-  { id: 'toa', name: 'Tombs of Amascut' },
-];
-
-const RAID_NAME_MAP = RAID_OPTIONS.reduce<Record<Raid, string>>((acc, r) => {
-  acc[r.id] = r.name;
-  return acc;
-}, {} as Record<Raid, string>);
 
 export function MultiBossSimulation() {
   const params = useCalculatorStore((s) => s.params);

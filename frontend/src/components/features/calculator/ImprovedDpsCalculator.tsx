@@ -16,7 +16,8 @@ import { CombatStyleTabs } from './CombatStyleTabs';
 import { DpsResultDisplay } from './DpsResultDisplay';
 import { useDpsCalculator } from '@/hooks/useDpsCalculator';
 import { useToast } from '@/hooks/use-toast';
-import RaidScalingPanel, { Raid, RaidScalingConfig } from '../simulation/RaidScalingPanel';
+import RaidScalingPanel, { RaidScalingConfig } from '../simulation/RaidScalingPanel';
+import { Raid, RAID_NAME_TO_ID } from '@/types/raid';
 import { useCalculatorStore } from '@/store/calculator-store';
 
 /**
@@ -45,12 +46,6 @@ export function ImprovedDpsCalculator() {
   const initData = useReferenceDataStore((s) => s.initData);
   const selectedBoss = useCalculatorStore((s) => s.selectedBoss);
   const [raidConfig, setRaidConfig] = useState<RaidScalingConfig>({ teamSize: 1 });
-
-  const RAID_NAME_TO_ID: Record<string, Raid> = {
-    'Chambers of Xeric': 'cox',
-    'Theatre of Blood': 'tob',
-    'Tombs of Amascut': 'toa',
-  };
 
   const selectedRaid = selectedBoss?.raid_group
     ? RAID_NAME_TO_ID[selectedBoss.raid_group]

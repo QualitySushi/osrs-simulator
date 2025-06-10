@@ -2,8 +2,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-
-export type Raid = 'cox' | 'tob' | 'toa';
+import { Raid, RAID_NAME_MAP } from '@/types/raid';
 
 export interface RaidScalingConfig {
   teamSize: number;
@@ -16,12 +15,6 @@ interface RaidScalingPanelProps {
   onChange: (config: RaidScalingConfig) => void;
 }
 
-const RAID_NAMES: Record<Raid, string> = {
-  cox: 'Chambers of Xeric',
-  tob: 'Theatre of Blood',
-  toa: 'Tombs of Amascut',
-};
-
 export function RaidScalingPanel({ raid, config, onChange }: RaidScalingPanelProps) {
   const handleChange = (key: keyof RaidScalingConfig, value: number) => {
     onChange({ ...config, [key]: value });
@@ -30,7 +23,7 @@ export function RaidScalingPanel({ raid, config, onChange }: RaidScalingPanelPro
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle>{RAID_NAMES[raid]} Scaling</CardTitle>
+        <CardTitle>{RAID_NAME_MAP[raid]} Scaling</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4 text-left">
         <div className="flex items-center gap-2">
