@@ -161,6 +161,33 @@ class TestDpsCalculator(unittest.TestCase):
 
         self.assertAlmostEqual(result["dps"], expected_dps, places=5)
 
+    def test_zero_special_energy_cost(self):
+        """Zero special energy cost should disable special attack simulation."""
+        params = {
+            "combat_style": "melee",
+            "strength_level": 99,
+            "strength_boost": 0,
+            "strength_prayer": 1.0,
+            "attack_level": 99,
+            "attack_boost": 0,
+            "attack_prayer": 1.0,
+            "melee_strength_bonus": 80,
+            "melee_attack_bonus": 80,
+            "attack_style_bonus_strength": 3,
+            "attack_style_bonus_attack": 0,
+            "attack_speed": 2.4,
+            "target_defence_level": 100,
+            "target_defence_bonus": 50,
+            "special_damage_multiplier": 1.2,
+            "special_accuracy_modifier": 1.0,
+            "special_energy_cost": 0,
+            "duration": 60,
+        }
+
+        result = DpsCalculator.calculate_dps(params)
+        self.assertNotIn("special_attack_dps", result)
+        self.assertNotIn("special_attacks", result)
+
 
 class TestMeleeCalculator(unittest.TestCase):
     """Test the Melee Calculator functionality."""
