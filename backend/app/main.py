@@ -147,17 +147,12 @@ async def get_bosses(
     """
     try:
 
-        bosses = await boss_repository.get_all_bosses_async(limit=page_size, offset=(page - 1) * page_size)
-        
-        # If no bosses are found in the database, return mock data
+        bosses = await boss_repository.get_all_bosses_async(
+            limit=page_size, offset=(page - 1) * page_size
+        )
+
         if not bosses:
-            return [
-                BossSummary(id=1, name="Zulrah", raid_group=None, location="Zul-Andra", has_multiple_forms=True),
-                BossSummary(id=2, name="Vorkath", raid_group=None, location="Ungael", has_multiple_forms=False),
-                BossSummary(id=3, name="Verzik Vitur", raid_group="Theatre of Blood", location="Ver Sinhaza", has_multiple_forms=True),
-                BossSummary(id=4, name="Great Olm", raid_group="Chambers of Xeric", location="Mount Quidamortem", has_multiple_forms=True),
-                BossSummary(id=5, name="Corporeal Beast", raid_group=None, location="Corporeal Beast Lair", has_multiple_forms=False),
-            ]
+            raise HTTPException(status_code=404, detail="No bosses found")
         return bosses
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to retrieve bosses: {str(e)}")
@@ -191,83 +186,9 @@ async def get_boss(boss_id: int, response: Response):
         boss = await boss_repository.get_boss_async(boss_id)
         response.headers["Cache-Control"] = f"public, max-age={CACHE_TTL_SECONDS}"
 
-        # If boss not found in the database, return mock data or 404
         if not boss:
-            # Mock data for sample bosses
-            if boss_id == 1:  # Zulrah
-                return {
-                    "id": 1,
-                    "name": "Zulrah",
-                    "raid_group": None,
-                    "location": "Zul-Andra",
-                    "examine": "The great serpent of the poison waste.",
-                    "has_multiple_forms": True,
-                    "forms": [
-                        {
-                            "id": 1,
-                            "boss_id": 1,
-                            "form_name": "Green Form",
-                            "form_order": 1,
-                            "combat_level": 725,
-                            "hitpoints": 500,
-                            "defence_level": 300,
-                            "magic_level": 300,
-                            "ranged_level": 300,
-                            "defence_stab": 55,
-                            "defence_slash": 55,
-                            "defence_crush": 55,
-                            "defence_magic": 0,
-                            "defence_ranged_standard": 300
-                        },
-                        {
-                            "id": 2,
-                            "boss_id": 1,
-                            "form_name": "Blue Form",
-                            "form_order": 2,
-                            "combat_level": 725,
-                            "hitpoints": 500,
-                            "defence_level": 300,
-                            "magic_level": 300,
-                            "ranged_level": 300,
-                            "defence_stab": 55,
-                            "defence_slash": 55,
-                            "defence_crush": 55,
-                            "defence_magic": 300,
-                            "defence_ranged_standard": 0
-                        }
-                    ]
-                }
-            elif boss_id == 2:  # Vorkath
-                return {
-                    "id": 2,
-                    "name": "Vorkath",
-                    "raid_group": None,
-                    "location": "Ungael",
-                    "examine": "An undead dragon.",
-                    "has_multiple_forms": False,
-                    "forms": [
-                        {
-                            "id": 3,
-                            "boss_id": 2,
-                            "form_name": "Default",
-                            "form_order": 1,
-                            "combat_level": 732,
-                            "hitpoints": 750,
-                            "defence_level": 214,
-                            "magic_level": 150,
-                            "ranged_level": 150,
-                            "defence_stab": 20,
-                            "defence_slash": 20,
-                            "defence_crush": 20,
-                            "defence_magic": 240,
-                            "defence_ranged_standard": 0
-                        }
-                    ]
-                }
-            else:
-                raise HTTPException(status_code=404, detail="Boss not found")
-        
-        response.headers["Cache-Control"] = f"public, max-age={CACHE_TTL_SECONDS}"
+            raise HTTPException(status_code=404, detail="Boss not found")
+
         return boss
     except HTTPException:
         raise
@@ -311,16 +232,8 @@ async def get_items(
         )
         response.headers["Cache-Control"] = f"public, max-age={CACHE_TTL_SECONDS}"
 
-        
-        # If no items are found in the database, return mock data
         if not items:
-            return [
-                ItemSummary(id=1, name="Twisted bow", slot="2h", has_special_attack=False, has_passive_effect=True, is_tradeable=True, has_combat_stats=True),
-                ItemSummary(id=2, name="Abyssal whip", slot="mainhand", has_special_attack=False, has_passive_effect=False, is_tradeable=True, has_combat_stats=True),
-                ItemSummary(id=3, name="Dragon claws", slot="mainhand", has_special_attack=True, has_passive_effect=False, is_tradeable=True, has_combat_stats=True),
-                ItemSummary(id=4, name="Bandos chestplate", slot="body", has_special_attack=False, has_passive_effect=False, is_tradeable=True, has_combat_stats=True),
-                ItemSummary(id=5, name="Amulet of fury", slot="neck", has_special_attack=False, has_passive_effect=False, is_tradeable=True, has_combat_stats=True),
-            ]
+            raise HTTPException(status_code=404, detail="No items found")
         return items
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to retrieve items: {str(e)}")
@@ -335,144 +248,10 @@ async def get_item(item_id: int, response: Response):
     try:
         item = await item_repository.get_item_async(item_id)
         response.headers["Cache-Control"] = f"public, max-age={CACHE_TTL_SECONDS}"
-
-        # If item not found in the database, return mock data or 404
         if not item:
-            # Mock data for sample items
-            if item_id == 1:  # Twisted bow
-                return {
-                    "id": 1,
-                    "name": "Twisted bow",
-                    "slot": "2h",
-                    "has_special_attack": False,
-                    "has_passive_effect": True,
-                    "passive_effect_text": "The Twisted bow has increased accuracy and damage against monsters with high Magic levels.",
-                    "is_tradeable": True,
-                    "has_combat_stats": True,
-                    "combat_stats": {
-                        "attack_bonuses": {
-                            "stab": 0,
-                            "slash": 0,
-                            "crush": 0,
-                            "magic": 0,
-                            "ranged": 70
-                        },
-                        "defence_bonuses": {
-                            "stab": 0,
-                            "slash": 0,
-                            "crush": 0,
-                            "magic": 0,
-                            "ranged": 0
-                        },
-                        "other_bonuses": {
-                            "strength": 0,
-                            "ranged strength": 20,
-                            "magic damage": "+0%",
-                            "prayer": 0
-                        },
-                        "combat_styles": [
-                            {
-                                "name": "Accurate",
-                                "attack_type": "Ranged",
-                                "style": "Accurate",
-                                "speed": "5 ticks (3.0s)",
-                                "range": "10 tiles",
-                                "experience": "",
-                                "boost": "+3 Attack"
-                            },
-                            {
-                                "name": "Rapid",
-                                "attack_type": "Ranged",
-                                "style": "Rapid",
-                                "speed": "4 ticks (2.4s)",
-                                "range": "10 tiles",
-                                "experience": "",
-                                "boost": ""
-                            },
-                            {
-                                "name": "Longrange",
-                                "attack_type": "Ranged",
-                                "style": "Longrange",
-                                "speed": "5 ticks (3.0s)",
-                                "range": "10 tiles",
-                                "experience": "",
-                                "boost": "+3 Defence"
-                            }
-                        ]
-                    }
-                }
-            elif item_id == 2:  # Abyssal whip
-                return {
-                    "id": 2,
-                    "name": "Abyssal whip",
-                    "slot": "mainhand",
-                    "has_special_attack": False,
-                    "has_passive_effect": False,
-                    "is_tradeable": True,
-                    "has_combat_stats": True,
-                    "combat_stats": {
-                        "attack_bonuses": {
-                            "stab": 0,
-                            "slash": 82,
-                            "crush": 0,
-                            "magic": 0,
-                            "ranged": 0
-                        },
-                        "defence_bonuses": {
-                            "stab": 0,
-                            "slash": 0,
-                            "crush": 0,
-                            "magic": 0,
-                            "ranged": 0
-                        },
-                        "other_bonuses": {
-                            "strength": 82,
-                            "ranged strength": 0,
-                            "magic damage": "+0%",
-                            "prayer": 0
-                        },
-                        "combat_styles": [
-                            {
-                                "name": "Chop",
-                                "attack_type": "Slash",
-                                "style": "Accurate",
-                                "speed": "5 ticks (3.0s)",
-                                "range": "1 tile",
-                                "experience": "",
-                                "boost": "+3 Attack"
-                            },
-                            {
-                                "name": "Slash",
-                                "attack_type": "Slash",
-                                "style": "Aggressive",
-                                "speed": "5 ticks (3.0s)",
-                                "range": "1 tile",
-                                "experience": "",
-                                "boost": "+3 Strength"
-                            },
-                            {
-                                "name": "Lunge",
-                                "attack_type": "Stab",
-                                "style": "Controlled",
-                                "speed": "5 ticks (3.0s)",
-                                "range": "1 tile",
-                                "experience": "",
-                                "boost": "+1 Attack, Strength, Defence"
-                            },
-                            {
-                                "name": "Block",
-                                "attack_type": "Slash",
-                                "style": "Defensive",
-                                "speed": "5 ticks (3.0s)",
-                                "range": "1 tile",
-                                "experience": "",
-                                "boost": "+3 Defence"
-                            }
-                        ]
-                    }
-                }
-            else:
-                raise HTTPException(status_code=404, detail="Item not found")
+            raise HTTPException(status_code=404, detail="Item not found")
+
+
         return item
     except HTTPException:
         raise
