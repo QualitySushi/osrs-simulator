@@ -98,12 +98,13 @@ export function useDpsCalculator() {
   const handleCalculate = useCallback(() => {
     const clean = sanitizeParams(params);
     if (currentLoadout) {
+      const specItem = currentLoadout['spec'];
       const twistedBowEquipped =
         (currentLoadout['2h'] &&
           currentLoadout['2h']!.name.toLowerCase().includes('twisted bow')) ||
         (currentLoadout['mainhand'] &&
           currentLoadout['mainhand']!.name.toLowerCase().includes('twisted bow'));
-      if (twistedBowEquipped && params.combat_style === 'ranged') {
+      if (!specItem && twistedBowEquipped && params.combat_style === 'ranged') {
         (clean as any).weapon_name = 'twisted bow';
         if (currentBossForm?.magic_level) {
           (clean as any).target_magic_level = currentBossForm.magic_level;
@@ -118,6 +119,9 @@ export function useDpsCalculator() {
           currentLoadout['mainhand']!.name.toLowerCase().includes('tumeken'));
       if (tumekenShadowEquipped && params.combat_style === 'magic') {
         (clean as any).shadow_bonus = 0.5;
+      }
+      if (specItem) {
+        (clean as any).weapon_name = specItem.name.toLowerCase();
       }
     }
     calculateMutation.mutate(clean);

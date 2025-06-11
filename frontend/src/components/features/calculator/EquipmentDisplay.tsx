@@ -28,6 +28,7 @@ const EQUIPMENT_SLOTS = {
   feet: { name: 'Feet', position: 'bottom-center', icon: '👢' },
   ring: { name: 'Ring', position: 'right-bottom', icon: '💍' },
   '2h': { name: 'Two-Handed', position: 'left-middle-2h', icon: '🗡️' },
+  spec: { name: 'Spec Weapon', position: 'spec-slot', icon: '⚡' },
 };
 
 const POSITION_TO_GRID: Record<string, string> = {
@@ -44,6 +45,7 @@ const POSITION_TO_GRID: Record<string, string> = {
   'left-bottom': 'col-start-1 row-start-5',
   'bottom-center': 'col-start-2 row-start-5',
   'right-bottom': 'col-start-3 row-start-5',
+  'spec-slot': 'col-span-3 row-start-6',
 };
 
 interface EquipmentDisplayProps {
@@ -285,7 +287,7 @@ export function EquipmentDisplay({ loadout, totals }: EquipmentDisplayProps) {
 
       {isExpanded && (
         <CardContent>
-          <div className="grid grid-cols-3 grid-rows-5 gap-2 justify-items-center">
+          <div className="grid grid-cols-3 grid-rows-6 gap-2 justify-items-center">
             {Object.entries(EQUIPMENT_SLOTS).map(([slotKey, slotData]) => {
               const item = loadout[slotKey];
               

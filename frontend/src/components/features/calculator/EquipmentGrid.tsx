@@ -28,7 +28,8 @@ const EQUIPMENT_SLOTS = {
   hands: { name: 'Hands', position: 'left-bottom' },
   feet: { name: 'Feet', position: 'bottom-center' },
   ring: { name: 'Ring', position: 'right-bottom' },
-  '2h': { name: 'Two-Handed', position: 'left-middle-2h' }
+  '2h': { name: 'Two-Handed', position: 'left-middle-2h' },
+  spec: { name: 'Spec Weapon', position: 'spec-slot' }
 };
 
 const POSITION_TO_GRID: Record<string, string> = {
@@ -43,7 +44,8 @@ const POSITION_TO_GRID: Record<string, string> = {
   'center-bottom': 'col-start-2 row-start-4',
   'left-bottom': 'col-start-1 row-start-5',
   'bottom-center': 'col-start-2 row-start-5',
-  'right-bottom': 'col-start-3 row-start-5'
+  'right-bottom': 'col-start-3 row-start-5',
+  'spec-slot': 'col-span-3 row-start-6'
 };
 
 interface EquipmentGridProps {
@@ -80,7 +82,7 @@ export function EquipmentGrid({ loadout, show2hOption, combatStyle, onUpdateLoad
     }
 
     itemsApi.getItemById(item.id).then((fullItem) => {
-      if (!fullItem || !fullItem.combat_stats) {
+      if (slot !== 'spec' && (!fullItem || !fullItem.combat_stats)) {
         toast.error(`Failed to load full stats for ${item.name}`);
         return;
       }
@@ -136,7 +138,7 @@ export function EquipmentGrid({ loadout, show2hOption, combatStyle, onUpdateLoad
 
   return (
     <>
-      <div className="grid grid-cols-3 grid-rows-5 gap-2 justify-items-center mb-4 px-4">
+      <div className="grid grid-cols-3 grid-rows-6 gap-2 justify-items-center mb-4 px-4">
         {getDisplaySlots().map(({ slot, name, position }) => (
           <div
             key={slot}
@@ -182,7 +184,7 @@ export function EquipmentGrid({ loadout, show2hOption, combatStyle, onUpdateLoad
           </DialogHeader>
           {selectedSlot && (
             <ItemSelector
-              slot={selectedSlot}
+              slot={selectedSlot === 'spec' ? undefined : selectedSlot}
               onSelectItem={(item) => handleSelectItem(selectedSlot, item)}
             />
           )}
