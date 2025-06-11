@@ -133,13 +133,31 @@ class DpsCalculator:
 
         while time < duration - 1e-9:
             if energy >= cost:
-                special_total += special_damage
-                energy = max(0.0, energy - cost)
+                damage = special_damage
                 step = special_speed
+                energy = max(0.0, energy - cost)
+                special = True
                 special_count += 1
             else:
-                regular_total += regular_damage
+                damage = regular_damage
                 step = attack_speed
+                special = False
+
+            if time + step > duration:
+                frac = (duration - time) / step
+                damage *= frac
+                energy = min(100.0, energy + regen_rate * step * frac)
+                if special:
+                    special_total += damage
+                else:
+                    regular_total += damage
+                time = duration
+                break
+
+            if special:
+                special_total += damage
+            else:
+                regular_total += damage
 
             time += step
             energy = min(100.0, energy + regen_rate * step)
