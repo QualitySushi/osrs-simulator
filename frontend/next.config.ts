@@ -3,6 +3,7 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   output: 'standalone',
   trailingSlash: true,
+  transpilePackages: ['@tanstack/react-query', '@tanstack/query-core'],
   images: {
     unoptimized: true
   },
