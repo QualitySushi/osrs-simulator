@@ -20,6 +20,7 @@ AZURE_SQL_CONNECTION = (
 # SQLite database file paths
 SQLITE_BOSSES_DB = "osrs_bosses.db"
 SQLITE_ITEMS_DB = "osrs_combat_items.db"  # Using combat items DB
+SQLITE_NPCS_DB = "osrs_npcs.db"
 
 def test_azure_connection():
     """Test connection to Azure SQL Database using Entra ID"""
@@ -115,6 +116,79 @@ def create_tables():
                 npc_ids NVARCHAR(255),
                 assigned_by NVARCHAR(255),
                 FOREIGN KEY (boss_id) REFERENCES bosses(id)
+            )
+        """)
+
+        # Create npcs table
+        cursor.execute("""
+            IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='npcs' AND xtype='U')
+            CREATE TABLE npcs (
+                id INT IDENTITY(1,1) PRIMARY KEY,
+                name NVARCHAR(255) NOT NULL UNIQUE,
+                raid_group NVARCHAR(255),
+                examine NVARCHAR(MAX),
+                release_date NVARCHAR(100),
+                location NVARCHAR(255),
+                slayer_level INT,
+                slayer_xp INT,
+                slayer_category NVARCHAR(100),
+                wiki_url NVARCHAR(255),
+                has_multiple_forms BIT,
+                raw_html NVARCHAR(MAX),
+                last_updated DATETIME
+            )
+        """)
+
+        # Create npc_forms table
+        cursor.execute("""
+            IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='npc_forms' AND xtype='U')
+            CREATE TABLE npc_forms (
+                id INT IDENTITY(1,1) PRIMARY KEY,
+                npc_id INT NOT NULL,
+                form_name NVARCHAR(255),
+                form_order INT,
+                combat_level INT,
+                hitpoints INT,
+                max_hit NVARCHAR(255),
+                attack_speed INT,
+                attack_style NVARCHAR(255),
+                attack_level INT,
+                strength_level INT,
+                defence_level INT,
+                magic_level INT,
+                ranged_level INT,
+                aggressive_attack_bonus INT,
+                aggressive_strength_bonus INT,
+                aggressive_magic_bonus INT,
+                aggressive_magic_strength_bonus INT,
+                aggressive_ranged_bonus INT,
+                aggressive_ranged_strength_bonus INT,
+                defence_stab INT,
+                defence_slash INT,
+                defence_crush INT,
+                defence_magic INT,
+                elemental_weakness_type NVARCHAR(100),
+                elemental_weakness_percent NVARCHAR(100),
+                defence_ranged_light INT,
+                defence_ranged_standard INT,
+                defence_ranged_heavy INT,
+                attribute NVARCHAR(255),
+                xp_bonus NVARCHAR(100),
+                aggressive BIT,
+                poisonous BIT,
+                poison_immunity BIT,
+                venom_immunity BIT,
+                melee_immunity BIT,
+                magic_immunity BIT,
+                ranged_immunity BIT,
+                cannon_immunity BIT,
+                thrall_immunity BIT,
+                special_mechanics NVARCHAR(MAX),
+                image_url NVARCHAR(500),
+                icons NVARCHAR(MAX),
+                size INT,
+                assigned_by NVARCHAR(255),
+                FOREIGN KEY (npc_id) REFERENCES npcs(id)
             )
         """)
         
@@ -319,6 +393,107 @@ def migrate_items():
         print(f"✗ Error migrating items: {e}")
         return False
 
+def migrate_npcs():
+    """Migrate NPCs from SQLite to Azure SQL"""
+    try:
+        print("Migrating NPCs...")
+
+        if not os.path.exists(SQLITE_NPCS_DB):
+            print(f"✗ SQLite file not found: {SQLITE_NPCS_DB}")
+            return False
+
+        sqlite_conn = sqlite3.connect(SQLITE_NPCS_DB)
+        sqlite_cursor = sqlite_conn.cursor()
+
+        azure_conn = pyodbc.connect(AZURE_SQL_CONNECTION)
+        azure_cursor = azure_conn.cursor()
+
+        sqlite_cursor.execute("SELECT * FROM npcs")
+        npcs = sqlite_cursor.fetchall()
+
+        print(f"Found {len(npcs)} NPCs to migrate")
+
+        sqlite_cursor.execute("PRAGMA table_info(npcs)")
+        columns = [col[1] for col in sqlite_cursor.fetchall()][1:]
+
+        npc_count = 0
+        for npc in npcs:
+            npc_data = npc[1:]
+            placeholders = ', '.join(['?' for _ in range(len(columns))])
+            insert_columns = ', '.join(columns)
+            query = f"INSERT INTO npcs ({insert_columns}) VALUES ({placeholders})"
+
+            try:
+                azure_cursor.execute(query, npc_data)
+                npc_count += 1
+                if npc_count % 50 == 0:
+                    print(f"  Migrated {npc_count} NPCs...")
+            except Exception as e:
+                print(f"✗ Failed to migrate NPC {npc[1]}: {e}")
+
+        print(f"✓ Migrated {npc_count} NPCs successfully!")
+
+        migrate_npc_forms(sqlite_cursor, azure_cursor)
+
+        azure_conn.commit()
+        azure_conn.close()
+        sqlite_conn.close()
+        return True
+
+    except Exception as e:
+        print(f"✗ Error migrating NPCs: {e}")
+        return False
+
+def migrate_npc_forms(sqlite_cursor, azure_cursor):
+    """Migrate NPC forms"""
+    try:
+        print("Migrating NPC forms...")
+
+        sqlite_cursor.execute("SELECT * FROM npc_forms")
+        forms = sqlite_cursor.fetchall()
+
+        print(f"Found {len(forms)} NPC forms to migrate")
+
+        sqlite_cursor.execute("PRAGMA table_info(npc_forms)")
+        columns = [col[1] for col in sqlite_cursor.fetchall()][1:]
+
+        form_count = 0
+        for form in forms:
+            old_npc_id = form[1]
+
+            sqlite_cursor.execute("SELECT name FROM npcs WHERE id = ?", (old_npc_id,))
+            npc_result = sqlite_cursor.fetchone()
+            if not npc_result:
+                continue
+
+            npc_name = npc_result[0]
+
+            azure_cursor.execute("SELECT id FROM npcs WHERE name = ?", (npc_name,))
+            azure_result = azure_cursor.fetchone()
+            if not azure_result:
+                continue
+
+            new_npc_id = azure_result[0]
+            form_data = list(form[1:])
+            form_data[0] = new_npc_id
+
+            placeholders = ', '.join(['?' for _ in range(len(columns))])
+            insert_columns = ', '.join(columns)
+            query = f"INSERT INTO npc_forms ({insert_columns}) VALUES ({placeholders})"
+
+            try:
+                azure_cursor.execute(query, form_data)
+                form_count += 1
+                if form_count % 50 == 0:
+                    print(f"  Migrated {form_count} NPC forms...")
+            except Exception as e:
+                print(f"✗ Failed to migrate form {form[2]}: {e}")
+
+        print(f"✓ Migrated {form_count} NPC forms successfully!")
+
+    except Exception as e:
+        print(f"✗ Error migrating NPC forms: {e}")
+
 def main():
     """Main migration function"""
     print("=" * 50)
@@ -349,12 +524,18 @@ def main():
         print("✓ Boss migration completed")
     else:
         print("✗ Boss migration failed")
-    
+
     # Migrate items
     if migrate_items():
         print("✓ Item migration completed")
     else:
         print("✗ Item migration failed")
+
+    # Migrate NPCs
+    if migrate_npcs():
+        print("✓ NPC migration completed")
+    else:
+        print("✗ NPC migration failed")
     
     print("\n" + "=" * 50)
     print("Migration completed!")
