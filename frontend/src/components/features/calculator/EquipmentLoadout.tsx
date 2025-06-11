@@ -14,7 +14,6 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useToast } from '@/hooks/use-toast';
 import { useCalculatorStore } from '@/store/calculator-store';
 import { EquipmentDisplay } from '@/components/features/calculator/EquipmentDisplay';
-import PassiveEffectsDisplay from './PassiveEffectsDisplay';
 import { ItemSelector } from './ItemSelector';
 import { Item, ItemSummary } from '@/types/calculator';
 import { itemsApi } from '@/services/api';
@@ -488,8 +487,6 @@ export function EquipmentLoadout({ onEquipmentUpdate }: EquipmentLoadoutProps) {
             <EquipmentDisplay loadout={loadout} totals={totals} />
           </div>
 
-          {/* Display passive effects if any items have them */}
-          <PassiveEffectsDisplay loadout={loadout} target={selectedBossForm} />
 
           <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mb-6">
             {getDisplaySlots().map(({ name, slot, icon }) => (

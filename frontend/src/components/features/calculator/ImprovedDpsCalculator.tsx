@@ -1,13 +1,11 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { useReferenceDataStore } from '@/store/reference-data-store';
-import PassiveEffectsDisplay from './PassiveEffectsDisplay';
 import { useDpsCalculator } from '@/hooks/useDpsCalculator';
 import { Raid, RAID_NAME_TO_ID } from '@/types/raid';
 import { useCalculatorStore } from '@/store/calculator-store';
 import { Header } from './improved/Header';
 import { MiddleColumns } from './improved/MiddleColumns';
-import { BottomPanels } from './improved/BottomPanels';
 import { RaidScalingConfig } from '../simulation/RaidScalingPanel';
 
 /**
@@ -58,13 +56,6 @@ export function ImprovedDpsCalculator() {
         appliedPassiveEffects={appliedPassiveEffects}
       />
 
-      {Object.keys(currentLoadout).length > 0 && (
-        <PassiveEffectsDisplay
-          loadout={currentLoadout}
-          target={currentBossForm}
-        />
-      )}
-
       <MiddleColumns
         onEquipmentUpdate={handleEquipmentUpdate}
         onSelectForm={handleBossUpdate}
@@ -74,8 +65,6 @@ export function ImprovedDpsCalculator() {
         onRaidConfigChange={setRaidConfig}
       />
 
-      <BottomPanels />
-      
     </div>
   );
 }
