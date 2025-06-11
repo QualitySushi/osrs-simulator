@@ -1,4 +1,5 @@
 import HomeHero from '@/components/layout/HomeHero';
+import { InitReferenceData } from '@/components/layout/InitReferenceData';
 import Link from 'next/link';
 import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 
@@ -6,6 +7,7 @@ export default function Home() {
   return (
     <>
       <HomeHero />
+      <InitReferenceData />
       <main id="main" className="container mx-auto py-8 px-4 pb-16 text-center">
         <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
           Welcome to ScapeLab, a suite of tools to help optimize your Old School RuneScape gameplay.

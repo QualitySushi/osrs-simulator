@@ -27,6 +27,8 @@ interface ReferenceDataState {
   loading: boolean;
   /** Progress of initial data loading between 0 and 1 */
   progress: number;
+  /** Indicates if loading failed */
+  error: boolean;
   timestamp: number;
   initData: () => Promise<void>;
   addBosses: (b: BossSummary[]) => void;
@@ -48,14 +50,16 @@ export const useReferenceDataStore = create<ReferenceDataState>()(
       passiveEffects: {},
       initialized: false,
       loading: false,
+      error: false,
       progress: 0,
       timestamp: 0,
       async initData() {
         if (get().initialized || get().loading) return;
-        set({ loading: true, progress: 0, timestamp: Date.now() });
+        set({ loading: true, progress: 0, timestamp: Date.now(), error: false });
         const pageSize = 50;
         let page = 1;
         const bosses: BossSummary[] = [];
+        let error = false;
         while (true) {
           try {
             const data = await bossesApi.getAllBosses({ page, page_size: pageSize });
@@ -64,6 +68,7 @@ export const useReferenceDataStore = create<ReferenceDataState>()(
             if (data.length < pageSize) break;
             page += 1;
           } catch {
+            error = true;
             break;
           }
         }
@@ -83,13 +88,20 @@ export const useReferenceDataStore = create<ReferenceDataState>()(
             if (data.length < pageSize) break;
             page += 1;
           } catch {
+            error = true;
             break;
           }
         }
         set({ progress: 0.5 });
         const [specialAttacks, passiveEffects] = await Promise.all([
-          specialAttacksApi.getAll().catch(() => ({})),
-          passiveEffectsApi.getAll().catch(() => ({})),
+          specialAttacksApi.getAll().catch(() => {
+            error = true;
+            return {};
+          }),
+          passiveEffectsApi.getAll().catch(() => {
+            error = true;
+            return {};
+          }),
         ]);
 
         set({ progress: 0.75 });
@@ -99,8 +111,9 @@ export const useReferenceDataStore = create<ReferenceDataState>()(
           items,
           specialAttacks,
           passiveEffects,
-          initialized: true,
+          initialized: !error,
           loading: false,
+          error,
           progress: 1,
         });
       },
@@ -135,7 +148,7 @@ export const useReferenceDataStore = create<ReferenceDataState>()(
         if (!stored) return;
         const expired = Date.now() - stored.timestamp > REFERENCE_TTL_MS;
         if (expired) {
-          state.setState({ bosses: [], bossForms: {}, items: [], specialAttacks: {}, passiveEffects: {}, initialized: false, loading: false, progress: 0, timestamp: Date.now() });
+          state.setState({ bosses: [], bossForms: {}, items: [], specialAttacks: {}, passiveEffects: {}, initialized: false, loading: false, progress: 0, error: false, timestamp: Date.now() });
         } else {
           state.setState({
             bosses: stored.bosses || [],
@@ -146,6 +159,7 @@ export const useReferenceDataStore = create<ReferenceDataState>()(
             initialized: false,
             loading: false,
             progress: 0,
+            error: false,
           });
         }
       },

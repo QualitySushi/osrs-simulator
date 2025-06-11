@@ -32,6 +32,7 @@ describe('reference data store', () => {
         initialized: false,
         loading: false,
         progress: 0,
+        error: false,
       });
     });
     mockedBossApi.getAllBosses.mockReset();
