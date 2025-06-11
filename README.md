@@ -151,6 +151,11 @@ GitHub Actions injects this value in `.github/workflows/azure-static-web-apps-ye
 Ensure this secret contains the URL of your deployed FastAPI service, for example
 `https://scapelab-api-dvawaebtdze3brf0.canadacentral-01.azurewebsites.net`.
 
+Set `NEXT_PUBLIC_FORCE_CLEAR_CACHE=true` in the same `.env.local` file if you
+need to force users' browsers to clear all cached state on load. This is handy
+when testers have visited a broken build and you want to wipe any persisted
+data such as local storage.
+
 When deploying the frontend, the workflow also requires a secret named
 `AZURE_STATIC_WEB_APPS_API_TOKEN_YELLOW_STONE_0DAF36A0F` containing the
 deployment token for your Azure Static Web App.
