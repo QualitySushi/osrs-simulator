@@ -50,16 +50,18 @@ export function PassiveEffectsDisplay({ loadout, target }: PassiveEffectsDisplay
     ];
 
     // Get equipped items with passive effects - enhanced detection
-    const itemsWithPassiveEffects = Object.values(loadout)
-      .filter(item => {
+    const itemsWithPassiveEffects = Object.entries(loadout)
+      .filter(([slot, item]) => {
+        if (slot === 'spec') return false;
         if (!item) return false;
-        
+
         // Check database flag OR known item names
-        return item.has_passive_effect || 
-              KNOWN_PASSIVE_ITEMS.some(keyword => 
+        return item.has_passive_effect ||
+              KNOWN_PASSIVE_ITEMS.some(keyword =>
                 item.name.toLowerCase().includes(keyword)
               );
-      }) as Item[];
+      })
+      .map(([, item]) => item) as Item[];
     
     if (process.env.NODE_ENV !== 'production') {
       console.log('[DEBUG] Items with passive effects:', itemsWithPassiveEffects);
