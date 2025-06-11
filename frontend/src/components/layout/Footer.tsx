@@ -5,14 +5,16 @@ export function Footer() {
     <footer className="border-t w-full py-6 bg-background mt-auto">
       <div className="container mx-auto px-4">
         <div className="flex flex-col md:flex-row justify-between items-center">
-          <div className="mb-4 md:mb-0 text-center md:text-left flex flex-col items-center md:items-start">
-            <img src="/images/logo_transparent_hd.png" alt="ScapeLab logo" className="h-8 w-8 mb-2" />
-            <p className="text-sm text-muted-foreground">
-              © {currentYear} ScapeLab. Not affiliated with Jagex Ltd.
-            </p>
-            <p className="text-xs text-muted-foreground mt-1">
-              Old School RuneScape and Jagex are trademarks of Jagex Ltd.
-            </p>
+          <div className="mb-4 md:mb-0 text-center md:text-left flex items-center space-x-2">
+            <img src="/images/logo_transparent_hd.png" alt="ScapeLab logo" className="h-8 w-8" />
+            <div className="flex flex-col items-center md:items-start">
+              <p className="text-sm text-muted-foreground">
+                © {currentYear} ScapeLab. Not affiliated with Jagex Ltd.
+              </p>
+              <p className="text-xs text-muted-foreground mt-1">
+                Old School RuneScape and Jagex are trademarks of Jagex Ltd.
+              </p>
+            </div>
           </div>
           
           <div className="text-sm text-muted-foreground text-center md:text-right">

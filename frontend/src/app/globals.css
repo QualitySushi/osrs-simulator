@@ -379,25 +379,25 @@ select {
 /* Logo fading animation for loading overlay */
 @keyframes logo-cycle {
   0%,
-  20% {
+  33% {
     opacity: 1;
   }
-  33%,
+  66%,
   100% {
     opacity: 0;
   }
 }
 
 .logo-fade-off {
-  animation: logo-cycle 6s linear infinite;
+  animation: logo-cycle 4.5s linear infinite;
 }
 
 .logo-fade-mid {
-  animation: logo-cycle 6s linear infinite;
-  animation-delay: 2s;
+  animation: logo-cycle 4.5s linear infinite;
+  animation-delay: 1.5s;
 }
 
 .logo-fade-on {
-  animation: logo-cycle 6s linear infinite;
-  animation-delay: 4s;
+  animation: logo-cycle 4.5s linear infinite;
+  animation-delay: 3s;
 }
