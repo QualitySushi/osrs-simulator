@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Search, Loader2 } from 'lucide-react';
+import { Search } from 'lucide-react';
+import { LogoSpinner } from '@/components/ui/LogoSpinner';
 import { 
   Command, 
   CommandEmpty, 
@@ -193,7 +194,7 @@ export function ItemSelector({ slot, specialOnly, onSelectItem }: ItemSelectorPr
                   <CommandList className="max-h-[300px]">
                     {isLoading && searchTerm ? (
                       <div className="flex items-center justify-center p-4">
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        <LogoSpinner className="mr-2 h-4 w-4" />
                         Loading...
                       </div>
                     ) : (
@@ -220,7 +221,7 @@ export function ItemSelector({ slot, specialOnly, onSelectItem }: ItemSelectorPr
                   </CommandList>
                   {isLoading && !searchTerm && (
                     <div className="flex items-center justify-center p-2">
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      <LogoSpinner className="mr-2 h-4 w-4" />
                     </div>
                   )}
                 </CommandGroup>

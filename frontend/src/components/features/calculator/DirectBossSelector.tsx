@@ -2,7 +2,8 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Loader2, RotateCcw } from 'lucide-react';
+import { RotateCcw } from 'lucide-react';
+import { LogoSpinner } from '@/components/ui/LogoSpinner';
 import { 
   Command, 
   CommandEmpty, 
@@ -270,7 +271,7 @@ export function DirectBossSelector({ onSelectBoss, onSelectForm, className }: Di
                   <CommandGroup>
                     {isLoading && searchQuery ? (
                       <div className="flex items-center justify-center p-4">
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        <LogoSpinner className="mr-2 h-4 w-4" />
                         Loading...
                       </div>
                     ) : (
@@ -293,7 +294,7 @@ export function DirectBossSelector({ onSelectBoss, onSelectForm, className }: Di
                   </CommandGroup>
                   { (isLoading && !searchQuery) || (storeBosses.length === 0 && !searchQuery) ? (
                     <div className="flex items-center justify-center p-2">
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      <LogoSpinner className="mr-2 h-4 w-4" />
                     </div>
                   ) : null}
                 </CommandList>
@@ -308,7 +309,7 @@ export function DirectBossSelector({ onSelectBoss, onSelectForm, className }: Di
             <label className="text-sm font-medium">Select Form/Phase</label>
             {isLoadingDetails ? (
               <div className="flex items-center text-sm text-muted-foreground">
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                <LogoSpinner className="mr-2 h-4 w-4" />
                 Loading boss details...
               </div>
             ) : (<div className="flex items-center gap-2 w-full justify-between">

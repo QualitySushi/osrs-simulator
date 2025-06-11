@@ -1,6 +1,7 @@
 'use client';
 
-import { Loader2, Check, X } from 'lucide-react';
+import { Check, X } from 'lucide-react';
+import { LogoSpinner } from '@/components/ui/LogoSpinner';
 import { useEffect, useState } from 'react';
 import { useReferenceDataStore } from '@/store/reference-data-store';
 
@@ -44,7 +45,7 @@ export function ReferenceDataBanner() {
         ) : error ? (
           <X className="h-4 w-4" />
         ) : (
-          <Loader2 className="h-4 w-4 animate-spin" />
+          <LogoSpinner className="h-4 w-4" />
         )}
         <span>
           {done

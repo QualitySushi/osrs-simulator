@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Search, Loader2, X } from 'lucide-react';
+import { Search, X } from 'lucide-react';
+import { LogoSpinner } from '@/components/ui/LogoSpinner';
 import {
   Command,
   CommandEmpty,
@@ -287,7 +288,7 @@ export function MultiBossSimulation() {
                   <CommandList>
                     {isLoading && searchTerm ? (
                       <div className="flex items-center justify-center p-4">
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        <LogoSpinner className="mr-2 h-4 w-4" />
                         Loading...
                       </div>
                     ) : (
@@ -323,7 +324,7 @@ export function MultiBossSimulation() {
           </div>
         )}
         <Button onClick={runSimulation} disabled={selectedBosses.length === 0 || isRunning}>
-          {isRunning && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}Run Simulation
+          {isRunning && <LogoSpinner className="mr-2 h-4 w-4" />}Run Simulation
         </Button>
         {results.length > 0 && (
           <Table className="mt-4">
