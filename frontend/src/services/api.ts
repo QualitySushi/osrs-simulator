@@ -1,10 +1,11 @@
 import axios from 'axios';
-import { 
-  CalculatorParams, 
-  DpsResult, 
-  Boss, 
-  Item, 
-  BossForm 
+import {
+  CalculatorParams,
+  DpsResult,
+  Boss,
+  Item,
+  BossForm,
+  SpecialAttack
 } from '@/types/calculator';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
@@ -127,6 +128,13 @@ export const itemsApi = {
       params.limit = limit;
     }
     const { data } = await apiClient.get('/search/items', { params });
+    return data;
+  },
+};
+
+export const specialAttacksApi = {
+  getAll: async (): Promise<Record<string, SpecialAttack>> => {
+    const { data } = await apiClient.get('/special-attacks');
     return data;
   },
 };

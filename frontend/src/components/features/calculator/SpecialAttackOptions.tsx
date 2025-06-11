@@ -1,13 +1,19 @@
 'use client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
-import { useCalculatorStore } from '@/store/calculator-store';
 import { Swords } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { specialAttacksApi } from '@/services/api';
+import { SpecialAttack } from '@/types/calculator';
 
 export function SpecialAttackOptions() {
-  const { params, setParams } = useCalculatorStore();
+  const [attacks, setAttacks] = useState<Record<string, SpecialAttack>>({});
+
+  useEffect(() => {
+    specialAttacksApi
+      .getAll()
+      .then(setAttacks)
+      .catch(() => setAttacks({}));
+  }, []);
 
   return (
     <Card className="w-full border">
@@ -17,56 +23,15 @@ export function SpecialAttackOptions() {
           Special Attacks
         </CardTitle>
       </CardHeader>
-      <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="space-y-1">
-          <Label>Special Cost</Label>
-          <Input
-            type="number"
-            min={0}
-            max={100}
-            value={params.special_attack_cost ?? 0}
-            onChange={(e) =>
-              setParams({ special_attack_cost: parseInt(e.target.value) || 0 })
-            }
-          />
-        </div>
-        <div className="space-y-1">
-          <Label>Rotation (%)</Label>
-          <Input
-            type="number"
-            min={0}
-            max={100}
-            value={Math.round((params.special_rotation ?? 0) * 100)}
-            onChange={(e) =>
-              setParams({ special_rotation: (parseFloat(e.target.value) || 0) / 100 })
-            }
-          />
-        </div>
-        <div className="flex items-center gap-2">
-          <Switch
-            checked={!!params.lightbearer}
-            onCheckedChange={(v) => setParams({ lightbearer: v })}
-          />
-          <Label>Lightbearer</Label>
-        </div>
-        <div className="flex items-center gap-2">
-          <Switch
-            checked={!!params.surge_potion}
-            onCheckedChange={(v) => setParams({ surge_potion: v })}
-          />
-          <Label>Surge Potion</Label>
-        </div>
-        <div className="space-y-1">
-          <Label>Duration (s)</Label>
-          <Input
-            type="number"
-            min={1}
-            value={params.duration ?? 60}
-            onChange={(e) =>
-              setParams({ duration: parseFloat(e.target.value) || 60 })
-            }
-          />
-        </div>
+      <CardContent className="space-y-4">
+        {Object.entries(attacks).map(([key, info]) => (
+          <div key={key} className="text-sm space-y-1">
+            <div className="font-semibold">
+              {info.special_name} - Cost {info.cost}%
+            </div>
+            <div>{info.effect}</div>
+          </div>
+        ))}
       </CardContent>
     </Card>
   );

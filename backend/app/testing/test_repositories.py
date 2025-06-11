@@ -181,4 +181,10 @@ class TestSpecialAttackRepository(unittest.TestCase):
         self.assertIsNotNone(data)
         self.assertEqual(data["cost"], 25)
 
+    def test_get_all_special_attacks(self):
+        from app.repositories import special_attack_repository
+        data = special_attack_repository.get_all_special_attacks()
+        self.assertIsInstance(data, dict)
+        self.assertIn("dragon_dagger", data)
+
 

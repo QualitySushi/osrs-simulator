@@ -15,3 +15,8 @@ def get_special_attack(weapon_name: str) -> Optional[Dict[str, Any]]:
     data = _load_data()
     key = weapon_name.lower().replace(" ", "_")
     return data.get(key)
+
+
+def get_all_special_attacks() -> Dict[str, Any]:
+    """Return the entire special attack dataset."""
+    return _load_data()

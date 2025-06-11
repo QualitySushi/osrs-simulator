@@ -287,3 +287,11 @@ export interface SearchParams {
   slot?: EquipmentSlot;
   limit?: number;
 }
+
+export interface SpecialAttack {
+  special_name: string;
+  cost: number;
+  effect: string;
+  attack_roll_modifier: number;
+  damage_roll_modifier: number;
+}
