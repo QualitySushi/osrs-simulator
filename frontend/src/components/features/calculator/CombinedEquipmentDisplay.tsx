@@ -17,7 +17,7 @@ import { EquipmentGrid } from './EquipmentGrid';
 import { AttackStyleSelector, DEFAULT_ATTACK_STYLES, ATTACK_TYPE_TO_DEFENCE_TYPE } from './AttackStyleSelector';
 import { CombatStatsSummary } from './CombatStatsSummary';
 import { SpellSelector } from './SpellSelector';
-import { getWeaponAttackStyles } from './EquipmentUtils';
+import { getWeaponAttackStyles, detectCombatStyleFromWeapon } from './EquipmentUtils';
 
 function isMeleeParams(params: CalculatorParams): params is CalculatorParams & { 
   attack_level: number;
@@ -215,17 +215,23 @@ export function CombinedEquipmentDisplay({ onEquipmentUpdate, bossForm, loadoutP
 
   // Automatically switch combat style based on weapon attack types
   useEffect(() => {
-    const styles = weaponStats.attackStyles;
-    if (!styles || Object.keys(styles).length === 0) return;
-    const attackTypes = Object.values(styles).map((s: any) => s.attackType);
+    const weapon = loadout['2h'] || loadout['mainhand'] || null;
     let detected: 'melee' | 'ranged' | 'magic' | null = null;
-    if (attackTypes.some((t) => t === 'magic')) detected = 'magic';
-    else if (attackTypes.some((t) => t === 'ranged')) detected = 'ranged';
-    else if (attackTypes.some((t) => ['stab', 'slash', 'crush'].includes(t))) detected = 'melee';
+
+    const styles = weaponStats.attackStyles;
+    if (styles && Object.keys(styles).length > 0) {
+      const attackTypes = Object.values(styles).map((s: any) => s.attackType);
+      if (attackTypes.some((t) => t === 'magic')) detected = 'magic';
+      else if (attackTypes.some((t) => t === 'ranged')) detected = 'ranged';
+      else if (attackTypes.some((t) => ['stab', 'slash', 'crush'].includes(t))) detected = 'melee';
+    } else {
+      detected = detectCombatStyleFromWeapon(weapon);
+    }
+
     if (detected && detected !== params.combat_style) {
       switchCombatStyle(detected);
     }
-  }, [weaponStats.attackStyles, params.combat_style, switchCombatStyle]);
+  }, [weaponStats.attackStyles, loadout, params.combat_style, switchCombatStyle]);
 
   // Update available attack styles when weapon changes
   useEffect(() => {

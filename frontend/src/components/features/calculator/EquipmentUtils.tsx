@@ -84,3 +84,29 @@ export function getWeaponAttackStyles(weapon: Item | null): Record<string, Attac
     return {};
   }
 }
+
+// Determine the combat style (melee, ranged, magic) a weapon primarily uses
+export function detectCombatStyleFromWeapon(
+  weapon: Item | null
+): 'melee' | 'ranged' | 'magic' | null {
+  if (!weapon) return null;
+
+  const styles = weapon.combat_stats?.combat_styles;
+  if (Array.isArray(styles) && styles.length > 0) {
+    const attackTypes = styles.map((s) => s.attack_type?.toLowerCase() || '');
+    if (attackTypes.some((t) => t === 'magic')) return 'magic';
+    if (attackTypes.some((t) => t === 'ranged')) return 'ranged';
+    if (attackTypes.some((t) => ['stab', 'slash', 'crush'].includes(t))) return 'melee';
+  }
+
+  const bonuses = weapon.combat_stats?.attack_bonuses || {};
+  const magic = bonuses.magic ?? -999;
+  const ranged = bonuses.ranged ?? -999;
+  const melee = Math.max(bonuses.stab ?? -999, bonuses.slash ?? -999, bonuses.crush ?? -999);
+
+  const max = Math.max(magic, ranged, melee);
+  if (max <= -999) return null;
+  if (max === magic) return 'magic';
+  if (max === ranged) return 'ranged';
+  return 'melee';
+}
