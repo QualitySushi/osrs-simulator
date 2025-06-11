@@ -292,14 +292,11 @@ export function MultiBossSimulation() {
                       </div>
                     ) : (
                       filteredBosses.map((boss) => (
-                        <CommandItem key={boss.id} value={boss.name} onSelect={() => addBoss(boss)}>
-                          {bossIcons[boss.id] && (
-                            <img
-                              src={bossIcons[boss.id]}
-                              alt={`${boss.name} icon`}
-                              className="w-4 h-4 mr-2 inline-block"
-                            />
-                          )}
+                        <CommandItem
+                          key={boss.id}
+                          value={boss.name}
+                          onSelect={() => addBoss(boss)}
+                        >
                           {boss.name}
                         </CommandItem>
                       ))
