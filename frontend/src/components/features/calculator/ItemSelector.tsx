@@ -26,11 +26,19 @@ import { useReferenceDataStore } from '@/store/reference-data-store';
 import { useDebounce } from '@/hooks/useDebounce';
 
 interface ItemSelectorProps {
-  slot?: string;
+  /**
+   * Limit results to specific equipment slot(s). When an array is provided the
+   * item slot must be one of the entries.
+   */
+  slot?: string | string[];
+  /**
+   * When true, only items with a special attack will be shown.
+   */
+  specialOnly?: boolean;
   onSelectItem?: (item: ItemSummary) => void;
 }
 
-export function ItemSelector({ slot, onSelectItem }: ItemSelectorProps) {
+export function ItemSelector({ slot, specialOnly, onSelectItem }: ItemSelectorProps) {
   const [open, setOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<ItemSummary | null>(null);
   const { params, setParams } = useCalculatorStore();
@@ -68,10 +76,15 @@ export function ItemSelector({ slot, onSelectItem }: ItemSelectorProps) {
 
   // Items from store filtered by slot
   const filteredItems = slot
-    ? storeItems.filter((item) => item.slot === slot)
+    ? storeItems.filter((item) =>
+        Array.isArray(slot) ? slot.includes(item.slot) : item.slot === slot
+      )
     : storeItems;
 
-  const itemsToDisplay = searchTerm.length > 0 ? searchResults ?? [] : filteredItems;
+  const baseItems = searchTerm.length > 0 ? searchResults ?? [] : filteredItems;
+  const itemsToDisplay = specialOnly
+    ? baseItems.filter((item) => item.has_special_attack)
+    : baseItems;
 
   // Handle item selection and update calculator params based on its stats
   const handleSelectItem = (item: ItemSummary) => {
@@ -130,7 +143,12 @@ export function ItemSelector({ slot, onSelectItem }: ItemSelectorProps) {
       <CardHeader>
         <CardTitle>Equipment Selection</CardTitle>
         <CardDescription>
-          Select equipment to calculate DPS with {slot && `(${slot.charAt(0).toUpperCase() + slot.slice(1)})`}
+          Select equipment to calculate DPS with
+          {slot && (
+            Array.isArray(slot)
+              ? ` (${slot.map((s) => s.charAt(0).toUpperCase() + s.slice(1)).join('/')})`
+              : ` (${slot.charAt(0).toUpperCase() + slot.slice(1)})`
+          )}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">

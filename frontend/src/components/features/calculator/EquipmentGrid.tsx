@@ -184,7 +184,10 @@ export function EquipmentGrid({ loadout, show2hOption, combatStyle, onUpdateLoad
           </DialogHeader>
           {selectedSlot && (
             <ItemSelector
-              slot={selectedSlot === 'spec' ? undefined : selectedSlot}
+              slot={
+                selectedSlot === 'spec' ? ['mainhand', '2h'] : selectedSlot
+              }
+              specialOnly={selectedSlot === 'spec'}
               onSelectItem={(item) => handleSelectItem(selectedSlot, item)}
             />
           )}
