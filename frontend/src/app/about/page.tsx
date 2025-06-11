@@ -7,8 +7,8 @@ export default function AboutPage() {
       
       <div className="prose dark:prose-invert max-w-3xl">
         <p className="lead text-center">
-          ScapeLab provides tools for Old School RuneScape players to optimize their gear and stats
-          for maximum damage output against a variety of bosses and monsters.
+          ScapeLab is an open-source DPS calculator and gear optimizer for Old School RuneScape.
+          Use it to compare different loadouts and plan for maximum damage against any boss or monster.
         </p>
         
         <h2>How It Works</h2>
@@ -53,12 +53,20 @@ export default function AboutPage() {
 
         <h2>Feedback & Contributions</h2>
         <p>
-          This is an open-source project. If you&apos;d like to contribute or provide feedback,
-          please visit our GitHub repository.
+          This project is completely open source. Contributions, bug reports and feature requests are welcome on
+          <a
+            href="https://github.com/QualitySushi/osrs-simulator"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mx-1"
+          >
+            GitHub
+          </a>
+          .
         </p>
 
         <p className="mt-6 text-center font-semibold">
-          ScapeLab is built by players, for players.
+          ScapeLab is built by players, for players, and is not affiliated with Jagex Ltd.
         </p>
         
         <div className="mt-8">
