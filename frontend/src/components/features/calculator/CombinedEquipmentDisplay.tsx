@@ -8,6 +8,9 @@ import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useCalculatorStore } from '@/store/calculator-store';
 import { Item, CalculatorParams, BossForm } from '@/types/calculator';
+import { useToast } from '@/hooks/use-toast';
+import { calculatorApi } from '@/services/api';
+import { Loader2 } from 'lucide-react';
 
 // Import our new components
 import { EquipmentGrid } from './EquipmentGrid';
@@ -54,6 +57,7 @@ export function CombinedEquipmentDisplay({ onEquipmentUpdate, bossForm, loadoutP
   const { params, setParams, gearLocked, loadout, setLoadout, resetParams, resetLocks, switchCombatStyle } = useCalculatorStore();
   // Start with 1H + Shield by default
   const [show2hOption, setShow2hOption] = useState(false);
+  const [isSuggesting, setIsSuggesting] = useState(false);
   const [availableAttackStyles, setAvailableAttackStyles] = useState<string[]>([]);
   const [selectedAttackStyle, setSelectedAttackStyle] = useState<string>('');
   const [weaponStats, setWeaponStats] = useState<{
@@ -63,6 +67,39 @@ export function CombinedEquipmentDisplay({ onEquipmentUpdate, bossForm, loadoutP
     attackStyles: {},
     baseAttackSpeed: 2.4 // Default 4 ticks
   });
+  const { toast } = useToast();
+
+  const sanitizeParams = useCallback((p: CalculatorParams): CalculatorParams => {
+    const { selected_spell, ...cleaned } = p as any;
+    if (!cleaned.target_defence_type) {
+      if (p.combat_style === 'melee') {
+        cleaned.target_defence_type = `defence_${cleaned.attack_type || 'slash'}`;
+      } else if (p.combat_style === 'ranged') {
+        cleaned.target_defence_type = 'defence_ranged_standard';
+      } else if (p.combat_style === 'magic') {
+        cleaned.target_defence_type = 'defence_magic';
+      }
+    }
+    if (p.combat_style === 'magic') {
+      delete cleaned.attack_style_bonus_attack;
+      delete cleaned.attack_style_bonus_strength;
+      cleaned.magic_level = Number(cleaned.magic_level);
+      cleaned.magic_boost = Number(cleaned.magic_boost);
+      cleaned.magic_prayer = Number(cleaned.magic_prayer);
+      cleaned.base_spell_max_hit = Number(cleaned.base_spell_max_hit);
+      cleaned.magic_attack_bonus = Number(cleaned.magic_attack_bonus);
+      cleaned.magic_damage_bonus = Number(cleaned.magic_damage_bonus);
+      cleaned.target_magic_level = Number(cleaned.target_magic_level);
+      cleaned.target_magic_defence = Number(cleaned.target_magic_defence);
+      cleaned.attack_speed = Number(cleaned.attack_speed);
+    }
+    if (!cleaned.special_rotation) delete cleaned.special_rotation;
+    if (!cleaned.special_attack_cost) delete cleaned.special_attack_cost;
+    if (cleaned.special_multiplier === 1.0) delete cleaned.special_multiplier;
+    if (cleaned.special_accuracy_multiplier === 1.0) delete cleaned.special_accuracy_multiplier;
+    if (cleaned.special_hit_count === 1) delete cleaned.special_hit_count;
+    return cleaned;
+  }, []);
 
   useEffect(() => {
     if (loadoutPreset) {
@@ -332,6 +369,29 @@ export function CombinedEquipmentDisplay({ onEquipmentUpdate, bossForm, loadoutP
     setSelectedAttackStyle(style);
   }, []);
 
+  const handleSuggestBis = async () => {
+    setIsSuggesting(true);
+    try {
+      toast.info('Fetching best-in-slot setup...');
+      const clean = sanitizeParams(params);
+      const setup = await calculatorApi.getBis(clean);
+      setLoadout(setup);
+      if (onEquipmentUpdate) {
+        onEquipmentUpdate(setup);
+      }
+      if (setup['2h']) {
+        setShow2hOption(true);
+      } else if (setup['mainhand'] || setup['offhand']) {
+        setShow2hOption(false);
+      }
+      toast.success('Best-in-slot setup applied');
+    } catch (e: any) {
+      toast.error(`Failed to fetch BIS: ${e.message}`);
+    } finally {
+      setIsSuggesting(false);
+    }
+  };
+
   // Get attack styles for display
   const getAttackStylesForDisplay = useCallback(() => {
     // First check if we have weapon-specific styles
@@ -391,14 +451,16 @@ export function CombinedEquipmentDisplay({ onEquipmentUpdate, bossForm, loadoutP
       </CardHeader>
 
       <CardContent>
-        {Object.keys(loadout).length > 0 && (
-          <div className="flex justify-center mb-2">
-            <Button variant="outline" size="sm" onClick={handleResetEquipment}
-            >
+        <div className="flex justify-center mb-2 gap-2">
+          {Object.keys(loadout).length > 0 && (
+            <Button variant="outline" size="sm" onClick={handleResetEquipment}>
               Reset Equipment
             </Button>
-          </div>
-        )}
+          )}
+          <Button size="sm" onClick={handleSuggestBis} disabled={isSuggesting}>
+            {isSuggesting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}Suggest BIS
+          </Button>
+        </div>
 
         {gearLocked && (
           <Alert className="mb-4 border-blue-300 dark:border-blue-800 bg-blue-100 dark:bg-blue-900">
