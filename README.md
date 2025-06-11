@@ -5,6 +5,7 @@ A comprehensive damage-per-second calculator for Old School RuneScape with accur
 
 Overview
 
+    If you encounter a bug or have a suggestion, submit it from the [Report Bug](/report-bug) page. Reports are automatically converted into GitHub issues via a workflow.
 The ScapeLab DPS Calculator is a powerful tool for Old School RuneScape players to optimize their combat gear and strategies. By accurately implementing the game's combat formulas, this calculator helps players compare different equipment setups, account for special effects, and calculate expected damage against various bosses.
 Key Features
 
@@ -373,6 +374,7 @@ Contributions are welcome! Please follow these steps:
     Commit your changes: git commit -m 'Add amazing feature'
     Push to the branch: git push origin feature/amazing-feature
     Open a Pull Request
+    If you encounter a bug or have a suggestion, submit it from the [Report Bug](/report-bug) page. Reports are automatically converted into GitHub issues via a workflow.
 
 For major changes, please open an issue first to discuss what you would like to change.
 Development Guidelines

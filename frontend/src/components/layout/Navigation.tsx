@@ -74,6 +74,15 @@ export function Navigation() {
             >
               About
             </Link>
+            <Link
+              href="/report-bug"
+              className={cn(
+                'text-sm transition-colors hover:text-primary',
+                pathname === '/report-bug' ? 'text-foreground font-medium' : 'text-muted-foreground'
+              )}
+            >
+              Report Bug
+            </Link>
           </div>
         </div>
         
