@@ -168,6 +168,13 @@ class DpsCalculator:
         result["dps"] = (regular_total + special_total) / duration
         result["special_attacks"] = special_count
         result["duration"] = duration
+        result["mainhand_max_hit"] = regular_result.get("max_hit")
+        result["special_attack_max_hit"] = special_result.get("max_hit")
+        result["mainhand_hit_chance"] = regular_result.get("hit_chance")
+        result["special_attack_hit_chance"] = special_result.get("hit_chance")
+        result["max_hit"] = max(
+            regular_result.get("max_hit", 0), special_result.get("max_hit", 0)
+        )
         return result
 
     @staticmethod

@@ -164,6 +164,10 @@ export interface DpsResult {
   duration?: number;
   special_attack_dps?: number;
   mainhand_dps?: number;
+  mainhand_max_hit?: number;
+  special_attack_max_hit?: number;
+  mainhand_hit_chance?: number;
+  special_attack_hit_chance?: number;
 }
 
 // Expanded DPS result with additional information
