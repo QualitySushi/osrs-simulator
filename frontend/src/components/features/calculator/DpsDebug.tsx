@@ -1,3 +1,5 @@
+import { safeFixed } from '@/utils/format';
+
 type DpsDebugProps = {
   params: {
     combat_style: 'melee' | 'ranged' | 'magic';
@@ -113,10 +115,10 @@ export default function DpsDebug({ params, output }: DpsDebugProps) {
       <p>  Defence Roll: {output.def_roll}</p>
 
       <br />
-      <p>→ <strong>Hit Chance:</strong> {output.hit_chance.toFixed(4)}</p>
-      <p>→ <strong>Average Hit:</strong> {output.avg_hit.toFixed(4)}</p>
+      <p>→ <strong>Hit Chance:</strong> {safeFixed(output.hit_chance, 4)}</p>
+      <p>→ <strong>Average Hit:</strong> {safeFixed(output.avg_hit, 4)}</p>
       <p>→ <strong>Attack Speed:</strong> {params.attack_speed}s</p>
-      <p>→ <strong>DPS:</strong> {output.dps.toFixed(4)}</p>
+      <p>→ <strong>DPS:</strong> {safeFixed(output.dps, 4)}</p>
       <p className="mt-2 font-bold">=============================</p>
     </div>
   );

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { useCalculatorStore } from '@/store/calculator-store';
 import { Item, BossForm } from '@/types/calculator';
+import { safeFixed } from '@/utils/format';
 import calculatePassiveEffectBonuses from './PassiveEffectCalculator';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -94,11 +95,11 @@ export function PassiveEffectsDisplay({ loadout, target }: PassiveEffectsDisplay
       const parts: string[] = [];
       
       if (formattedAccuracy !== 0) {
-        parts.push(`+${formattedAccuracy.toFixed(1)}% accuracy`);
+        parts.push(`+${safeFixed(formattedAccuracy, 1)}% accuracy`);
       }
       
       if (formattedDamage !== 0) {
-        parts.push(`+${formattedDamage.toFixed(1)}% damage`);
+        parts.push(`+${safeFixed(formattedDamage, 1)}% damage`);
       }
       
       if ((bonuses.maxHit || 0) > 0) {

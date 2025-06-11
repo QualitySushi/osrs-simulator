@@ -2,6 +2,7 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { Calculator } from 'lucide-react';
 import { CalculatorParams, DpsResult } from '@/types/calculator';
+import { safeFixed } from '@/utils/format';
 
 interface DpsResultDisplayProps {
   params: CalculatorParams;
@@ -21,12 +22,12 @@ export function DpsResultDisplay({ params, results, appliedPassiveEffects }: Dps
           <CardContent className="pt-6">
             <div className="text-sm font-medium text-muted-foreground">Total DPS</div>
             <div className="text-3xl font-bold text-primary">
-              {(results.dps + (results.special_attack_dps ?? 0)).toFixed(2)}
+              {safeFixed(results.dps + (results.special_attack_dps ?? 0), 2)}
             </div>
             {results.special_attack_dps !== undefined && (
               <div className="text-xs text-muted-foreground">
-                Base {results.dps.toFixed(2)} + Special{' '}
-                {results.special_attack_dps.toFixed(2)}
+                Base {safeFixed(results.dps, 2)} + Special{' '}
+                {safeFixed(results.special_attack_dps, 2)}
               </div>
             )}
           </CardContent>
@@ -40,7 +41,7 @@ export function DpsResultDisplay({ params, results, appliedPassiveEffects }: Dps
         <Card className="bg-muted/30 border">
           <CardContent className="pt-6">
             <div className="text-sm font-medium text-muted-foreground">Hit Chance</div>
-            <div className="text-3xl font-bold text-primary">{(results.hit_chance * 100).toFixed(1)}%</div>
+            <div className="text-3xl font-bold text-primary">{safeFixed(results.hit_chance * 100, 1)}%</div>
           </CardContent>
         </Card>
         {results.special_attack_dps !== undefined && (
