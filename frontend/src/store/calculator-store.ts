@@ -8,8 +8,8 @@ import {
   RangedCalculatorParams,
   MagicCalculatorParams,
   Item,
-  Boss,
-  BossForm,
+  Npc,
+  NpcForm,
   Preset,
 } from '@/types/calculator';
 
@@ -22,10 +22,10 @@ interface CalculatorState {
     results: DpsResult;
   }>;
   gearLocked: boolean;
-  bossLocked: boolean;
+  npcLocked: boolean;
   loadout: Record<string, Item | null>;
-  selectedBoss: Boss | null;
-  selectedBossForm: BossForm | null;
+  selectedNpc: Npc | null;
+  selectedNpcForm: NpcForm | null;
   presets: Preset[];
 
   setParams: (params: Partial<CalculatorParams>) => void;
@@ -37,12 +37,12 @@ interface CalculatorState {
   resetParams: () => void;
   lockGear: () => void;
   unlockGear: () => void;
-  lockBoss: () => void;
-  unlockBoss: () => void;
+  lockNpc: () => void;
+  unlockNpc: () => void;
   resetLocks: () => void;
   setLoadout: (loadout: Record<string, Item | null>) => void;
-  setSelectedBoss: (boss: Boss | null) => void;
-  setSelectedBossForm: (form: BossForm | null) => void;
+  setSelectedNpc: (npc: Npc | null) => void;
+  setSelectedNpcForm: (form: NpcForm | null) => void;
   setPresets: (presets: Preset[]) => void;
   addPreset: (preset: Preset) => void;
   removePreset: (id: string) => void;
@@ -154,10 +154,10 @@ export const useCalculatorStore = create<CalculatorState>()(
       results: null,
       comparisonResults: [],
       gearLocked: false,
-      bossLocked: false,
+      npcLocked: false,
       loadout: {},
-      selectedBoss: null,
-      selectedBossForm: null,
+      selectedNpc: null,
+      selectedNpcForm: null,
       presets: [],
 
       setParams: (newParams: Partial<CalculatorParams>) => set((state): Partial<CalculatorState> => {
@@ -194,22 +194,22 @@ export const useCalculatorStore = create<CalculatorState>()(
           case 'melee': return { 
             params: defaultMeleeParams,
             gearLocked: false,
-            bossLocked: false
+            npcLocked: false
           };
           case 'ranged': return { 
             params: defaultRangedParams,
             gearLocked: false,
-            bossLocked: false
+            npcLocked: false
           };
           case 'magic': return { 
             params: defaultMagicParams,
             gearLocked: false,
-            bossLocked: false
+            npcLocked: false
           };
           default: return { 
             params: defaultMeleeParams,
             gearLocked: false,
-            bossLocked: false
+            npcLocked: false
           };
         }
       }),
@@ -230,25 +230,25 @@ export const useCalculatorStore = create<CalculatorState>()(
         const style = state.params.combat_style;
         switch (style) {
           case 'melee':
-            return { params: defaultMeleeParams, gearLocked: false, bossLocked: false };
+            return { params: defaultMeleeParams, gearLocked: false, npcLocked: false };
           case 'ranged':
-            return { params: defaultRangedParams, gearLocked: false, bossLocked: false };
+            return { params: defaultRangedParams, gearLocked: false, npcLocked: false };
           case 'magic':
-            return { params: defaultMagicParams, gearLocked: false, bossLocked: false };
+            return { params: defaultMagicParams, gearLocked: false, npcLocked: false };
           default:
-            return { params: defaultMeleeParams, gearLocked: false, bossLocked: false };
+            return { params: defaultMeleeParams, gearLocked: false, npcLocked: false };
         }
       }),
 
 
       lockGear: () => set({ gearLocked: true }),
       unlockGear: () => set({ gearLocked: false }),
-      lockBoss: () => set({ bossLocked: true }),
-      unlockBoss: () => set({ bossLocked: false }),
-      resetLocks: () => set({ gearLocked: false, bossLocked: false }),
+      lockNpc: () => set({ npcLocked: true }),
+      unlockNpc: () => set({ npcLocked: false }),
+      resetLocks: () => set({ gearLocked: false, npcLocked: false }),
       setLoadout: (loadout) => set({ loadout }),
-      setSelectedBoss: (boss) => set({ selectedBoss: boss }),
-      setSelectedBossForm: (form) => set({ selectedBossForm: form }),
+      setSelectedNpc: (npc) => set({ selectedNpc: npc }),
+      setSelectedNpcForm: (form) => set({ selectedNpcForm: form }),
       setPresets: (presets) => set({ presets }),
       addPreset: (preset) =>
         set((state) => ({ presets: [...state.presets, preset] })),
@@ -268,10 +268,10 @@ export const useCalculatorStore = create<CalculatorState>()(
       partialize: (state) => ({
         params: state.params,
         gearLocked: state.gearLocked,
-        bossLocked: state.bossLocked,
+        npcLocked: state.npcLocked,
         loadout: state.loadout,
-        selectedBoss: state.selectedBoss,
-        selectedBossForm: state.selectedBossForm,
+        selectedNpc: state.selectedNpc,
+        selectedNpcForm: state.selectedNpcForm,
         presets: state.presets,
       })
     }

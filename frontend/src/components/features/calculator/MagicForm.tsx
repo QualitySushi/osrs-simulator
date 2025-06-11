@@ -79,7 +79,7 @@ export function MagicForm() {
       god_spell_charged: false
     },
     gearLockedFields: ['magic_attack_bonus', 'magic_damage_bonus'],
-    bossLockedFields: ['target_magic_level', 'target_magic_defence'],
+    npcLockedFields: ['target_magic_level', 'target_magic_defence'],
   });
 
   // Cast params to magic params for type safety
@@ -491,7 +491,7 @@ export function MagicForm() {
                       className={isFieldDisabled('target_magic_level') ? "opacity-50" : ""}
                     />
                   </FormControl>
-                  {isFieldDisabled('target_magic_level') && <FormDescription className="text-amber-500">Using target stats from boss</FormDescription>}
+                  {isFieldDisabled('target_magic_level') && <FormDescription className="text-amber-500">Using target stats from npc</FormDescription>}
                 </FormItem>
               )}
             />
@@ -519,7 +519,7 @@ export function MagicForm() {
                       className={isFieldDisabled('target_magic_defence') ? "opacity-50" : ""}
                     />
                   </FormControl>
-                  {isFieldDisabled('target_magic_defence') && <FormDescription className="text-amber-500">Using target stats from boss</FormDescription>}
+                  {isFieldDisabled('target_magic_defence') && <FormDescription className="text-amber-500">Using target stats from npc</FormDescription>}
                 </FormItem>
               )}
             />

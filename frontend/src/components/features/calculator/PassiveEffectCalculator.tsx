@@ -1,4 +1,4 @@
-import { CalculatorParams, Item, BossForm } from '@/types/calculator';
+import { CalculatorParams, Item, NpcForm } from '@/types/calculator';
 import {
   isTargetDraconic,
   isTargetDemonic,
@@ -40,7 +40,7 @@ const effects: Array<{ name: string; description: string }> = [];
 export function calculatePassiveEffectBonuses(
   params: CalculatorParams,
   equipment: Record<string, Item | null>,
-  target?: BossForm | null
+  target?: NpcForm | null
 ): PassiveEffectBonus {
   // Default bonus (no change)
   const bonus: PassiveEffectBonus = {

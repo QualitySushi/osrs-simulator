@@ -59,13 +59,13 @@ interface EquipmentLoadoutProps {
 
 export function EquipmentLoadout({ onEquipmentUpdate }: EquipmentLoadoutProps) {
   const { toast } = useToast();
-  const { params, setParams, lockGear, unlockGear, gearLocked, bossLocked } = useCalculatorStore();
+  const { params, setParams, lockGear, unlockGear, gearLocked, npcLocked } = useCalculatorStore();
   const combatStyle = params.combat_style;
   const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [loadout, setLoadout] = useState<Record<string, Item | null>>({});
   const [isExpanded, setIsExpanded] = useState(true);
-  const [selectedBossForm, setSelectedBossForm] = useState(null);
+  const [selectedNpcForm, setSelectedNpcForm] = useState(null);
   // Default to 1H weapon with offhand
   const [show2hOption, setShow2hOption] = useState(false); // Add missing state
 
@@ -80,18 +80,18 @@ export function EquipmentLoadout({ onEquipmentUpdate }: EquipmentLoadoutProps) {
     'magic damage percent': 0,
   });
 
-  // Effect to fetch the current boss form when boss is locked
+  // Effect to fetch the current npc form when npc is locked
   useEffect(() => {
-    // This would need to be implemented to fetch the current boss form
-    // from the BossSelector component or from an API
-    if (bossLocked) {
-      // fetchCurrentBossForm().then(form => setSelectedBossForm(form));
+    // This would need to be implemented to fetch the current npc form
+    // from the NpcSelector component or from an API
+    if (npcLocked) {
+      // fetchCurrentNpcForm().then(form => setSelectedNpcForm(form));
       // For now we'll just use null
-      setSelectedBossForm(null);
+      setSelectedNpcForm(null);
     } else {
-      setSelectedBossForm(null);
+      setSelectedNpcForm(null);
     }
-  }, [bossLocked]);
+  }, [npcLocked]);
 
   // Helper function to apply gear totals to the store
   const applyGearTotals = useCallback((totals: Record<string, number>) => {

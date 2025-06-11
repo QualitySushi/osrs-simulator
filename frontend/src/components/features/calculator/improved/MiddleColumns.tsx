@@ -1,6 +1,6 @@
 'use client';
 import { Card, CardContent } from '@/components/ui/card';
-import { BossSelector } from '../BossSelector';
+import { NpcSelector } from '../NpcSelector';
 import { EquipmentPanel } from '../EquipmentPanel';
 import { PrayerPotionSelector } from '../PrayerPotionSelector';
 import RaidScalingPanel, { RaidScalingConfig } from '../../simulation/RaidScalingPanel';
@@ -10,7 +10,7 @@ import { Raid } from '@/types/raid';
 interface MiddleColumnsProps {
   onEquipmentUpdate: (slot: string, item: any) => void;
   onSelectForm: (form: any) => void;
-  currentBossForm: any;
+  currentNpcForm: any;
   selectedRaid?: Raid;
   raidConfig: RaidScalingConfig;
   onRaidConfigChange: (config: RaidScalingConfig) => void;
@@ -19,7 +19,7 @@ interface MiddleColumnsProps {
 export function MiddleColumns({
   onEquipmentUpdate,
   onSelectForm,
-  currentBossForm,
+  currentNpcForm,
   selectedRaid,
   raidConfig,
   onRaidConfigChange,
@@ -29,12 +29,12 @@ export function MiddleColumns({
       <div className="space-y-6 flex flex-col">
         <EquipmentPanel
           onEquipmentUpdate={onEquipmentUpdate}
-          bossForm={currentBossForm}
+          npcForm={currentNpcForm}
         />
       </div>
       <div className="space-y-6 flex flex-col flex-grow">
         <PrayerPotionSelector />
-        <BossSelector onSelectForm={onSelectForm} />
+        <NpcSelector onSelectForm={onSelectForm} />
         {selectedRaid && (
           <RaidScalingPanel raid={selectedRaid} config={raidConfig} onChange={onRaidConfigChange} />
         )}

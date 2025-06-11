@@ -38,8 +38,8 @@ export interface UseCombatFormOptions<T extends FieldValues> {
   // Mapping of equipment fields to check gearLocked status
   gearLockedFields: string[];
   
-  // Mapping of target fields to check bossLocked status
-  bossLockedFields: string[];
+  // Mapping of target fields to check npcLocked status
+  npcLockedFields: string[];
 }
 
 export interface UseCombatFormResult<T extends FieldValues> {
@@ -54,7 +54,7 @@ export interface UseCombatFormResult<T extends FieldValues> {
   params: CalculatorParams;
   setParams: (params: Partial<CalculatorParams>) => void;
   gearLocked: boolean;
-  bossLocked: boolean;
+  npcLocked: boolean;
 }
 
 /**
@@ -65,9 +65,9 @@ export function useCombatForm<T extends FieldValues>({
   formSchema,
   defaultValues,
   gearLockedFields,
-  bossLockedFields
+  npcLockedFields
 }: UseCombatFormOptions<T>): UseCombatFormResult<T> {
-  const { params, setParams, gearLocked, bossLocked } = useCalculatorStore();
+  const { params, setParams, gearLocked, npcLocked } = useCalculatorStore();
   
   // Initialize form with validation
   const form = useForm<T>({
@@ -98,9 +98,9 @@ type ParamsRecord = Record<string, unknown>;
 
     for (const key of Object.keys(storeValues)) {
       const isGearLockedField = gearLocked && gearLockedFields.includes(key);
-      const isBossLockedField = bossLocked && bossLockedFields.includes(key);
+      const isNpcLockedField = npcLocked && npcLockedFields.includes(key);
 
-      if (!isGearLockedField && !isBossLockedField) {
+      if (!isGearLockedField && !isNpcLockedField) {
         merged[key] = storeValues[key];
       }
     }
@@ -127,9 +127,9 @@ type ParamsRecord = Record<string, unknown>;
       });
     }
     
-    // Don't update target stats if boss is locked
-    if (bossLocked) {
-      bossLockedFields.forEach(field => {
+    // Don't update target stats if npc is locked
+    if (npcLocked) {
+      npcLockedFields.forEach(field => {
         delete updatedValuesRecord[field];
       });
     }
@@ -142,7 +142,7 @@ type ParamsRecord = Record<string, unknown>;
       // Set parameters in the store - use type assertion for safety
       setParams(updatedValues as unknown as Partial<CalculatorParams>);
     }
-  }, [setParams, gearLocked, bossLocked, gearLockedFields, bossLockedFields, combatStyle]);
+  }, [setParams, gearLocked, npcLocked, gearLockedFields, npcLockedFields, combatStyle]);
   
   // Helper to check if field should be disabled
   const isFieldDisabled = useCallback((fieldName: string) => {
@@ -151,13 +151,13 @@ type ParamsRecord = Record<string, unknown>;
       return true;
     }
     
-    // Target stat fields should be disabled when boss is locked
-    if (bossLocked && bossLockedFields.includes(fieldName)) {
+    // Target stat fields should be disabled when npc is locked
+    if (npcLocked && npcLockedFields.includes(fieldName)) {
       return true;
     }
     
     return false;
-  }, [gearLocked, bossLocked, gearLockedFields, bossLockedFields]);
+  }, [gearLocked, npcLocked, gearLockedFields, npcLockedFields]);
   
   return {
     form,
@@ -166,6 +166,6 @@ type ParamsRecord = Record<string, unknown>;
     params,
     setParams,
     gearLocked,
-    bossLocked
+    npcLocked
   };
 }

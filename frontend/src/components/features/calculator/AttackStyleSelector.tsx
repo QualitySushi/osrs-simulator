@@ -10,7 +10,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Item } from "@/types/calculator";
-import { BossForm } from "@/types/calculator";
+import { NpcForm } from "@/types/calculator";
 
 // Define attack styles with their bonuses
 export interface AttackStyleDefinition {
@@ -102,7 +102,7 @@ export const DEFAULT_ATTACK_STYLES: Record<
 interface AttackStyleSelectorProps {
   loadout: Record<string, Item | null>;
   combatStyle: string;
-  bossForm?: BossForm | null;
+  npcForm?: NpcForm | null;
   attackStyles: Record<string, AttackStyleDefinition>;
   availableAttackStyles: string[];
   selectedAttackStyle: string;
@@ -112,7 +112,7 @@ interface AttackStyleSelectorProps {
 export function AttackStyleSelector({
   loadout,
   combatStyle,
-  bossForm,
+  npcForm,
   attackStyles,
   availableAttackStyles,
   selectedAttackStyle,

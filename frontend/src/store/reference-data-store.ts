@@ -4,22 +4,22 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { safeStorage } from '@/utils/safeStorage';
 import {
-  bossesApi,
+  npcsApi,
   itemsApi,
   specialAttacksApi,
   passiveEffectsApi,
 } from '@/services/api';
 import {
-  BossForm,
-  BossSummary,
+  NpcForm,
+  NpcSummary,
   ItemSummary,
   SpecialAttack,
   PassiveEffect,
 } from '@/types/calculator';
 
 interface ReferenceDataState {
-  bosses: BossSummary[];
-  bossForms: Record<number, BossForm[]>;
+  npcs: NpcSummary[];
+  npcForms: Record<number, NpcForm[]>;
   items: ItemSummary[];
   specialAttacks: Record<string, SpecialAttack>;
   passiveEffects: Record<string, PassiveEffect>;
@@ -31,8 +31,8 @@ interface ReferenceDataState {
   error: boolean;
   timestamp: number;
   initData: () => Promise<void>;
-  addBosses: (b: BossSummary[]) => void;
-  addBossForms: (id: number, forms: BossForm[]) => void;
+  addNpces: (b: NpcSummary[]) => void;
+  addNpcForms: (id: number, forms: NpcForm[]) => void;
   addItems: (i: ItemSummary[]) => void;
   setSpecialAttacks: (a: Record<string, SpecialAttack>) => void;
   setPassiveEffects: (e: Record<string, PassiveEffect>) => void;
@@ -43,8 +43,8 @@ const REFERENCE_TTL_MS = 12 * 60 * 60 * 1000; // 12 hours
 export const useReferenceDataStore = create<ReferenceDataState>()(
   persist(
     (set, get) => ({
-      bosses: [],
-      bossForms: {},
+      npcs: [],
+      npcForms: {},
       items: [],
       specialAttacks: {},
       passiveEffects: {},
@@ -58,13 +58,13 @@ export const useReferenceDataStore = create<ReferenceDataState>()(
         set({ loading: true, progress: 0, timestamp: Date.now(), error: false });
         const pageSize = 50;
         let page = 1;
-        const bosses: BossSummary[] = [];
+        const npcs: NpcSummary[] = [];
         let error = false;
         while (true) {
           try {
-            const data = await bossesApi.getAllBosses({ page, page_size: pageSize });
+            const data = await npcsApi.getAllNpces({ page, page_size: pageSize });
             if (!data.length) break;
-            bosses.push(...data);
+            npcs.push(...data);
             if (data.length < pageSize) break;
             page += 1;
           } catch {
@@ -107,7 +107,7 @@ export const useReferenceDataStore = create<ReferenceDataState>()(
         set({ progress: 0.75 });
 
         set({
-          bosses,
+          npcs,
           items,
           specialAttacks,
           passiveEffects,
@@ -117,11 +117,11 @@ export const useReferenceDataStore = create<ReferenceDataState>()(
           progress: 1,
         });
       },
-      addBosses(b) {
-        set((state) => ({ bosses: [...state.bosses, ...b] }));
+      addNpces(b) {
+        set((state) => ({ npcs: [...state.npcs, ...b] }));
       },
-      addBossForms(id, forms) {
-        set((state) => ({ bossForms: { ...state.bossForms, [id]: forms } }));
+      addNpcForms(id, forms) {
+        set((state) => ({ npcForms: { ...state.npcForms, [id]: forms } }));
       },
       addItems(i) {
         set((state) => ({ items: [...state.items, ...i] }));
@@ -137,8 +137,8 @@ export const useReferenceDataStore = create<ReferenceDataState>()(
       name: 'osrs-reference-data',
       storage: createJSONStorage(() => safeStorage),
       partialize: (state) => ({
-        bosses: state.bosses,
-        bossForms: state.bossForms,
+        npcs: state.npcs,
+        npcForms: state.npcForms,
         items: state.items,
         specialAttacks: state.specialAttacks,
         passiveEffects: state.passiveEffects,
@@ -148,11 +148,11 @@ export const useReferenceDataStore = create<ReferenceDataState>()(
         if (!stored) return;
         const expired = Date.now() - stored.timestamp > REFERENCE_TTL_MS;
         if (expired) {
-          state.setState({ bosses: [], bossForms: {}, items: [], specialAttacks: {}, passiveEffects: {}, initialized: false, loading: false, progress: 0, error: false, timestamp: Date.now() });
+          state.setState({ npcs: [], npcForms: {}, items: [], specialAttacks: {}, passiveEffects: {}, initialized: false, loading: false, progress: 0, error: false, timestamp: Date.now() });
         } else {
           state.setState({
-            bosses: stored.bosses || [],
-            bossForms: stored.bossForms || {},
+            npcs: stored.npcs || [],
+            npcForms: stored.npcForms || {},
             items: stored.items || [],
             specialAttacks: stored.specialAttacks || {},
             passiveEffects: stored.passiveEffects || {},

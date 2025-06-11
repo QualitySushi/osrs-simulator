@@ -1,17 +1,17 @@
 ScapeLab DPS Calculator
 
-A comprehensive damage-per-second calculator for Old School RuneScape with accurate combat formulas, equipment comparison, and boss statistics.
+A comprehensive damage-per-second calculator for Old School RuneScape with accurate combat formulas, equipment comparison, and npc statistics.
 
 
 Overview
 
     If you encounter a bug or have a suggestion, submit it from the [Report Bug](/report-bug) page. Reports are automatically converted into GitHub issues via a workflow.
-The ScapeLab DPS Calculator is a powerful tool for Old School RuneScape players to optimize their combat gear and strategies. By accurately implementing the game's combat formulas, this calculator helps players compare different equipment setups, account for special effects, and calculate expected damage against various bosses.
+The ScapeLab DPS Calculator is a powerful tool for Old School RuneScape players to optimize their combat gear and strategies. By accurately implementing the game's combat formulas, this calculator helps players compare different equipment setups, account for special effects, and calculate expected damage against various npcs.
 Key Features
 
     All Combat Styles: Full support for Melee, Ranged, and Magic calculations
     Equipment Database: Comprehensive database of in-game items with their stats and effects
-    Boss Encyclopedia: Detailed information for all bosses including their defensive stats and weaknesses
+    Npc Encyclopedia: Detailed information for all npcs including their defensive stats and weaknesses
     Special Effects: Support for passive effects, set effects, and monster-specific bonuses
     Defense Reduction: Calculate the impact of defense-lowering special attacks
     Visualizations: Save loadouts and view DPS, max hit and hit chance graphs
@@ -69,7 +69,7 @@ Usage Guide
     Select Combat Style: Choose between Melee, Ranged, or Magic
     Set Your Stats: Enter your combat levels and boosts
     Choose Equipment: Select gear for each slot
-    Select Target: Pick a boss or enter custom defense stats
+    Select Target: Pick a npc or enter custom defense stats
     Apply Modifiers: Select prayers, potions, and special attacks
     Calculate: View your expected DPS and other stats
     Compare: Save setups to compare different loadouts
@@ -93,8 +93,8 @@ The frontend is built with Next.js and uses:
 
 State Persistence
 
-The calculator remembers your last selected boss, locked gear, and loadout across
-page reloads using Zustand's `persist` middleware. Boss and item lists are cached
+The calculator remembers your last selected npc, locked gear, and loadout across
+page reloads using Zustand's `persist` middleware. Npc and item lists are cached
 locally for 12 hours so returning to the app doesn't require refetching all
 reference data.
 
@@ -185,10 +185,10 @@ copied from the SQLite sources to keep their ordering consistent across runs,
 and the items table enforces `UNIQUE(name)` to guard against accidental
 duplicates.
 
-The API also caches boss and item lookups in memory. Set the
+The API also caches npc and item lookups in memory. Set the
 `CACHE_TTL_SECONDS` environment variable to control how long (in seconds)
 these results remain cached. The default is `3600` seconds. On the first
-request the server loads and caches the full boss and item lists, and all
+request the server loads and caches the full npc and item lists, and all
 subsequent search requests are served from this in-memory cache so the
 database is only queried when a specific record is requested.
 
@@ -315,12 +315,12 @@ Request Body: `DpsParameters`
 
 Response: A mapping of gear slot to item details.
 
-List Bosses
+List Npcs
 -----------
 
-GET `/bosses`
+GET `/npcs`
 
-GET `/boss/form/{form_id}` - Retrieve boss details by form identifier
+GET `/npc/form/{form_id}` - Retrieve npc details by form identifier
 
 Query Parameters:
 
@@ -330,7 +330,7 @@ Query Parameters:
 Search Endpoints
 ----------------
 
-GET `/search/bosses` - Search for bosses by name
+GET `/search/npcs` - Search for npcs by name
 GET `/search/items` - Search for items by name
 
 Query Parameters:
@@ -353,8 +353,8 @@ Query Parameters:
 Performance & API Best Practices
 -------------------------------
 
-- Use `page` and `page_size` on `/items` and `/bosses` to paginate responses and minimize payload size.
-- Item and boss detail endpoints utilise server-side in-memory caches. Responses include a `Cache-Control` header with a `max-age` matching the `CACHE_TTL_SECONDS` setting.
+- Use `page` and `page_size` on `/items` and `/npcs` to paginate responses and minimize payload size.
+- Item and npc detail endpoints utilise server-side in-memory caches. Responses include a `Cache-Control` header with a `max-age` matching the `CACHE_TTL_SECONDS` setting.
 - Adjust cache duration via the `CACHE_TTL_SECONDS` environment variable when launching the backend.
 
 See the API documentation at /docs for more endpoints.
@@ -363,7 +363,7 @@ See the API documentation at /docs for more endpoints.
 All game data is sourced from the Old School RuneScape Wiki using custom data scrapers. The scraping tools are included in the repository:
 
     osrs_item_scraper.py: Scrapes equipment data
-    extract.py: Scrapes boss data
+    extract.py: Scrapes npc data
 
 🛠️ Contributing
 
