@@ -28,6 +28,36 @@ export const metadata: Metadata = {
 };
 
 export default function Home() {
+  const articleSummaries = [
+    {
+      id: 1,
+      title: 'Yama Storms Into Gielinor',
+      author: 'ScapeLab Reporter',
+      date: '2025-05-14',
+      image: '/landscape-placeholder.svg',
+    },
+    {
+      id: 2,
+      title: 'Community Cheers for Stackable Clues',
+      author: 'ScapeLab Reporter',
+      date: '2025-05-30',
+      image: '/landscape-placeholder.svg',
+    },
+    {
+      id: 3,
+      title: 'A Mixed June for OSRS Events',
+      author: 'ScapeLab Reporter',
+      date: '2025-06-08',
+      image: '/landscape-placeholder.svg',
+    },
+    {
+      id: 4,
+      title: "Reddit's Latest Running Jokes",
+      author: 'ScapeLab Reporter',
+      date: '2025-06-10',
+      image: '/landscape-placeholder.svg',
+    },
+  ];
   return (
     <>
       <HomeHero />
@@ -69,6 +99,28 @@ export default function Home() {
               </CardHeader>
             </Card>
           </Link>
+        </div>
+        <h2 className="mt-16 mb-6 text-2xl font-bold">Latest News</h2>
+        <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-4">
+          {articleSummaries.map(article => (
+            <Link key={article.id} href={`/news#article-${article.id}`}>
+              <Card className="hover:border-primary transition-colors text-left">
+                <img
+                  src={article.image}
+                  alt=""
+                  className="w-full h-32 object-cover rounded-t"
+                />
+                <CardHeader>
+                  <CardTitle className="text-base font-semibold">
+                    {article.title}
+                  </CardTitle>
+                  <CardDescription>
+                    {article.author} - {new Date(article.date).toLocaleDateString()}
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+            </Link>
+          ))}
         </div>
       </main>
     </>
