@@ -47,13 +47,13 @@ describe('image alt text', () => {
     });
   });
 
-  it('renders boss icon with descriptive alt text', () => {
+  it('does not render a boss icon', () => {
     const boss = { id: 1, name: 'Zulrah', icon_url: '/zulrah.png' } as any;
     useCalculatorStore.getState().setSelectedBoss(boss);
     useReferenceDataStore.setState({ bosses: [boss], bossForms: { 1: [] } });
 
     render(<BossSelector />, { wrapper });
-    expect(screen.getByAltText('Zulrah icon')).toBeInTheDocument();
+    expect(screen.queryByAltText('Zulrah icon')).not.toBeInTheDocument();
   });
 
   it('renders item icon with descriptive alt text in list', async () => {
