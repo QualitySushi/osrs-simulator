@@ -72,7 +72,7 @@ Usage Guide
     Apply Modifiers: Select prayers, potions, and special attacks
     Calculate: View your expected DPS and other stats
     Compare: Save setups to compare different loadouts
-    Special Attack DPS: Specify a special weapon, energy cost, and regeneration rate to see how much extra damage specials add alongside your mainhand.
+    Special Attack DPS: Specify a special weapon, energy cost, and regeneration rate to see how much extra damage specials add alongside your mainhand. Specials fire automatically whenever your energy is at least the listed cost. Energy regenerates by default at **10% every 30 seconds**, doubled if a Lightbearer ring is equipped and multiplied by **1.5** while under a surge potion. `special_attack_speed` controls how quickly special hits occur compared to your normal `attack_speed`. Together with `special_energy_cost` and the fight `duration`, these values determine how many specials are used. A future `initial_special_energy` field may allow starting below 100% energy.
 
 Additional documentation can be found in the `docs/` folder:
 
@@ -230,6 +230,15 @@ Include these optional fields to simulate special attacks:
 "special_energy_cost": 50,
 "special_regen_rate": 0.33
 ```
+
+Special energy regenerates at **10% every 30 seconds** by default. This rate is
+doubled when wearing the Lightbearer ring and increased by **50%** while a surge
+potion is active. During a fight the simulator spends special energy whenever it
+reaches or exceeds `special_energy_cost`. Each special uses
+`special_attack_speed` as its swing timer in place of your normal
+`attack_speed`. Combined with the encounter `duration`, these values determine
+how many specials occur. A planned `initial_special_energy` parameter will allow
+starting a simulation with less than 100% energy.
 
 Response:
 
