@@ -7,6 +7,7 @@ Select target bosses and their different forms/phases
 Choose equipment to automatically update stats
 View detailed results with max hit, hit chance, and DPS
 Modular component structure with custom hooks
+Light and dark theme toggle with saved preference
 
 Technologies Used
 
@@ -55,3 +56,7 @@ Components can be explored in Storybook:
 ```bash
 npm run storybook
 ```
+
+### Theme
+
+Use the sun/moon button in the header to switch between light and dark modes. Your choice is saved in localStorage so it persists between visits.
