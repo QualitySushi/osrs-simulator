@@ -23,7 +23,7 @@ Key Features
 🚀 Getting Started
 Prerequisites
 
-    Node.js 20.x or later
+    Node.js 18.x LTS
     Python 3.8+
     npm or yarn
     pip
