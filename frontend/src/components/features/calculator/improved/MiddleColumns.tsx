@@ -31,9 +31,9 @@ export function MiddleColumns({
           onEquipmentUpdate={onEquipmentUpdate}
           bossForm={currentBossForm}
         />
-        <PrayerPotionSelector className="flex-grow" />
       </div>
       <div className="space-y-6 flex flex-col flex-grow">
+        <PrayerPotionSelector className="flex-grow" />
         <BossSelector onSelectForm={onSelectForm} />
         {selectedRaid && (
           <RaidScalingPanel raid={selectedRaid} config={raidConfig} onChange={onRaidConfigChange} />

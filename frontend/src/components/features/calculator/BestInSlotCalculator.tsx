@@ -146,12 +146,12 @@ export function BestInSlotCalculator() {
             onEquipmentUpdate={handleEquipmentUpdate}
             bossForm={currentBossForm}
           />
-          {/* Prayer/Potion selector */}
-          <PrayerPotionSelector className="flex-grow" />
         </div>
 
         {/* Right column */}
         <div className="space-y-6 flex flex-col flex-grow">
+          {/* Prayer/Potion selector */}
+          <PrayerPotionSelector className="flex-grow" />
           {/* Target selection section */}
           <BossSelector onSelectForm={handleBossUpdate} />
         </div>
