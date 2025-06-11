@@ -33,7 +33,7 @@ export function MiddleColumns({
         />
       </div>
       <div className="space-y-6 flex flex-col flex-grow">
-        <PrayerPotionSelector className="flex-grow" />
+        <PrayerPotionSelector />
         <BossSelector onSelectForm={onSelectForm} />
         {selectedRaid && (
           <RaidScalingPanel raid={selectedRaid} config={raidConfig} onChange={onRaidConfigChange} />
