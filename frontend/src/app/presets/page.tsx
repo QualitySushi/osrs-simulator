@@ -1,4 +1,3 @@
-'use client';
 import { PresetSelector } from '@/components/features/calculator/PresetSelector';
 import { Visualizations } from '@/components/features/calculator/Visualizations';
 import type { Metadata } from 'next';
