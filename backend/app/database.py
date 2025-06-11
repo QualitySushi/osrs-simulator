@@ -7,13 +7,11 @@ import asyncio
 from contextlib import contextmanager, asynccontextmanager
 from typing import Dict, List, Optional, Any
 from .config.settings import (
-    DB_POOL_SIZE,
     DB_CONNECTION_TIMEOUT,
     DB_MAX_RETRIES,
 )
 
-# Connection pool configuration via environment variables
-POOL_SIZE = DB_POOL_SIZE
+# Connection configuration via environment variables
 CONNECTION_TIMEOUT = DB_CONNECTION_TIMEOUT
 MAX_RETRIES = DB_MAX_RETRIES
 
@@ -65,25 +63,19 @@ class AzureSQLDatabaseService:
                     f"Connection Timeout=30;"
                 )
 
-        # Async connection pool will be created lazily
-        self._async_pool: aioodbc.pool.Pool | None = None
+        # Async connections will be opened per request
+
 
     def _get_connection(self) -> pyodbc.Connection:
         """Create a synchronous connection (no pooling)."""
         return pyodbc.connect(self.connection_string, timeout=CONNECTION_TIMEOUT)
 
-    async def _get_async_pool(self) -> aioodbc.pool.Pool:
-        if self._async_pool is None:
-            self._async_pool = await aioodbc.create_pool(
-                dsn=self.connection_string,
-                maxsize=POOL_SIZE,
-                timeout=CONNECTION_TIMEOUT,
-            )
-        return self._async_pool
-
     async def _get_connection_async(self) -> aioodbc.Connection:
-        pool = await self._get_async_pool()
-        return await pool.acquire()
+        """Create a new async connection."""
+        return await aioodbc.connect(
+            dsn=self.connection_string,
+            timeout=CONNECTION_TIMEOUT,
+        )
 
     @contextmanager
     def connection(self):
@@ -118,8 +110,7 @@ class AzureSQLDatabaseService:
             except Exception:
                 if conn:
                     try:
-                        pool = await self._get_async_pool()
-                        await pool.release(conn)
+                        await conn.close()
                     except Exception:
                         pass
                 if attempt == MAX_RETRIES - 1:
@@ -127,8 +118,7 @@ class AzureSQLDatabaseService:
                 await asyncio.sleep(2**attempt)
             else:
                 if conn:
-                    pool = await self._get_async_pool()
-                    await pool.release(conn)
+                    await conn.close()
                 break
 
     def get_all_bosses(
