@@ -505,6 +505,16 @@ async def search_items(query: str, limit: int | None = None):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Search failed: {str(e)}")
 
+
+@app.get("/search/special-attacks", tags=["Search"])
+async def search_special_attacks(query: str, limit: int | None = None):
+    """Search for weapons with special attacks by name."""
+    try:
+        results = special_attack_repository.search_special_attacks(query, limit=limit)
+        return results
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Search failed: {str(e)}")
+
 @app.post("/calculate/item-effect", tags=["DPS"])
 async def calculate_item_effect(params: Dict[str, Any]):
     """
