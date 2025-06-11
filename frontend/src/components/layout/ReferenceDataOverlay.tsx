@@ -34,21 +34,23 @@ export function ReferenceDataOverlay() {
       <div className="text-center">
         <div className="relative w-48 h-48 mx-auto">
           <LogoProgressCircle progress={progress} />
-          <img
-            src="/images/logo_transparent_off.png"
-            alt="ScapeLab logo"
-            className="absolute inset-0 w-full h-full object-contain logo-fade-off"
-          />
-          <img
-            src="/images/logo_transparent_mid.png"
-            alt="ScapeLab logo"
-            className="absolute inset-0 w-full h-full object-contain logo-fade-mid"
-          />
-          <img
-            src="/images/logo_transparent_on.png"
-            alt="ScapeLab logo"
-            className="absolute inset-0 w-full h-full object-contain logo-fade-on"
-          />
+          <div className="absolute inset-0 p-12">
+            <img
+              src="/images/logo_transparent_off.png"
+              alt="ScapeLab logo"
+              className="absolute inset-0 w-full h-full object-contain logo-fade-off"
+            />
+            <img
+              src="/images/logo_transparent_mid.png"
+              alt="ScapeLab logo"
+              className="absolute inset-0 w-full h-full object-contain logo-fade-mid"
+            />
+            <img
+              src="/images/logo_transparent_on.png"
+              alt="ScapeLab logo"
+              className="absolute inset-0 w-full h-full object-contain logo-fade-on"
+            />
+          </div>
         </div>
         <p className="mt-4 text-lg">
           {error ? "Failed to load game data" : "Loading game data..."}
