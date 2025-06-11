@@ -1,6 +1,29 @@
 'use client';
 import { PresetSelector } from '@/components/features/calculator/PresetSelector';
 import { Visualizations } from '@/components/features/calculator/Visualizations';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Presets & Visualizations',
+  description: 'Manage saved loadouts and visualize their performance.',
+  alternates: {
+    canonical: '/presets',
+  },
+  openGraph: {
+    title: 'Presets & Visualizations',
+    description: 'Manage saved loadouts and visualize their performance.',
+    url: '/presets',
+    siteName: 'ScapeLab',
+    images: ['/favicon.ico'],
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Presets & Visualizations',
+    description: 'Manage saved loadouts and visualize their performance.',
+  },
+};
 
 export default function PresetsPage() {
   return (

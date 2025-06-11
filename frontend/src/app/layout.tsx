@@ -7,9 +7,12 @@ import { ThemeToggle } from '@/components/theme/ThemeToggle';
 import './globals.css';
 import type { Metadata } from "next";
 
+const siteUrl = new URL('https://scapelab.app');
+
 export const metadata: Metadata = {
   title: "ScapeLab",
   description: "Tools for optimizing your Old School RuneScape gameplay",
+  metadataBase: siteUrl,
 };
 
 export default function RootLayout({

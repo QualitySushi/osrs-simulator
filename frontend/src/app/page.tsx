@@ -2,6 +2,29 @@ import HomeHero from '@/components/layout/HomeHero';
 import { InitReferenceData } from '@/components/layout/InitReferenceData';
 import Link from 'next/link';
 import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Home | ScapeLab',
+  description: 'Tools for optimizing your Old School RuneScape gameplay',
+  alternates: {
+    canonical: '/',
+  },
+  openGraph: {
+    title: 'Home - ScapeLab',
+    description: 'Tools for optimizing your Old School RuneScape gameplay',
+    url: '/',
+    siteName: 'ScapeLab',
+    images: ['/favicon.ico'],
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Home | ScapeLab',
+    description: 'Tools for optimizing your Old School RuneScape gameplay',
+  },
+};
 
 export default function Home() {
   return (
