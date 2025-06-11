@@ -25,16 +25,21 @@ export function ReferenceDataOverlay() {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-background">
       <div className="text-center">
-        <div className="relative w-48 h-48 mx-auto logo-fade-container">
+        <div className="relative w-48 h-48 mx-auto">
           <img
-            src="/images/logo_transparent.png"
+            src="/images/logo_transparent_off.png"
             alt="ScapeLab logo"
-            className="absolute inset-0 w-full h-full object-contain logo-fade-1"
+            className="absolute inset-0 w-full h-full object-contain logo-fade-off"
           />
           <img
-            src="/images/logo_transparent_v2.png"
+            src="/images/logo_transparent_mid.png"
             alt="ScapeLab logo"
-            className="absolute inset-0 w-full h-full object-contain logo-fade-2"
+            className="absolute inset-0 w-full h-full object-contain logo-fade-mid"
+          />
+          <img
+            src="/images/logo_transparent_on.png"
+            alt="ScapeLab logo"
+            className="absolute inset-0 w-full h-full object-contain logo-fade-on"
           />
         </div>
         <p className="mt-4 text-lg">{error ? 'Failed to load game data' : 'Loading game data...'}</p>
