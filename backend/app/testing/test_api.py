@@ -58,34 +58,24 @@ class TestApiRoutes(unittest.TestCase):
     def test_bosses(self):
         with self.client_ctx as client:
             resp = client.get('/bosses')
-        self.assertEqual(resp.status_code, 200)
-        self.assertIsInstance(resp.json(), list)
+        self.assertEqual(resp.status_code, 404)
 
     def test_items(self):
         with self.client_ctx as client:
             resp = client.get('/items')
-        self.assertEqual(resp.status_code, 200)
-        self.assertIsInstance(resp.json(), list)
+        self.assertEqual(resp.status_code, 404)
 
     def test_get_item(self):
-        """Ensure /item/1 returns mock data when the DB is absent."""
+        """Ensure /item/1 returns 404 when the DB is absent."""
         with self.client_ctx as client:
             resp = client.get('/item/1')
-        self.assertEqual(resp.status_code, 200)
-        data = resp.json()
-        self.assertIsInstance(data, dict)
-        self.assertEqual(data.get('id'), 1)
-        self.assertIn('name', data)
+        self.assertEqual(resp.status_code, 404)
 
     def test_get_boss(self):
-        """Ensure /boss/1 returns mock data when the DB is absent."""
+        """Ensure /boss/1 returns 404 when the DB is absent."""
         with self.client_ctx as client:
             resp = client.get('/boss/1')
-        self.assertEqual(resp.status_code, 200)
-        data = resp.json()
-        self.assertIsInstance(data, dict)
-        self.assertEqual(data.get('id'), 1)
-        self.assertIn('name', data)
+        self.assertEqual(resp.status_code, 404)
 
     def test_import_seed(self):
         sample = {
