@@ -59,7 +59,9 @@ export function calculatePassiveEffectBonuses(
   const combatStyle = params.combat_style;
   
   // Check for equipped items
-  const equippedItems = Object.values(equipment).filter(item => item !== null) as Item[];
+  const equippedItems = Object.entries(equipment)
+    .filter(([slot, item]) => slot !== 'spec' && item !== null)
+    .map(([, item]) => item as Item);
   
   // Process each item for passive effects
   equippedItems.forEach(item => {

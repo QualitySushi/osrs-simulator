@@ -90,6 +90,21 @@ export function useDpsCalculator() {
         cleaned.target_magic_defence = Number(cleaned.target_magic_defence);
         cleaned.attack_speed = Number(cleaned.attack_speed);
       }
+      if (!cleaned.special_rotation) {
+        delete cleaned.special_rotation;
+      }
+      if (!cleaned.special_attack_cost) {
+        delete cleaned.special_attack_cost;
+      }
+      if (cleaned.special_multiplier === 1.0) {
+        delete cleaned.special_multiplier;
+      }
+      if (cleaned.special_accuracy_multiplier === 1.0) {
+        delete cleaned.special_accuracy_multiplier;
+      }
+      if (cleaned.special_hit_count === 1) {
+        delete cleaned.special_hit_count;
+      }
       return cleaned;
     },
     []
@@ -122,6 +137,11 @@ export function useDpsCalculator() {
       }
       if (specItem) {
         (clean as any).weapon_name = specItem.name.toLowerCase();
+        delete (clean as any).special_attack_cost;
+        delete (clean as any).special_multiplier;
+        delete (clean as any).special_accuracy_multiplier;
+        delete (clean as any).special_hit_count;
+        delete (clean as any).guaranteed_hit;
       }
     }
     calculateMutation.mutate(clean);
