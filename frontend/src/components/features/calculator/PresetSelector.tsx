@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Save, Trash2, ClipboardCopy } from 'lucide-react';
+import { Save, Trash2, ClipboardCopy, ArrowUp, ArrowDown } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -21,7 +21,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useCalculatorStore } from '@/store/calculator-store';
-import { CombatStyle, CalculatorParams } from '@/types/calculator';
+import { CombatStyle, CalculatorParams, Item } from '@/types/calculator';
 import { Badge } from '@/components/ui/badge';
 
 import { cn } from '@/lib/utils';
@@ -39,10 +39,21 @@ interface Preset {
   combatStyle: CombatStyle;
   timestamp: number;
   params: CalculatorParams;
+  equipment: Record<string, Item | null>;
 }
 
 export function PresetSelector({ onPresetLoad, className }: PresetSelectorProps) {
-  const { params, loadout, setParams, setLoadout, switchCombatStyle } = useCalculatorStore();
+  const {
+    params,
+    loadout,
+    setParams,
+    setLoadout,
+    switchCombatStyle,
+    addLoadoutPreset,
+    setLoadoutPresets,
+    removeLoadoutPreset,
+    reorderLoadoutPresets,
+  } = useCalculatorStore();
   const { toast } = useToast();
   const [hasMounted, setHasMounted] = useState(false);
   const [saveDialogOpen, setSaveDialogOpen] = useState(false);
@@ -56,7 +67,9 @@ export function PresetSelector({ onPresetLoad, className }: PresetSelectorProps)
     setHasMounted(true);
     if (typeof window !== 'undefined') {
       const savedPresets = localStorage.getItem('osrs-dps-presets');
-      setPresets(savedPresets ? JSON.parse(savedPresets) : []);
+      const loaded = savedPresets ? JSON.parse(savedPresets) : [];
+      setPresets(loaded);
+      setLoadoutPresets(loaded);
     }
   }, []);
 
@@ -77,10 +90,13 @@ export function PresetSelector({ onPresetLoad, className }: PresetSelectorProps)
       combatStyle: params.combat_style,
       timestamp: Date.now(),
       params: { ...params },
+      equipment: { ...loadout },
     };
 
     const updatedPresets = [...presets, newPreset];
     setPresets(updatedPresets);
+    setLoadoutPresets(updatedPresets);
+    addLoadoutPreset(newPreset);
     if (typeof window !== 'undefined') {
       localStorage.setItem('osrs-dps-presets', JSON.stringify(updatedPresets));
     }
@@ -91,6 +107,7 @@ export function PresetSelector({ onPresetLoad, className }: PresetSelectorProps)
   const loadPreset = (preset: Preset) => {
     switchCombatStyle(preset.params.combat_style);
     setParams(preset.params);
+    setLoadout(preset.equipment || {});
     onPresetLoad?.();
   };
 
@@ -119,8 +136,26 @@ export function PresetSelector({ onPresetLoad, className }: PresetSelectorProps)
   const deletePreset = (presetId: string) => {
     const updatedPresets = presets.filter(preset => preset.id !== presetId);
     setPresets(updatedPresets);
+    setLoadoutPresets(updatedPresets);
+    removeLoadoutPreset(presetId);
     if (typeof window !== 'undefined') {
       localStorage.setItem('osrs-dps-presets', JSON.stringify(updatedPresets));
+    }
+  };
+
+  const movePreset = (presetId: string, direction: 'up' | 'down') => {
+    const index = presets.findIndex(p => p.id === presetId);
+    if (index === -1) return;
+    const newIndex = direction === 'up' ? index - 1 : index + 1;
+    if (newIndex < 0 || newIndex >= presets.length) return;
+    const updated = [...presets];
+    const [moved] = updated.splice(index, 1);
+    updated.splice(newIndex, 0, moved);
+    setPresets(updated);
+    setLoadoutPresets(updated);
+    reorderLoadoutPresets(index, newIndex);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('osrs-dps-presets', JSON.stringify(updated));
     }
   };
 
@@ -362,6 +397,12 @@ export function PresetSelector({ onPresetLoad, className }: PresetSelectorProps)
                             </TooltipContent>
                           </Tooltip>
                         </TooltipProvider>
+                        <Button variant="ghost" size="sm" onClick={() => movePreset(preset.id, 'up')}>
+                          <ArrowUp className="h-4 w-4" />
+                        </Button>
+                        <Button variant="ghost" size="sm" onClick={() => movePreset(preset.id, 'down')}>
+                          <ArrowDown className="h-4 w-4" />
+                        </Button>
                       </div>
                     </div>
                   ))

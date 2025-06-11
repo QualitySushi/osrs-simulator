@@ -102,7 +102,7 @@ export function EquipmentPanel({ onEquipmentUpdate, bossForm }: EquipmentPanelPr
         <Tabs value={activePreset} onValueChange={handlePresetChange} className="w-full">
           <TabsList className="mb-4 flex gap-2">
             <TabsTrigger value="current">Current</TabsTrigger>
-            {loadoutPresets.map((p) => (
+            {loadoutPresets.slice(0, 6).map((p) => (
               <TabsTrigger key={p.id} value={p.id}>{p.name}</TabsTrigger>
             ))}
             <Button variant="outline" size="sm" onClick={handleAddPreset}">Add preset</Button>

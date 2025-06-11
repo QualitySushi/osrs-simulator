@@ -237,7 +237,14 @@ export const useCalculatorStore = create<CalculatorState>()(
       addLoadoutPreset: (preset) =>
         set((state) => ({ loadoutPresets: [...state.loadoutPresets, preset] })),
       removeLoadoutPreset: (id) =>
-        set((state) => ({ loadoutPresets: state.loadoutPresets.filter((p) => p.id !== id) }))
+        set((state) => ({ loadoutPresets: state.loadoutPresets.filter((p) => p.id !== id) })),
+      reorderLoadoutPresets: (fromIndex, toIndex) =>
+        set((state) => {
+          const updated = [...state.loadoutPresets];
+          const [moved] = updated.splice(fromIndex, 1);
+          updated.splice(toIndex, 0, moved);
+          return { loadoutPresets: updated };
+        })
     }),
     {
       name: 'osrs-calculator-storage',
