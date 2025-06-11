@@ -138,3 +138,10 @@ export const specialAttacksApi = {
     return data;
   },
 };
+
+export const passiveEffectsApi = {
+  getAll: async (): Promise<Record<string, unknown>> => {
+    const { data } = await apiClient.get('/passive-effects');
+    return data;
+  },
+};

@@ -43,20 +43,25 @@ class MeleeCalculator:
         # Step 4: Attack Roll
         attack_roll = math.floor(effective_atk * (params["melee_attack_bonus"] + EQUIPMENT_BONUS_OFFSET))
         attack_roll = math.floor(attack_roll * params.get("gear_multiplier", 1.0))
+        attack_roll = math.floor(attack_roll * params.get("special_accuracy_multiplier", 1.0))
 
         # Step 5–6: Defence Roll
         def_roll = (params["target_defence_level"] + 9) * (params["target_defence_bonus"] + EQUIPMENT_BONUS_OFFSET)
 
         # Step 7: Hit Chance (Wiki accurate)
-        if attack_roll > def_roll:
-            hit_chance = 1 - (def_roll + 2) / (2 * (attack_roll + 1))
+        if params.get("guaranteed_hit"):
+            hit_chance = 1.0
         else:
-            hit_chance = attack_roll / (2 * (def_roll + 1))
+            if attack_roll > def_roll:
+                hit_chance = 1 - (def_roll + 2) / (2 * (attack_roll + 1))
+            else:
+                hit_chance = attack_roll / (2 * (def_roll + 1))
 
-        hit_chance = max(0, min(1, hit_chance))  # Clamp between 0 and 1
+            hit_chance = max(0, min(1, hit_chance))  # Clamp between 0 and 1
 
         # Step 8: Average Hit and DPS
         avg_hit = hit_chance * (max_hit + 1) / 2
+        avg_hit *= params.get("special_hit_count", 1)
         dps = avg_hit / params["attack_speed"]
 
         if params.get("debug"):
