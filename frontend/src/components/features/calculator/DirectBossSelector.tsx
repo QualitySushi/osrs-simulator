@@ -42,7 +42,6 @@ export function DirectBossSelector({ onSelectBoss, onSelectForm, className }: Di
   const debouncedQuery = useDebounce(searchQuery, 300);
   const [selectedBoss, setSelectedBoss] = useState<BossSummary | null>(null);
   const [selectedForm, setSelectedForm] = useState<BossForm | null>(null);
-  const [bossIcons, setBossIcons] = useState<Record<number, string>>({});
   const storeBosses = useReferenceDataStore((s) => s.bosses);
   const storeBossForms = useReferenceDataStore((s) => s.bossForms);
   const initData = useReferenceDataStore((s) => s.initData);
@@ -93,17 +92,6 @@ export function DirectBossSelector({ onSelectBoss, onSelectForm, className }: Di
           : undefined
       : undefined;
 
-  // Fetch icons for all bosses
-  useEffect(() => {
-    if (!storeBosses) return;
-    const map: Record<number, string> = {};
-    storeBosses.forEach((b) => {
-      if (b.icon_url) {
-        map[b.id] = b.icon_url;
-      }
-    });
-    setBossIcons(map);
-  }, [storeBosses]);
 
   // Handle click outside to close search results
   useEffect(() => {
@@ -265,13 +253,6 @@ export function DirectBossSelector({ onSelectBoss, onSelectForm, className }: Di
         <div className="space-y-2">
           <label className="text-sm font-medium">Select Boss</label>
           <div className="relative" ref={commandRef}>
-            {selectedBoss && (
-              <img
-                src={bossIcons[selectedBoss.id]}
-                alt={`${selectedBoss.name} icon`}
-                className="w-5 h-5 absolute top-2 left-2"
-              />
-            )}
             <Command className="rounded-lg border shadow-md pl-7">
               <CommandInput
                 placeholder="Search bosses..."
@@ -300,11 +281,6 @@ export function DirectBossSelector({ onSelectBoss, onSelectForm, className }: Di
                           onSelect={() => handleSelectBoss(boss)}
                           className="cursor-pointer"
                         >
-                          <img
-                            src={bossIcons[boss.id]}
-                            alt={`${boss.name} icon`}
-                            className="w-4 h-4 mr-2 inline-block"
-                          />
                           <span>{boss.name}</span>
                           {boss.raid_group && (
                             <Badge variant="outline" className="ml-2">
