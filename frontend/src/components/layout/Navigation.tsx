@@ -17,7 +17,7 @@ export function Navigation() {
             className="text-xl font-bold font-title flex items-center space-x-2"
           >
             <img
-              src="/images/logo_transparent.png"
+              src="/images/logo_transparent_on.png"
               alt="ScapeLab logo"
               className="w-6 h-6"
             />
