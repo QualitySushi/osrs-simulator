@@ -78,28 +78,6 @@ export function RangedForm() {
             
             <FormField
               control={form.control}
-              name="ranged_level"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Ranged Level: {field.value}</FormLabel>
-                  <FormControl>
-                    <Slider
-                      min={1}
-                      max={99}
-                      step={1}
-                      value={[field.value]}
-                      onValueChange={(values) => {
-                        field.onChange(values[0]);
-                        onValueChange({ ranged_level: values[0] });
-                      }}
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
               name="ranged_boost"
               render={({ field }) => (
                 <FormItem>

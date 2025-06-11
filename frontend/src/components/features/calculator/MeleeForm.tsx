@@ -84,28 +84,6 @@ export function MeleeForm() {
             
             <FormField
               control={form.control}
-              name="strength_level"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Strength Level: {field.value}</FormLabel>
-                  <FormControl>
-                    <Slider
-                      min={1}
-                      max={99}
-                      step={1}
-                      value={[field.value]}
-                      onValueChange={(values) => {
-                        field.onChange(values[0]);
-                        onValueChange({ strength_level: values[0] });
-                      }}
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
               name="strength_boost"
               render={({ field }) => (
                 <FormItem>
@@ -125,28 +103,6 @@ export function MeleeForm() {
                   <FormDescription>
                     Super Strength: 5, Super Combat: 5, Overload: 6+
                   </FormDescription>
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="attack_level"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Attack Level: {field.value}</FormLabel>
-                  <FormControl>
-                    <Slider
-                      min={1}
-                      max={99}
-                      step={1}
-                      value={[field.value]}
-                      onValueChange={(values) => {
-                        field.onChange(values[0]);
-                        onValueChange({ attack_level: values[0] });
-                      }}
-                    />
-                  </FormControl>
                 </FormItem>
               )}
             />

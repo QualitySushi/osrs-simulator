@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { MeleeForm } from './MeleeForm';
 import { RangedForm } from './RangedForm';
 import { MagicForm } from './MagicForm';
+import { PlayerLevel } from './PlayerLevel';
 import { CombatStyle } from '@/types/calculator';
 
 interface CalculatorFormsProps {
@@ -26,6 +27,7 @@ export function CalculatorForms({
 
   return (
     <div className="w-full mb-6">
+      <PlayerLevel />
       <div className="flex items-center gap-4 mb-4">
         <ToggleBox
           id="manual-toggle"
