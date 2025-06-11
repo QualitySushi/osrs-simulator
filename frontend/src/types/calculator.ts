@@ -14,6 +14,7 @@ export type EquipmentSlot =
   | 'hands'
   | 'feet'
   | 'ring'
+  | 'spec'
   | '2h';
 
 // Equipment loadout interface
@@ -29,6 +30,7 @@ export interface EquipmentLoadout {
   hands?: Item | null;
   feet?: Item | null;
   ring?: Item | null;
+  spec?: Item | null;
   '2h'?: Item | null;
 }
 
