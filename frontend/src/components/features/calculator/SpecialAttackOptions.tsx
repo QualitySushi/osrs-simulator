@@ -24,14 +24,17 @@ export function SpecialAttackOptions() {
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        {Object.entries(attacks).map(([key, info]) => (
-          <div key={key} className="text-sm space-y-1">
-            <div className="font-semibold">
-              {info.special_name} - Cost {info.cost}%
+        {Object.entries(attacks).map(([key, info]) => {
+          const [specialName, description] = info.effect.split(':', 2);
+          return (
+            <div key={key} className="text-sm space-y-1">
+              <div className="font-semibold">
+                {info.weapon_name} - {specialName.trim()} (Cost {info.special_cost}%)
+              </div>
+              <div>{description?.trim()}</div>
             </div>
-            <div>{info.effect}</div>
-          </div>
-        ))}
+          );
+        })}
       </CardContent>
     </Card>
   );

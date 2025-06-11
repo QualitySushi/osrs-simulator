@@ -309,9 +309,17 @@ export interface SearchParams {
 }
 
 export interface SpecialAttack {
-  special_name: string;
-  cost: number;
+  weapon_name: string;
   effect: string;
-  attack_roll_modifier: number;
-  damage_roll_modifier: number;
+  special_cost: number;
+  accuracy_multiplier: number;
+  damage_multiplier: number;
+}
+
+export interface PassiveEffect {
+  item_name: string;
+  effect_description: string;
+  effect_type?: string;
+  category?: string;
+  stackable?: boolean;
 }

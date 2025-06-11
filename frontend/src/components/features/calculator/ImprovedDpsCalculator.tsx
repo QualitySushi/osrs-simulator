@@ -15,6 +15,7 @@ import { CalculatorForms } from './CalculatorForms';
 import { CombatStyleTabs } from './CombatStyleTabs';
 import { DpsResultDisplay } from './DpsResultDisplay';
 import { SpecialAttackOptions } from './SpecialAttackOptions';
+import { PassiveEffectOptions } from './PassiveEffectOptions';
 import { useDpsCalculator } from '@/hooks/useDpsCalculator';
 import { useToast } from '@/hooks/use-toast';
 import RaidScalingPanel, { RaidScalingConfig } from '../simulation/RaidScalingPanel';
@@ -112,6 +113,7 @@ export function ImprovedDpsCalculator() {
           {/* Prayer/Potion selector */}
           <PrayerPotionSelector className="flex-grow" />
           <SpecialAttackOptions />
+          <PassiveEffectOptions />
         </div>
 
         {/* Right column */}
