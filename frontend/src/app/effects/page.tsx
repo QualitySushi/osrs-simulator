@@ -1,4 +1,3 @@
-'use client';
 import { SpecialAttackOptions } from '@/components/features/calculator/SpecialAttackOptions';
 import { PassiveEffectOptions } from '@/components/features/calculator/PassiveEffectOptions';
 import type { Metadata } from 'next';

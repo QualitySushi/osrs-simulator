@@ -1,5 +1,3 @@
-'use client';
-
 import { BestInSlotCalculator } from '@/components/features/calculator/BestInSlotCalculator';
 import type { Metadata } from 'next';
 

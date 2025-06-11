@@ -1,5 +1,3 @@
-'use client';
-
 import MultiBossSimulation from '@/components/features/simulation/MultiBossSimulation';
 import type { Metadata } from 'next';
 
