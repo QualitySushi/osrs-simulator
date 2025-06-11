@@ -3,20 +3,13 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Collapsible, CollapsibleTrigger, CollapsibleContent } from '@/components/ui/collapsible';
 import { Sparkles, ChevronDown, ChevronUp } from 'lucide-react';
-import { useEffect, useState } from 'react';
-import { passiveEffectsApi } from '@/services/api';
+import { useState } from 'react';
+import { useReferenceDataStore } from '@/store/reference-data-store';
 import { PassiveEffect } from '@/types/calculator';
 
 export function PassiveEffectOptions() {
-  const [effects, setEffects] = useState<Record<string, PassiveEffect>>({});
+  const effects = useReferenceDataStore((s) => s.passiveEffects);
   const [isOpen, setIsOpen] = useState(false);
-
-  useEffect(() => {
-    passiveEffectsApi
-      .getAll()
-      .then(setEffects)
-      .catch(() => setEffects({}));
-  }, []);
 
   return (
     <Collapsible open={isOpen} onOpenChange={setIsOpen} className="w-full">

@@ -3,20 +3,13 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Collapsible, CollapsibleTrigger, CollapsibleContent } from '@/components/ui/collapsible';
 import { Swords, ChevronDown, ChevronUp } from 'lucide-react';
-import { useEffect, useState } from 'react';
-import { specialAttacksApi } from '@/services/api';
+import { useState } from 'react';
+import { useReferenceDataStore } from '@/store/reference-data-store';
 import { SpecialAttack } from '@/types/calculator';
 
 export function SpecialAttackOptions() {
-  const [attacks, setAttacks] = useState<Record<string, SpecialAttack>>({});
+  const attacks = useReferenceDataStore((s) => s.specialAttacks);
   const [isOpen, setIsOpen] = useState(false);
-
-  useEffect(() => {
-    specialAttacksApi
-      .getAll()
-      .then(setAttacks)
-      .catch(() => setAttacks({}));
-  }, []);
 
   return (
     <Collapsible open={isOpen} onOpenChange={setIsOpen} className="w-full">
