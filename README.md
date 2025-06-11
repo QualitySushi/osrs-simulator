@@ -147,6 +147,7 @@ echo "NEXT_PUBLIC_API_URL=http://localhost:8000" > .env.local
 For production, set this to your deployed API URL. The deployment workflows
 expect a repository secret named `BACKEND_URL` which will be exposed as
 `NEXT_PUBLIC_API_URL` during the frontend build.
+GitHub Actions injects this value in `.github/workflows/azure-static-web-apps-yellow-stone-0daf36a0f.yml`.
 Ensure this secret contains the URL of your deployed FastAPI service, for example
 `https://scapelab-api-dvawaebtdze3brf0.canadacentral-01.azurewebsites.net`.
 
