@@ -12,14 +12,14 @@ class SQLiteDatabaseService:
     """Minimal SQLite-backed service for testing."""
 
     def __init__(self, db_dir: str):
-        self.db_path = os.path.join(db_dir, "osrs_bosses.db")
+        self.db_path = os.path.join(db_dir, "osrs_npcs.db")
 
     def get_boss(self, boss_id: int):
         conn = sqlite3.connect(self.db_path)
         conn.row_factory = sqlite3.Row
         cursor = conn.cursor()
         cursor.execute(
-            "SELECT id, name FROM bosses WHERE id = ?",
+            "SELECT id, name FROM npcs WHERE id = ?",
             (boss_id,),
         )
         row = cursor.fetchone()
@@ -29,7 +29,7 @@ class SQLiteDatabaseService:
 
         boss = {"id": row["id"], "name": row["name"], "forms": []}
         cursor.execute(
-            "SELECT id, boss_id, form_name, form_order, size FROM boss_forms WHERE boss_id = ? ORDER BY form_order",
+            "SELECT id, npc_id as boss_id, form_name, form_order, size FROM npc_forms WHERE npc_id = ? ORDER BY form_order",
             (boss_id,),
         )
         for form_row in cursor.fetchall():
@@ -52,12 +52,12 @@ DatabaseService = SQLiteDatabaseService
 class TestDatabaseService(unittest.TestCase):
     def setUp(self):
         self.temp_dir = tempfile.mkdtemp()
-        boss_db = os.path.join(self.temp_dir, "osrs_bosses.db")
+        boss_db = os.path.join(self.temp_dir, "osrs_npcs.db")
         conn = sqlite3.connect(boss_db)
         cursor = conn.cursor()
         cursor.execute(
             """
-            CREATE TABLE bosses (
+            CREATE TABLE npcs (
                 id INTEGER PRIMARY KEY,
                 name TEXT,
                 raid_group TEXT,
@@ -73,9 +73,9 @@ class TestDatabaseService(unittest.TestCase):
         )
         cursor.execute(
             """
-            CREATE TABLE boss_forms (
+            CREATE TABLE npc_forms (
                 id INTEGER PRIMARY KEY,
-                boss_id INTEGER,
+                npc_id INTEGER,
                 form_name TEXT,
                 form_order INTEGER,
                 combat_level INTEGER,
@@ -125,20 +125,20 @@ class TestDatabaseService(unittest.TestCase):
         )
         cursor.execute(
             """
-            INSERT INTO bosses (id, name, raid_group, examine, location, release_date, slayer_level, slayer_xp, slayer_category, has_multiple_forms)
+            INSERT INTO npcs (id, name, raid_group, examine, location, release_date, slayer_level, slayer_xp, slayer_category, has_multiple_forms)
             VALUES (1, 'Test Boss', NULL, 'A boss', 'Somewhere', '2020-01-01', 1, 100, 'Demon', 0)
             """
         )
         cursor.execute(
             """
-            INSERT INTO bosses (id, name, raid_group, examine, location, release_date, slayer_level, slayer_xp, slayer_category, has_multiple_forms)
+            INSERT INTO npcs (id, name, raid_group, examine, location, release_date, slayer_level, slayer_xp, slayer_category, has_multiple_forms)
             VALUES (2, 'No Form Boss', NULL, 'Another boss', 'Nowhere', '2020-01-02', 1, 100, 'Undead', 0)
             """
         )
         cursor.execute(
             """
-            INSERT INTO boss_forms (
-                id, boss_id, form_name, form_order, combat_level, hitpoints,
+            INSERT INTO npc_forms (
+                id, npc_id, form_name, form_order, combat_level, hitpoints,
                 max_hit, attack_speed, attack_style, attack_level, strength_level,
                 defence_level, magic_level, ranged_level, aggressive_attack_bonus,
                 aggressive_strength_bonus, aggressive_magic_bonus,
