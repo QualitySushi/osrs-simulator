@@ -51,9 +51,15 @@ interface CombinedEquipmentDisplayProps {
   onEquipmentUpdate?: (loadout: Record<string, Item | null>) => void;
   bossForm?: BossForm | null;
   loadoutPreset?: Record<string, Item | null>;
+  showSuggestButton?: boolean;
 }
 
-export function CombinedEquipmentDisplay({ onEquipmentUpdate, bossForm, loadoutPreset }: CombinedEquipmentDisplayProps) {
+export function CombinedEquipmentDisplay({
+  onEquipmentUpdate,
+  bossForm,
+  loadoutPreset,
+  showSuggestButton = false,
+}: CombinedEquipmentDisplayProps) {
   const { params, setParams, gearLocked, loadout, setLoadout, resetParams, resetLocks, switchCombatStyle } = useCalculatorStore();
   // Start with 1H + Shield by default
   const [show2hOption, setShow2hOption] = useState(false);
@@ -468,9 +474,11 @@ export function CombinedEquipmentDisplay({ onEquipmentUpdate, bossForm, loadoutP
               Reset Equipment
             </Button>
           )}
-          <Button size="sm" onClick={handleSuggestBis} disabled={isSuggesting}>
-            {isSuggesting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}Suggest BIS
-          </Button>
+          {showSuggestButton && (
+            <Button size="sm" onClick={handleSuggestBis} disabled={isSuggesting}>
+              {isSuggesting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}Suggest BIS
+            </Button>
+          )}
         </div>
 
         {gearLocked && (
