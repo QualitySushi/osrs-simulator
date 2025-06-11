@@ -28,13 +28,13 @@ export function CalculatorForms({
   return (
     <div className="w-full mb-6">
       <PlayerLevel />
-      <div className="flex items-center gap-4 mb-4">
+      <div className="flex items-center gap-4 mt-4 mb-4">
         <ToggleBox
           id="manual-toggle"
           pressed={showManual}
           onPressedChange={setShowManual}
         />
-        <Label htmlFor="manual-toggle">Show Manual Inputs</Label>
+        <Label htmlFor="manual-toggle">Enable Manual Overrides</Label>
         
       </div>
       {showManual && (
