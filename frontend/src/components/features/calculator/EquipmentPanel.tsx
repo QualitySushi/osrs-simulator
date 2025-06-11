@@ -27,8 +27,8 @@ export function EquipmentPanel({ onEquipmentUpdate, bossForm }: EquipmentPanelPr
   const {
     resetParams,
     resetLocks,
-    loadoutPresets,
-    addLoadoutPreset,
+    presets,
+    addPreset,
     setLoadout,
     setParams,
     switchCombatStyle,
@@ -63,7 +63,7 @@ export function EquipmentPanel({ onEquipmentUpdate, bossForm }: EquipmentPanelPr
   const handlePresetChange = (id: string) => {
     setActivePreset(id);
     if (id === 'current') return;
-    const preset = loadoutPresets.find((p) => p.id === id);
+    const preset = presets.find((p) => p.id === id);
     if (preset) {
       switchCombatStyle(preset.params.combat_style as any);
       setParams(preset.params);
@@ -84,7 +84,7 @@ export function EquipmentPanel({ onEquipmentUpdate, bossForm }: EquipmentPanelPr
       equipment: { ...loadout },
       seed: encodeSeed(params, loadout as any),
     };
-    addLoadoutPreset(newPreset);
+    addPreset(newPreset);
     setActivePreset(newPreset.id);
     toast.success('Preset saved');
   };
@@ -102,7 +102,7 @@ export function EquipmentPanel({ onEquipmentUpdate, bossForm }: EquipmentPanelPr
         <Tabs value={activePreset} onValueChange={handlePresetChange} className="w-full">
           <TabsList className="mb-4 flex gap-2">
             <TabsTrigger value="current">Current</TabsTrigger>
-            {loadoutPresets.slice(0, 6).map((p) => (
+            {presets.slice(0, 6).map((p) => (
               <TabsTrigger key={p.id} value={p.id}>{p.name}</TabsTrigger>
             ))}
             <Button variant="outline" size="sm" onClick={handleAddPreset}">Add preset</Button>

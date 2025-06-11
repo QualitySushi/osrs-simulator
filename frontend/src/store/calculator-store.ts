@@ -26,7 +26,7 @@ interface CalculatorState {
   loadout: Record<string, Item | null>;
   selectedBoss: Boss | null;
   selectedBossForm: BossForm | null;
-  loadoutPresets: Preset[];
+  presets: Preset[];
 
   setParams: (params: Partial<CalculatorParams>) => void;
   switchCombatStyle: (style: 'melee' | 'ranged' | 'magic') => void;
@@ -43,9 +43,10 @@ interface CalculatorState {
   setLoadout: (loadout: Record<string, Item | null>) => void;
   setSelectedBoss: (boss: Boss | null) => void;
   setSelectedBossForm: (form: BossForm | null) => void;
-  setLoadoutPresets: (presets: Preset[]) => void;
-  addLoadoutPreset: (preset: Preset) => void;
-  removeLoadoutPreset: (id: string) => void;
+  setPresets: (presets: Preset[]) => void;
+  addPreset: (preset: Preset) => void;
+  removePreset: (id: string) => void;
+  reorderPresets: (fromIndex: number, toIndex: number) => void;
 }
 
 const defaultMeleeParams: MeleeCalculatorParams = {
@@ -160,7 +161,7 @@ export const useCalculatorStore = create<CalculatorState>()(
       loadout: {},
       selectedBoss: null,
       selectedBossForm: null,
-      loadoutPresets: [],
+      presets: [],
 
       setParams: (newParams: Partial<CalculatorParams>) => set((state): Partial<CalculatorState> => {
         const currentStyle = state.params.combat_style;
@@ -251,17 +252,17 @@ export const useCalculatorStore = create<CalculatorState>()(
       setLoadout: (loadout) => set({ loadout }),
       setSelectedBoss: (boss) => set({ selectedBoss: boss }),
       setSelectedBossForm: (form) => set({ selectedBossForm: form }),
-      setLoadoutPresets: (presets) => set({ loadoutPresets: presets }),
-      addLoadoutPreset: (preset) =>
-        set((state) => ({ loadoutPresets: [...state.loadoutPresets, preset] })),
-      removeLoadoutPreset: (id) =>
-        set((state) => ({ loadoutPresets: state.loadoutPresets.filter((p) => p.id !== id) })),
-      reorderLoadoutPresets: (fromIndex, toIndex) =>
+      setPresets: (presets) => set({ presets }),
+      addPreset: (preset) =>
+        set((state) => ({ presets: [...state.presets, preset] })),
+      removePreset: (id) =>
+        set((state) => ({ presets: state.presets.filter((p) => p.id !== id) })),
+      reorderPresets: (fromIndex, toIndex) =>
         set((state) => {
-          const updated = [...state.loadoutPresets];
+          const updated = [...state.presets];
           const [moved] = updated.splice(fromIndex, 1);
           updated.splice(toIndex, 0, moved);
-          return { loadoutPresets: updated };
+          return { presets: updated };
         })
     }),
     {
@@ -274,7 +275,7 @@ export const useCalculatorStore = create<CalculatorState>()(
         loadout: state.loadout,
         selectedBoss: state.selectedBoss,
         selectedBossForm: state.selectedBossForm,
-        loadoutPresets: state.loadoutPresets,
+        presets: state.presets,
       })
     }
   )
