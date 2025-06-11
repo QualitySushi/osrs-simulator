@@ -67,11 +67,11 @@ def read_root():
         "endpoints": {
             "GET /": "This welcome message",
             "POST /calculate/dps": "Calculate DPS based on parameters",
-            "GET /bosses": "Get a list of all bosses",
-            "GET /boss/{boss_id}": "Get details for a specific boss",
+            "GET /npcs": "Get a list of all NPCs",
+            "GET /npc/{npc_id}": "Get details for a specific NPC",
             "GET /items": "Get a list of all items (with optional filters)",
             "GET /item/{item_id}": "Get details for a specific item",
-            "GET /search/bosses": "Search for bosses by name",
+            "GET /search/npcs": "Search for NPCs by name",
             "GET /search/items": "Search for items by name"
         }
     }
@@ -135,15 +135,15 @@ async def get_best_in_slot(params: DpsParameters):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/bosses", response_model=List[BossSummary], tags=["Bosses"])
-async def get_bosses(
+@app.get("/npcs", response_model=List[BossSummary], tags=["NPCs"])
+async def get_npcs(
     page: int = Query(1, ge=1, description="Page number"),
     page_size: int = Query(50, ge=1, le=100, description="Results per page"),
 ):
     """
-    Get a list of all bosses.
+    Get a list of all NPCs.
     
-    Returns a list of boss summaries with basic information.
+    Returns a list of NPC summaries with basic information.
     """
     try:
 
@@ -152,18 +152,18 @@ async def get_bosses(
         )
 
         if not bosses:
-            raise HTTPException(status_code=404, detail="No bosses found")
+            raise HTTPException(status_code=404, detail="No NPCs found")
         return bosses
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to retrieve bosses: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to retrieve NPCs: {str(e)}")
 
 
-@app.get("/bosses/full", response_model=List[Boss], tags=["Bosses"])
-async def get_bosses_full(
+@app.get("/npcs/full", response_model=List[Boss], tags=["NPCs"])
+async def get_npcs_full(
     page: int = Query(1, ge=1, description="Page number"),
     page_size: int = Query(50, ge=1, le=100, description="Results per page"),
 ):
-    """Get a paginated list of bosses including their forms."""
+    """Get a paginated list of NPCs including their forms."""
     try:
         bosses = await boss_repository.get_bosses_with_forms_async(
             limit=page_size,
@@ -173,42 +173,42 @@ async def get_bosses_full(
             return []
         return bosses
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to retrieve bosses: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to retrieve NPCs: {str(e)}")
 
-@app.get("/boss/{boss_id}", response_model=Boss, tags=["Bosses"])
-async def get_boss(boss_id: int, response: Response):
+@app.get("/npc/{npc_id}", response_model=Boss, tags=["NPCs"])
+async def get_npc(npc_id: int, response: Response):
     """
-    Get details for a specific boss.
+    Get details for a specific NPC.
     
-    Returns detailed information about a boss, including all of its forms if it has multiple forms.
+    Returns detailed information about an NPC, including all of its forms if it has multiple forms.
     """
     try:
-        boss = await boss_repository.get_boss_async(boss_id)
+        boss = await boss_repository.get_boss_async(npc_id)
         response.headers["Cache-Control"] = f"public, max-age={CACHE_TTL_SECONDS}"
 
         if not boss:
-            raise HTTPException(status_code=404, detail="Boss not found")
+            raise HTTPException(status_code=404, detail="NPC not found")
 
         return boss
     except HTTPException:
         raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to retrieve boss: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to retrieve NPC: {str(e)}")
 
 
-@app.get("/boss/form/{form_id}", response_model=Boss, tags=["Bosses"])
-async def get_boss_by_form(form_id: int, response: Response):
-    """Get boss details using a form id."""
+@app.get("/npc/form/{form_id}", response_model=Boss, tags=["NPCs"])
+async def get_npc_by_form(form_id: int, response: Response):
+    """Get NPC details using a form id."""
     try:
         boss = await boss_repository.get_boss_by_form_async(form_id)
         if not boss:
-            raise HTTPException(status_code=404, detail="Boss form not found")
+            raise HTTPException(status_code=404, detail="NPC form not found")
         response.headers["Cache-Control"] = f"public, max-age={CACHE_TTL_SECONDS}"
         return boss
     except HTTPException:
         raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to retrieve boss: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to retrieve NPC: {str(e)}")
 
 @app.get("/items", response_model=List[ItemSummary], tags=["Items"])
 async def get_items(
@@ -258,12 +258,12 @@ async def get_item(item_id: int, response: Response):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to retrieve item: {str(e)}")
 
-@app.get("/search/bosses", response_model=List[BossSummary], tags=["Search"])
-async def search_bosses(query: str, limit: int | None = None):
+@app.get("/search/npcs", response_model=List[BossSummary], tags=["Search"])
+async def search_npcs(query: str, limit: int | None = None):
     """
-    Search for bosses by name.
-    
-    Returns a list of bosses that match the search query.
+    Search for NPCs by name.
+
+    Returns a list of NPCs that match the search query.
     """
     try:
         results = await boss_repository.search_bosses_async(query, limit=limit)
