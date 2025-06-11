@@ -6,6 +6,9 @@ export default function HomeHero() {
         <h1 className="text-5xl md:text-6xl font-title text-primary drop-shadow-md mb-6">
           ScapeLab Tools
         </h1>
+        <p className="text-xl text-muted-foreground mb-6 max-w-2xl mx-auto">
+          Welcome to ScapeLab, a suite of tools to help optimize your Old School RuneScape gameplay.
+        </p>
       </div>
     </section>
   );
