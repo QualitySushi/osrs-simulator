@@ -18,6 +18,10 @@ class DpsResult(BaseModel):
     special_attacks: Optional[int] = None
     duration: Optional[float] = None
     special_attack_dps: Optional[float] = None
+    mainhand_max_hit: Optional[int] = None
+    special_attack_max_hit: Optional[int] = None
+    mainhand_hit_chance: Optional[float] = None
+    special_attack_hit_chance: Optional[float] = None
 
 
 class BossForm(BaseModel):
