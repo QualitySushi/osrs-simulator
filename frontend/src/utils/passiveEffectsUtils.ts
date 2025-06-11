@@ -273,3 +273,10 @@ export function hasCrystalRangedWeapon(equipment: Record<string, Item | null>): 
           (equipment['2h'].name.toLowerCase().includes('crystal bow') || 
            equipment['2h'].name.toLowerCase().includes('bow of faerdhinen')));
 }
+// Aliases exported for calculator compatibility
+export const isTargetDraconic = isNpcDraconic;
+export const isTargetDemonic = isNpcDemonic;
+export const isTargetKalphite = isNpcKalphite;
+export const isTargetTurothKurask = isNpcTurothKurask;
+export const isInWilderness = isNpcInWilderness;
+export const isTargetUndead = isNpcUndead;
