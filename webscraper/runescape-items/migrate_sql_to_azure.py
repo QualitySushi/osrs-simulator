@@ -82,7 +82,7 @@ def create_tables():
             IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='bosses' AND xtype='U')
             CREATE TABLE bosses (
                 id INT PRIMARY KEY,
-                name NVARCHAR(255) NOT NULL UNIQUE,
+                name NVARCHAR(255) NOT NULL,
                 raid_group NVARCHAR(255),
                 examine NVARCHAR(MAX),
                 release_date NVARCHAR(100),
@@ -154,7 +154,7 @@ def create_tables():
             IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='npcs' AND xtype='U')
             CREATE TABLE npcs (
                 id INT PRIMARY KEY,
-                name NVARCHAR(255) NOT NULL UNIQUE,
+                name NVARCHAR(255) NOT NULL,
                 raid_group NVARCHAR(255),
                 examine NVARCHAR(MAX),
                 release_date NVARCHAR(100),
@@ -227,7 +227,7 @@ def create_tables():
             IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='items' AND xtype='U')
             CREATE TABLE items (
                 id INT PRIMARY KEY,
-                name NVARCHAR(255) NOT NULL UNIQUE,
+                name NVARCHAR(255) NOT NULL,
                 has_special_attack BIT,
                 special_attack_text NVARCHAR(MAX),
                 has_passive_effect BIT,

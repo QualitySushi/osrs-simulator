@@ -70,7 +70,7 @@ def init_db():
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS bosses (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT UNIQUE,
+            name TEXT,
             raid_group TEXT,
             examine TEXT,
             release_date TEXT,
