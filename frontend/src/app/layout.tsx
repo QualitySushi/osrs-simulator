@@ -8,8 +8,8 @@ import './globals.css';
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "OSRS DPS Calculator",
-  description: "Calculate DPS for Old School RuneScape combat styles and gear",
+  title: "ScapeLab",
+  description: "Tools for optimizing your Old School RuneScape gameplay",
 };
 
 export default function RootLayout({

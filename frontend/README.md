@@ -1,5 +1,5 @@
-OSRS DPS Calculator Frontend
-A Next.js-based frontend for the OSRS DPS Calculator. This application provides a user interface for calculating damage-per-second for different combat styles in Old School RuneScape.
+ScapeLab DPS Calculator Frontend
+A Next.js-based frontend for the ScapeLab DPS Calculator. This application provides a user interface for calculating damage-per-second for different combat styles in Old School RuneScape.
 Features
 
 Calculate DPS for all combat styles: Melee, Ranged, and Magic

@@ -3,12 +3,12 @@ import Link from 'next/link';
 export default function AboutPage() {
   return (
     <main id="main" className="container mx-auto py-8 px-4">
-      <h1 className="text-4xl font-bold mb-8">About OSRS DPS Calculator</h1>
+      <h1 className="text-4xl font-bold mb-8 text-center">About ScapeLab</h1>
       
       <div className="prose dark:prose-invert max-w-3xl">
-        <p className="lead">
-          The OSRS DPS Calculator is a tool designed to help Old School RuneScape players 
-          optimize their gear and stats for maximum damage output against various bosses and monsters.
+        <p className="lead text-center">
+          ScapeLab provides tools for Old School RuneScape players to optimize their gear and stats
+          for maximum damage output against a variety of bosses and monsters.
         </p>
         
         <h2>How It Works</h2>
@@ -50,11 +50,15 @@ export default function AboutPage() {
           <li>Frontend: Next.js, React, TanStack Query, Zustand, shadcn/ui</li>
           <li>Backend: FastAPI, Python, SQLite</li>
         </ul>
-        
+
         <h2>Feedback & Contributions</h2>
         <p>
           This is an open-source project. If you&apos;d like to contribute or provide feedback,
           please visit our GitHub repository.
+        </p>
+
+        <p className="mt-6 text-center font-semibold">
+          ScapeLab is built by players, for players.
         </p>
         
         <div className="mt-8">

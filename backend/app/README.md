@@ -1,4 +1,4 @@
-OSRS DPS Calculator API
+ScapeLab DPS Calculator API
 An API for calculating damage-per-second (DPS) in Old School RuneScape based on equipment, stats, and target information.
 Features
 
