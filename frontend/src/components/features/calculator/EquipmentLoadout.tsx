@@ -16,7 +16,7 @@ import { useCalculatorStore } from '@/store/calculator-store';
 import { EquipmentDisplay } from '@/components/features/calculator/EquipmentDisplay';
 import PassiveEffectsDisplay from './PassiveEffectsDisplay';
 import { ItemSelector } from './ItemSelector';
-import { Item } from '@/types/calculator';
+import { Item, ItemSummary } from '@/types/calculator';
 import { itemsApi } from '@/services/api';
 
 const EQUIPMENT_SLOTS = [
@@ -202,7 +202,7 @@ export function EquipmentLoadout({ onEquipmentUpdate }: EquipmentLoadoutProps) {
     }
   }, [loadout, applyGearTotals, gearLocked, onEquipmentUpdate]);
 
-  const handleSelectItem = (slot: string, item: Item | null) => {
+  const handleSelectItem = (slot: string, item: ItemSummary | null) => {
     if (!item) {
       if (process.env.NODE_ENV !== 'production') {
         console.debug(`[DEBUG] Deselected item for slot: ${slot}`);

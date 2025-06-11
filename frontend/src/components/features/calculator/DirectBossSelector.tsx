@@ -23,14 +23,14 @@ import {
 } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { bossesApi } from '@/services/api';
-import { Boss, BossForm } from '@/types/calculator';
+import { Boss, BossSummary, BossForm } from '@/types/calculator';
 import { useCalculatorStore } from '@/store/calculator-store';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useReferenceDataStore } from '@/store/reference-data-store';
 import { cn } from '@/lib/utils';
 
 interface DirectBossSelectorProps {
-  onSelectBoss?: (boss: Boss) => void;
+  onSelectBoss?: (boss: BossSummary) => void;
   onSelectForm?: (form: BossForm | null) => void;
   className?: string;
 }
@@ -38,7 +38,7 @@ interface DirectBossSelectorProps {
 export function DirectBossSelector({ onSelectBoss, onSelectForm, className }: DirectBossSelectorProps) {
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedBoss, setSelectedBoss] = useState<Boss | null>(null);
+  const [selectedBoss, setSelectedBoss] = useState<BossSummary | null>(null);
   const [selectedForm, setSelectedForm] = useState<BossForm | null>(null);
   const [bossIcons, setBossIcons] = useState<Record<number, string>>({});
   const storeBosses = useReferenceDataStore((s) => s.bosses);
@@ -116,7 +116,7 @@ export function DirectBossSelector({ onSelectBoss, onSelectForm, className }: Di
   }, [unlockBoss, selectedForm]);
 
   // Handle boss selection
-  const handleSelectBoss = (boss: Boss) => {
+  const handleSelectBoss = (boss: BossSummary) => {
     setSelectedBoss(boss);
     setSelectedForm(null);
     setSearchOpen(false);

@@ -217,6 +217,15 @@ export interface BossForm {
   size?: number;
 }
 
+export interface BossSummary {
+  id: number;
+  name: string;
+  raid_group?: string;
+  location?: string;
+  has_multiple_forms?: boolean;
+  icon_url?: string;
+}
+
 export interface Item {
   id: number;
   name: string;
@@ -236,6 +245,17 @@ export interface Item {
     quests?: string[];
   };
   release_date?: string;
+  icons?: string[];
+}
+
+export interface ItemSummary {
+  id: number;
+  name: string;
+  slot?: string;
+  has_special_attack: boolean;
+  has_passive_effect: boolean;
+  is_tradeable: boolean;
+  has_combat_stats: boolean;
   icons?: string[];
 }
 

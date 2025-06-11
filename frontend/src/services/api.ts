@@ -3,7 +3,9 @@ import {
   CalculatorParams,
   DpsResult,
   Boss,
+  BossSummary,
   Item,
+  ItemSummary,
   BossForm,
   SpecialAttack
 } from '@/types/calculator';
@@ -47,7 +49,7 @@ export const bossesApi = {
 
   getAllBosses: async (
     params?: { page?: number; page_size?: number }
-  ): Promise<Boss[]> => {
+  ): Promise<BossSummary[]> => {
 
     const { data } = await apiClient.get('/bosses', { params });
     return data;
@@ -91,7 +93,7 @@ export const bossesApi = {
     }
   },
 
-  searchBosses: async (query: string, limit?: number): Promise<Boss[]> => {
+  searchBosses: async (query: string, limit?: number): Promise<BossSummary[]> => {
     const params: Record<string, unknown> = { query };
     if (limit !== undefined) {
       params.limit = limit;
@@ -112,7 +114,7 @@ export const itemsApi = {
       tradeable_only?: boolean;
     }
 
-  ): Promise<Item[]> => {
+  ): Promise<ItemSummary[]> => {
     const { data } = await apiClient.get('/items', { params });
     return data;
   },
@@ -122,7 +124,7 @@ export const itemsApi = {
     return data;
   },
 
-  searchItems: async (query: string, limit?: number): Promise<Item[]> => {
+  searchItems: async (query: string, limit?: number): Promise<ItemSummary[]> => {
     const params: Record<string, unknown> = { query };
     if (limit !== undefined) {
       params.limit = limit;
