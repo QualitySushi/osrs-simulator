@@ -379,10 +379,10 @@ select {
 /* Logo fading animation for loading overlay */
 @keyframes logo-cycle {
   0%,
-  33% {
+  20% {
     opacity: 1;
   }
-  66%,
+  40%,
   100% {
     opacity: 0;
   }
@@ -392,7 +392,7 @@ select {
 .logo-fade-mid,
 .logo-fade-on {
   opacity: 0;
-  animation: logo-cycle 4.5s linear infinite both;
+  animation: logo-cycle 4.5s cubic-bezier(0.4, 0, 0.2, 1) infinite both;
 }
 
 .logo-fade-mid {
