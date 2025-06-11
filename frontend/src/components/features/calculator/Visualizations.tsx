@@ -35,7 +35,7 @@ export function Visualizations() {
 
   const data = comparisonResults.map((c) => ({
     name: c.label,
-    dps: c.results.dps + (c.results.special_attack_dps ?? 0),
+    dps: c.results.dps,
     maxHit: c.results.max_hit,
     hitChance: c.results.hit_chance * 100,
   }));

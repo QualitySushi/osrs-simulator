@@ -72,6 +72,7 @@ Usage Guide
     Apply Modifiers: Select prayers, potions, and special attacks
     Calculate: View your expected DPS and other stats
     Compare: Save setups to compare different loadouts
+    Special Attack DPS: Specify a special weapon, energy cost, and regeneration rate to see how much extra damage specials add alongside your mainhand.
 
 Additional documentation can be found in the `docs/` folder:
 
@@ -220,6 +221,15 @@ json
   "target_defence_level": 100,
   "target_defence_bonus": 50
 }
+
+Include these optional fields to simulate special attacks:
+```
+"special_damage_multiplier": 1.2,
+"special_accuracy_modifier": 1.0,
+"special_attack_speed": 3.0,
+"special_energy_cost": 50,
+"special_regen_rate": 0.33
+```
 
 Response:
 

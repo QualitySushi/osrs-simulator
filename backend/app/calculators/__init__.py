@@ -20,8 +20,12 @@ class DpsCalculator:
         if weapon_name:
             sa = special_attack_repository.get_special_attack(weapon_name)
             if sa:
-                params.setdefault("special_multiplier", sa.get("damage_multiplier", 1.0))
-                params.setdefault("special_accuracy_multiplier", sa.get("accuracy_multiplier", 1.0))
+                params.setdefault(
+                    "special_multiplier", sa.get("damage_multiplier", 1.0)
+                )
+                params.setdefault(
+                    "special_accuracy_multiplier", sa.get("accuracy_multiplier", 1.0)
+                )
                 params.setdefault("special_hit_count", sa.get("hit_count", 1))
                 params.setdefault("guaranteed_hit", sa.get("guaranteed_hit", False))
                 params.setdefault("special_attack_cost", sa.get("special_cost"))
@@ -40,20 +44,35 @@ class DpsCalculator:
                         if n.get("unit") == "ether":
                             charge_req = n.get("value")
                             break
-                    if charge_req is not None and params.get("ether_charge", 0) < charge_req:
+                    if (
+                        charge_req is not None
+                        and params.get("ether_charge", 0) < charge_req
+                    ):
                         apply = False
                 if apply:
                     if dmg:
-                        params["gear_multiplier"] = params.get("gear_multiplier", 1.0) * dmg
+                        params["gear_multiplier"] = (
+                            params.get("gear_multiplier", 1.0) * dmg
+                        )
                     if acc:
-                        params["special_accuracy_multiplier"] = params.get("special_accuracy_multiplier", 1.0) * acc
+                        params["special_accuracy_multiplier"] = (
+                            params.get("special_accuracy_multiplier", 1.0) * acc
+                        )
 
                 if mech.get("scales_with") == "target_magic_level":
                     target_level = params.get("target_magic_level")
                     if target_level is not None:
-                        bonus = RangedCalculator.calculate_twisted_bow_bonus(target_level)
-                        params["gear_multiplier"] = params.get("gear_multiplier", 1.0) * bonus["damage_multiplier"]
-                        params["special_accuracy_multiplier"] = params.get("special_accuracy_multiplier", 1.0) * bonus["accuracy_multiplier"]
+                        bonus = RangedCalculator.calculate_twisted_bow_bonus(
+                            target_level
+                        )
+                        params["gear_multiplier"] = (
+                            params.get("gear_multiplier", 1.0)
+                            * bonus["damage_multiplier"]
+                        )
+                        params["special_accuracy_multiplier"] = (
+                            params.get("special_accuracy_multiplier", 1.0)
+                            * bonus["accuracy_multiplier"]
+                        )
         combat_style = params.get("combat_style", "melee").lower()
 
         calculator = None
@@ -66,22 +85,37 @@ class DpsCalculator:
         else:
             raise ValueError(f"Invalid combat style: {combat_style}")
 
-        # If no special rotation requested, just return normal DPS
-        if params.get("special_attack_cost") is None or params.get("special_rotation") is None:
+        # Map new parameter names for special attacks
+        if "special_damage_multiplier" in params:
+            params["special_multiplier"] = params["special_damage_multiplier"]
+        if "special_accuracy_modifier" in params:
+            params["special_accuracy_multiplier"] = params["special_accuracy_modifier"]
+        cost = params.get("special_energy_cost")
+        if cost is None:
+            cost = params.get("special_attack_cost")
+
+        # If no special attack cost provided, just return normal DPS
+        if cost is None:
             return calculator.calculate_dps(params)
 
         # Calculate regular and special attack damage per hit
         regular_params = params.copy()
         regular_params["special_multiplier"] = 1.0
+        regular_params["special_accuracy_multiplier"] = 1.0
         regular_result = calculator.calculate_dps(regular_params)
-        special_result = calculator.calculate_dps(params)
+
+        special_params = params.copy()
+        special_speed = params.get(
+            "special_attack_speed", params.get("attack_speed", 2.4)
+        )
+        special_params["attack_speed"] = special_speed
+        special_result = calculator.calculate_dps(special_params)
 
         regular_damage = regular_result["average_hit"]
         special_damage = special_result["average_hit"]
-        attack_speed = params.get("attack_speed", 2.4)
 
-        # Special energy regeneration
-        regen_rate = 10 / 30  # energy per second
+        attack_speed = params.get("attack_speed", 2.4)
+        regen_rate = params.get("special_regen_rate", 10 / 30)
         regen_mult = 1.0
         if params.get("lightbearer"):
             regen_mult *= 2
@@ -89,31 +123,31 @@ class DpsCalculator:
             regen_mult *= 1.5
         regen_rate *= regen_mult
 
-        cost = params.get("special_attack_cost", 0)
-        rotation = params.get("special_rotation", 0.0)
         duration = params.get("duration", 60.0)
 
         energy = 100.0
         time = 0.0
         special_count = 0
-        attack_count = 0
-        total_damage = 0.0
+        regular_total = 0.0
+        special_total = 0.0
 
         while time < duration - 1e-9:
-            if energy >= cost and special_count / (attack_count + 1e-9) < rotation:
-                total_damage += special_damage
+            if energy >= cost:
+                special_total += special_damage
                 energy = max(0.0, energy - cost)
+                step = special_speed
                 special_count += 1
             else:
-                total_damage += regular_damage
+                regular_total += regular_damage
+                step = attack_speed
 
-            attack_count += 1
-            time += attack_speed
-            energy = min(100.0, energy + regen_rate * attack_speed)
+            time += step
+            energy = min(100.0, energy + regen_rate * step)
 
         result = regular_result.copy()
-        final_dps = total_damage / duration
-        result["special_attack_dps"] = final_dps - regular_result["dps"]
+        result["mainhand_dps"] = regular_total / duration
+        result["special_attack_dps"] = special_total / duration
+        result["dps"] = (regular_total + special_total) / duration
         result["special_attacks"] = special_count
         result["duration"] = duration
         return result
@@ -126,14 +160,20 @@ class DpsCalculator:
         if "twisted bow" in item_name:
             magic_level = params.get("target_magic_level")
             if magic_level is None:
-                raise ValueError("target_magic_level is required for Twisted Bow effect")
+                raise ValueError(
+                    "target_magic_level is required for Twisted Bow effect"
+                )
             return RangedCalculator.calculate_twisted_bow_bonus(magic_level)
 
         if "tumeken" in item_name:
             base_hit = params.get("base_spell_max_hit")
             magic_level = params.get("magic_level")
             if base_hit is None or magic_level is None:
-                raise ValueError("base_spell_max_hit and magic_level are required for Tumeken's Shadow effect")
-            return MagicCalculator.calculate_tumekens_shadow_bonus(base_hit, magic_level)
+                raise ValueError(
+                    "base_spell_max_hit and magic_level are required for Tumeken's Shadow effect"
+                )
+            return MagicCalculator.calculate_tumekens_shadow_bonus(
+                base_hit, magic_level
+            )
 
         raise ValueError(f"No effect calculator for item: {item_name}")

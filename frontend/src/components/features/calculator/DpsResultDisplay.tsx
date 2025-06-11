@@ -22,11 +22,11 @@ export function DpsResultDisplay({ params, results, appliedPassiveEffects }: Dps
           <CardContent className="pt-6">
             <div className="text-sm font-medium text-muted-foreground">Total DPS</div>
             <div className="text-3xl font-bold text-primary">
-              {safeFixed(results.dps + (results.special_attack_dps ?? 0), 2)}
+              {safeFixed(results.dps, 2)}
             </div>
             {results.special_attack_dps !== undefined && (
               <div className="text-xs text-muted-foreground">
-                Base {safeFixed(results.dps, 2)} + Special{' '}
+                Base {safeFixed(results.mainhand_dps ?? 0, 2)} + Special{' '}
                 {safeFixed(results.special_attack_dps, 2)}
               </div>
             )}

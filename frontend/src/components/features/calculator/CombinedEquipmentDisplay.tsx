@@ -98,6 +98,11 @@ export function CombinedEquipmentDisplay({ onEquipmentUpdate, bossForm, loadoutP
     if (cleaned.special_multiplier === 1.0) delete cleaned.special_multiplier;
     if (cleaned.special_accuracy_multiplier === 1.0) delete cleaned.special_accuracy_multiplier;
     if (cleaned.special_hit_count === 1) delete cleaned.special_hit_count;
+    if (cleaned.special_attack_speed === undefined) delete cleaned.special_attack_speed;
+    if (cleaned.special_damage_multiplier === undefined) delete cleaned.special_damage_multiplier;
+    if (cleaned.special_accuracy_modifier === undefined) delete cleaned.special_accuracy_modifier;
+    if (cleaned.special_energy_cost === undefined) delete cleaned.special_energy_cost;
+    if (cleaned.special_regen_rate === 10 / 30) delete cleaned.special_regen_rate;
     return cleaned;
   }, []);
 
