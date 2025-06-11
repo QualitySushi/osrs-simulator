@@ -78,6 +78,7 @@ Additional documentation can be found in the `docs/` folder:
 
     docs/ARCHITECTURE.md - High level component diagram
     docs/WIREFRAME.md    - Basic UI wireframe
+    docs/BEST_IN_SLOT_FINDER.md - How the BIS algorithm works
 
 Technical Documentation
 Frontend Architecture
