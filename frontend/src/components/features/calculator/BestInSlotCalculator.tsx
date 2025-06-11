@@ -10,6 +10,7 @@ import { PrayerPotionSelector } from './PrayerPotionSelector';
 import { CalculatorForms } from './CalculatorForms';
 import { CombatStyleTabs } from './CombatStyleTabs';
 import { DpsResultDisplay } from './DpsResultDisplay';
+import PassiveEffectsDisplay from './PassiveEffectsDisplay';
 import { useDpsCalculator } from '@/hooks/useDpsCalculator';
 import { calculatorApi } from '@/services/api';
 import { useToast } from '@/hooks/use-toast';
@@ -34,6 +35,7 @@ export function BestInSlotCalculator() {
     handleEquipmentUpdate,
     handleNpcUpdate,
     currentNpcForm,
+    currentLoadout,
   } = useDpsCalculator();
   const initData = useReferenceDataStore((s) => s.initData);
   const { toast } = useToast();
@@ -137,6 +139,11 @@ export function BestInSlotCalculator() {
           )}
         </CardContent>
       </Card>
+
+      {Object.keys(currentLoadout).length > 0 && (
+        <PassiveEffectsDisplay loadout={currentLoadout} target={currentNpcForm} />
+      )}
+
       {/* Two-column layout for middle sections */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Left column */}

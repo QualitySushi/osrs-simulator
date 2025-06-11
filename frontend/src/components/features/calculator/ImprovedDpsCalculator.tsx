@@ -5,6 +5,7 @@ import { useDpsCalculator } from '@/hooks/useDpsCalculator';
 import { Raid, RAID_NAME_TO_ID } from '@/types/raid';
 import { useCalculatorStore } from '@/store/calculator-store';
 import { Header } from './improved/Header';
+import PassiveEffectsDisplay from './PassiveEffectsDisplay';
 import { MiddleColumns } from './improved/MiddleColumns';
 import { RaidScalingConfig } from '../simulation/RaidScalingPanel';
 
@@ -55,6 +56,10 @@ export function ImprovedDpsCalculator() {
         results={results}
         appliedPassiveEffects={appliedPassiveEffects}
       />
+
+      {Object.keys(currentLoadout).length > 0 && (
+        <PassiveEffectsDisplay loadout={currentLoadout} target={currentNpcForm} />
+      )}
 
       <MiddleColumns
         onEquipmentUpdate={handleEquipmentUpdate}
