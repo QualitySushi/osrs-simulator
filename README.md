@@ -175,7 +175,11 @@ authenticate via Managed Identity.
 
 The scraper utilities still produce SQLite databases. Use
 `webscraper/runescape-items/migrate_sql_to_azure.py` to import this data into
-the Azure SQL instance.
+the Azure SQL instance. The migration script now drops any existing tables
+before recreating them, so it can be rerun safely. Item and NPC IDs are copied
+from the SQLite sources to keep their ordering consistent across runs. Boss
+records are pulled from the same NPC database, and the items table enforces
+`UNIQUE(name)` to guard against accidental duplicates.
 
 The API also caches boss and item lookups in memory. Set the
 `CACHE_TTL_SECONDS` environment variable to control how long (in seconds)

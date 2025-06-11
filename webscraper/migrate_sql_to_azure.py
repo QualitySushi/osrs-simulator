@@ -18,9 +18,10 @@ AZURE_SQL_CONNECTION = (
 )
 
 # SQLite database file paths
-SQLITE_BOSSES_DB = "osrs_bosses.db"
-SQLITE_ITEMS_DB = "osrs_combat_items.db"  # Using combat items DB
+# All NPC and boss data resides in this single SQLite database
 SQLITE_NPCS_DB = "osrs_npcs.db"
+SQLITE_BOSSES_DB = SQLITE_NPCS_DB
+SQLITE_ITEMS_DB = "osrs_combat_items.db"  # Using combat items DB
 
 def test_azure_connection():
     """Test connection to Azure SQL Database using Entra ID"""
@@ -40,6 +41,35 @@ def test_azure_connection():
         print("  2. Have been added as an Azure AD admin on the SQL server")
         return False
 
+def drop_tables():
+    """Drop existing tables so migrations start fresh."""
+    try:
+        print("Dropping existing tables in Azure SQL Database...")
+        conn = pyodbc.connect(AZURE_SQL_CONNECTION)
+        cursor = conn.cursor()
+
+        tables = [
+            "npc_forms",
+            "npcs",
+            "boss_forms",
+            "bosses",
+            "items",
+        ]
+        for table in tables:
+            cursor.execute(
+                f"IF OBJECT_ID('{table}', 'U') IS NOT NULL DROP TABLE {table}"
+            )
+
+        conn.commit()
+        conn.close()
+        print("✓ Existing tables dropped successfully!")
+        return True
+
+    except Exception as e:
+        print(f"✗ Failed to drop tables: {e}")
+        return False
+
+
 def create_tables():
     """Create tables in Azure SQL Database"""
     try:
@@ -51,7 +81,7 @@ def create_tables():
         cursor.execute("""
             IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='bosses' AND xtype='U')
             CREATE TABLE bosses (
-                id INT IDENTITY(1,1) PRIMARY KEY,
+                id INT PRIMARY KEY,
                 name NVARCHAR(255) NOT NULL UNIQUE,
                 raid_group NVARCHAR(255),
                 examine NVARCHAR(MAX),
@@ -69,7 +99,7 @@ def create_tables():
         cursor.execute("""
             IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='boss_forms' AND xtype='U')
             CREATE TABLE boss_forms (
-                id INT IDENTITY(1,1) PRIMARY KEY,
+                id INT PRIMARY KEY,
                 boss_id INT NOT NULL,
                 form_name NVARCHAR(255),
                 form_order INT,
@@ -123,7 +153,7 @@ def create_tables():
         cursor.execute("""
             IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='npcs' AND xtype='U')
             CREATE TABLE npcs (
-                id INT IDENTITY(1,1) PRIMARY KEY,
+                id INT PRIMARY KEY,
                 name NVARCHAR(255) NOT NULL UNIQUE,
                 raid_group NVARCHAR(255),
                 examine NVARCHAR(MAX),
@@ -143,7 +173,7 @@ def create_tables():
         cursor.execute("""
             IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='npc_forms' AND xtype='U')
             CREATE TABLE npc_forms (
-                id INT IDENTITY(1,1) PRIMARY KEY,
+                id INT PRIMARY KEY,
                 npc_id INT NOT NULL,
                 form_name NVARCHAR(255),
                 form_order INT,
@@ -196,8 +226,8 @@ def create_tables():
         cursor.execute("""
             IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='items' AND xtype='U')
             CREATE TABLE items (
-                id INT IDENTITY(1,1) PRIMARY KEY,
-                name NVARCHAR(255) NOT NULL,
+                id INT PRIMARY KEY,
+                name NVARCHAR(255) NOT NULL UNIQUE,
                 has_special_attack BIT,
                 special_attack_text NVARCHAR(MAX),
                 has_passive_effect BIT,
@@ -244,19 +274,14 @@ def migrate_bosses():
         
         print(f"Found {len(bosses)} bosses to migrate")
         
-        # Get column names (skip the first one which is ID)
+        # Get column names including the ID so we preserve ordering
         sqlite_cursor.execute("PRAGMA table_info(bosses)")
-        columns = [col[1] for col in sqlite_cursor.fetchall()][1:]  # Skip ID column
+        columns = [col[1] for col in sqlite_cursor.fetchall()]
         
         boss_count = 0
         for boss in bosses:
-            boss_data = boss[1:]  # Skip the SQLite ID
+            boss_data = boss
 
-            # Skip duplicate bosses
-            azure_cursor.execute("SELECT 1 FROM bosses WHERE name = ?", (boss[1],))
-            if azure_cursor.fetchone():
-                print(f"• Boss {boss[1]} already exists, skipping")
-                continue
 
             placeholders = ', '.join(['?' for _ in range(len(columns))])
             insert_columns = ', '.join(columns)
@@ -294,42 +319,13 @@ def migrate_boss_forms(sqlite_cursor, azure_cursor):
         
         print(f"Found {len(forms)} boss forms to migrate")
         
-        # Get column names
+        # Get column names including IDs
         sqlite_cursor.execute("PRAGMA table_info(boss_forms)")
-        columns = [col[1] for col in sqlite_cursor.fetchall()][1:]  # Skip ID column
+        columns = [col[1] for col in sqlite_cursor.fetchall()]
         
         form_count = 0
         for form in forms:
-            old_boss_id = form[1]
-            
-            # Get the boss name from SQLite
-            sqlite_cursor.execute("SELECT name FROM bosses WHERE id = ?", (old_boss_id,))
-            boss_result = sqlite_cursor.fetchone()
-            
-            if not boss_result:
-                continue
-                
-            boss_name = boss_result[0]
-            
-            # Get the new boss_id from Azure SQL
-            azure_cursor.execute("SELECT id FROM bosses WHERE name = ?", (boss_name,))
-            azure_result = azure_cursor.fetchone()
-            
-            if not azure_result:
-                continue
-                
-            new_boss_id = azure_result[0]
-
-            # Skip duplicate forms
-            azure_cursor.execute(
-                "SELECT 1 FROM boss_forms WHERE boss_id = ? AND form_name = ?",
-                (new_boss_id, form[2]),
-            )
-            if azure_cursor.fetchone():
-                continue
-
-            form_data = list(form[1:])  # Skip SQLite ID
-            form_data[0] = new_boss_id  # Replace boss_id
+            form_data = form
             
             # Create parameterized query
             placeholders = ', '.join(['?' for _ in range(len(columns))])
@@ -373,13 +369,13 @@ def migrate_items():
         
         print(f"Found {len(items)} items to migrate")
         
-        # Get column names (skip the first one which is ID)
+        # Get column names including the ID
         sqlite_cursor.execute("PRAGMA table_info(items)")
-        columns = [col[1] for col in sqlite_cursor.fetchall()][1:]  # Skip ID column
+        columns = [col[1] for col in sqlite_cursor.fetchall()]
         
         item_count = 0
         for item in items:
-            item_data = item[1:]  # Skip the SQLite ID
+            item_data = item
             
             # Create parameterized query
             placeholders = ', '.join(['?' for _ in range(len(columns))])
@@ -426,16 +422,12 @@ def migrate_npcs():
         print(f"Found {len(npcs)} NPCs to migrate")
 
         sqlite_cursor.execute("PRAGMA table_info(npcs)")
-        columns = [col[1] for col in sqlite_cursor.fetchall()][1:]
+        columns = [col[1] for col in sqlite_cursor.fetchall()]
 
         npc_count = 0
         for npc in npcs:
-            npc_data = npc[1:]
+            npc_data = npc
 
-            azure_cursor.execute("SELECT 1 FROM npcs WHERE name = ?", (npc[1],))
-            if azure_cursor.fetchone():
-                print(f"• NPC {npc[1]} already exists, skipping")
-                continue
 
             placeholders = ', '.join(['?' for _ in range(len(columns))])
             insert_columns = ', '.join(columns)
@@ -473,36 +465,11 @@ def migrate_npc_forms(sqlite_cursor, azure_cursor):
         print(f"Found {len(forms)} NPC forms to migrate")
 
         sqlite_cursor.execute("PRAGMA table_info(npc_forms)")
-        columns = [col[1] for col in sqlite_cursor.fetchall()][1:]
+        columns = [col[1] for col in sqlite_cursor.fetchall()]
 
         form_count = 0
         for form in forms:
-            old_npc_id = form[1]
-
-            sqlite_cursor.execute("SELECT name FROM npcs WHERE id = ?", (old_npc_id,))
-            npc_result = sqlite_cursor.fetchone()
-            if not npc_result:
-                continue
-
-            npc_name = npc_result[0]
-
-            azure_cursor.execute("SELECT id FROM npcs WHERE name = ?", (npc_name,))
-            azure_result = azure_cursor.fetchone()
-            if not azure_result:
-                continue
-
-            new_npc_id = azure_result[0]
-            
-            azure_cursor.execute(
-                "SELECT 1 FROM npc_forms WHERE npc_id = ? AND form_name = ?",
-                (new_npc_id, form[2]),
-            )
-            if azure_cursor.fetchone():
-                continue
-
-
-            form_data = list(form[1:])
-            form_data[0] = new_npc_id
+            form_data = form
 
             placeholders = ', '.join(['?' for _ in range(len(columns))])
             insert_columns = ', '.join(columns)
@@ -538,7 +505,10 @@ def main():
     # Test Azure connection
     if not test_azure_connection():
         return
-    
+
+    if not drop_tables():
+        return
+
     # Create tables
     if not create_tables():
         return
