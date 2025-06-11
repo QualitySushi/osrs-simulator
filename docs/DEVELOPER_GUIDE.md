@@ -62,7 +62,7 @@ The React frontend is found in `frontend/src` and relies on:
 
 ## About Page
 
-A simple about page exists at `frontend/src/app/about/page.tsx` and describes the project, its data sources and technologies used. It links back to the main calculator page.
+A simple about page exists at `frontend/src/app/about/page.tsx` and describes the project, its data sources and technologies used. It links back to the home page.
 
 ## API Pagination
 

@@ -27,6 +27,15 @@ export function Navigation() {
                 pathname === '/' ? 'text-foreground font-medium' : 'text-muted-foreground'
               )}
             >
+              Home
+            </Link>
+            <Link
+              href="/calculator"
+              className={cn(
+                'text-sm transition-colors hover:text-primary',
+                pathname === '/calculator' ? 'text-foreground font-medium' : 'text-muted-foreground'
+              )}
+            >
               Calculator
             </Link>
             <Link

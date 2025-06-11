@@ -62,11 +62,11 @@ export default function AboutPage() {
         </p>
         
         <div className="mt-8">
-          <Link 
+          <Link
             href="/"
             className="bg-primary text-primary-foreground hover:bg-primary/90 py-2 px-4 rounded"
           >
-            Return to Calculator
+            Return Home
           </Link>
         </div>
       </div>
