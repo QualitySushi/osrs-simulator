@@ -8,7 +8,20 @@ DATA_PATH = Path(__file__).resolve().parent.parent / "data" / "special_attacks.j
 @lru_cache(maxsize=1)
 def _load_data() -> Dict[str, Any]:
     with open(DATA_PATH, "r", encoding="utf-8") as f:
-        return json.load(f)
+        raw = json.load(f)
+
+    # Dataset may be a list of objects; convert to a lookup dict
+    if isinstance(raw, list):
+        data: Dict[str, Any] = {}
+        for entry in raw:
+            name = entry.get("weapon_name")
+            if not name:
+                continue
+            key = name.lower().replace(" ", "_")
+            data[key] = entry
+        return data
+
+    return raw
 
 def get_special_attack(weapon_name: str) -> Optional[Dict[str, Any]]:
     """Return special attack data for a given weapon name."""

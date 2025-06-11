@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 # Load environment variables from a .env file if present
 load_dotenv()
 
-from .repositories import item_repository, boss_repository, special_attack_repository
+from .repositories import item_repository, boss_repository, special_attack_repository, passive_effect_repository
 from .config.settings import CACHE_TTL_SECONDS
 from .models import (
     DpsResult, 
@@ -527,6 +527,15 @@ async def get_special_attacks():
         return special_attack_repository.get_all_special_attacks()
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to retrieve special attacks: {str(e)}")
+
+
+@app.get("/passive-effects", tags=["Items"])
+async def get_passive_effects():
+    """Return the passive effect reference data."""
+    try:
+        return passive_effect_repository.get_all_passive_effects()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to retrieve passive effects: {str(e)}")
 
 # For direct execution during development
 if __name__ == "__main__":

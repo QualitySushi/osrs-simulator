@@ -151,6 +151,8 @@
       "accuracy_multiplier": 1.5
     }
   },
+  {
+    "item_name": "Zaryte crossbow",
     "effect_description": "The effects of enchanted bolts are strengthened by 10%.",
     "effect_type": "combat",
     "category": "weapon",
@@ -307,14 +309,13 @@
       "consumable": true
     }
   },
+  {
+    "item_name": "Kodai wand",
     "effect_description": "Each combat spell cast with the weapon has a 3/20 (15%) chance to not consume runes.",
     "effect_type": "utility",
     "category": "weapon",
     "stackable": false,
-    "numerical_values": [
-      {"value": 3, "unit": "in_20", "context": "3 in 20 chance"},
-      {"value": 15, "unit": "%", "context": "15% chance"}
-    ],
+    "numerical_values": [{"value": 3, "unit": "in_20", "context": "3 in 20 chance"}, {"value": 15, "unit": "%", "context": "15% chance"}],
     "percentages": [15.0],
     "special_mechanics": {
       "rune_save_chance": 0.15,
