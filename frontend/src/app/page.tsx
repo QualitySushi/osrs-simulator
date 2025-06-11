@@ -1,5 +1,6 @@
 import HomeHero from '@/components/layout/HomeHero';
 import { InitReferenceData } from '@/components/layout/InitReferenceData';
+import { ReferenceDataOverlay } from '@/components/layout/ReferenceDataOverlay';
 import Link from 'next/link';
 import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import type { Metadata } from 'next';
@@ -31,6 +32,7 @@ export default function Home() {
     <>
       <HomeHero />
       <InitReferenceData />
+      <ReferenceDataOverlay />
       <main id="main" className="container mx-auto py-8 px-4 pb-16 text-center">
         <p className="text-lg">Choose a tool from the navigation above or the buttons below to get started.</p>
 
