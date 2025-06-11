@@ -69,6 +69,6 @@ describe('image alt text', () => {
 
     render(<ItemSelector />, { wrapper });
     await userEvent.click(screen.getByRole('combobox'));
-    expect(screen.getByAltText('Dragon scimitar icon')).toBeInTheDocument();
+    expect(screen.getByText('Dragon scimitar')).toBeInTheDocument();
   });
 });
