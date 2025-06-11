@@ -75,6 +75,15 @@ export function Navigation() {
               Import
             </Link>
             <Link
+              href="/effects"
+              className={cn(
+                'text-sm transition-colors hover:text-primary',
+                pathname === '/effects' ? 'text-foreground font-medium' : 'text-muted-foreground'
+              )}
+            >
+              Effects
+            </Link>
+            <Link
               href="/assistant"
               className={cn(
                 'text-sm transition-colors hover:text-primary',
