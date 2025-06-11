@@ -29,13 +29,13 @@ import {
 } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { bossesApi } from '@/services/api';
-import { Boss, BossForm, MeleeCalculatorParams, RangedCalculatorParams, MagicCalculatorParams } from '@/types/calculator';
+import { Boss, BossSummary, BossForm, MeleeCalculatorParams, RangedCalculatorParams, MagicCalculatorParams } from '@/types/calculator';
 import { useCalculatorStore } from '@/store/calculator-store';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useReferenceDataStore } from '@/store/reference-data-store';
 
 interface BossSelectorProps {
-  onSelectBoss?: (boss: Boss) => void;
+  onSelectBoss?: (boss: BossSummary) => void;
   onSelectForm?: (form: BossForm | null) => void;
 }
 
@@ -109,7 +109,7 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
   }, [unlockBoss, selectedForm]);
 
   // Handle boss selection
-  const handleSelectBoss = (boss: Boss) => {
+  const handleSelectBoss = (boss: BossSummary) => {
     setSelectedBoss(boss);
     setSelectedForm(null);
     setOpen(false);

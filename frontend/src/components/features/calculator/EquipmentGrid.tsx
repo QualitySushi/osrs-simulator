@@ -12,7 +12,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { ItemSelector } from './ItemSelector';
-import { Item } from '@/types/calculator';
+import { Item, ItemSummary } from '@/types/calculator';
 import { useToast } from '@/hooks/use-toast';
 import { itemsApi } from '@/services/api';
 
@@ -69,7 +69,7 @@ export function EquipmentGrid({ loadout, show2hOption, combatStyle, onUpdateLoad
       .map(([slot, data]) => ({ slot, ...data }));
   };
 
-  const handleSelectItem = (slot: string, item: Item | null) => {
+  const handleSelectItem = (slot: string, item: ItemSummary | null) => {
     const updated = { ...loadout };
     if (!item) {
       delete updated[slot];

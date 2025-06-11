@@ -4,18 +4,18 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { safeStorage } from '@/utils/safeStorage';
 import { bossesApi, itemsApi } from '@/services/api';
-import { Boss, BossForm, Item } from '@/types/calculator';
+import { BossForm, BossSummary, ItemSummary } from '@/types/calculator';
 
 interface ReferenceDataState {
-  bosses: Boss[];
+  bosses: BossSummary[];
   bossForms: Record<number, BossForm[]>;
-  items: Item[];
+  items: ItemSummary[];
   initialized: boolean;
   timestamp: number;
   initData: () => Promise<void>;
-  addBosses: (b: Boss[]) => void;
+  addBosses: (b: BossSummary[]) => void;
   addBossForms: (id: number, forms: BossForm[]) => void;
-  addItems: (i: Item[]) => void;
+  addItems: (i: ItemSummary[]) => void;
 }
 
 const REFERENCE_TTL_MS = 12 * 60 * 60 * 1000; // 12 hours
@@ -35,18 +35,9 @@ export const useReferenceDataStore = create<ReferenceDataState>()(
         let page = 1;
         while (true) {
           try {
-            const data = await bossesApi.getBossesWithForms({ page, page_size: pageSize });
+            const data = await bossesApi.getAllBosses({ page, page_size: pageSize });
             if (!data.length) break;
             set((state) => ({ bosses: [...state.bosses, ...data] }));
-            const formsMap: Record<number, BossForm[]> = {};
-            for (const b of data) {
-              if (b.forms && b.forms.length) {
-                formsMap[b.id] = b.forms;
-              }
-            }
-            if (Object.keys(formsMap).length) {
-              set((state) => ({ bossForms: { ...state.bossForms, ...formsMap } }));
-            }
             if (data.length < pageSize) break;
             page += 1;
           } catch {

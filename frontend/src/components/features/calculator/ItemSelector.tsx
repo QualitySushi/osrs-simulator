@@ -18,7 +18,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { itemsApi } from '@/services/api';
-import { Item } from '@/types/calculator';
+import { Item, ItemSummary } from '@/types/calculator';
 import { useCalculatorStore } from '@/store/calculator-store';
 import { CombatStyle } from '@/types/calculator';
 import { ItemPassiveEffects } from './ItemPassiveEffects';
@@ -26,12 +26,12 @@ import { useReferenceDataStore } from '@/store/reference-data-store';
 
 interface ItemSelectorProps {
   slot?: string;
-  onSelectItem?: (item: Item) => void;
+  onSelectItem?: (item: ItemSummary) => void;
 }
 
 export function ItemSelector({ slot, onSelectItem }: ItemSelectorProps) {
   const [open, setOpen] = useState(false);
-  const [selectedItem, setSelectedItem] = useState<Item | null>(null);
+  const [selectedItem, setSelectedItem] = useState<ItemSummary | null>(null);
   const { params, setParams } = useCalculatorStore();
   const combatStyle = params.combat_style;
 
@@ -72,7 +72,7 @@ export function ItemSelector({ slot, onSelectItem }: ItemSelectorProps) {
   const itemsToDisplay = searchTerm.length > 0 ? searchResults ?? [] : filteredItems;
 
   // Handle item selection and update calculator params based on its stats
-  const handleSelectItem = (item: Item) => {
+  const handleSelectItem = (item: ItemSummary) => {
     setSelectedItem(item);
     setOpen(false);
 
