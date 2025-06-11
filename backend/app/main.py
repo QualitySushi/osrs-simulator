@@ -4,10 +4,13 @@ from fastapi.staticfiles import StaticFiles
 from typing import Dict, Any, List
 import os
 import asyncio
+import logging
 from dotenv import load_dotenv
 
 # Load environment variables from a .env file if present
 load_dotenv()
+
+logging.basicConfig(level=logging.INFO, format="[%(levelname)s] %(message)s")
 
 from .repositories import item_repository, boss_repository, special_attack_repository, passive_effect_repository
 from .config.settings import CACHE_TTL_SECONDS

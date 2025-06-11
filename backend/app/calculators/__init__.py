@@ -4,6 +4,9 @@ from .magic import MagicCalculator
 from .raid_scaling import apply_raid_scaling
 from typing import Dict, Any
 from ..repositories import special_attack_repository, passive_effect_repository
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class DpsCalculator:
@@ -14,12 +17,16 @@ class DpsCalculator:
         """
         Dispatch DPS calculation based on combat style.
         """
+        logger.info("Starting DPS calculation with params: %s", params)
         params = apply_raid_scaling(params)
+        logger.info("After raid scaling: %s", params)
 
         weapon_name = str(params.get("weapon_name", "")).lower()
+        logger.info("Weapon: %s", weapon_name or "None")
         if weapon_name:
             sa = special_attack_repository.get_special_attack(weapon_name)
             if sa:
+                logger.info("Special attack data: %s", sa)
                 params.setdefault(
                     "special_multiplier", sa.get("damage_multiplier", 1.0)
                 )
@@ -29,9 +36,12 @@ class DpsCalculator:
                 params.setdefault("special_hit_count", sa.get("hit_count", 1))
                 params.setdefault("guaranteed_hit", sa.get("guaranteed_hit", False))
                 params.setdefault("special_attack_cost", sa.get("special_cost"))
+            else:
+                logger.info("No special attack data found")
 
             pe = passive_effect_repository.get_passive_effect(weapon_name)
             if pe:
+                logger.info("Passive effect data: %s", pe)
                 mech = pe.get("special_mechanics", {})
                 dmg = mech.get("damage_multiplier")
                 acc = mech.get("accuracy_multiplier")
@@ -74,6 +84,7 @@ class DpsCalculator:
                             * bonus["accuracy_multiplier"]
                         )
         combat_style = params.get("combat_style", "melee").lower()
+        logger.info("Combat style: %s", combat_style)
 
         calculator = None
         if combat_style == "melee":
@@ -93,9 +104,11 @@ class DpsCalculator:
         cost = params.get("special_energy_cost")
         if cost is None or cost <= 0:
             cost = params.get("special_attack_cost")
+        logger.info("Special energy cost: %s", cost)
 
         # If no special attack cost provided or it is non-positive, just return normal DPS
         if cost is None or cost <= 0:
+            logger.info("No special attack cost, returning regular DPS only")
             return calculator.calculate_dps(params)
 
         # Calculate regular and special attack damage per hit
@@ -113,6 +126,11 @@ class DpsCalculator:
 
         regular_damage = regular_result["average_hit"]
         special_damage = special_result["average_hit"]
+        logger.info(
+            "Regular hit: %.2f, Special hit: %.2f",
+            regular_damage,
+            special_damage,
+        )
 
         attack_speed = params.get("attack_speed", 2.4)
         regen_rate = params.get("special_regen_rate", 10 / 30)
@@ -130,6 +148,12 @@ class DpsCalculator:
         special_count = 0
         regular_total = 0.0
         special_total = 0.0
+        logger.info(
+            "Simulation start: duration=%.2fs, attack_speed=%.2fs, special_speed=%.2fs",
+            duration,
+            attack_speed,
+            special_speed,
+        )
 
         while time < duration - 1e-9:
             if energy >= cost:
@@ -152,6 +176,14 @@ class DpsCalculator:
                 else:
                     regular_total += damage
                 time = duration
+                logger.info(
+                    "t=%.2fs -> %.2f damage (%s, partial %.2f), energy=%.2f",
+                    time,
+                    damage,
+                    "special" if special else "regular",
+                    frac,
+                    energy,
+                )
                 break
 
             if special:
@@ -161,6 +193,13 @@ class DpsCalculator:
 
             time += step
             energy = min(100.0, energy + regen_rate * step)
+            logger.info(
+                "t=%.2fs -> %.2f damage (%s), energy=%.2f",
+                time,
+                damage,
+                "special" if special else "regular",
+                energy,
+            )
 
         result = regular_result.copy()
         result["mainhand_dps"] = regular_total / duration
@@ -175,6 +214,7 @@ class DpsCalculator:
         result["max_hit"] = max(
             regular_result.get("max_hit", 0), special_result.get("max_hit", 0)
         )
+        logger.info("Final result: %s", result)
         return result
 
     @staticmethod
