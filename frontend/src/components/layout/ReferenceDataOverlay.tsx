@@ -2,14 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { useReferenceDataStore } from "@/store/reference-data-store";
-import { LogoProgressCircle } from "@/components/ui/LogoProgressCircle";
 import { OSRS_LOADING_JOKES } from "@/utils/jokes";
 
 export function ReferenceDataOverlay() {
   const loading = useReferenceDataStore((s) => s.loading);
   const initialized = useReferenceDataStore((s) => s.initialized);
   const error = useReferenceDataStore((s) => s.error);
-  const progress = useReferenceDataStore((s) => s.progress);
 
   const shouldShow = loading || (!initialized && !error);
   const [visible, setVisible] = useState(shouldShow);
@@ -33,7 +31,6 @@ export function ReferenceDataOverlay() {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-background">
       <div className="text-center">
         <div className="relative w-48 h-48 mx-auto">
-          <LogoProgressCircle progress={progress} />
           <div className="absolute inset-0 p-12 z-10">
             <img
               src="/images/logo_transparent_off.png"
