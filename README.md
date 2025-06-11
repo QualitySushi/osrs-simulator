@@ -1,11 +1,11 @@
-OSRS DPS Calculator
+ScapeLab DPS Calculator
 
 A comprehensive damage-per-second calculator for Old School RuneScape with accurate combat formulas, equipment comparison, and boss statistics.
 
 
 Overview
 
-The OSRS DPS Calculator is a powerful tool for Old School RuneScape players to optimize their combat gear and strategies. By accurately implementing the game's combat formulas, this calculator helps players compare different equipment setups, account for special effects, and calculate expected damage against various bosses.
+The ScapeLab DPS Calculator is a powerful tool for Old School RuneScape players to optimize their combat gear and strategies. By accurately implementing the game's combat formulas, this calculator helps players compare different equipment setups, account for special effects, and calculate expected damage against various bosses.
 Key Features
 
     All Combat Styles: Full support for Melee, Ranged, and Magic calculations
@@ -391,4 +391,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
     Jagex for creating Old School RuneScape
     The OSRS community for verifying formulas and mechanics
 
-OSRS DPS Calculator is not affiliated with Jagex Ltd. Old School RuneScape and Jagex are trademarks of Jagex Ltd.
+ScapeLab is not affiliated with Jagex Ltd. Old School RuneScape and Jagex are trademarks of Jagex Ltd.

@@ -7,7 +7,7 @@ export function Footer() {
         <div className="flex flex-col md:flex-row justify-between items-center">
           <div className="mb-4 md:mb-0 text-center md:text-left">
             <p className="text-sm text-muted-foreground">
-              © {currentYear} OSRS DPS Calculator. Not affiliated with Jagex Ltd.
+              © {currentYear} ScapeLab. Not affiliated with Jagex Ltd.
             </p>
             <p className="text-xs text-muted-foreground mt-1">
               Old School RuneScape and Jagex are trademarks of Jagex Ltd.

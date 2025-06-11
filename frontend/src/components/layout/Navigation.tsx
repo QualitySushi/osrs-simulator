@@ -16,12 +16,12 @@ export function Navigation() {
             href="/"
             className="text-xl font-bold font-title"
           >
-            OSRS DPS Calculator
+            ScapeLab
           </Link>
           
           <div className="hidden md:flex space-x-4">
-            <Link 
-              href="/" 
+            <Link
+              href="/"
               className={cn(
                 'text-sm transition-colors hover:text-primary',
                 pathname === '/' ? 'text-foreground font-medium' : 'text-muted-foreground'
@@ -30,13 +30,13 @@ export function Navigation() {
               Calculator
             </Link>
             <Link
-              href="/about"
+              href="/simulate"
               className={cn(
                 'text-sm transition-colors hover:text-primary',
-                pathname === '/about' ? 'text-foreground font-medium' : 'text-muted-foreground'
+                pathname === '/simulate' ? 'text-foreground font-medium' : 'text-muted-foreground'
               )}
             >
-              About
+              Simulate
             </Link>
             <Link
               href="/import"
@@ -48,13 +48,13 @@ export function Navigation() {
               Import
             </Link>
             <Link
-              href="/simulate"
+              href="/about"
               className={cn(
                 'text-sm transition-colors hover:text-primary',
-                pathname === '/simulate' ? 'text-foreground font-medium' : 'text-muted-foreground'
+                pathname === '/about' ? 'text-foreground font-medium' : 'text-muted-foreground'
               )}
             >
-              Simulate
+              About
             </Link>
           </div>
         </div>

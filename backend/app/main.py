@@ -25,7 +25,7 @@ from .services import bis_service
 
 # Create the FastAPI app
 app = FastAPI(
-    title="OSRS DPS Calculator API",
+    title="ScapeLab DPS Calculator API",
     description="API for calculating DPS in Old School RuneScape",
     version="1.0.0"
 )
@@ -62,7 +62,7 @@ if os.path.isdir(IMAGES_DIR):
 def read_root():
     """Get a welcome message and basic API information."""
     return {
-        "message": "Welcome to the OSRS DPS Calculator API",
+        "message": "Welcome to the ScapeLab DPS Calculator API",
         "version": "1.0.0",
         "endpoints": {
             "GET /": "This welcome message",

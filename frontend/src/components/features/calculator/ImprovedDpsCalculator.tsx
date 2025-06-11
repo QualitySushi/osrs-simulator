@@ -23,7 +23,7 @@ import { Raid, RAID_NAME_TO_ID } from '@/types/raid';
 import { useCalculatorStore } from '@/store/calculator-store';
 
 /**
- * ImprovedDpsCalculator - A redesigned OSRS DPS Calculator with better UI flow
+ * ImprovedDpsCalculator - A redesigned ScapeLab DPS Calculator with better UI flow
  * This component improves on the original by:
  * - Creating a consistent layout with proper alignment
  * - Balancing the height between columns
