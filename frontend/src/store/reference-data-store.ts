@@ -3,13 +3,26 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { safeStorage } from '@/utils/safeStorage';
-import { bossesApi, itemsApi } from '@/services/api';
-import { BossForm, BossSummary, ItemSummary } from '@/types/calculator';
+import {
+  bossesApi,
+  itemsApi,
+  specialAttacksApi,
+  passiveEffectsApi,
+} from '@/services/api';
+import {
+  BossForm,
+  BossSummary,
+  ItemSummary,
+  SpecialAttack,
+  PassiveEffect,
+} from '@/types/calculator';
 
 interface ReferenceDataState {
   bosses: BossSummary[];
   bossForms: Record<number, BossForm[]>;
   items: ItemSummary[];
+  specialAttacks: Record<string, SpecialAttack>;
+  passiveEffects: Record<string, PassiveEffect>;
   initialized: boolean;
   loading: boolean;
   timestamp: number;
@@ -17,6 +30,8 @@ interface ReferenceDataState {
   addBosses: (b: BossSummary[]) => void;
   addBossForms: (id: number, forms: BossForm[]) => void;
   addItems: (i: ItemSummary[]) => void;
+  setSpecialAttacks: (a: Record<string, SpecialAttack>) => void;
+  setPassiveEffects: (e: Record<string, PassiveEffect>) => void;
 }
 
 const REFERENCE_TTL_MS = 12 * 60 * 60 * 1000; // 12 hours
@@ -27,6 +42,8 @@ export const useReferenceDataStore = create<ReferenceDataState>()(
       bosses: [],
       bossForms: {},
       items: [],
+      specialAttacks: {},
+      passiveEffects: {},
       initialized: false,
       loading: false,
       timestamp: 0,
@@ -65,7 +82,19 @@ export const useReferenceDataStore = create<ReferenceDataState>()(
             break;
           }
         }
-        set({ bosses, items, initialized: true, loading: false });
+        const [specialAttacks, passiveEffects] = await Promise.all([
+          specialAttacksApi.getAll().catch(() => ({})),
+          passiveEffectsApi.getAll().catch(() => ({})),
+        ]);
+
+        set({
+          bosses,
+          items,
+          specialAttacks,
+          passiveEffects,
+          initialized: true,
+          loading: false,
+        });
       },
       addBosses(b) {
         set((state) => ({ bosses: [...state.bosses, ...b] }));
@@ -76,22 +105,39 @@ export const useReferenceDataStore = create<ReferenceDataState>()(
       addItems(i) {
         set((state) => ({ items: [...state.items, ...i] }));
       },
+      setSpecialAttacks(a) {
+        set({ specialAttacks: a });
+      },
+      setPassiveEffects(e) {
+        set({ passiveEffects: e });
+      },
     }),
     {
       name: 'osrs-reference-data',
       storage: createJSONStorage(() => safeStorage),
       partialize: (state) => ({
-        bosses: state.bosses.map(b => ({ id: b.id, name: b.name })),
-        items: state.items.map(i => ({ id: i.id, name: i.name })),
+        bosses: state.bosses,
+        bossForms: state.bossForms,
+        items: state.items,
+        specialAttacks: state.specialAttacks,
+        passiveEffects: state.passiveEffects,
         timestamp: state.timestamp,
       }),
       onRehydrateStorage: (state) => (stored) => {
         if (!stored) return;
         const expired = Date.now() - stored.timestamp > REFERENCE_TTL_MS;
         if (expired) {
-          state.setState({ bosses: [], bossForms: {}, items: [], initialized: false, loading: false, timestamp: Date.now() });
+          state.setState({ bosses: [], bossForms: {}, items: [], specialAttacks: {}, passiveEffects: {}, initialized: false, loading: false, timestamp: Date.now() });
         } else {
-          state.setState({ bosses: stored.bosses, items: stored.items, initialized: false, loading: false });
+          state.setState({
+            bosses: stored.bosses || [],
+            bossForms: stored.bossForms || {},
+            items: stored.items || [],
+            specialAttacks: stored.specialAttacks || {},
+            passiveEffects: stored.passiveEffects || {},
+            initialized: false,
+            loading: false,
+          });
         }
       },
     }
