@@ -14,9 +14,14 @@ export function Navigation() {
         <div className="flex space-x-6 items-center">
           <Link
             href="/"
-            className="text-xl font-bold font-title"
+            className="text-xl font-bold font-title flex items-center space-x-2"
           >
-            ScapeLab
+            <img
+              src="/images/logo_transparent.png"
+              alt="ScapeLab logo"
+              className="w-6 h-6"
+            />
+            <span>ScapeLab</span>
           </Link>
           
           <div className="hidden md:flex space-x-4">

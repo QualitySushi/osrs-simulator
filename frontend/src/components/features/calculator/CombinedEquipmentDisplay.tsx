@@ -10,7 +10,7 @@ import { useCalculatorStore } from '@/store/calculator-store';
 import { Item, CalculatorParams, BossForm } from '@/types/calculator';
 import { useToast } from '@/hooks/use-toast';
 import { calculatorApi } from '@/services/api';
-import { Loader2 } from 'lucide-react';
+import { LogoSpinner } from '@/components/ui/LogoSpinner';
 
 // Import our new components
 import { EquipmentGrid } from './EquipmentGrid';
@@ -476,7 +476,7 @@ export function CombinedEquipmentDisplay({
           )}
           {showSuggestButton && (
             <Button size="sm" onClick={handleSuggestBis} disabled={isSuggesting}>
-              {isSuggesting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}Suggest BIS
+              {isSuggesting && <LogoSpinner className="mr-2 h-4 w-4" />}Suggest BIS
             </Button>
           )}
         </div>
