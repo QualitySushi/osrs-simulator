@@ -45,6 +45,14 @@ export default function Home() {
               </CardHeader>
             </Card>
           </Link>
+          <Link href="/assistant">
+            <Card className="hover:border-primary transition-colors">
+              <CardHeader>
+                <CardTitle>Assistant</CardTitle>
+                <CardDescription>Chat-based planner</CardDescription>
+              </CardHeader>
+            </Card>
+          </Link>
         </div>
       </main>
     </>
