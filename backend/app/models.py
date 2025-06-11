@@ -151,7 +151,6 @@ class DpsParameters(BaseModel):
     guaranteed_hit: Optional[bool] = None
     attack_style_bonus: Optional[int] = Field(default=0)
     special_attack_cost: Optional[int] = None
-    special_rotation: Optional[float] = None
     special_attack_speed: Optional[float] = None
     special_damage_multiplier: Optional[float] = None
     special_accuracy_modifier: Optional[float] = None

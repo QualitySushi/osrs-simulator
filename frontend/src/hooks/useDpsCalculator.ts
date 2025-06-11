@@ -91,9 +91,6 @@ export function useDpsCalculator() {
         cleaned.target_magic_defence = Number(cleaned.target_magic_defence);
         cleaned.attack_speed = Number(cleaned.attack_speed);
       }
-      if (!cleaned.special_rotation) {
-        delete cleaned.special_rotation;
-      }
       if (!cleaned.special_attack_cost) {
         delete cleaned.special_attack_cost;
       }
