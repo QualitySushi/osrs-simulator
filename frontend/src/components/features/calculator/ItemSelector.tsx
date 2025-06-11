@@ -23,6 +23,7 @@ import { useCalculatorStore } from '@/store/calculator-store';
 import { CombatStyle } from '@/types/calculator';
 import { ItemPassiveEffects } from './ItemPassiveEffects';
 import { useReferenceDataStore } from '@/store/reference-data-store';
+import { useDebounce } from '@/hooks/useDebounce';
 
 interface ItemSelectorProps {
   slot?: string;
@@ -44,14 +45,15 @@ export function ItemSelector({ slot, onSelectItem }: ItemSelectorProps) {
   }, [initData]);
 
   const [searchTerm, setSearchTerm] = useState('');
+  const debouncedSearch = useDebounce(searchTerm, 300);
 
   const {
     data: searchResults,
     isLoading,
   } = useQuery({
-    queryKey: ['item-search', searchTerm],
-    queryFn: () => itemsApi.searchItems(searchTerm),
-    enabled: searchTerm.length > 0,
+    queryKey: ['item-search', debouncedSearch],
+    queryFn: () => itemsApi.searchItems(debouncedSearch),
+    enabled: debouncedSearch.length > 0,
     staleTime: Infinity,
     onSuccess: (d) => addItems(d),
   });

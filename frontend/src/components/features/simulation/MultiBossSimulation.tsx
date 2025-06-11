@@ -35,6 +35,7 @@ import {
 import { bossesApi, calculatorApi } from '@/services/api';
 import { useCalculatorStore } from '@/store/calculator-store';
 import { useReferenceDataStore } from '@/store/reference-data-store';
+import { useDebounce } from '@/hooks/useDebounce';
 import {
   Boss,
   BossForm,
@@ -60,6 +61,7 @@ export function MultiBossSimulation() {
   const [raidConfig, setRaidConfig] = useState<RaidScalingConfig>({ teamSize: 1 });
   const [results, setResults] = useState<SimulationEntry[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const debouncedSearch = useDebounce(searchTerm, 300);
   const [open, setOpen] = useState(false);
   const [isRunning, setIsRunning] = useState(false);
   const storeBosses = useReferenceDataStore((s) => s.bosses);
@@ -82,9 +84,9 @@ export function MultiBossSimulation() {
   }, [storeBosses]);
 
   const { data: searchResults, isLoading } = useQuery({
-    queryKey: ['sim-boss-search', searchTerm],
-    queryFn: () => bossesApi.searchBosses(searchTerm, 50),
-    enabled: searchTerm.length > 0,
+    queryKey: ['sim-boss-search', debouncedSearch],
+    queryFn: () => bossesApi.searchBosses(debouncedSearch, 50),
+    enabled: debouncedSearch.length > 0,
     staleTime: Infinity,
     onSuccess: (d) => addBosses(d),
   });

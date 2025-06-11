@@ -492,13 +492,14 @@ def migrate_npc_forms(sqlite_cursor, azure_cursor):
                 continue
 
             new_npc_id = azure_result[0]
-
+            
             azure_cursor.execute(
                 "SELECT 1 FROM npc_forms WHERE npc_id = ? AND form_name = ?",
                 (new_npc_id, form[2]),
             )
             if azure_cursor.fetchone():
                 continue
+
 
             form_data = list(form[1:])
             form_data[0] = new_npc_id
