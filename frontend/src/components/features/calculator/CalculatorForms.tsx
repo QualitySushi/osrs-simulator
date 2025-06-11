@@ -39,24 +39,26 @@ export function CalculatorForms({
         
       </div>
       {showManual && (
-        <Tabs
-          value={activeTab}
-          onValueChange={(v) => onTabChange(v as CombatStyle)}
-          className="w-full"
-        >
-          <TabsContent value="melee">
-            <MeleeForm />
-          </TabsContent>
-          <TabsContent value="ranged">
-            <RangedForm />
-          </TabsContent>
-          <TabsContent value="magic">
-            <MagicForm />
-          </TabsContent>
-        </Tabs>
-        <div className="mt-6">
-          <SpecialAttackForm />
-        </div>
+        <>
+          <Tabs
+            value={activeTab}
+            onValueChange={(v) => onTabChange(v as CombatStyle)}
+            className="w-full"
+          >
+            <TabsContent value="melee">
+              <MeleeForm />
+            </TabsContent>
+            <TabsContent value="ranged">
+              <RangedForm />
+            </TabsContent>
+            <TabsContent value="magic">
+              <MagicForm />
+            </TabsContent>
+          </Tabs>
+          <div className="mt-6">
+            <SpecialAttackForm />
+          </div>
+        </>
       )}
       <div className="mt-6 flex justify-center">
         <Button
