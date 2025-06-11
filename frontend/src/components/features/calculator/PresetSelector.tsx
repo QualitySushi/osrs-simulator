@@ -50,10 +50,10 @@ export function PresetSelector({ onPresetLoad, className }: PresetSelectorProps)
     setParams,
     setLoadout,
     switchCombatStyle,
-    addLoadoutPreset,
-    setLoadoutPresets,
-    removeLoadoutPreset,
-    reorderLoadoutPresets,
+    addPreset,
+    setPresets: setStorePresets,
+    removePreset,
+    reorderPresets,
   } = useCalculatorStore();
   const { toast } = useToast();
   const [hasMounted, setHasMounted] = useState(false);
@@ -70,7 +70,7 @@ export function PresetSelector({ onPresetLoad, className }: PresetSelectorProps)
       const savedPresets = localStorage.getItem('osrs-dps-presets');
       const loaded = savedPresets ? JSON.parse(savedPresets) : [];
       setPresets(loaded);
-      setLoadoutPresets(loaded);
+      setStorePresets(loaded);
     }
   }, []);
 
@@ -96,8 +96,8 @@ export function PresetSelector({ onPresetLoad, className }: PresetSelectorProps)
 
     const updatedPresets = [...presets, newPreset];
     setPresets(updatedPresets);
-    setLoadoutPresets(updatedPresets);
-    addLoadoutPreset(newPreset);
+    setStorePresets(updatedPresets);
+    addPreset(newPreset);
     if (typeof window !== 'undefined') {
       localStorage.setItem('osrs-dps-presets', JSON.stringify(updatedPresets));
     }
@@ -137,8 +137,8 @@ export function PresetSelector({ onPresetLoad, className }: PresetSelectorProps)
   const deletePreset = (presetId: string) => {
     const updatedPresets = presets.filter(preset => preset.id !== presetId);
     setPresets(updatedPresets);
-    setLoadoutPresets(updatedPresets);
-    removeLoadoutPreset(presetId);
+    setStorePresets(updatedPresets);
+    removePreset(presetId);
     if (typeof window !== 'undefined') {
       localStorage.setItem('osrs-dps-presets', JSON.stringify(updatedPresets));
     }
@@ -153,8 +153,8 @@ export function PresetSelector({ onPresetLoad, className }: PresetSelectorProps)
     const [moved] = updated.splice(index, 1);
     updated.splice(newIndex, 0, moved);
     setPresets(updated);
-    setLoadoutPresets(updated);
-    reorderLoadoutPresets(index, newIndex);
+    setStorePresets(updated);
+    reorderPresets(index, newIndex);
     if (typeof window !== 'undefined') {
       localStorage.setItem('osrs-dps-presets', JSON.stringify(updated));
     }
@@ -188,7 +188,7 @@ export function PresetSelector({ onPresetLoad, className }: PresetSelectorProps)
   return (
     <Card className={cn('w-full flex flex-col', className)}>
       <CardHeader>
-        <CardTitle>Loadout Presets</CardTitle>
+        <CardTitle>Presets</CardTitle>
         <CardDescription>Save and load your equipment setups</CardDescription>
       </CardHeader>
       <CardContent>
@@ -206,7 +206,7 @@ export function PresetSelector({ onPresetLoad, className }: PresetSelectorProps)
                 </DialogTrigger>
                 <DialogContent>
                   <DialogHeader>
-                    <DialogTitle>Save Loadout Preset</DialogTitle>
+                    <DialogTitle>Save Preset</DialogTitle>
                     <DialogDescription>
                       Give your preset a name to save your current setup
                     </DialogDescription>
@@ -284,7 +284,7 @@ export function PresetSelector({ onPresetLoad, className }: PresetSelectorProps)
                 </DialogTrigger>
                 <DialogContent>
                   <DialogHeader>
-                    <DialogTitle>Save Loadout Preset</DialogTitle>
+                    <DialogTitle>Save Preset</DialogTitle>
                     <DialogDescription>
                       Give your preset a name to save your current setup
                     </DialogDescription>

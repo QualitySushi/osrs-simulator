@@ -134,7 +134,7 @@ export function ImprovedDpsCalculator() {
           </Card>
 
         </div>
-        {/* Bottom row: DPS comparison and loadout presets */}
+        {/* Bottom row: DPS comparison and presets */}
         <Visualizations />
         <PresetSelector
           className="flex-grow"
