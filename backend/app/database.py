@@ -133,7 +133,7 @@ class AzureSQLDatabaseService:
 
                 query = (
                     "SELECT id, name, raid_group, location, has_multiple_forms\n"
-                    "FROM bosses\n"
+                    "FROM npcs\n"
                     "ORDER BY name"
                 )
                 params: list[Any] = []
@@ -151,8 +151,8 @@ class AzureSQLDatabaseService:
                     cursor.execute(
                         """
                     SELECT TOP 1 icons, image_url
-                    FROM boss_forms
-                    WHERE boss_id = ?
+                    FROM npc_forms
+                    WHERE npc_id = ?
                     """,
                         (row[0],),
                     )
@@ -195,7 +195,7 @@ class AzureSQLDatabaseService:
                 cursor.execute(
                     """
                 SELECT id, name, raid_group, location, examine, has_multiple_forms
-                FROM bosses
+                FROM npcs
                 WHERE id = ?
                 """,
                     (boss_id,),
@@ -217,12 +217,12 @@ class AzureSQLDatabaseService:
 
                 cursor.execute(
                     """
-                SELECT id, boss_id, form_name, form_order, combat_level, hitpoints,
+                SELECT id, npc_id AS boss_id, form_name, form_order, combat_level, hitpoints,
                        defence_level, magic_level, ranged_level, defence_stab, defence_slash,
                        defence_crush, defence_magic, defence_ranged_standard, icons, image_url,
                        size
-                FROM boss_forms
-                WHERE boss_id = ?
+                FROM npc_forms
+                WHERE npc_id = ?
                 ORDER BY form_order
                 """,
                     (boss_id,),
@@ -275,7 +275,7 @@ class AzureSQLDatabaseService:
         try:
             with self.connection() as conn:
                 cursor = conn.cursor()
-                cursor.execute("SELECT boss_id FROM boss_forms WHERE id = ?", (form_id,))
+                cursor.execute("SELECT npc_id FROM npc_forms WHERE id = ?", (form_id,))
                 row = cursor.fetchone()
                 if row:
                     return row[0]
@@ -415,7 +415,7 @@ class AzureSQLDatabaseService:
 
             sql = (
                 "SELECT id, name, raid_group, location\n"
-                "FROM bosses\n"
+                "FROM npcs\n"
                 "WHERE name LIKE ?\n"
                 "ORDER BY name"
             )
@@ -423,7 +423,7 @@ class AzureSQLDatabaseService:
             if limit is not None:
                 sql = (
                     "SELECT TOP (?) id, name, raid_group, location\n"
-                    "FROM bosses\n"
+                    "FROM npcs\n"
                     "WHERE name LIKE ?\n"
                     "ORDER BY name"
                 )
@@ -512,7 +512,7 @@ class AzureSQLDatabaseService:
                 async with conn.cursor() as cursor:
                     query = (
                         "SELECT id, name, raid_group, location, has_multiple_forms\n"
-                        "FROM bosses\n"
+                        "FROM npcs\n"
                         "ORDER BY name"
                     )
                     params: list[Any] = []
@@ -529,8 +529,8 @@ class AzureSQLDatabaseService:
                         await cursor.execute(
                             """
                         SELECT TOP 1 icons, image_url
-                        FROM boss_forms
-                        WHERE boss_id = ?
+                        FROM npc_forms
+                        WHERE npc_id = ?
                         """,
                             (row[0],),
                         )
@@ -567,7 +567,7 @@ class AzureSQLDatabaseService:
                     await cursor.execute(
                         """
                     SELECT id, name, raid_group, location, examine, has_multiple_forms
-                    FROM bosses
+                    FROM npcs
                     WHERE id = ?
                     """,
                         (boss_id,),
@@ -588,12 +588,12 @@ class AzureSQLDatabaseService:
 
                     await cursor.execute(
                         """
-                    SELECT id, boss_id, form_name, form_order, combat_level, hitpoints,
+                    SELECT id, npc_id AS boss_id, form_name, form_order, combat_level, hitpoints,
                            defence_level, magic_level, ranged_level, defence_stab, defence_slash,
                            defence_crush, defence_magic, defence_ranged_standard, icons, image_url,
                            size
-                    FROM boss_forms
-                    WHERE boss_id = ?
+                    FROM npc_forms
+                    WHERE npc_id = ?
                     ORDER BY form_order
                     """,
                         (boss_id,),
@@ -644,7 +644,7 @@ class AzureSQLDatabaseService:
             async with self.connection_async() as conn:
                 async with conn.cursor() as cursor:
                     await cursor.execute(
-                        "SELECT boss_id FROM boss_forms WHERE id = ?",
+                        "SELECT npc_id FROM npc_forms WHERE id = ?",
                         (form_id,),
                     )
                     row = await cursor.fetchone()
@@ -780,7 +780,7 @@ class AzureSQLDatabaseService:
                 async with conn.cursor() as cursor:
                     sql = (
                         "SELECT id, name, raid_group, location\n"
-                        "FROM bosses\n"
+                        "FROM npcs\n"
                         "WHERE name LIKE ?\n"
                         "ORDER BY name"
                     )
@@ -788,7 +788,7 @@ class AzureSQLDatabaseService:
                     if limit is not None:
                         sql = (
                             "SELECT TOP (?) id, name, raid_group, location\n"
-                            "FROM bosses\n"
+                            "FROM npcs\n"
                             "WHERE name LIKE ?\n"
                             "ORDER BY name"
                         )
