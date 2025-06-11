@@ -1,37 +1,2244 @@
-{
-  "dragon_dagger": {
-    "special_name": "Puncture",
-    "cost": 25,
-    "effect": "Performs two quick slashes.",
-    "attack_roll_modifier": 0.15,
-    "damage_roll_modifier": 0.15
+[
+  {
+    "weapon_name": "3rd age axe",
+    "effect": "Lumber Up: Temporarily boosts Woodcutting level by 3 for 3 minutes, consuming 100% special attack energy.",
+    "special_cost": 100,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "skill_boosts": [
+        {
+          "skill": "woodcutting",
+          "amount": 3
+        }
+      ]
+    }
   },
-  "dragon_claws": {
-    "special_name": "Slice and Dice",
-    "cost": 50,
-    "effect": "Hits four times in rapid succession.",
-    "attack_roll_modifier": 0.0,
-    "damage_roll_modifier": 0.0
+  {
+    "weapon_name": "3rd age felling axe",
+    "effect": "Lumber Up: Temporarily boosts Woodcutting level by 3 for 3 minutes, consuming 100% special attack energy.",
+    "special_cost": 100,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "skill_boosts": [
+        {
+          "skill": "woodcutting",
+          "amount": 3
+        }
+      ]
+    }
   },
-  "saradomin_godsword": {
-    "special_name": "Healing Blade",
-    "cost": 50,
-    "effect": "Restores Hitpoints and Prayer based on damage dealt.",
-    "attack_roll_modifier": 1.0,
-    "damage_roll_modifier": 0.10
+  {
+    "weapon_name": "Abyssal bludgeon",
+    "effect": "Penance: Increases damage by 0.5% for every prayer point missing, consuming 50% special attack energy.",
+    "special_cost": 50,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "damage_bonus": {
+        "type": "missing_prayer_points",
+        "rate": 0.5
+      }
+    }
   },
-  "armadyl_godsword": {
-    "special_name": "The Judgement",
-    "cost": 50,
-    "effect": "Inflicts extra damage and increases accuracy.",
-    "attack_roll_modifier": 1.0,
-    "damage_roll_modifier": 0.375
+  {
+    "weapon_name": "Abyssal dagger",
+    "effect": "Abyssal Puncture: Hits twice with 25% accuracy increase and 15% damage reduction, consuming 25% special attack energy.",
+    "special_cost": 25,
+    "accuracy_multiplier": 1.25,
+    "damage_multiplier": 0.85,
+    "hit_count": 2,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {}
   },
-  "zamorak_godsword": {
-    "special_name": "Ice Cleave",
-    "cost": 50,
-    "effect": "Freezes the target if the attack hits.",
-    "attack_roll_modifier": 1.0,
-    "damage_roll_modifier": 0.10
+  {
+    "weapon_name": "Abyssal tentacle",
+    "effect": "Binding Tentacle: Binds target for 5 seconds with ~50% poison chance, consuming 50% special attack energy.",
+    "special_cost": 50,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "binding": {
+        "type": "bind",
+        "duration": 5.0
+      },
+      "poison": {
+        "chance": 50,
+        "damage": 4
+      }
+    }
+  },
+  {
+    "weapon_name": "Abyssal whip",
+    "effect": "Energy Drain: 25% accuracy increase, transfers 10% run energy from target in PvP, consuming 50% special attack energy.",
+    "special_cost": 50,
+    "accuracy_multiplier": 1.25,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "run_energy_drain": {
+        "percentage": 10,
+        "pvp_only": true
+      }
+    }
+  },
+  {
+    "weapon_name": "Accursed sceptre",
+    "effect": "Condemn: 50% accuracy/damage increase, drains target's Defence and Magic by 15%, consumes 1 revenant ether.",
+    "special_cost": 50,
+    "accuracy_multiplier": 1.5,
+    "damage_multiplier": 1.5,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "stat_drains": [
+        {
+          "stat": "defence",
+          "percentage": 15
+        },
+        {
+          "stat": "magic",
+          "percentage": 15
+        }
+      ],
+      "resource_cost": {
+        "revenant_ether": 1
+      }
+    }
+  },
+  {
+    "weapon_name": "Ancient godsword",
+    "effect": "Blood Sacrifice: Doubled accuracy, 10% damage increase. Target marked for sacrifice - must move 5+ tiles within 4.8s or take 25 magic damage. Heals 15% of target's max HP.",
+    "special_cost": 50,
+    "accuracy_multiplier": 2.0,
+    "damage_multiplier": 1.1,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "sacrifice_mechanic": {
+        "movement_requirement": 5,
+        "time_limit": 4.8,
+        "magic_damage": 25,
+        "healing_percentage": 15,
+        "healing_cap_npc": 25,
+        "healing_cap_player": 15
+      }
+    }
+  },
+  {
+    "weapon_name": "Ancient mace",
+    "effect": "Favour of the War God: Hits through Protect from Melee, drains opponent's prayer by damage dealt, restores caster's prayer by same amount.",
+    "special_cost": 100,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "prayer": {
+        "restore": {
+          "type": "damage_based"
+        },
+        "drain": {
+          "type": "damage_based"
+        }
+      },
+      "prayer_bypass": true
+    }
+  },
+  {
+    "weapon_name": "Arclight",
+    "effect": "Weaken: Lowers opponent's Strength, Attack, and Defence by 5% (10% for demons) + 1, consuming 50% special attack energy.",
+    "special_cost": 50,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "stat_drains": [
+        {
+          "stat": "strength",
+          "percentage": 5,
+          "demon_bonus": 10
+        },
+        {
+          "stat": "attack",
+          "percentage": 5,
+          "demon_bonus": 10
+        },
+        {
+          "stat": "defence",
+          "percentage": 5,
+          "demon_bonus": 10
+        }
+      ]
+    }
+  },
+  {
+    "weapon_name": "Armadyl crossbow",
+    "effect": "Armadyl Eye: Doubles accuracy and enchanted bolt special effect chance for one shot, consuming 50% special attack energy.",
+    "special_cost": 50,
+    "accuracy_multiplier": 2.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "enchanted_bolt_bonus": {
+        "special_chance_multiplier": 2
+      }
+    }
+  },
+  {
+    "weapon_name": "Armadyl crossbow (Last Man Standing)",
+    "effect": "Armadyl Eye: Doubles accuracy and enchanted bolt special effect chance for one shot, consuming 50% special attack energy.",
+    "special_cost": 50,
+    "accuracy_multiplier": 2.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "enchanted_bolt_bonus": {
+        "special_chance_multiplier": 2
+      }
+    }
+  },
+  {
+    "weapon_name": "Armadyl godsword",
+    "effect": "The Judgement: Doubled accuracy with 37.5% higher maximum hit than normal attack, consuming 50% special attack energy.",
+    "special_cost": 50,
+    "accuracy_multiplier": 2.0,
+    "damage_multiplier": 1.375,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {}
+  },
+  {
+    "weapon_name": "Armadyl godsword (Last Man Standing)",
+    "effect": "The Judgement: Doubled accuracy with 37.5% higher maximum hit than normal attack, consuming 50% special attack energy.",
+    "special_cost": 50,
+    "accuracy_multiplier": 2.0,
+    "damage_multiplier": 1.375,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {}
+  },
+  {
+    "weapon_name": "Bandos godsword",
+    "effect": "Warstrike: Doubled accuracy, 21% more damage, drains combat levels equal to damage dealt in order: Defence, Strength, Prayer, Attack, Magic, Ranged.",
+    "special_cost": 50,
+    "accuracy_multiplier": 2.0,
+    "damage_multiplier": 1.21,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "stat_drains": [
+        {
+          "type": "damage_based",
+          "description": "Drains combat stats equal to damage dealt"
+        }
+      ]
+    }
+  },
+  {
+    "weapon_name": "Barrelchest anchor",
+    "effect": "Sunder: Doubles accuracy, 10% damage increase, drains combat stats by 10% of damage in order: Defence, Attack, Ranged, Magic.",
+    "special_cost": 50,
+    "accuracy_multiplier": 2.0,
+    "damage_multiplier": 1.1,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "stat_drains": [
+        {
+          "type": "damage_based",
+          "description": "Drains combat stats equal to 10% of damage"
+        }
+      ]
+    }
+  },
+  {
+    "weapon_name": "Blisterwood flail",
+    "effect": "Retainer: Traps vampyre juvenile/juvinate with <50% HP, preventing retaliation for 30 seconds, consuming 10% special attack energy.",
+    "special_cost": 10,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "vampyre_trap": {
+        "hp_requirement": 50,
+        "duration": 30
+      }
+    }
+  },
+  {
+    "weapon_name": "Blue moon spear",
+    "effect": "Break Shackles: Removes binding effects, 1% accuracy/damage per tick removed. Requires full blue moon armour set.",
+    "special_cost": 50,
+    "accuracy_multiplier": 1.01,
+    "damage_multiplier": 1.01,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "binding_removal": {
+        "bonus_per_tick": 1
+      },
+      "armour_requirement": "full_blue_moon_set"
+    }
+  },
+  {
+    "weapon_name": "Bone dagger",
+    "effect": "Backstab: Never misses if target undamaged or not last damaged by you. Lowers Defence by damage dealt.",
+    "special_cost": 75,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": true,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "stat_drains": [
+        {
+          "stat": "defence",
+          "type": "damage_based"
+        }
+      ],
+      "conditional_guarantee": "undamaged_target"
+    }
+  },
+  {
+    "weapon_name": "Brine sabre",
+    "effect": "Liquify: Doubles accuracy underwater, increases Strength/Attack/Defence by 25% of damage dealt, consuming 75% special attack energy.",
+    "special_cost": 75,
+    "accuracy_multiplier": 2.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "underwater_only": true,
+      "stat_boosts": [
+        {
+          "stats": ["strength", "attack", "defence"],
+          "type": "damage_based",
+          "multiplier": 0.25
+        }
+      ]
+    }
+  },
+  {
+    "weapon_name": "Burning claws",
+    "effect": "Burning barrage: Hits three times with burn chance scaling by hit order (15%/30%/45%). Each burn deals 10 damage over 40 ticks, max 5 stacks.",
+    "special_cost": 30,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 3,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "burn_effect": {
+        "damage": 10,
+        "duration": 40,
+        "max_stacks": 5,
+        "chance_scaling": [15, 30, 45]
+      },
+      "complex_damage_calculation": true
+    }
+  },
+  {
+    "weapon_name": "Crystal axe",
+    "effect": "Lumber Up: Temporarily boosts Woodcutting level by 3 for 3 minutes, consuming 100% special attack energy.",
+    "special_cost": 100,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "skill_boosts": [
+        {
+          "skill": "woodcutting",
+          "amount": 3
+        }
+      ]
+    }
+  },
+  {
+    "weapon_name": "Crystal halberd",
+    "effect": "Special attack: 10% damage boost, hits large monsters twice (second hit -25% accuracy), can hit 10 NPCs in 3x1 area or 3 players in PvP.",
+    "special_cost": 30,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.1,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "area_of_effect": {
+        "type": "area",
+        "size": "3x1",
+        "max_targets_pvm": 10,
+        "max_targets_pvp": 3
+      },
+      "large_monster_double_hit": {
+        "accuracy_reduction": 25
+      }
+    }
+  },
+  {
+    "weapon_name": "Crystal halberd (i)",
+    "effect": "Special attack: 10% damage boost, hits large monsters twice (second hit -25% accuracy), can hit 10 NPCs in 3x1 area or 3 players in PvP.",
+    "special_cost": 30,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.1,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "area_of_effect": {
+        "type": "area",
+        "size": "3x1",
+        "max_targets_pvm": 10,
+        "max_targets_pvp": 3
+      },
+      "large_monster_double_hit": {
+        "accuracy_reduction": 25
+      }
+    }
+  },
+  {
+    "weapon_name": "Crystal harpoon",
+    "effect": "Fishstabber: Provides +3 Fishing boost, consuming 100% special attack energy.",
+    "special_cost": 100,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "skill_boosts": [
+        {
+          "skill": "fishing",
+          "amount": 3
+        }
+      ]
+    }
+  },
+  {
+    "weapon_name": "Crystal pickaxe",
+    "effect": "Rock Knocker: Temporarily boosts Mining level by 3, consuming 100% special attack energy.",
+    "special_cost": 100,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "skill_boosts": [
+        {
+          "skill": "mining",
+          "amount": 3
+        }
+      ]
+    }
+  },
+  {
+    "weapon_name": "Dark bow",
+    "effect": "Descent of Darkness/Dragons: Fires two arrows with 30% more damage (50% with dragon arrows), minimum 5 damage per arrow (8 with dragon arrows, capped at 48).",
+    "special_cost": 55,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.3,
+    "hit_count": 2,
+    "guaranteed_hit": false,
+    "min_damage": 5,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "dragon_arrows": {
+        "damage_multiplier": 1.5,
+        "min_damage": 8,
+        "max_damage_cap": 48
+      }
+    }
+  },
+  {
+    "weapon_name": "Dark bow (Last Man Standing)",
+    "effect": "Descent of Darkness/Dragons: Fires two arrows with 30% more damage (50% with dragon arrows), minimum 5 damage per arrow (8 with dragon arrows, capped at 48).",
+    "special_cost": 55,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.3,
+    "hit_count": 2,
+    "guaranteed_hit": false,
+    "min_damage": 5,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "dragon_arrows": {
+        "damage_multiplier": 1.5,
+        "min_damage": 8,
+        "max_damage_cap": 48
+      }
+    }
+  },
+  {
+    "weapon_name": "Darklight",
+    "effect": "Weaken: Lowers opponent's Strength, Attack, and Defence by 5% (10% for demons) + 1, consuming 50% special attack energy.",
+    "special_cost": 50,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "stat_drains": [
+        {
+          "stat": "strength",
+          "percentage": 5,
+          "demon_bonus": 10
+        },
+        {
+          "stat": "attack",
+          "percentage": 5,
+          "demon_bonus": 10
+        },
+        {
+          "stat": "defence",
+          "percentage": 5,
+          "demon_bonus": 10
+        }
+      ]
+    }
+  },
+  {
+    "weapon_name": "Dawnbringer",
+    "effect": "Pulsate: Fires powerful blast at Verzik dealing 75-150 damage, consuming 35% special attack energy. Guaranteed hit unaffected by gear/prayer.",
+    "special_cost": 35,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": true,
+    "min_damage": 75,
+    "max_damage_cap": 150,
+    "special_mechanics": {
+      "verzik_only": true,
+      "unaffected_by_bonuses": true
+    }
+  },
+  {
+    "weapon_name": "Dinh's bulwark",
+    "effect": "Shield Bash: Hits up to 10 enemies in 11x11 area with 20% accuracy increase. Target gets hit twice, others once. Reduces highest offensive stats by 5%.",
+    "special_cost": 50,
+    "accuracy_multiplier": 1.2,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "area_of_effect": {
+        "type": "multi_target",
+        "max_targets": 10,
+        "area": "11x11",
+        "primary_target_double_hit": true
+      },
+      "stat_drains": [
+        {
+          "type": "highest_offensive",
+          "percentage": 5
+        }
+      ]
+    }
+  },
+  {
+    "weapon_name": "Dorgeshuun crossbow",
+    "effect": "Snipe: Never misses if target undamaged or not last damaged by you. Lowers Defence by damage dealt.",
+    "special_cost": 75,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": true,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "stat_drains": [
+        {
+          "stat": "defence",
+          "type": "damage_based"
+        }
+      ],
+      "conditional_guarantee": "undamaged_target"
+    }
+  },
+  {
+    "weapon_name": "Dragon 2h sword",
+    "effect": "Powerstab: Hits all targets within 1 square in multi-combat (max 14 NPCs or 3 players), consuming 60% special attack energy.",
+    "special_cost": 60,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "area_of_effect": {
+        "type": "adjacent_tiles",
+        "max_targets_pvm": 14,
+        "max_targets_pvp": 3,
+        "multicombat_only": true
+      }
+    }
+  },
+  {
+    "weapon_name": "Dragon axe",
+    "effect": "Lumber Up: Temporarily boosts Woodcutting level by 3 for 3 minutes, consuming 100% special attack energy.",
+    "special_cost": 100,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "skill_boosts": [
+        {
+          "skill": "woodcutting",
+          "amount": 3
+        }
+      ]
+    }
+  },
+  {
+    "weapon_name": "Dragon battleaxe",
+    "effect": "Rampage: Drains Attack/Defence/Ranged/Magic by 10%, increases Strength by 10 + (levels drained / 4), consuming 100% special attack energy.",
+    "special_cost": 100,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "stat_drains": [
+        {
+          "stat": "attack",
+          "percentage": 10
+        },
+        {
+          "stat": "defence",
+          "percentage": 10
+        },
+        {
+          "stat": "ranged",
+          "percentage": 10
+        },
+        {
+          "stat": "magic",
+          "percentage": 10
+        }
+      ],
+      "skill_boosts": [
+        {
+          "skill": "strength",
+          "formula": "10 + (levels_drained / 4)"
+        }
+      ]
+    }
+  },
+  {
+    "weapon_name": "Dragon claws",
+    "effect": "Slice and Dice: Hits four times with complex damage patterns (4-2-1-1, 0-4-2-2, 0-0-3-3, or 0-0-0-5) based on accuracy rolls.",
+    "special_cost": 50,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 4,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "complex_damage_sequence": {
+        "pattern_4211": "First hit: max-1 to 0.5*max, subsequent hits scale",
+        "pattern_0422": "Second hit first: 3/8 to 7/8 max",
+        "pattern_0033": "Third hit first: 1/4 to 3/4 max",
+        "pattern_0005": "Fourth hit only: 1/4 to 5/4 max",
+        "miss_damage": "2/3 chance of 2 damage, 1/3 chance of 0"
+      }
+    }
+  },
+  {
+    "weapon_name": "Dragon claws (Last Man Standing)",
+    "effect": "Slice and Dice: Hits four times with complex damage patterns based on accuracy rolls.",
+    "special_cost": 50,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 4,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "complex_damage_sequence": {
+        "description": "Complex 4-hit sequence similar to regular dragon claws"
+      }
+    }
+  },
+  {
+    "weapon_name": "Dragon crossbow",
+    "effect": "Annihilate: Hits up to 9 enemies in 3x3 area. Primary target +20% damage, others -20% damage, consuming 60% special attack energy.",
+    "special_cost": 60,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "area_of_effect": {
+        "type": "multi_target",
+        "max_targets": 9,
+        "area": "3x3",
+        "primary_damage_bonus": 20,
+        "secondary_damage_penalty": 20
+      }
+    }
+  },
+  {
+    "weapon_name": "Dragon dagger",
+    "effect": "Puncture: Two hits with 15% accuracy and damage bonus each, consuming 25% special attack energy.",
+    "special_cost": 25,
+    "accuracy_multiplier": 1.15,
+    "damage_multiplier": 1.15,
+    "hit_count": 2,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {}
+  },
+  {
+    "weapon_name": "Dragon halberd",
+    "effect": "Sweep: 10% damage boost, hits large monsters twice (second hit -25% accuracy), can hit 10 NPCs in 3x1 area or 3 players in PvP.",
+    "special_cost": 30,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.1,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "area_of_effect": {
+        "type": "area",
+        "size": "3x1",
+        "max_targets_pvm": 10,
+        "max_targets_pvp": 3
+      },
+      "large_monster_double_hit": {
+        "accuracy_reduction": 25
+      }
+    }
+  },
+  {
+    "weapon_name": "Dragon harpoon",
+    "effect": "Fishstabber: Provides +3 Fishing boost, consuming 100% special attack energy.",
+    "special_cost": 100,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "skill_boosts": [
+        {
+          "skill": "fishing",
+          "amount": 3
+        }
+      ]
+    }
+  },
+  {
+    "weapon_name": "Dragon hasta",
+    "effect": "Unleash: Uses all special attack energy, 5% accuracy and 2.5% damage per 5% energy used. Ignores Protect from Melee.",
+    "special_cost": null,
+    "accuracy_multiplier": null,
+    "damage_multiplier": null,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "variable_cost": {
+        "accuracy_per_5_percent": 5,
+        "damage_per_5_percent": 2.5,
+        "description": "Uses all special attack energy, scales with amount used"
+      },
+      "prayer_bypass": true
+    }
+  },
+  {
+    "weapon_name": "Dragon knife",
+    "effect": "Duality: Throws two knives at once with separate accuracy/damage rolls, consuming 25% special attack energy.",
+    "special_cost": 25,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 2,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {}
+  },
+  {
+    "weapon_name": "Dragon longsword",
+    "effect": "Cleave: Raises maximum hit by 25% for one attack, consuming 25% special attack energy.",
+    "special_cost": 25,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.25,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {}
+  },
+  {
+    "weapon_name": "Dragon mace",
+    "effect": "Shatter: 25% accuracy increase and 50% damage increase, consuming 25% special attack energy.",
+    "special_cost": 25,
+    "accuracy_multiplier": 1.25,
+    "damage_multiplier": 1.5,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {}
+  },
+  {
+    "weapon_name": "Dragon pickaxe",
+    "effect": "Rock Knocker: Temporarily boosts Mining level by 3 for 3 minutes, consuming 100% special attack energy.",
+    "special_cost": 100,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "skill_boosts": [
+        {
+          "skill": "mining",
+          "amount": 3
+        }
+      ]
+    }
+  },
+  {
+    "weapon_name": "Dragon scimitar",
+    "effect": "Sever: 25% accuracy increase. In PvP, prevents Protect prayers for 8 ticks (4.8 seconds), consuming 55% special attack energy.",
+    "special_cost": 55,
+    "accuracy_multiplier": 1.25,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "prayer_disable": {
+        "duration": 4.8,
+        "description": "Prevents Protect from Magic/Missiles/Melee for 8 ticks in PvP"
+      }
+    }
+  },
+  {
+    "weapon_name": "Dragon spear",
+    "effect": "Shove: Pushes opponent back and stuns for 6 ticks (3.6 seconds), consuming 25% special attack energy. Cannot be used on large monsters.",
+    "special_cost": 25,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "binding": {
+        "type": "stun",
+        "duration": 3.6
+      },
+      "large_monster_restriction": true
+    }
+  },
+  {
+    "weapon_name": "Dragon sword",
+    "effect": "Wild Stab: 25% accuracy and damage increase. Ignores Protect from Melee, consuming 40% special attack energy.",
+    "special_cost": 40,
+    "accuracy_multiplier": 1.25,
+    "damage_multiplier": 1.25,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "prayer_bypass": true
+    }
+  },
+  {
+    "weapon_name": "Dragon thrownaxe",
+    "effect": "Momentum Throw: 25% accuracy increase, guarantees attack on next tick, consuming 25% special attack energy.",
+    "special_cost": 25,
+    "accuracy_multiplier": 1.25,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "instant_next_attack": true
+    }
+  },
+  {
+    "weapon_name": "Dragon warhammer",
+    "effect": "Smash: 50% more damage, lowers target's Defence by 30% on successful hit. Stacks multiplicatively.",
+    "special_cost": 50,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.5,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "stat_drains": [
+        {
+          "stat": "defence",
+          "percentage": 30,
+          "stacking": "multiplicative"
+        }
+      ]
+    }
+  },
+  {
+    "weapon_name": "Dual macuahuitl",
+    "effect": "Blood Infusion: Removes accuracy check, raises min/max hit by 25%. Takes 25% current HP as damage. Requires full blood moon armour.",
+    "special_cost": 25,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.25,
+    "hit_count": 1,
+    "guaranteed_hit": true,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "self_damage": {
+        "percentage": 25,
+        "of": "current_hitpoints"
+      },
+      "bloodrager_guaranteed": true,
+      "armour_requirement": "full_blood_moon_set"
+    }
+  },
+  {
+    "weapon_name": "Echo harpoon",
+    "effect": "Fishstabber: Provides +3 Fishing boost, consuming 100% special attack energy.",
+    "special_cost": 100,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "skill_boosts": [
+        {
+          "skill": "fishing",
+          "amount": 3
+        }
+      ]
+    }
+  },
+  {
+    "weapon_name": "Eclipse atlatl",
+    "effect": "Eclipse: Magic-based attack at melee distance with 50% accuracy bonus. Consumes burn damage to increase max/min hit (max +50). Requires full eclipse moon armour.",
+    "special_cost": 50,
+    "accuracy_multiplier": 1.5,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "burn_consumption": {
+        "max_hit_bonus": "burn_damage",
+        "min_hit_bonus": "burn_damage / 2",
+        "cap": 50
+      },
+      "magic_based": true,
+      "armour_requirement": "full_eclipse_moon_set"
+    }
+  },
+  {
+    "weapon_name": "Elder maul",
+    "effect": "Pulverize: 25% accuracy increase, reduces target's Defence by 35% on successful hit. Stacks multiplicatively.",
+    "special_cost": 50,
+    "accuracy_multiplier": 1.25,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "stat_drains": [
+        {
+          "stat": "defence",
+          "percentage": 35,
+          "stacking": "multiplicative"
+        }
+      ]
+    }
+  },
+  {
+    "weapon_name": "Eldritch nightmare staff",
+    "effect": "Invocate: High magic damage, restores prayer points by 50% of damage dealt (max 120 prayer). Restoration based on potential damage.",
+    "special_cost": 55,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "prayer": {
+        "restore": {
+          "type": "percentage_damage",
+          "value": 50,
+          "max": 120
+        }
+      },
+      "potential_damage_calculation": true
+    }
+  },
+  {
+    "weapon_name": "Emberlight",
+    "effect": "Weaken: Lowers opponent's Strength, Attack, and Defence by 5% (15% for demons) + 1, consuming 50% special attack energy.",
+    "special_cost": 50,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "stat_drains": [
+        {
+          "stat": "strength",
+          "percentage": 5,
+          "demon_bonus": 15
+        },
+        {
+          "stat": "attack",
+          "percentage": 5,
+          "demon_bonus": 15
+        },
+        {
+          "stat": "defence",
+          "percentage": 5,
+          "demon_bonus": 15
+        }
+      ]
+    }
+  },
+  {
+    "weapon_name": "Excalibur",
+    "effect": "Sanctuary: Temporarily increases Defence by 8, consuming 100% special attack energy.",
+    "special_cost": 100,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "skill_boosts": [
+        {
+          "skill": "defence",
+          "amount": 8
+        }
+      ]
+    }
+  },
+  {
+    "weapon_name": "Granite hammer",
+    "effect": "Hammer Blow: 50% accuracy increase, guarantees 5 additional damage. Target takes minimum 5 damage even on miss.",
+    "special_cost": 60,
+    "accuracy_multiplier": 1.5,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": 5,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "guaranteed_damage": 5
+    }
+  },
+  {
+    "weapon_name": "Granite maul",
+    "effect": "Quick Smash: Instant attack consuming 60% special attack energy. No accuracy increase.",
+    "special_cost": 60,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "instant_attack": true
+    }
+  },
+  {
+    "weapon_name": "Granite maul (Last Man Standing)",
+    "effect": "Quick Smash: Instant attack consuming 50% special attack energy. No accuracy increase.",
+    "special_cost": 50,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "instant_attack": true
+    }
+  },
+  {
+    "weapon_name": "Granite maul (ornate handle)",
+    "effect": "Quick Smash: Instant attack consuming 50% special attack energy. No accuracy increase.",
+    "special_cost": 50,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "instant_attack": true
+    }
+  },
+  {
+    "weapon_name": "Heavy ballista",
+    "effect": "Concentrated Shot: 25% increased accuracy and damage, consuming 65% special attack energy.",
+    "special_cost": 65,
+    "accuracy_multiplier": 1.25,
+    "damage_multiplier": 1.25,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {}
+  },
+  {
+    "weapon_name": "Heavy ballista (Last Man Standing)",
+    "effect": "Concentrated Shot: 25% increased accuracy and damage, consuming 65% special attack energy.",
+    "special_cost": 65,
+    "accuracy_multiplier": 1.25,
+    "damage_multiplier": 1.25,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {}
+  },
+  {
+    "weapon_name": "Infernal axe",
+    "effect": "Lumber Up: Temporarily boosts Woodcutting level by 3 for 3 minutes, consuming 100% special attack energy.",
+    "special_cost": 100,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "skill_boosts": [
+        {
+          "skill": "woodcutting",
+          "amount": 3
+        }
+      ]
+    }
+  },
+  {
+    "weapon_name": "Infernal harpoon",
+    "effect": "Fishstabber: Provides +3 Fishing boost, consuming 100% special attack energy.",
+    "special_cost": 100,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "skill_boosts": [
+        {
+          "skill": "fishing",
+          "amount": 3
+        }
+      ]
+    }
+  },
+  {
+    "weapon_name": "Infernal pickaxe",
+    "effect": "Rock Knocker: Temporarily boosts Mining level by 3, consuming 100% special attack energy. Also has ore combustion passive effect.",
+    "special_cost": 100,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "skill_boosts": [
+        {
+          "skill": "mining",
+          "amount": 3
+        }
+      ],
+      "passive_effect": {
+        "ore_combustion": {
+          "chance": 33,
+          "smithing_xp": true
+        }
+      }
+    }
+  },
+  {
+    "weapon_name": "Ivandis flail",
+    "effect": "Retainer: Traps vampyre juvenile/juvinate with <50% HP, preventing retaliation for 30 seconds, consuming 10% special attack energy.",
+    "special_cost": 10,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "vampyre_trap": {
+        "hp_requirement": 50,
+        "duration": 30
+      }
+    }
+  },
+  {
+    "weapon_name": "Keris partisan of corruption",
+    "effect": "Wrath of Amascut: 100% accuracy, 25% damage increase. Target takes 25% increased damage for 10 ticks. Player cannot attack for 8 ticks.",
+    "special_cost": 75,
+    "accuracy_multiplier": 2.0,
+    "damage_multiplier": 1.25,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "target_vulnerability": {
+        "damage_increase": 25,
+        "duration": 10
+      },
+      "self_stun": {
+        "duration": 8
+      }
+    }
+  },
+  {
+    "weapon_name": "Keris partisan of the sun",
+    "effect": "Tumeken's Light: Full heal + 20% overheal, cures poison/venom, restores run energy and stats. Costs 50 prayer points + 75% special energy.",
+    "special_cost": 75,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "healing": {
+        "type": "full_heal",
+        "overheal": "20% of base HP"
+      },
+      "prayer_cost": 50,
+      "status_cure": ["poison", "venom"],
+      "stat_restore": "all",
+      "run_energy_restore": "full"
+    }
+  },
+  {
+    "weapon_name": "Light ballista",
+    "effect": "Concentrated Shot: 25% increased accuracy and damage, consuming 65% special attack energy.",
+    "special_cost": 65,
+    "accuracy_multiplier": 1.25,
+    "damage_multiplier": 1.25,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {}
+  },
+  {
+    "weapon_name": "Light ballista (Last Man Standing)",
+    "effect": "Concentrated Shot: 25% increased accuracy and damage, consuming 65% special attack energy.",
+    "special_cost": 65,
+    "accuracy_multiplier": 1.25,
+    "damage_multiplier": 1.25,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {}
+  },
+  {
+    "weapon_name": "Magic comp bow",
+    "effect": "Powershot: Guaranteed hit with custom damage calculation based only on visible ranged level and ammo strength, consuming 35% special energy.",
+    "special_cost": 35,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": true,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "custom_damage_formula": true,
+      "ignores_gear_bonuses": true
+    }
+  },
+  {
+    "weapon_name": "Magic longbow",
+    "effect": "Powershot: Guaranteed hit with custom damage calculation based only on visible ranged level and ammo strength, consuming 35% special energy.",
+    "special_cost": 35,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": true,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "custom_damage_formula": true,
+      "ignores_gear_bonuses": true
+    }
+  },
+  {
+    "weapon_name": "Magic shortbow",
+    "effect": "Snapshot: Fires two arrows with ~43% accuracy boost and custom damage calculation, consuming 55% special attack energy.",
+    "special_cost": 55,
+    "accuracy_multiplier": 1.43,
+    "damage_multiplier": 1.0,
+    "hit_count": 2,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "custom_damage_formula": true,
+      "ignores_gear_bonuses": true
+    }
+  },
+  {
+    "weapon_name": "Magic shortbow (i)",
+    "effect": "Snapshot: Fires two arrows with ~43% accuracy boost and custom damage calculation, consuming 50% special attack energy.",
+    "special_cost": 50,
+    "accuracy_multiplier": 1.43,
+    "damage_multiplier": 1.0,
+    "hit_count": 2,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "custom_damage_formula": true,
+      "ignores_gear_bonuses": true
+    }
+  },
+  {
+    "weapon_name": "Morrigan's javelin (bh)",
+    "effect": "Phantom Strike: 150% accuracy with damage over time effect. Target bleeds 10 damage per tick until 75% of initial damage is dealt.",
+    "special_cost": 50,
+    "accuracy_multiplier": 1.5,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "damage_over_time": {
+        "damage": 10,
+        "interval": 0.6,
+        "total_percentage": 75
+      }
+    }
+  },
+  {
+    "weapon_name": "Morrigan's javelin (Deadman Mode)",
+    "effect": "Phantom Strike: Damage over time effect. Target bleeds 10 damage per tick until 75% of initial damage is dealt.",
+    "special_cost": 50,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "damage_over_time": {
+        "damage": 10,
+        "interval": 0.6,
+        "total_percentage": 75
+      }
+    }
+  },
+  {
+    "weapon_name": "Morrigan's javelin (Last Man Standing)",
+    "effect": "Phantom Strike: Damage over time effect. Target bleeds 5 damage every 3 ticks until equal to initial damage is dealt.",
+    "special_cost": 50,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "damage_over_time": {
+        "damage": 5,
+        "interval": 1.8,
+        "total_percentage": 100
+      }
+    }
+  },
+  {
+    "weapon_name": "Morrigan's throwing axe (bh)",
+    "effect": "Hamstring: 150% accuracy, 50-150% damage range. Increases target's run energy drain by 6x for 1 minute.",
+    "special_cost": 50,
+    "accuracy_multiplier": 1.5,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "damage_range": {
+        "min": 0.5,
+        "max": 1.5
+      },
+      "run_energy_drain": {
+        "multiplier": 6,
+        "duration": 60
+      }
+    }
+  },
+  {
+    "weapon_name": "Morrigan's throwing axe (Deadman Mode)",
+    "effect": "Hamstring: 20-120% damage range, reduces next attack interval by 1 tick. Increases target's run energy drain by 6x for 1 minute.",
+    "special_cost": 25,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "damage_range": {
+        "min": 0.2,
+        "max": 1.2
+      },
+      "run_energy_drain": {
+        "multiplier": 6,
+        "duration": 60
+      },
+      "attack_speed_reduction": 1
+    }
+  },
+  {
+    "weapon_name": "Noxious halberd",
+    "effect": "Virulence: Can only be used while poisoned/venomed. Cures condition and increases next hit's minimum damage by poison/venom damage.",
+    "special_cost": 50,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "poison_requirement": true,
+      "status_cure": ["poison", "venom"],
+      "min_damage_bonus": "poison_damage_remaining"
+    }
+  },
+  {
+    "weapon_name": "Osmumten's fang",
+    "effect": "Eviscerate: 50% accuracy increase, uses fang's true max hit instead of normal reduced max hit, consuming 25% special energy.",
+    "special_cost": 25,
+    "accuracy_multiplier": 1.5,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "true_max_hit": true,
+      "description": "Uses fang's true max hit instead of normal reduced max hit"
+    }
+  },
+  {
+    "weapon_name": "Purging staff",
+    "effect": "Scatter ashes: Uses best demonbane spell. If target dies, refunds energy and reduces next attack by 3 ticks. Requires Arceuus spellbook.",
+    "special_cost": 25,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "demonbane_spell": true,
+      "energy_refund_on_kill": true,
+      "attack_speed_bonus_on_kill": 3,
+      "spellbook_requirement": "arceuus"
+    }
+  },
+  {
+    "weapon_name": "Rod of ivandis",
+    "effect": "Retainer: Traps vampyre juvenile/juvinate with <50% HP for 30 seconds. Consumes one charge from rod.",
+    "special_cost": 10,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "vampyre_trap": {
+        "hp_requirement": 50,
+        "duration": 30
+      },
+      "charge_consumption": 1
+    }
+  },
+  {
+    "weapon_name": "Rune claws",
+    "effect": "Impale: 10% damage increase but increases time to next attack by 1 tick, consuming 25% special attack energy.",
+    "special_cost": 25,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.1,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "attack_delay_penalty": 1
+    }
+  },
+  {
+    "weapon_name": "Rune thrownaxe",
+    "effect": "Chainhit: Ricochets to up to 5 enemies within 3 tile radius. Each hit consumes 10% special energy. Accuracy roll after each hit.",
+    "special_cost": null,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.0,
+    "hit_count": null,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "variable_cost": {
+        "per_hit": 10,
+        "max_targets": 5
+      },
+      "area_of_effect": {
+        "type": "radius",
+        "radius": 3,
+        "description": "Ricochets to multiple targets, 10% cost per hit"
+      },
+      "custom_damage_formula": true
+    }
+  },
+  {
+    "weapon_name": "Saradomin godsword",
+    "effect": "Healing Blade: Doubled accuracy, 10% damage increase. Heals 50% damage dealt as HP, 25% as prayer (min 10 HP/5 prayer for hits <22).",
+    "special_cost": 50,
+    "accuracy_multiplier": 2.0,
+    "damage_multiplier": 1.1,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "healing": {
+        "type": "percentage_damage",
+        "value": 50,
+        "min": 10
+      },
+      "prayer": {
+        "restore": {
+          "type": "percentage_damage",
+          "value": 25,
+          "min": 5
+        }
+      },
+      "potential_damage_calculation": true
+    }
+  },
+  {
+    "weapon_name": "Saradomin sword",
+    "effect": "Saradomin's Lightning: 10% more melee damage plus 1-16 Magic damage. Consumes 100% special energy. Magic part splashes vs Protect from Magic.",
+    "special_cost": 100,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.1,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "magic_damage": {
+        "type": "additional",
+        "range": "1-16",
+        "prayer_affected": true
+      }
+    }
+  },
+  {
+    "weapon_name": "Saradomin's blessed sword",
+    "effect": "Saradomin's Lightning: Magic-based attack with 25% max hit increase, consuming 65% special energy. Rolls against Magic defence.",
+    "special_cost": 65,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.25,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "magic_based": true,
+      "defence_type": "magic"
+    }
+  },
+  {
+    "weapon_name": "Scorching bow",
+    "effect": "Scorching shackles: 30% accuracy increase, binds demons for 20 ticks with 5 burn damage over time. Only works on demons.",
+    "special_cost": 25,
+    "accuracy_multiplier": 1.3,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "binding": {
+        "type": "bind",
+        "duration": 20,
+        "demon_only": true
+      },
+      "burn_damage": {
+        "total": 5,
+        "interval": 4
+      }
+    }
+  },
+  {
+    "weapon_name": "Seercull",
+    "effect": "Soulshot: Guaranteed hit, drains Magic level equal to damage dealt. Uses custom damage formula based only on visible ranged level and ammo.",
+    "special_cost": 100,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": true,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "stat_drains": [
+        {
+          "stat": "magic",
+          "type": "damage_based"
+        }
+      ],
+      "custom_damage_formula": true,
+      "ignores_gear_bonuses": true
+    }
+  },
+  {
+    "weapon_name": "Soulreaper axe",
+    "effect": "Behead: Consumes all Soul Stacks for 6% accuracy/damage per stack and 8 HP healing per stack. Does not cost special energy.",
+    "special_cost": 0,
+    "accuracy_multiplier": null,
+    "damage_multiplier": null,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "soul_stacks": {
+        "consumes_all": true,
+        "accuracy_per_stack": 6,
+        "damage_per_stack": 6,
+        "healing_per_stack": 8
+      }
+    }
+  },
+  {
+    "weapon_name": "User:Speeddymon/Sandbox/Dragon harpoon",
+    "effect": "Fishstabber: Provides +3 Fishing boost, consuming 100% special attack energy.",
+    "special_cost": 100,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "skill_boosts": [
+        {
+          "skill": "fishing",
+          "amount": 3
+        }
+      ]
+    }
+  },
+  {
+    "weapon_name": "Staff of balance",
+    "effect": "Power of Death: Halves opponent's melee damage for 1 minute. Effect lost if staff unequipped. Stacks with Protect from Melee.",
+    "special_cost": 100,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "damage_reduction": {
+        "type": "melee",
+        "percentage": 50,
+        "duration": 60,
+        "requires_equipped": true
+      }
+    }
+  },
+  {
+    "weapon_name": "Staff of light",
+    "effect": "Power of Death: Halves opponent's melee damage for 1 minute. Effect inactive while unequipped. Stacks with Protect from Melee.",
+    "special_cost": 100,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "damage_reduction": {
+        "type": "melee",
+        "percentage": 50,
+        "duration": 60,
+        "inactive_when_unequipped": true
+      }
+    }
+  },
+  {
+    "weapon_name": "Staff of the dead",
+    "effect": "Power of Death: Halves opponent's melee damage for 1 minute. Effect inactive while unequipped. Stacks with Protect from Melee.",
+    "special_cost": 100,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "damage_reduction": {
+        "type": "melee",
+        "percentage": 50,
+        "duration": 60,
+        "inactive_when_unequipped": true
+      }
+    }
+  },
+  {
+    "weapon_name": "Staff of the dead (Last Man Standing)",
+    "effect": "Power of Death: Halves opponent's melee damage for 1 minute. Effect lost if staff unequipped. Stacks with Protect from Melee.",
+    "special_cost": 100,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "damage_reduction": {
+        "type": "melee",
+        "percentage": 50,
+        "duration": 60,
+        "requires_equipped": true
+      }
+    }
+  },
+  {
+    "weapon_name": "Statius's warhammer (bh)",
+    "effect": "Smash: 25-125% damage range, lowers Defence by 75% on successful hit. Stacks multiplicatively.",
+    "special_cost": 35,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "damage_range": {
+        "min": 0.25,
+        "max": 1.25
+      },
+      "stat_drains": [
+        {
+          "stat": "defence",
+          "percentage": 75,
+          "stacking": "multiplicative"
+        }
+      ]
+    }
+  },
+  {
+    "weapon_name": "Statius's warhammer (Deadman Mode)",
+    "effect": "Smash: 25-125% damage range, lowers Defence by 30% on damage-dealing hit. Stacks multiplicatively.",
+    "special_cost": 35,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "damage_range": {
+        "min": 0.25,
+        "max": 1.25
+      },
+      "stat_drains": [
+        {
+          "stat": "defence",
+          "percentage": 30,
+          "stacking": "multiplicative",
+          "requires_damage": true
+        }
+      ]
+    }
+  },
+  {
+    "weapon_name": "Statius's warhammer (Last Man Standing)",
+    "effect": "Smash: 25-125% damage range, lowers Defence by 30% on damage-dealing hit. Stacks multiplicatively.",
+    "special_cost": 35,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "damage_range": {
+        "min": 0.25,
+        "max": 1.25
+      },
+      "stat_drains": [
+        {
+          "stat": "defence",
+          "percentage": 30,
+          "stacking": "multiplicative",
+          "requires_damage": true
+        }
+      ]
+    }
+  },
+  {
+    "weapon_name": "Tonalztics of ralos",
+    "effect": "Division: Reduces target's Defence by 10% of its Magic level per hit. Can hit twice when charged, potentially 4x with two specials.",
+    "special_cost": 50,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "stat_drains": [
+        {
+          "stat": "defence",
+          "type": "magic_level_based",
+          "percentage": 10
+        }
+      ],
+      "charged_double_hit": true
+    }
+  },
+  {
+    "weapon_name": "Toxic blowpipe",
+    "effect": "Toxic Siphon: 100% accuracy, 50% damage increase, heals half damage dealt (rounded down). Healing based on potential damage.",
+    "special_cost": 50,
+    "accuracy_multiplier": 2.0,
+    "damage_multiplier": 1.5,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "healing": {
+        "type": "percentage_damage",
+        "value": 50
+      },
+      "potential_damage_calculation": true
+    }
+  },
+  {
+    "weapon_name": "Toxic staff of the dead",
+    "effect": "Power of Death: Halves opponent's melee damage for 1 minute. Effect lost if staff unequipped. Stacks with Protect from Melee.",
+    "special_cost": 100,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "damage_reduction": {
+        "type": "melee",
+        "percentage": 50,
+        "duration": 60,
+        "requires_equipped": true
+      }
+    }
+  },
+  {
+    "weapon_name": "Ursine chainmace",
+    "effect": "Bear Down: Doubled accuracy, deals 20 damage over 6 seconds, prevents running for 3.6 seconds, reduces Agility by 20. Must be charged.",
+    "special_cost": 50,
+    "accuracy_multiplier": 2.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "damage_over_time": {
+        "damage": 20,
+        "duration": 6
+      },
+      "binding": {
+        "type": "prevent_running",
+        "duration": 3.6
+      },
+      "stat_drains": [
+        {
+          "stat": "agility",
+          "amount": 20
+        }
+      ],
+      "requires_charged": true
+    }
+  },
+  {
+    "weapon_name": "Vesta's blighted longsword",
+    "effect": "Feint: 20-120% damage range, accuracy rolled against 25% of opponent's defence, consuming 25% special energy.",
+    "special_cost": 25,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "damage_range": {
+        "min": 0.2,
+        "max": 1.2
+      },
+      "defence_reduction": {
+        "percentage": 25
+      }
+    }
+  },
+  {
+    "weapon_name": "Vesta's longsword (Deadman Mode)",
+    "effect": "Feint: 20-120% damage range, accuracy rolled against 25% of opponent's defence, consuming 25% special energy.",
+    "special_cost": 25,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "damage_range": {
+        "min": 0.2,
+        "max": 1.2
+      },
+      "defence_reduction": {
+        "percentage": 25
+      }
+    }
+  },
+  {
+    "weapon_name": "Vesta's longsword (Last Man Standing)",
+    "effect": "Feint: 20-120% damage range, accuracy rolled against 25% of opponent's defence, consuming 25% special energy.",
+    "special_cost": 25,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "damage_range": {
+        "min": 0.2,
+        "max": 1.2
+      },
+      "defence_reduction": {
+        "percentage": 25
+      }
+    }
+  },
+  {
+    "weapon_name": "Vesta's spear (bh)",
+    "effect": "Spear Wall: Initial hit up to 100% max, second hit 50-75% of first hit after 2 ticks. User immune to melee for 8 ticks.",
+    "special_cost": 50,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 2,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "delayed_second_hit": {
+        "delay": 2,
+        "damage_range": {
+          "min": 0.5,
+          "max": 0.75
+        }
+      },
+      "melee_immunity": {
+        "duration": 8
+      }
+    }
+  },
+  {
+    "weapon_name": "Vesta's spear (Deadman Mode)",
+    "effect": "Spear Wall: Hits up to 16 targets within 8 tiles in multicombat (1 in single). User immune to melee for 8 ticks.",
+    "special_cost": 50,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "area_of_effect": {
+        "type": "multi_target",
+        "max_targets": 16,
+        "range": 8
+      },
+      "melee_immunity": {
+        "duration": 8
+      }
+    }
+  },
+  {
+    "weapon_name": "Voidwaker",
+    "effect": "Disrupt: Guaranteed Magic damage between 50-150% of wielder's maximum melee hit, consuming 50% special energy.",
+    "special_cost": 50,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": true,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "magic_damage": {
+        "type": "multiplier_range",
+        "min": 0.5,
+        "max": 1.5,
+        "of": "max_melee_hit"
+      }
+    }
+  },
+  {
+    "weapon_name": "Voidwaker (deadman)",
+    "effect": "Disrupt: Guaranteed Magic damage between 50-150% of wielder's maximum melee hit, consuming 50% special energy.",
+    "special_cost": 50,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": true,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "magic_damage": {
+        "type": "multiplier_range",
+        "min": 0.5,
+        "max": 1.5,
+        "of": "max_melee_hit"
+      }
+    }
+  },
+  {
+    "weapon_name": "Voidwaker (Last Man Standing)",
+    "effect": "Disrupt: Guaranteed Magic damage between 50-150% of wielder's maximum melee hit, consuming 50% special energy.",
+    "special_cost": 50,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": true,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "magic_damage": {
+        "type": "multiplier_range",
+        "min": 0.5,
+        "max": 1.5,
+        "of": "max_melee_hit"
+      }
+    }
+  },
+  {
+    "weapon_name": "Volatile nightmare staff",
+    "effect": "Immolate: 50% accuracy increase, high magic damage based on Magic level (max 58). Does not consume runes.",
+    "special_cost": 55,
+    "accuracy_multiplier": 1.5,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": 58,
+    "special_mechanics": {
+      "magic_damage": {
+        "type": "magic_level_based",
+        "formula": "min(floor(58 * Magic_Level / 99 + 1), 58)"
+      },
+      "no_rune_cost": true
+    }
+  },
+  {
+    "weapon_name": "Webweaver bow",
+    "effect": "Swarm: Hits four times with doubled accuracy, each hit up to 40% of max hit. Each hit has poison chance starting at 4 damage.",
+    "special_cost": 50,
+    "accuracy_multiplier": 2.0,
+    "damage_multiplier": 0.4,
+    "hit_count": 4,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "poison": {
+        "chance": "per_hit",
+        "damage": 4
+      }
+    }
+  },
+  {
+    "weapon_name": "Zamorak godsword",
+    "effect": "Ice Cleave: Doubled accuracy, 10% damage increase. Freezes target for 19.2 seconds on successful hit. Must hit to freeze.",
+    "special_cost": 50,
+    "accuracy_multiplier": 2.0,
+    "damage_multiplier": 1.1,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "binding": {
+        "type": "freeze",
+        "duration": 19.2,
+        "requires_hit": true
+      }
+    }
+  },
+  {
+    "weapon_name": "Zamorakian hasta",
+    "effect": "Shove: Pushes opponent back and stuns for 3 seconds. Cannot be used on large monsters. 1 tick immunity after stun ends.",
+    "special_cost": 25,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "binding": {
+        "type": "stun",
+        "duration": 3.0
+      },
+      "large_monster_restriction": true,
+      "immunity_after": {
+        "duration": 0.6,
+        "type": "stun_immunity"
+      }
+    }
+  },
+  {
+    "weapon_name": "Zamorakian spear",
+    "effect": "Shove: Pushes opponent back and stuns for 3 seconds. Cannot be used on large monsters. 1 tick immunity after stun ends.",
+    "special_cost": 25,
+    "accuracy_multiplier": 1.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "binding": {
+        "type": "stun",
+        "duration": 3.0
+      },
+      "large_monster_restriction": true,
+      "immunity_after": {
+        "duration": 0.6,
+        "type": "stun_immunity"
+      }
+    }
+  },
+  {
+    "weapon_name": "Zaryte crossbow",
+    "effect": "Evoke: Doubled accuracy, guarantees enchanted bolt special effect on successful hit, consuming 75% special energy.",
+    "special_cost": 75,
+    "accuracy_multiplier": 2.0,
+    "damage_multiplier": 1.0,
+    "hit_count": 1,
+    "guaranteed_hit": false,
+    "min_damage": null,
+    "max_damage_cap": null,
+    "special_mechanics": {
+      "enchanted_bolt_guarantee": true
+    }
   }
-}
+]

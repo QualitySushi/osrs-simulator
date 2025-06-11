@@ -1,0 +1,1330 @@
+
+[
+  {
+    "item_name": "Twisted bow",
+    "effect_description": "Accuracy and damage is increased in correspondence to the target's Magic level.",
+    "effect_type": "combat",
+    "category": "weapon",
+    "stackable": false,
+    "numerical_values": [
+      {
+        "value": 250,
+        "unit": "magic_level_cap",
+        "context": "scales with target magic level up to 250"
+      },
+      {
+        "value": 140,
+        "unit": "max_accuracy_bonus",
+        "context": "maximum 140% accuracy bonus at 250+ magic"
+      },
+      {
+        "value": 100,
+        "unit": "max_damage_bonus", 
+        "context": "maximum 100% damage bonus at 250+ magic"
+      }
+    ],
+    "percentages": [140.0, 100.0],
+    "special_mechanics": {
+      "scales_with": "target_magic_level",
+      "cap_at": 250,
+      "linear_scaling": true
+    }
+  },
+  {
+    "item_name": "Webweaver bow",
+    "effect_description": "When charged with at least 1000 revenant ether, the weapon gains +50% damage and accuracy against all monsters in the Wilderness. Each attack consumes one ether.",
+    "effect_type": "combat",
+    "category": "weapon",
+    "stackable": false,
+    "numerical_values": [
+      {"value": 1000, "unit": "ether", "context": "minimum charge requirement"},
+      {"value": 50, "unit": "%", "context": "+50% damage and accuracy"},
+      {"value": 1, "unit": "ether_per_attack", "context": "consumption rate"}
+    ],
+    "percentages": [50.0],
+    "special_mechanics": {
+      "requires_charge": true,
+      "charge_type": "revenant_ether",
+      "wilderness_only": true,
+      "damage_multiplier": 1.5,
+      "accuracy_multiplier": 1.5
+    }
+  },
+  {
+    "item_name": "Thammaron's sceptre",
+    "effect_description": "When charged with at least 1000 revenant ether, the weapon gains +100% damage and accuracy against all monsters in the Wilderness. Each cast consumes one ether.",
+    "effect_type": "combat",
+    "category": "weapon",
+    "stackable": false,
+    "numerical_values": [
+      {"value": 1000, "unit": "ether", "context": "minimum charge requirement"},
+      {"value": 100, "unit": "%", "context": "+100% damage and accuracy"},
+      {"value": 1, "unit": "ether_per_cast", "context": "consumption rate"}
+    ],
+    "percentages": [100.0],
+    "special_mechanics": {
+      "requires_charge": true,
+      "charge_type": "revenant_ether",
+      "wilderness_only": true,
+      "damage_multiplier": 2.0,
+      "accuracy_multiplier": 2.0
+    }
+  },
+  {
+    "item_name": "Accursed sceptre",
+    "effect_description": "When charged with at least 1000 revenant ether, the weapon gains +100% damage and accuracy against all monsters in the Wilderness. Each cast consumes one ether.",
+    "effect_type": "combat",
+    "category": "weapon",
+    "stackable": false,
+    "numerical_values": [
+      {"value": 1000, "unit": "ether", "context": "minimum charge requirement"},
+      {"value": 100, "unit": "%", "context": "+100% damage and accuracy"},
+      {"value": 1, "unit": "ether_per_cast", "context": "consumption rate"}
+    ],
+    "percentages": [100.0],
+    "special_mechanics": {
+      "requires_charge": true,
+      "charge_type": "revenant_ether",
+      "wilderness_only": true,
+      "damage_multiplier": 2.0,
+      "accuracy_multiplier": 2.0
+    }
+  },
+  {
+    "item_name": "Accursed sceptre (a)",
+    "effect_description": "When charged with at least 1000 revenant ether, the weapon gains +100% damage and accuracy against all monsters in the Wilderness. Each cast consumes one ether. Can autocast Ancient Magicks.",
+    "effect_type": "combat",
+    "category": "weapon",
+    "stackable": false,
+    "numerical_values": [
+      {"value": 1000, "unit": "ether", "context": "minimum charge requirement"},
+      {"value": 100, "unit": "%", "context": "+100% damage and accuracy"},
+      {"value": 1, "unit": "ether_per_cast", "context": "consumption rate"}
+    ],
+    "percentages": [100.0],
+    "special_mechanics": {
+      "requires_charge": true,
+      "charge_type": "revenant_ether",
+      "wilderness_only": true,
+      "damage_multiplier": 2.0,
+      "accuracy_multiplier": 2.0,
+      "autocasts_ancients": true
+    }
+  },
+  {
+    "item_name": "Viggora's chainmace",
+    "effect_description": "When charged with at least 1000 revenant ether, the weapon gains +50% damage and accuracy against all monsters in the Wilderness. Each attack consumes one ether.",
+    "effect_type": "combat",
+    "category": "weapon",
+    "stackable": false,
+    "numerical_values": [
+      {"value": 1000, "unit": "ether", "context": "minimum charge requirement"},
+      {"value": 50, "unit": "%", "context": "+50% damage and accuracy"},
+      {"value": 1, "unit": "ether_per_attack", "context": "consumption rate"}
+    ],
+    "percentages": [50.0],
+    "special_mechanics": {
+      "requires_charge": true,
+      "charge_type": "revenant_ether",
+      "wilderness_only": true,
+      "damage_multiplier": 1.5,
+      "accuracy_multiplier": 1.5
+    }
+  },
+  {
+    "item_name": "Ursine chainmace",
+    "effect_description": "When charged with at least 1000 revenant ether, the weapon gains +50% damage and accuracy against all monsters in the Wilderness. Each attack consumes one ether.",
+    "effect_type": "combat",
+    "category": "weapon",
+    "stackable": false,
+    "numerical_values": [
+      {"value": 1000, "unit": "ether", "context": "minimum charge requirement"},
+      {"value": 50, "unit": "%", "context": "+50% damage and accuracy"},
+      {"value": 1, "unit": "ether_per_attack", "context": "consumption rate"}
+    ],
+    "percentages": [50.0],
+    "special_mechanics": {
+      "requires_charge": true,
+      "charge_type": "revenant_ether",
+      "wilderness_only": true,
+      "damage_multiplier": 1.5,
+      "accuracy_multiplier": 1.5
+    }
+  },
+    "effect_description": "The effects of enchanted bolts are strengthened by 10%.",
+    "effect_type": "combat",
+    "category": "weapon",
+    "stackable": false,
+    "numerical_values": [{"value": 10, "unit": "%", "context": "strengthened by 10%"}],
+    "percentages": [10.0]
+  },
+  {
+    "item_name": "Dragon hunter crossbow",
+    "effect_description": "Accuracy and damage are increased by 30% and 25% respectively when fighting draconic creatures (excluding Elvarg and revenant dragons).",
+    "effect_type": "combat",
+    "category": "weapon",
+    "stackable": false,
+    "numerical_values": [{"value": 30, "unit": "%", "context": "increased by 30%"}, {"value": 25, "unit": "%", "context": "and 25%"}],
+    "percentages": [30.0, 25.0]
+  },
+  {
+    "item_name": "Dragon hunter lance",
+    "effect_description": "Accuracy and damage are increased by 20% when fighting draconic creatures (excluding Elvarg and revenant dragons).",
+    "effect_type": "combat",
+    "category": "weapon",
+    "stackable": false,
+    "numerical_values": [{"value": 20, "unit": "%", "context": "increased by 20%"}],
+    "percentages": [20.0]
+  },
+  {
+    "item_name": "Dragon hunter wand",
+    "effect_description": "Accuracy and damage are increased by 50% and 20% respectively when fighting draconic creatures (excluding Elvarg and revenant dragons).",
+    "effect_type": "combat",
+    "category": "weapon",
+    "stackable": false,
+    "numerical_values": [{"value": 50, "unit": "%", "context": "increased by 50%"}, {"value": 20, "unit": "%", "context": "and 20%"}],
+    "percentages": [50.0, 20.0]
+  },
+  {
+    "item_name": "Craw's bow",
+    "effect_description": "When charged with at least 1000 revenant ether, the weapon gains +50% damage and accuracy against all monsters in the Wilderness. Each attack consumes one ether.",
+    "effect_type": "combat",
+    "category": "weapon",
+    "stackable": false,
+    "numerical_values": [
+      {"value": 1000, "unit": "ether", "context": "minimum charge requirement"},
+      {"value": 50, "unit": "%", "context": "+50% damage and accuracy"},
+      {"value": 1, "unit": "ether_per_attack", "context": "consumption rate"}
+    ],
+    "percentages": [50.0],
+    "special_mechanics": {
+      "requires_charge": true,
+      "charge_type": "revenant_ether",
+      "wilderness_only": true,
+      "damage_multiplier": 1.5,
+      "accuracy_multiplier": 1.5
+    }
+  },
+  {
+    "item_name": "Staff of the dead",
+    "effect_description": "Each combat spell cast with the weapon has a 1/8 (12.5%) chance to not consume runes.",
+    "effect_type": "utility",
+    "category": "weapon",
+    "stackable": false,
+    "numerical_values": [
+      {"value": 1, "unit": "in_8", "context": "1 in 8 chance"},
+      {"value": 12.5, "unit": "%", "context": "12.5% chance"}
+    ],
+    "percentages": [12.5],
+    "special_mechanics": {
+      "rune_save_chance": 0.125,
+      "spell_types": ["combat_spells"],
+      "save_type": "all_runes"
+    }
+  },
+  {
+    "item_name": "Staff of light",
+    "effect_description": "Each combat spell cast with the weapon has a 1/8 (12.5%) chance to not consume runes.",
+    "effect_type": "utility",
+    "category": "weapon",
+    "stackable": false,
+    "numerical_values": [
+      {"value": 1, "unit": "in_8", "context": "1 in 8 chance"},
+      {"value": 12.5, "unit": "%", "context": "12.5% chance"}
+    ],
+    "percentages": [12.5],
+    "special_mechanics": {
+      "rune_save_chance": 0.125,
+      "spell_types": ["combat_spells"],
+      "save_type": "all_runes"
+    }
+  },
+  {
+    "item_name": "Toxic staff of the dead",
+    "effect_description": "Each combat spell cast with the weapon has a 1/8 (12.5%) chance to not consume runes. Attacks have a chance to inflict venom.",
+    "effect_type": "utility",
+    "category": "weapon",
+    "stackable": false,
+    "numerical_values": [
+      {"value": 1, "unit": "in_8", "context": "1 in 8 chance"},
+      {"value": 12.5, "unit": "%", "context": "12.5% chance"}
+    ],
+    "percentages": [12.5],
+    "special_mechanics": {
+      "rune_save_chance": 0.125,
+      "spell_types": ["combat_spells"],
+      "save_type": "all_runes",
+      "inflicts_venom": true
+    }
+  },
+  {
+    "item_name": "Darklight",
+    "effect_description": "Increases the player's accuracy and damage by 60% against demonic creatures.",
+    "effect_type": "combat",
+    "category": "weapon",
+    "stackable": false,
+    "numerical_values": [
+      {"value": 60, "unit": "%", "context": "60% accuracy and damage vs demons"},
+      {"value": 1.6, "unit": "multiplier", "context": "1.6x multiplier"}
+    ],
+    "percentages": [60.0],
+    "special_mechanics": {
+      "damage_multiplier": 1.6,
+      "accuracy_multiplier": 1.6,
+      "applies_to": "demonic_creatures"
+    }
+  },
+  {
+    "item_name": "Emberlight",
+    "effect_description": "Increases the player's accuracy and damage by 70% against demonic creatures.",
+    "effect_type": "combat",
+    "category": "weapon",
+    "stackable": false,
+    "numerical_values": [
+      {"value": 70, "unit": "%", "context": "70% accuracy and damage vs demons"},
+      {"value": 1.7, "unit": "multiplier", "context": "1.7x multiplier"}
+    ],
+    "percentages": [70.0],
+    "special_mechanics": {
+      "damage_multiplier": 1.7,
+      "accuracy_multiplier": 1.7,
+      "applies_to": "demonic_creatures"
+    }
+  },
+  {
+    "item_name": "Holy water",
+    "effect_description": "Performs strongly against demons. Deals 4 damage to demons when used.",
+    "effect_type": "combat",
+    "category": "weapon",
+    "stackable": false,
+    "numerical_values": [
+      {"value": 4, "unit": "damage", "context": "4 damage to demons"}
+    ],
+    "percentages": [],
+    "special_mechanics": {
+      "fixed_damage": 4,
+      "applies_to": "demonic_creatures",
+      "consumable": true
+    }
+  },
+    "effect_description": "Each combat spell cast with the weapon has a 3/20 (15%) chance to not consume runes.",
+    "effect_type": "utility",
+    "category": "weapon",
+    "stackable": false,
+    "numerical_values": [
+      {"value": 3, "unit": "in_20", "context": "3 in 20 chance"},
+      {"value": 15, "unit": "%", "context": "15% chance"}
+    ],
+    "percentages": [15.0],
+    "special_mechanics": {
+      "rune_save_chance": 0.15,
+      "spell_types": ["combat_spells"],
+      "save_type": "all_runes"
+    }
+  },
+  {
+    "item_name": "Sanguinesti staff",
+    "effect_description": "Each successful hit has a 1 in 6 chance of healing the wielder half the amount of Hitpoints dealt to a target.",
+    "effect_type": "utility",
+    "category": "weapon",
+    "stackable": false,
+    "numerical_values": [
+      {"value": 1, "unit": "in_6", "context": "1 in 6 chance"},
+      {"value": 16.67, "unit": "%", "context": "16.67% chance"},
+      {"value": 0.5, "unit": "multiplier", "context": "half the damage dealt"}
+    ],
+    "percentages": [16.67],
+    "special_mechanics": {
+      "heal_chance": 0.1667,
+      "heal_amount": "50% of damage dealt",
+      "triggers_on": "successful_hit"
+    }
+  },
+  {
+    "item_name": "Silverlight",
+    "effect_description": "Increases the player's max hit by 60% against demonic creatures.",
+    "effect_type": "combat",
+    "category": "weapon",
+    "stackable": false,
+    "numerical_values": [{"value": 60, "unit": "%", "context": "by 60%"}],
+    "percentages": [60.0]
+  },
+  {
+    "item_name": "Arclight",
+    "effect_description": "Increases the player's accuracy and damage by 70% against demonic creatures.",
+    "effect_type": "combat",
+    "category": "weapon",
+    "stackable": false,
+    "numerical_values": [{"value": 70, "unit": "%", "context": "by 70%"}],
+    "percentages": [70.0]
+  },
+  {
+    "item_name": "Scorching bow",
+    "effect_description": "Increases the player's accuracy and damage by 30% against demonic creatures.",
+    "effect_type": "combat",
+    "category": "weapon",
+    "stackable": false,
+    "numerical_values": [{"value": 30, "unit": "%", "context": "by 30%"}],
+    "percentages": [30.0]
+  },
+  {
+    "item_name": "Purging staff",
+    "effect_description": "Doubles the bonuses of demonbane spells and those gained from Mark of Darkness. Additionally, Mark of Darkness lasts 5 times longer if the staff is equipped when it is cast.",
+    "effect_type": "combat",
+    "category": "weapon",
+    "stackable": false,
+    "numerical_values": [{"value": 5, "unit": "times", "context": "5 times longer"}],
+    "percentages": []
+  },
+  {
+    "item_name": "Blackjacks",
+    "effect_description": "All blackjacks have a chance to stun a target upon hitting, causing them to briefly stop attacking the player; the better the material, the more chance of stunning occurring.",
+    "effect_type": "utility",
+    "category": "weapon",
+    "stackable": false,
+    "numerical_values": [],
+    "percentages": []
+  },
+  {
+    "item_name": "Keris",
+    "effect_description": "Grants 33% more damage against scarab creatures and kalphites. Also has a 1/51 chance to deal triple damage. The Keris partisan of breaching has a 33% accuracy bonus in addition to the aforementioned effects.",
+    "effect_type": "combat",
+    "category": "weapon",
+    "stackable": false,
+    "numerical_values": [
+      {"value": 33, "unit": "%", "context": "33% more damage vs kalphites"},
+      {"value": 1, "unit": "in_51", "context": "1 in 51 chance"},
+      {"value": 1.96, "unit": "%", "context": "1.96% chance for triple damage"},
+      {"value": 3, "unit": "multiplier", "context": "triple damage"},
+      {"value": 33, "unit": "%", "context": "33% accuracy bonus (breaching variant)"}
+    ],
+    "percentages": [33.0, 1.96, 33.0],
+    "special_mechanics": {
+      "damage_bonus_vs": ["kalphites", "scarab_creatures"],
+      "damage_multiplier": 1.33,
+      "triple_damage_chance": 0.0196,
+      "triple_damage_multiplier": 3.0
+    }
+  },
+  {
+    "item_name": "Keris partisan of the sun",
+    "effect_description": "Applies only within the Tombs of Amascut: Accuracy is increased by 25% for targets with less than 25% health. Upon killing a target, the player is healed for 12 Hitpoints at the cost of 5 prayer points; this effect can overheal up to 20% of one's base Hitpoints level.",
+    "effect_type": "combat",
+    "category": "weapon",
+    "stackable": false,
+    "numerical_values": [{"value": 25, "unit": "%", "context": "by 25%"}, {"value": 12, "unit": "Hitpoints", "context": "healed for 12 Hitpoints"}, {"value": 5, "unit": "prayer points", "context": "cost of 5 prayer points"}, {"value": 20, "unit": "%", "context": "up to 20%"}],
+    "percentages": [25.0, 25.0, 20.0]
+  },
+  {
+    "item_name": "Wolfbane",
+    "effect_description": "When wielded, the dagger stops the residents of Canifis from morphing into their more powerful Werewolf form.",
+    "effect_type": "utility",
+    "category": "weapon",
+    "stackable": false,
+    "numerical_values": [],
+    "percentages": []
+  },
+  {
+    "item_name": "Colossal blade",
+    "effect_description": "Increases the wielder's maximum hit against larger enemies using the formula (MaxHit+(2*MonsterSize)), where MonsterSize is capped at 5.",
+    "effect_type": "combat",
+    "category": "weapon",
+    "stackable": false,
+    "numerical_values": [
+      {"value": 2, "unit": "multiplier", "context": "2*MonsterSize"},
+      {"value": 5, "unit": "size_cap", "context": "MonsterSize capped at 5"},
+      {"value": 10, "unit": "max_bonus", "context": "maximum +10 damage vs size 5 enemies"}
+    ],
+    "percentages": [],
+    "special_mechanics": {
+      "damage_formula": "MaxHit + (2 * MonsterSize)",
+      "monster_size_cap": 5,
+      "max_damage_bonus": 10,
+      "applies_to": "larger_enemies"
+    }
+  },
+  {
+    "item_name": "Leaf-bladed battleaxe",
+    "effect_description": "Damage is increased by 17.5% when fighting turoths and kurask. This does stack with a slayer helmet or equivalent's bonuses.",
+    "effect_type": "combat",
+    "category": "weapon",
+    "stackable": true,
+    "numerical_values": [{"value": 17.5, "unit": "%", "context": "by 17.5%"}],
+    "percentages": [17.5]
+  },
+  {
+    "item_name": "Osmumten's fang",
+    "effect_description": "Rolls accuracy twice; the higher accuracy roll between the two takes precedence when rolling for a successful hit. Successful hits always deal between 15% and 85% of the player's max hit.",
+    "effect_type": "combat",
+    "category": "weapon",
+    "stackable": false,
+    "numerical_values": [
+      {"value": 2, "unit": "rolls", "context": "rolls accuracy twice"},
+      {"value": 15, "unit": "%", "context": "minimum 15% of max hit"},
+      {"value": 85, "unit": "%", "context": "maximum 85% of max hit"},
+      {"value": 0.15, "unit": "min_multiplier", "context": "0.15 minimum damage multiplier"},
+      {"value": 0.85, "unit": "max_multiplier", "context": "0.85 maximum damage multiplier"}
+    ],
+    "percentages": [15.0, 85.0],
+    "special_mechanics": {
+      "accuracy_rolls": 2,
+      "takes_higher_roll": true,
+      "min_damage_percent": 15,
+      "max_damage_percent": 85,
+      "guaranteed_damage_range": true
+    }
+  },
+  {
+    "item_name": "Tumeken's shadow",
+    "effect_description": "Magic Attack and Magic damage are tripled from the player's worn equipment. This is increased to 4x while inside the Tombs of Amascut.",
+    "effect_type": "combat",
+    "category": "weapon",
+    "stackable": false,
+    "numerical_values": [
+      {"value": 3, "unit": "multiplier", "context": "tripled magic attack and damage"},
+      {"value": 4, "unit": "multiplier", "context": "4x inside Tombs of Amascut"},
+      {"value": 300, "unit": "%", "context": "300% increase (3x)"},
+      {"value": 400, "unit": "%", "context": "400% increase (4x) in ToA"}
+    ],
+    "percentages": [300.0, 400.0],
+    "special_mechanics": {
+      "magic_attack_multiplier": 3.0,
+      "magic_damage_multiplier": 3.0,
+      "toa_magic_attack_multiplier": 4.0,
+      "toa_magic_damage_multiplier": 4.0,
+      "location_bonus": "tombs_of_amascut"
+    }
+  },
+  {
+    "item_name": "Zuriel's staff",
+    "effect_description": "Boosts Ancient Magicks combat spells: Ice spells have 10% more accuracy. Blood spells heal 50% more. Smoke spells poison damage is increased by 100%. Shadow spells Attack drain is increased by 100%.",
+    "effect_type": "combat",
+    "category": "weapon",
+    "stackable": false,
+    "numerical_values": [{"value": 10, "unit": "%", "context": "10% more accuracy"}, {"value": 50, "unit": "%", "context": "heal 50% more"}, {"value": 100, "unit": "%", "context": "increased by 100%"}],
+    "percentages": [10.0, 50.0, 100.0, 100.0]
+  },
+  {
+    "item_name": "Ancient sceptre",
+    "effect_description": "Boosts the secondary effects of Ancient Magicks combat spells by 10%.",
+    "effect_type": "combat",
+    "category": "weapon",
+    "stackable": false,
+    "numerical_values": [{"value": 10, "unit": "%", "context": "by 10%"}],
+    "percentages": [10.0]
+  },
+  {
+    "item_name": "Blood ancient sceptre",
+    "effect_description": "Boosts the secondary effects of Ancient Magicks combat spells by 10%. Also allows players to overheal up to 10% over the player's base Hitpoints when using blood spells.",
+    "effect_type": "combat",
+    "category": "weapon",
+    "stackable": false,
+    "numerical_values": [{"value": 10, "unit": "%", "context": "by 10%"}, {"value": 10, "unit": "%", "context": "up to 10%"}],
+    "percentages": [10.0, 10.0]
+  },
+  {
+    "item_name": "Ice ancient sceptre",
+    "effect_description": "Boosts the secondary effects of Ancient Magicks combat spells by 10%. Also grants an additional 10% accuracy bonus given to ice spells on targets that can be frozen and are not currently frozen.",
+    "effect_type": "combat",
+    "category": "weapon",
+    "stackable": false,
+    "numerical_values": [{"value": 10, "unit": "%", "context": "by 10%"}, {"value": 10, "unit": "%", "context": "additional 10%"}],
+    "percentages": [10.0, 10.0]
+  },
+  {
+    "item_name": "Shadow ancient sceptre",
+    "effect_description": "Boosts the secondary effects of Ancient Magicks combat spells by 10%. Also lowers a target's Attack, Strength, and Defence levels when casting shadow spells.",
+    "effect_type": "combat",
+    "category": "weapon",
+    "stackable": false,
+    "numerical_values": [{"value": 10, "unit": "%", "context": "by 10%"}],
+    "percentages": [10.0]
+  },
+  {
+    "item_name": "Smoke ancient sceptre",
+    "effect_description": "Boosts the secondary effects of Ancient Magicks combat spells by 10%. Also temporarily reduces a poisoned target's ability to heal by 20% for 6 seconds after taking damage when casting spells.",
+    "effect_type": "combat",
+    "category": "weapon",
+    "stackable": false,
+    "numerical_values": [{"value": 10, "unit": "%", "context": "by 10%"}, {"value": 20, "unit": "%", "context": "by 20%"}, {"value": 6, "unit": "seconds", "context": "for 6 seconds"}],
+    "percentages": [10.0, 20.0]
+  },
+  {
+    "item_name": "Keris partisan",
+    "effect_description": "Grants 33% more damage against scarab creatures and kalphites. Also has a 1/51 chance to deal triple damage.",
+    "effect_type": "combat",
+    "category": "weapon",
+    "stackable": false,
+    "numerical_values": [
+      {"value": 33, "unit": "%", "context": "33% more damage vs kalphites"},
+      {"value": 1, "unit": "in_51", "context": "1 in 51 chance"},
+      {"value": 1.96, "unit": "%", "context": "1.96% chance for triple damage"},
+      {"value": 3, "unit": "multiplier", "context": "triple damage"},
+      {"value": 1.33, "unit": "multiplier", "context": "1.33x base damage"}
+    ],
+    "percentages": [33.0, 1.96],
+    "special_mechanics": {
+      "damage_bonus_vs": ["kalphites", "scarab_creatures"],
+      "damage_multiplier": 1.33,
+      "triple_damage_chance": 0.0196,
+      "triple_damage_multiplier": 3.0
+    }
+  },
+  {
+    "item_name": "Keris partisan of breaching",
+    "effect_description": "Grants 33% more damage against scarab creatures and kalphites. Also has a 1/51 chance to deal triple damage. Has a 33% accuracy bonus against kalphites and scarabs.",
+    "effect_type": "combat",
+    "category": "weapon",
+    "stackable": false,
+    "numerical_values": [
+      {"value": 33, "unit": "%", "context": "33% more damage vs kalphites"},
+      {"value": 1, "unit": "in_51", "context": "1 in 51 chance"},
+      {"value": 1.96, "unit": "%", "context": "1.96% chance for triple damage"},
+      {"value": 3, "unit": "multiplier", "context": "triple damage"},
+      {"value": 33, "unit": "%", "context": "33% accuracy bonus"},
+      {"value": 1.33, "unit": "multiplier", "context": "1.33x damage and accuracy"}
+    ],
+    "percentages": [33.0, 1.96, 33.0],
+    "special_mechanics": {
+      "damage_bonus_vs": ["kalphites", "scarab_creatures"],
+      "damage_multiplier": 1.33,
+      "accuracy_multiplier": 1.33,
+      "triple_damage_chance": 0.0196,
+      "triple_damage_multiplier": 3.0
+    }
+  },
+  {
+    "item_name": "Bone shortbow",
+    "effect_description": "Adds 25% to the player's Ranged max hit. Can only be used against rats.",
+    "effect_type": "combat",
+    "category": "weapon",
+    "stackable": false,
+    "numerical_values": [
+      {"value": 25, "unit": "%", "context": "25% ranged max hit bonus"},
+      {"value": 1.25, "unit": "multiplier", "context": "1.25x ranged damage"}
+    ],
+    "percentages": [25.0],
+    "special_mechanics": {
+      "damage_multiplier": 1.25,
+      "applies_to": "rats_only",
+      "combat_style": "ranged"
+    }
+  },
+  {
+    "item_name": "Bone staff",
+    "effect_description": "Adds 25% to the player's Magic max hit. Can only be used against rats.",
+    "effect_type": "combat",
+    "category": "weapon",
+    "stackable": false,
+    "numerical_values": [
+      {"value": 25, "unit": "%", "context": "25% magic max hit bonus"},
+      {"value": 1.25, "unit": "multiplier", "context": "1.25x magic damage"}
+    ],
+    "percentages": [25.0],
+    "special_mechanics": {
+      "damage_multiplier": 1.25,
+      "applies_to": "rats_only",
+      "combat_style": "magic"
+    }
+  },
+    "effect_description": "Adds 10 damage to the player's max hit. Can only be used against rats.",
+    "effect_type": "combat",
+    "category": "weapon",
+    "stackable": false,
+    "numerical_values": [{"value": 10, "unit": "damage", "context": "Adds 10 damage"}],
+    "percentages": []
+  },
+  {
+    "item_name": "Elysian spirit shield",
+    "effect_description": "There is a 70% chance of reducing the damage the player receives by 25%. Does not work against non-combat damage (e.g. poison).",
+    "effect_type": "defensive",
+    "category": "armour",
+    "stackable": false,
+    "numerical_values": [{"value": 70, "unit": "%", "context": "70% chance"}, {"value": 25, "unit": "%", "context": "by 25%"}],
+    "percentages": [70.0, 25.0]
+  },
+  {
+    "item_name": "Spectral spirit shield",
+    "effect_description": "Reduces the effectiveness of all Prayer draining attacks by 50%. Does not work against other players.",
+    "effect_type": "defensive",
+    "category": "armour",
+    "stackable": false,
+    "numerical_values": [{"value": 50, "unit": "%", "context": "by 50%"}],
+    "percentages": [50.0]
+  },
+  {
+    "item_name": "Dinh's bulwark",
+    "effect_description": "If the block style is chosen, 20% less damage is taken; however, the player forfeits their ability to attack. Does not work against other players. If the pummel style is chosen, the player's maximum hit increases according to their defence bonuses for stab, slash, crush and Ranged combined.",
+    "effect_type": "defensive",
+    "category": "armour",
+    "stackable": false,
+    "numerical_values": [{"value": 20, "unit": "%", "context": "20% less damage"}],
+    "percentages": [20.0]
+  },
+  {
+    "item_name": "Elemental shield",
+    "effect_description": "Offers partial protection against wyverns' icy breath when worn. Reduces damage by 50%.",
+    "effect_type": "defensive",
+    "category": "armour",
+    "stackable": false,
+    "numerical_values": [
+      {"value": 50, "unit": "%", "context": "50% damage reduction vs wyvern breath"},
+      {"value": 0.5, "unit": "multiplier", "context": "0.5x damage taken"}
+    ],
+    "percentages": [50.0],
+    "special_mechanics": {
+      "damage_reduction": 0.5,
+      "applies_to": "wyvern_icy_breath",
+      "protection_type": "partial"
+    }
+  },
+  {
+    "item_name": "Mind shield",
+    "effect_description": "Offers partial protection against wyverns' icy breath when worn. Reduces damage by 50%.",
+    "effect_type": "defensive",
+    "category": "armour",
+    "stackable": false,
+    "numerical_values": [
+      {"value": 50, "unit": "%", "context": "50% damage reduction vs wyvern breath"},
+      {"value": 0.5, "unit": "multiplier", "context": "0.5x damage taken"}
+    ],
+    "percentages": [50.0],
+    "special_mechanics": {
+      "damage_reduction": 0.5,
+      "applies_to": "wyvern_icy_breath",
+      "protection_type": "partial"
+    }
+  },
+    "effect_description": "Offers partial protection against dragonfire when worn.",
+    "effect_type": "defensive",
+    "category": "armour",
+    "stackable": false,
+    "numerical_values": [],
+    "percentages": []
+  },
+  {
+    "item_name": "Ancient wyvern shield",
+    "effect_description": "Offers full protection against dragonfire and wyverns' icy breath when worn. Provides complete immunity to the freezing effect of wyverns' icy breath.",
+    "effect_type": "defensive",
+    "category": "armour",
+    "stackable": false,
+    "numerical_values": [
+      {"value": 100, "unit": "%", "context": "100% protection against dragonfire"},
+      {"value": 100, "unit": "%", "context": "100% immunity to freezing"}
+    ],
+    "percentages": [100.0],
+    "special_mechanics": {
+      "dragonfire_protection": 1.0,
+      "icy_breath_protection": 1.0,
+      "freeze_immunity": true,
+      "protection_type": "full"
+    }
+  },
+  {
+    "item_name": "Dragonfire ward",
+    "effect_description": "Offers partial protection against dragonfire and wyverns' icy breath when worn. Reduces damage by 75%.",
+    "effect_type": "defensive",
+    "category": "armour",
+    "stackable": false,
+    "numerical_values": [
+      {"value": 75, "unit": "%", "context": "75% damage reduction"},
+      {"value": 0.25, "unit": "multiplier", "context": "0.25x damage taken"}
+    ],
+    "percentages": [75.0],
+    "special_mechanics": {
+      "damage_reduction": 0.75,
+      "applies_to": ["dragonfire", "wyvern_icy_breath"],
+      "protection_type": "partial"
+    }
+  },
+    "effect_description": "Offers partial protection against dragonfire and wyverns' icy breath when worn. The Ancient wyvern shield offers a full immunity against the freezing effect of the wyverns' icy breath.",
+    "effect_type": "defensive",
+    "category": "armour",
+    "stackable": false,
+    "numerical_values": [],
+    "percentages": []
+  },
+  {
+    "item_name": "Black mask",
+    "effect_description": "Increases Melee damage and accuracy by 16.67% while fighting monsters assigned as the player's current Slayer task. The imbued mask or helmet also increases Magic and Ranged damage and accuracy by 15%. Charged black mask: Also randomly reduces the opponent's Defence level, draining one charge.",
+    "effect_type": "combat",
+    "category": "armour",
+    "stackable": false,
+    "numerical_values": [
+      {"value": 16.67, "unit": "%", "context": "melee damage and accuracy vs slayer task"},
+      {"value": 15, "unit": "%", "context": "magic and ranged (imbued)"},
+      {"value": 1.1667, "unit": "multiplier", "context": "1.1667x melee damage/accuracy"},
+      {"value": 1.15, "unit": "multiplier", "context": "1.15x magic/ranged (imbued)"}
+    ],
+    "percentages": [16.67, 15.0],
+    "special_mechanics": {
+      "melee_damage_multiplier": 1.1667,
+      "melee_accuracy_multiplier": 1.1667,
+      "magic_damage_multiplier_imbued": 1.15,
+      "magic_accuracy_multiplier_imbued": 1.15,
+      "ranged_damage_multiplier_imbued": 1.15,
+      "ranged_accuracy_multiplier_imbued": 1.15,
+      "applies_to": "slayer_task_only",
+      "defence_drain_when_charged": true
+    }
+  },
+  {
+    "item_name": "Slayer helmet (i)",
+    "effect_description": "Increases Melee damage and accuracy by 16.67% while fighting monsters assigned as the player's current Slayer task. Also increases Magic and Ranged damage and accuracy by 15%.",
+    "effect_type": "combat",
+    "category": "armour",
+    "stackable": false,
+    "numerical_values": [
+      {"value": 16.67, "unit": "%", "context": "melee damage and accuracy vs slayer task"},
+      {"value": 15, "unit": "%", "context": "magic and ranged damage and accuracy"},
+      {"value": 1.1667, "unit": "multiplier", "context": "1.1667x melee"},
+      {"value": 1.15, "unit": "multiplier", "context": "1.15x magic/ranged"}
+    ],
+    "percentages": [16.67, 15.0],
+    "special_mechanics": {
+      "melee_damage_multiplier": 1.1667,
+      "melee_accuracy_multiplier": 1.1667,
+      "magic_damage_multiplier": 1.15,
+      "magic_accuracy_multiplier": 1.15,
+      "ranged_damage_multiplier": 1.15,
+      "ranged_accuracy_multiplier": 1.15,
+      "applies_to": "slayer_task_only",
+      "imbued": true
+    }
+  },
+  {
+    "item_name": "Broodoo shield",
+    "effect_description": "Charged: Randomly reduces the opponent's Attack, Defence, or Strength level, depending on the colour of the shield, draining one charge. Green reduces Attack, blue reduces Defence, orange reduces Strength.",
+    "effect_type": "combat",
+    "category": "armour",
+    "stackable": false,
+    "numerical_values": [
+      {"value": 1, "unit": "charge", "context": "drains one charge per proc"}
+    ],
+    "percentages": [],
+    "special_mechanics": {
+      "requires_charge": true,
+      "stat_drain_random": true,
+      "green_reduces": "attack",
+      "blue_reduces": "defence", 
+      "orange_reduces": "strength",
+      "charge_consumed_per_proc": 1
+    }
+  },
+  {
+    "item_name": "Magma helm",
+    "effect_description": "Provides immunity to becoming poisoned and envenomed. Does not inflict venom like the serpentine helm.",
+    "effect_type": "defensive",
+    "category": "armour",
+    "stackable": false,
+    "numerical_values": [],
+    "percentages": [],
+    "special_mechanics": {
+      "poison_immunity": true,
+      "venom_immunity": true,
+      "inflicts_venom": false
+    }
+  },
+  {
+    "item_name": "Tanzanite helm",
+    "effect_description": "Provides immunity to becoming poisoned and envenomed. Does not inflict venom like the serpentine helm.",
+    "effect_type": "defensive",
+    "category": "armour",
+    "stackable": false,
+    "numerical_values": [],
+    "percentages": [],
+    "special_mechanics": {
+      "poison_immunity": true,
+      "venom_immunity": true,
+      "inflicts_venom": false
+    }
+  },
+  {
+    "item_name": "Snelm",
+    "effect_description": "Offers considerable protection against snails crawling around in Morytania. Reduces damage from snail attacks by 50%.",
+    "effect_type": "defensive",
+    "category": "armour",
+    "stackable": false,
+    "numerical_values": [
+      {"value": 50, "unit": "%", "context": "50% damage reduction vs snails"},
+      {"value": 0.5, "unit": "multiplier", "context": "0.5x damage taken"}
+    ],
+    "percentages": [50.0],
+    "special_mechanics": {
+      "damage_reduction": 0.5,
+      "applies_to": "snails",
+      "location": "morytania"
+    }
+  },
+  {
+    "item_name": "Blessed dizana's quiver",
+    "effect_description": "Arrows and bolts fired gain an additional +2 Ranged Strength and +20 Ranged accuracy.",
+    "effect_type": "combat",
+    "category": "armour",
+    "stackable": false,
+    "numerical_values": [
+      {"value": 2, "unit": "Ranged Strength", "context": "+2 Ranged Strength"},
+      {"value": 20, "unit": "Ranged accuracy", "context": "+20 Ranged accuracy"}
+    ],
+    "percentages": [],
+    "special_mechanics": {
+      "ranged_strength_bonus": 2,
+      "ranged_accuracy_bonus": 20,
+      "applies_to": ["arrows", "bolts"],
+      "blessed_version": true
+    }
+  },
+    "effect_description": "Increases Melee damage and accuracy by 16.67% while fighting monsters assigned as the player's current Slayer task. The imbued mask or helmet also increases Magic and Ranged damage and accuracy by 15%.",
+    "effect_type": "combat",
+    "category": "armour",
+    "stackable": false,
+    "numerical_values": [{"value": 16.67, "unit": "%", "context": "by 16.67%"}, {"value": 15, "unit": "%", "context": "by 15%"}],
+    "percentages": [16.67, 15.0]
+  },
+  {
+    "item_name": "Chaos gauntlets",
+    "effect_description": "Increases damage by bolt spells by +3.",
+    "effect_type": "combat",
+    "category": "armour",
+    "stackable": false,
+    "numerical_values": [{"value": 3, "unit": "damage", "context": "by +3"}],
+    "percentages": []
+  },
+  {
+    "item_name": "Serpentine helm",
+    "effect_description": "If the target is an NPC and worn in conjunction with a venomous weapon (toxic staff of the dead when casting combat spells, toxic blowpipe or trident of the swamp), the chance to envenom a target is 100% per attack. If worn in conjunction with any poisoned melee weapon or Ranged ammunition (excluding emerald bolts (e)), the chance to envenom a target is 50%. Otherwise, if worn in conjunction with any non-poisoned melee weapon, the chance to envenom a target (including other players) is 16.7%. Also grants immunity to becoming poisoned and envenomed.",
+    "effect_type": "combat",
+    "category": "armour",
+    "stackable": false,
+    "numerical_values": [{"value": 100, "unit": "%", "context": "100% per attack"}, {"value": 50, "unit": "%", "context": "is 50%"}, {"value": 16.7, "unit": "%", "context": "is 16.7%"}],
+    "percentages": [100.0, 50.0, 16.7]
+  },
+  {
+    "item_name": "Insulated boots",
+    "effect_description": "Offers partial protection against the electrical attacks of rune dragons and the blue ball explosion during Phase 2 of the fight against Verzik Vitur.",
+    "effect_type": "defensive",
+    "category": "armour",
+    "stackable": false,
+    "numerical_values": [],
+    "percentages": []
+  },
+  {
+    "item_name": "Neitiznot shield",
+    "effect_description": "Reduces the maximum damage taken from the ice troll females' and thrower trolls' throwing rock attacks from 6 to 2.",
+    "effect_type": "defensive",
+    "category": "armour",
+    "stackable": false,
+    "numerical_values": [{"value": 6, "unit": "damage", "context": "from 6"}, {"value": 2, "unit": "damage", "context": "to 2"}],
+    "percentages": []
+  },
+  {
+    "item_name": "Dizana's quiver",
+    "effect_description": "Arrows and bolts fired gain an additional +1 Ranged Strength and +10 Ranged accuracy.",
+    "effect_type": "combat",
+    "category": "armour",
+    "stackable": false,
+    "numerical_values": [{"value": 1, "unit": "Ranged Strength", "context": "+1 Ranged Strength"}, {"value": 10, "unit": "Ranged accuracy", "context": "+10 Ranged accuracy"}],
+    "percentages": []
+  },
+  {
+    "item_name": "Necklace of faith",
+    "effect_description": "When the user is hit down to less than 20% of their maximum Hitpoints (including being hit for 0), they will have their Prayer restored for 10% of their Prayer level, destroying the necklace in the process.",
+    "effect_type": "utility",
+    "category": "jewellery",
+    "stackable": false,
+    "numerical_values": [{"value": 20, "unit": "%", "context": "less than 20%"}, {"value": 10, "unit": "%", "context": "for 10%"}],
+    "percentages": [20.0, 10.0]
+  },
+  {
+    "item_name": "Ring of life",
+    "effect_description": "When the user is hit down to less than 10% of their maximum Hitpoints (including being hit for 0), they will be teleported to their respawn point, destroying the ring in the process. If both the ring of life and phoenix necklace are equipped, then the phoenix necklace will activate first.",
+    "effect_type": "utility",
+    "category": "jewellery",
+    "stackable": false,
+    "numerical_values": [{"value": 10, "unit": "%", "context": "less than 10%"}],
+    "percentages": [10.0]
+  },
+  {
+    "item_name": "Phoenix necklace",
+    "effect_description": "When the user is hit down to less than 20% of their maximum Hitpoints (including being hit for 0), they will heal for 30% of their maximum Hitpoints, destroying the necklace in the process. If both the ring of life and phoenix necklace are equipped, then the phoenix necklace will activate first.",
+    "effect_type": "utility",
+    "category": "jewellery",
+    "stackable": false,
+    "numerical_values": [{"value": 20, "unit": "%", "context": "less than 20%"}, {"value": 30, "unit": "%", "context": "heal for 30%"}],
+    "percentages": [20.0, 30.0]
+  },
+  {
+    "item_name": "Amulet of glory",
+    "effect_description": "Charged: Increases the chance of finding gems while mining. Greatly increases the speed at which gem rocks are mined. Provides 1 in 86.2 chance for gems from regular rocks, and 40% faster mining speed at gem rocks.",
+    "effect_type": "skill",
+    "category": "jewellery",
+    "stackable": false,
+    "numerical_values": [
+      {"value": 1, "unit": "in_86.2", "context": "1 in 86.2 chance for gems"},
+      {"value": 1.16, "unit": "%", "context": "1.16% chance for gems"},
+      {"value": 40, "unit": "%", "context": "40% faster gem rock mining"},
+      {"value": 1.4, "unit": "multiplier", "context": "1.4x gem rock speed"}
+    ],
+    "percentages": [1.16, 40.0],
+    "special_mechanics": {
+      "requires_charge": true,
+      "gem_chance": 0.0116,
+      "gem_rock_speed_multiplier": 1.4,
+      "applies_to": "mining",
+      "skill_type": "mining"
+    }
+  },
+  {
+    "item_name": "Ring of wealth",
+    "effect_description": "When killing an NPC, removes empty slots on the rare drop table and automatically collects currency monster drops (e.g. coins) in the user's inventory. Imbued: Doubles the chances of receiving a clue scroll while in the Wilderness.",
+    "effect_type": "utility",
+    "category": "jewellery",
+    "stackable": false,
+    "numerical_values": [
+      {"value": 2, "unit": "multiplier", "context": "doubles clue scroll chance (imbued)"}
+    ],
+    "percentages": [],
+    "special_mechanics": {
+      "removes_empty_rdt_slots": true,
+      "auto_collects_currency": true,
+      "imbued_clue_multiplier": 2.0,
+      "imbued_wilderness_only": true,
+      "affects_rare_drop_table": true
+    }
+  },
+    "effect_description": "When killing an NPC, removes empty slots on the rare drop table and automatically collects currency monster drops (e.g. coins) in the user's inventory. Imbued: Doubles the chances of receiving a clue scroll while in the Wilderness.",
+    "effect_type": "utility",
+    "category": "jewellery",
+    "stackable": false,
+    "numerical_values": [],
+    "percentages": []
+  },
+  {
+    "item_name": "Amulet of glory",
+    "effect_description": "Charged: Increases the chance of finding gems while mining. Greatly increases the speed at which gem rocks are mined.",
+    "effect_type": "skill",
+    "category": "jewellery",
+    "stackable": false,
+    "numerical_values": [],
+    "percentages": []
+  },
+  {
+    "item_name": "Ring of suffering",
+    "effect_description": "When damaged by an NPC, they are dealt back 10% of the same damage, rounded down. The recoil effect can be toggled on/off. Can store up to 100,000 charges of ring of recoil.",
+    "effect_type": "combat",
+    "category": "jewellery",
+    "stackable": false,
+    "numerical_values": [
+      {"value": 10, "unit": "%", "context": "10% damage recoiled"},
+      {"value": 0.1, "unit": "multiplier", "context": "0.1x damage recoiled"},
+      {"value": 100000, "unit": "max_charges", "context": "maximum 100,000 charges"}
+    ],
+    "percentages": [10.0],
+    "special_mechanics": {
+      "recoil_multiplier": 0.1,
+      "recoil_rounded_down": true,
+      "toggleable": true,
+      "max_charges": 100000,
+      "charge_type": "ring_of_recoil"
+    }
+  },
+    "effect_description": "When damaged by an NPC, they are dealt back 10% of the same damage, rounded down. The effect can be disabled on the ring of suffering.",
+    "effect_type": "combat",
+    "category": "jewellery",
+    "stackable": false,
+    "numerical_values": [{"value": 10, "unit": "%", "context": "back 10%"}],
+    "percentages": [10.0]
+  },
+  {
+    "item_name": "Salve amulet",
+    "effect_description": "Increases Melee accuracy and damage by 16.67% when fighting the undead. Enchanted: Increases Melee accuracy and damage by 20% when fighting the undead. Imbued: Increases accuracy and damage for Melee and Ranged by 16.67% when fighting the undead, with Magic accuracy and damage being increased by 15%. Enchanted & imbued: Increases accuracy and damage in all styles by 20% when fighting the undead.",
+    "effect_type": "combat",
+    "category": "jewellery",
+    "stackable": false,
+    "numerical_values": [
+      {"value": 16.67, "unit": "%", "context": "base melee vs undead"},
+      {"value": 20, "unit": "%", "context": "enchanted melee vs undead"},
+      {"value": 15, "unit": "%", "context": "imbued magic vs undead"},
+      {"value": 1.1667, "unit": "multiplier", "context": "base/imbued melee multiplier"},
+      {"value": 1.2, "unit": "multiplier", "context": "enchanted multiplier"},
+      {"value": 1.15, "unit": "multiplier", "context": "imbued magic multiplier"}
+    ],
+    "percentages": [16.67, 20.0, 16.67, 15.0, 20.0],
+    "special_mechanics": {
+      "base_melee_multiplier": 1.1667,
+      "enchanted_melee_multiplier": 1.2,
+      "imbued_melee_multiplier": 1.1667,
+      "imbued_ranged_multiplier": 1.1667,
+      "imbued_magic_multiplier": 1.15,
+      "enchanted_imbued_all_multiplier": 1.2,
+      "applies_to": "undead_only",
+      "affects": ["accuracy", "damage"]
+    }
+  },
+  {
+    "item_name": "Berserker necklace",
+    "effect_description": "If worn with the obsidian sword, dagger, maul or mace, damage is increased by 20%. The damage bonus does stack with obsidian armour.",
+    "effect_type": "combat",
+    "category": "jewellery",
+    "stackable": true,
+    "numerical_values": [{"value": 20, "unit": "%", "context": "by 20%"}],
+    "percentages": [20.0]
+  },
+  {
+    "item_name": "Amulet of the damned",
+    "effect_description": "Provides buffs to full barrows equipment sets in addition to their normal passive effects.",
+    "effect_type": "combat",
+    "category": "jewellery",
+    "stackable": true,
+    "numerical_values": [],
+    "percentages": []
+  },
+  {
+    "item_name": "Amulet of avarice",
+    "effect_description": "When worn, every NPC item drop in the Revenant Caves is noted, and damage and accuracy against revenants is increased by 20%. The player is permanently skulled until the amulet is unequipped, in which case the skull will disappear after 20 minutes.",
+    "effect_type": "utility",
+    "category": "jewellery",
+    "stackable": false,
+    "numerical_values": [{"value": 20, "unit": "%", "context": "by 20%"}, {"value": 20, "unit": "minutes", "context": "after 20 minutes"}],
+    "percentages": [20.0]
+  },
+  {
+    "item_name": "Brimstone ring",
+    "effect_description": "When worn, combat spells have a 25% chance to ignore 10% of the opponent's total Magic defence.",
+    "effect_type": "combat",
+    "category": "jewellery",
+    "stackable": false,
+    "numerical_values": [{"value": 25, "unit": "%", "context": "25% chance"}, {"value": 10, "unit": "%", "context": "ignore 10%"}],
+    "percentages": [25.0, 10.0]
+  },
+  {
+    "item_name": "Lightbearer",
+    "effect_description": "When worn, special attack energy is regenerated twice as fast (~15 seconds per 10%). Unequipping the ring will reset the special attack energy restoration timer.",
+    "effect_type": "utility",
+    "category": "jewellery",
+    "stackable": false,
+    "numerical_values": [{"value": 15, "unit": "seconds", "context": "15 seconds"}, {"value": 10, "unit": "%", "context": "per 10%"}],
+    "percentages": [10.0]
+  },
+  {
+    "item_name": "Void Knight equipment",
+    "effect_description": "Set effect directed by combat class of worn helmet: Melee: +10% melee accuracy and strength. Ranger: +10% ranged accuracy and strength. Mage: +45% magic accuracy. Additional 2.5% damage bonus if Elite Void Knight armour is worn.",
+    "effect_type": "combat",
+    "category": "armour_set",
+    "stackable": false,
+    "numerical_values": [
+      {"value": 10, "unit": "%", "context": "melee accuracy and strength"},
+      {"value": 10, "unit": "%", "context": "ranged accuracy and strength"},
+      {"value": 45, "unit": "%", "context": "magic accuracy"},
+      {"value": 2.5, "unit": "%", "context": "elite damage bonus"},
+      {"value": 1.1, "unit": "multiplier", "context": "melee/ranged multiplier"},
+      {"value": 1.45, "unit": "multiplier", "context": "magic accuracy multiplier"},
+      {"value": 1.025, "unit": "multiplier", "context": "elite damage multiplier"}
+    ],
+    "percentages": [10.0, 10.0, 45.0, 2.5],
+    "special_mechanics": {
+      "melee_accuracy_multiplier": 1.1,
+      "melee_strength_multiplier": 1.1,
+      "ranged_accuracy_multiplier": 1.1,
+      "ranged_strength_multiplier": 1.1,
+      "magic_accuracy_multiplier": 1.45,
+      "elite_damage_multiplier": 1.025,
+      "requires_helmet": true,
+      "helmet_determines_style": true
+    }
+  },
+  {
+    "item_name": "Shayzien armour",
+    "effect_description": "Damage taken by the poison attack used by lizardman shamans is reduced. The higher the tier, the more damage reduced; the damage is completely negated when the tier 5 set is worn. Tier 1: 20%, Tier 2: 40%, Tier 3: 60%, Tier 4: 80%, Tier 5: 100%.",
+    "effect_type": "defensive",
+    "category": "armour_set",
+    "stackable": false,
+    "numerical_values": [{"value": 20, "unit": "%", "context": "Tier 1: 20%"}, {"value": 40, "unit": "%", "context": "Tier 2: 40%"}, {"value": 60, "unit": "%", "context": "Tier 3: 60%"}, {"value": 80, "unit": "%", "context": "Tier 4: 80%"}, {"value": 100, "unit": "%", "context": "Tier 5: 100%"}],
+    "percentages": [20.0, 40.0, 60.0, 80.0, 100.0]
+  },
+  {
+    "item_name": "Justiciar armour",
+    "effect_description": "Damage taken is reduced depending on the player's Defence bonus towards it (except in PvP). The exact formula for the amount of damage reduced is: bonus/3000, where bonus is the player's defence bonus for that particular style. For example, +450 defence gives 15% damage reduction.",
+    "effect_type": "defensive",
+    "category": "armour_set",
+    "stackable": false,
+    "numerical_values": [
+      {"value": 3000, "unit": "divisor", "context": "bonus/3000"},
+      {"value": 450, "unit": "defence_example", "context": "450 defence = 15% reduction"},
+      {"value": 15, "unit": "%", "context": "15% reduction at 450 defence"},
+      {"value": 600, "unit": "defence_example", "context": "600 defence = 20% reduction"},
+      {"value": 20, "unit": "%", "context": "20% reduction at 600 defence"}
+    ],
+    "percentages": [],
+    "special_mechanics": {
+      "damage_reduction_formula": "defence_bonus / 3000",
+      "max_reduction_cap": null,
+      "applies_to_pvp": false,
+      "style_specific": true,
+      "examples": {
+        "450_defence": 0.15,
+        "600_defence": 0.20,
+        "900_defence": 0.30
+      }
+    }
+  },
+    "effect_description": "Damage taken is reduced depending on the player's Defence bonus towards it (except in PvP). The exact formula for the amount of damage reduced is: bonus/3000, where bonus is the player's defence bonus for that particular style.",
+    "effect_type": "defensive",
+    "category": "armour_set",
+    "stackable": false,
+    "numerical_values": [{"value": 3000, "unit": "divisor", "context": "bonus/3000"}],
+    "percentages": []
+  },
+  {
+    "item_name": "Inquisitor's armour",
+    "effect_description": "Each piece worn boosts damage and accuracy by 0.5% when using the crush attack style. If all three pieces are equipped, the boost is increased to 2.5%. The effect is amplified further when using the Inquisitor's mace, with each piece boosting damage and accuracy by 2.5%, although it will not apply the 1.0% set bonus when using the mace.",
+    "effect_type": "combat",
+    "category": "armour_set",
+    "stackable": true,
+    "numerical_values": [{"value": 0.5, "unit": "%", "context": "by 0.5%"}, {"value": 2.5, "unit": "%", "context": "to 2.5%"}, {"value": 2.5, "unit": "%", "context": "by 2.5%"}, {"value": 1.0, "unit": "%", "context": "1.0% set bonus"}],
+    "percentages": [0.5, 2.5, 2.5, 1.0]
+  },
+  {
+    "item_name": "Virtus robes",
+    "effect_description": "Each piece has a 2% magic damage bonus, but this is increased by a further 3% when using combat spells from Ancient Magicks, for a total of 5% per piece. This results in a 15% damage bonus to Ancient Magicks overall when all three pieces are equipped (6% base magic damage bonus, plus 9% to Ancient Magicks specifically).",
+    "effect_type": "combat",
+    "category": "armour_set",
+    "stackable": true,
+    "numerical_values": [{"value": 2, "unit": "%", "context": "2% magic damage"}, {"value": 3, "unit": "%", "context": "further 3%"}, {"value": 5, "unit": "%", "context": "total of 5%"}, {"value": 15, "unit": "%", "context": "15% damage bonus"}, {"value": 6, "unit": "%", "context": "6% base"}, {"value": 9, "unit": "%", "context": "plus 9%"}],
+    "percentages": [2.0, 3.0, 5.0, 15.0, 6.0, 9.0]
+  },
+  {
+    "item_name": "Dharok's set (Wretched Strength)",
+    "effect_description": "Attacks do more damage as the player's Hitpoints decrease. With an amulet of the damned: When hit, there is a 25% chance of recoiling 15% of the damage taken. This effect can stack with the Vengeance spell and a ring of recoil to recoil 100% of the damage taken.",
+    "effect_type": "combat",
+    "category": "equipment_set",
+    "stackable": true,
+    "numerical_values": [{"value": 25, "unit": "%", "context": "25% chance"}, {"value": 15, "unit": "%", "context": "15% of the damage"}, {"value": 100, "unit": "%", "context": "100% of the damage"}],
+    "percentages": [25.0, 15.0, 100.0]
+  },
+  {
+    "item_name": "Torag's set (Corruption)",
+    "effect_description": "Successful melee attacks have a 25% chance of lowering the victim's run energy by 20%. With an amulet of the damned: Defence increased by 1% for every 1 health missing.",
+    "effect_type": "combat",
+    "category": "equipment_set",
+    "stackable": false,
+    "numerical_values": [{"value": 25, "unit": "%", "context": "25% chance"}, {"value": 20, "unit": "%", "context": "by 20%"}, {"value": 1, "unit": "%", "context": "by 1%"}],
+    "percentages": [25.0, 20.0, 1.0]
+  },
+  {
+    "item_name": "Guthan's set (Infestation)",
+    "effect_description": "Attacks have a 25% chance of replenishing the player's health equal to the damage dealt. With an amulet of the damned: The healing effect can heal players 10 hitpoints above their base Hitpoints level.",
+    "effect_type": "utility",
+    "category": "equipment_set",
+    "stackable": false,
+    "numerical_values": [{"value": 25, "unit": "%", "context": "25% chance"}, {"value": 10, "unit": "hitpoints", "context": "10 hitpoints above"}],
+    "percentages": [25.0]
+  },
+  {
+    "item_name": "Verac's set (Defiler)",
+    "effect_description": "Attacks have a 25% chance of ignoring any armour, Defence, and protection prayers. With an amulet of the damned: Additional +7 Prayer bonus (not counting the amulet's +3).",
+    "effect_type": "combat",
+    "category": "equipment_set",
+    "stackable": false,
+    "numerical_values": [{"value": 25, "unit": "%", "context": "25% chance"}, {"value": 7, "unit": "Prayer bonus", "context": "+7 Prayer bonus"}, {"value": 3, "unit": "Prayer bonus", "context": "amulet's +3"}],
+    "percentages": [25.0]
+  },
+  {
+    "item_name": "Karil's set (Tainted Shot)",
+    "effect_description": "Successful ranged attacks have a 25% chance of lowering the enemy's Agility level by 20%. With an amulet of the damned: For each attack, there is a 25% chance of dealing two hitsplats. The second hitsplat will deal half the damage of the first hitsplat.",
+    "effect_type": "combat",
+    "category": "equipment_set",
+    "stackable": false,
+    "numerical_values": [{"value": 25, "unit": "%", "context": "25% chance"}, {"value": 20, "unit": "%", "context": "by 20%"}, {"value": 25, "unit": "%", "context": "25% chance"}],
+    "percentages": [25.0, 20.0, 25.0]
+  },
+  {
+    "item_name": "Ahrim's set (Blighted Aura)",
+    "effect_description": "Successful magical attacks have a 25% chance of lowering the enemy's Strength by 5 levels. With an amulet of the damned: Able to autocast Ancient Magicks. Also a 25% chance of dealing a hit with 30% increased damage.",
+    "effect_type": "combat",
+    "category": "equipment_set",
+    "stackable": false,
+    "numerical_values": [{"value": 25, "unit": "%", "context": "25% chance"}, {"value": 5, "unit": "levels", "context": "by 5 levels"}, {"value": 25, "unit": "%", "context": "25% chance"}, {"value": 30, "unit": "%", "context": "30% increased"}],
+    "percentages": [25.0, 25.0, 30.0]
+  },
+  {
+    "item_name": "Obsidian equipment",
+    "effect_description": "Obsidian weaponry gain a 10% Attack and Strength boost if a full set of obsidian armour is worn (excluding shield and cape). This does stack with the Berserker necklace damage bonus.",
+    "effect_type": "combat",
+    "category": "equipment_set",
+    "stackable": true,
+    "numerical_values": [
+      {"value": 10, "unit": "%", "context": "10% Attack boost"},
+      {"value": 10, "unit": "%", "context": "10% Strength boost"},
+      {"value": 1.1, "unit": "multiplier", "context": "1.1x attack accuracy"},
+      {"value": 1.1, "unit": "multiplier", "context": "1.1x strength damage"}
+    ],
+    "percentages": [10.0, 10.0],
+    "special_mechanics": {
+      "melee_accuracy_multiplier": 1.1,
+      "melee_strength_multiplier": 1.1,
+      "requires_full_set": true,
+      "excludes": ["shield", "cape"],
+      "stacks_with_berserker_necklace": true,
+      "applies_to": "obsidian_weapons_only"
+    }
+  },
+  {
+    "item_name": "Crystal armour",
+    "effect_description": "Each piece when worn with a crystal bow or Bow of faerdhinen gives an accuracy and damage bonus. If the entire set is worn, this becomes 15% damage and 30% accuracy increase. Crystal helm: +2.5% damage, +5.0% accuracy. Crystal body: +7.5% damage, +15.0% accuracy. Crystal legs: +5.0% damage, +10.0% accuracy.",
+    "effect_type": "combat",
+    "category": "equipment_set",
+    "stackable": true,
+    "numerical_values": [
+      {"value": 15, "unit": "%", "context": "15% damage (full set)"},
+      {"value": 30, "unit": "%", "context": "30% accuracy (full set)"},
+      {"value": 2.5, "unit": "%", "context": "helm: +2.5% damage"},
+      {"value": 5.0, "unit": "%", "context": "helm: +5.0% accuracy"},
+      {"value": 7.5, "unit": "%", "context": "body: +7.5% damage"},
+      {"value": 15.0, "unit": "%", "context": "body: +15.0% accuracy"},
+      {"value": 5.0, "unit": "%", "context": "legs: +5.0% damage"},
+      {"value": 10.0, "unit": "%", "context": "legs: +10.0% accuracy"},
+      {"value": 1.15, "unit": "multiplier", "context": "1.15x damage (full set)"},
+      {"value": 1.3, "unit": "multiplier", "context": "1.3x accuracy (full set)"}
+    ],
+    "percentages": [15.0, 30.0, 2.5, 5.0, 7.5, 15.0, 5.0, 10.0],
+    "special_mechanics": {
+      "requires_crystal_bow": true,
+      "compatible_weapons": ["crystal_bow", "bow_of_faerdhinen", "bow_of_faerdhinen_c"],
+      "full_set_damage_multiplier": 1.15,
+      "full_set_accuracy_multiplier": 1.3,
+      "individual_pieces": {
+        "helm": {"damage": 1.025, "accuracy": 1.05},
+        "body": {"damage": 1.075, "accuracy": 1.15},
+        "legs": {"damage": 1.05, "accuracy": 1.1}
+      }
+    }
+  },
+  {
+    "item_name": "Eclipse moon armour",
+    "effect_description": "Has a set effect where the eclipse atlatl has a 20% chance to inflict a burn effect on the targets. Whilst burnt, the target will be dealt 10 damage over the course of 40 ticks, or 24 seconds (1 damage every 4 ticks), and can be stacked up to five times.",
+    "effect_type": "combat",
+    "category": "equipment_set",
+    "stackable": true,
+    "numerical_values": [{"value": 20, "unit": "%", "context": "20% chance"}, {"value": 10, "unit": "damage", "context": "10 damage"}, {"value": 40, "unit": "ticks", "context": "40 ticks"}, {"value": 24, "unit": "seconds", "context": "24 seconds"}, {"value": 1, "unit": "damage", "context": "1 damage"}, {"value": 4, "unit": "ticks", "context": "every 4 ticks"}, {"value": 5, "unit": "times", "context": "five times"}],
+    "percentages": [20.0]
+  },
+  {
+    "item_name": "Blue moon armour",
+    "effect_description": "Has a set effect where after casting a bind spell, the blue moon spear has a 20% chance for its next melee attack to be unaffected by action delays. The chance is further increased to 50% if the Arceuus spellbook is used.",
+    "effect_type": "combat",
+    "category": "equipment_set",
+    "stackable": false,
+    "numerical_values": [{"value": 20, "unit": "%", "context": "20% chance"}, {"value": 50, "unit": "%", "context": "increased to 50%"}],
+    "percentages": [20.0, 50.0]
+  },
+  {
+    "item_name": "Blood moon armour",
+    "effect_description": "Has a set effect where the dual macuahuitl has a 33% chance to attack one tick earlier than usual upon a successful hit, allowing the player to attack again after 3 ticks. Both hits count towards this independently, meaning there is a 55% chance to trigger the effect if both hits are successful.",
+    "effect_type": "combat",
+    "category": "equipment_set",
+    "stackable": false,
+    "numerical_values": [{"value": 33, "unit": "%", "context": "33% chance"}, {"value": 1, "unit": "tick", "context": "one tick earlier"}, {"value": 3, "unit": "ticks", "context": "after 3 ticks"}, {"value": 55, "unit": "%", "context": "55% chance"}],
+    "percentages": [33.0, 55.0]
+  }
+]
