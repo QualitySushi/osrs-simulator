@@ -4,7 +4,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Info } from 'lucide-react';
 import { useEffect, useState, useCallback } from 'react';
 import { useReferenceDataStore } from '@/store/reference-data-store';
-import { BossSelector } from './BossSelector';
+import { NpcSelector } from './NpcSelector';
 import { EquipmentPanel } from './EquipmentPanel';
 import { PrayerPotionSelector } from './PrayerPotionSelector';
 import { CalculatorForms } from './CalculatorForms';
@@ -32,8 +32,8 @@ export function BestInSlotCalculator() {
     handleReset,
     handleTabChange,
     handleEquipmentUpdate,
-    handleBossUpdate,
-    currentBossForm,
+    handleNpcUpdate,
+    currentNpcForm,
   } = useDpsCalculator();
   const initData = useReferenceDataStore((s) => s.initData);
   const { toast } = useToast();
@@ -144,7 +144,7 @@ export function BestInSlotCalculator() {
           {/* Character equipment section */}
           <EquipmentPanel
             onEquipmentUpdate={handleEquipmentUpdate}
-            bossForm={currentBossForm}
+            npcForm={currentNpcForm}
           />
         </div>
 
@@ -153,7 +153,7 @@ export function BestInSlotCalculator() {
           {/* Prayer/Potion selector */}
           <PrayerPotionSelector />
           {/* Target selection section */}
-          <BossSelector onSelectForm={handleBossUpdate} />
+          <NpcSelector onSelectForm={handleNpcUpdate} />
         </div>
       </div>
     </div>

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { useCalculatorStore } from '@/store/calculator-store';
-import { Item, BossForm } from '@/types/calculator';
+import { Item, NpcForm } from '@/types/calculator';
 import { safeFixed } from '@/utils/format';
 import calculatePassiveEffectBonuses from './PassiveEffectCalculator';
 import { Badge } from '@/components/ui/badge';
@@ -29,7 +29,7 @@ import {
 
 interface PassiveEffectsDisplayProps {
   loadout: Record<string, Item | null>;
-  target?: BossForm | null;
+  target?: NpcForm | null;
 }
 
 export function PassiveEffectsDisplay({ loadout, target }: PassiveEffectsDisplayProps) {

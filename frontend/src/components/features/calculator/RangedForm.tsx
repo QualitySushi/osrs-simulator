@@ -64,7 +64,7 @@ export function RangedForm() {
     formSchema: rangedFormSchema,
     defaultValues,
     gearLockedFields: ['ranged_strength_bonus', 'ranged_attack_bonus'],
-    bossLockedFields: ['target_defence_level', 'target_defence_bonus'],
+    npcLockedFields: ['target_defence_level', 'target_defence_bonus'],
   });
 
   const rangedParams = params as RangedCalculatorParams;
@@ -316,7 +316,7 @@ export function RangedForm() {
                       value={rangedParams.target_defence_level} // Ensure we display the actual store value
                     />
                   </FormControl>
-                  {isFieldDisabled('target_defence_level') && <FormDescription className="text-amber-500">Using target stats from boss</FormDescription>}
+                  {isFieldDisabled('target_defence_level') && <FormDescription className="text-amber-500">Using target stats from npc</FormDescription>}
                 </FormItem>
               )}
             />
@@ -345,7 +345,7 @@ export function RangedForm() {
                       value={rangedParams.target_defence_bonus} // Ensure we display the actual store value
                     />
                   </FormControl>
-                  {isFieldDisabled('target_defence_bonus') && <FormDescription className="text-amber-500">Using target stats from boss</FormDescription>}
+                  {isFieldDisabled('target_defence_bonus') && <FormDescription className="text-amber-500">Using target stats from npc</FormDescription>}
                 </FormItem>
               )}
             />

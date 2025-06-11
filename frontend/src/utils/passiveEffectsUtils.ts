@@ -1,21 +1,21 @@
-import { Item, BossForm, CombatStyle } from '@/types/calculator';
+import { Item, NpcForm, CombatStyle } from '@/types/calculator';
 
-// Extended type for Boss weakness that includes monster types
-type BossWeaknessType = CombatStyle | 'dragon' | 'demon' | 'kalphite' | 'undead' | null | undefined;
+// Extended type for Npc weakness that includes monster types
+type NpcWeaknessType = CombatStyle | 'dragon' | 'demon' | 'kalphite' | 'undead' | null | undefined;
 
 /**
  * Utility functions for checking target types and equipment effects
  */
 
 // Target type checker functions
-export function isTargetDraconic(target?: BossForm | null): boolean {
+export function isNpcDraconic(target?: NpcForm | null): boolean {
   if (!target) return false;
   
-  // Check for specific boss ID (e.g., KBD)
-  if (target.boss_id === 50) return true;
+  // Check for specific npc ID (e.g., KBD)
+  if (target.npc_id === 50) return true;
   
   // Check for weakness property - with proper type checking
-  if (target.weakness && (target.weakness as BossWeaknessType) === "dragon") return true;
+  if (target.weakness && (target.weakness as NpcWeaknessType) === "dragon") return true;
   
   // Check name contains dragon-related terms
   if (target.form_name) {
@@ -29,11 +29,11 @@ export function isTargetDraconic(target?: BossForm | null): boolean {
   return false;
 }
 
-export function isTargetDemonic(target?: BossForm | null): boolean {
+export function isNpcDemonic(target?: NpcForm | null): boolean {
   if (!target) return false;
   
   // Check for weakness property - with proper type checking
-  if (target.weakness && (target.weakness as BossWeaknessType) === "demon") return true;
+  if (target.weakness && (target.weakness as NpcWeaknessType) === "demon") return true;
   
   // Check name contains demon-related terms
   if (target.form_name) {
@@ -47,11 +47,11 @@ export function isTargetDemonic(target?: BossForm | null): boolean {
   return false;
 }
 
-export function isTargetKalphite(target?: BossForm | null): boolean {
+export function isNpcKalphite(target?: NpcForm | null): boolean {
   if (!target) return false;
   
   // Check for weakness property - with proper type checking
-  if (target.weakness && (target.weakness as BossWeaknessType) === "kalphite") return true;
+  if (target.weakness && (target.weakness as NpcWeaknessType) === "kalphite") return true;
   
   // Check name contains kalphite-related terms
   if (target.form_name) {
@@ -64,7 +64,7 @@ export function isTargetKalphite(target?: BossForm | null): boolean {
   return false;
 }
 
-export function isTargetTurothKurask(target?: BossForm | null): boolean {
+export function isNpcTurothKurask(target?: NpcForm | null): boolean {
   if (!target) return false;
   
   // Check name contains turoth/kurask
@@ -76,10 +76,10 @@ export function isTargetTurothKurask(target?: BossForm | null): boolean {
   return false;
 }
 
-export function isInWilderness(target?: BossForm | null): boolean {
+export function isNpcInWilderness(target?: NpcForm | null): boolean {
   if (!target) return false;
   
-  // Check name contains wilderness boss names
+  // Check name contains wilderness npc names
   if (target.form_name) {
     const name = target.form_name.toLowerCase();
     return name.includes('revenant') || 
@@ -92,11 +92,11 @@ export function isInWilderness(target?: BossForm | null): boolean {
   return false;
 }
 
-export function isTargetUndead(target?: BossForm | null): boolean {
+export function isNpcUndead(target?: NpcForm | null): boolean {
   if (!target) return false;
   
   // Check for weakness property - with proper type checking
-  if (target.weakness && (target.weakness as BossWeaknessType) === "undead") return true;
+  if (target.weakness && (target.weakness as NpcWeaknessType) === "undead") return true;
   
   // Check name contains undead-related terms
   if (target.form_name) {

@@ -7,7 +7,7 @@ import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useCalculatorStore } from '@/store/calculator-store';
-import { Item, CalculatorParams, BossForm } from '@/types/calculator';
+import { Item, CalculatorParams, NpcForm } from '@/types/calculator';
 import { useToast } from '@/hooks/use-toast';
 import { calculatorApi } from '@/services/api';
 import { LogoSpinner } from '@/components/ui/LogoSpinner';
@@ -49,14 +49,14 @@ function isMagicParams(params: CalculatorParams): params is CalculatorParams & {
 
 interface CombinedEquipmentDisplayProps {
   onEquipmentUpdate?: (loadout: Record<string, Item | null>) => void;
-  bossForm?: BossForm | null;
+  npcForm?: NpcForm | null;
   loadoutPreset?: Record<string, Item | null>;
   showSuggestButton?: boolean;
 }
 
 export function CombinedEquipmentDisplay({
   onEquipmentUpdate,
-  bossForm,
+  npcForm,
   loadoutPreset,
   showSuggestButton = false,
 }: CombinedEquipmentDisplayProps) {
@@ -347,21 +347,21 @@ export function CombinedEquipmentDisplay({
         const atkBonuses = weapon?.combat_stats?.attack_bonuses || {};
         updateParams.melee_attack_bonus = atkBonuses[type as keyof typeof atkBonuses] ?? 0;
         updateParams.target_defence_type = ATTACK_TYPE_TO_DEFENCE_TYPE[type];
-        updateParams.target_defence_bonus = bossForm?.[ATTACK_TYPE_TO_DEFENCE_TYPE[type] as keyof BossForm] ?? 0;
+        updateParams.target_defence_bonus = npcForm?.[ATTACK_TYPE_TO_DEFENCE_TYPE[type] as keyof NpcForm] ?? 0;
       }
 
       if (isRangedParams(params)) {
         updateParams.ranged_attack_bonus = params.ranged_attack_bonus;
         updateParams.ranged_strength_bonus = params.ranged_strength_bonus;
         updateParams.target_defence_type = 'defence_ranged_standard';
-        updateParams.target_defence_bonus = bossForm?.defence_ranged_standard ?? 0;
+        updateParams.target_defence_bonus = npcForm?.defence_ranged_standard ?? 0;
       }
 
       if (isMagicParams(params)) {
         updateParams.magic_attack_bonus = params.magic_attack_bonus;
         updateParams.magic_damage_bonus = params.magic_damage_bonus;
         updateParams.target_defence_type = 'defence_magic';
-        updateParams.target_defence_bonus = bossForm?.defence_magic ?? 0;
+        updateParams.target_defence_bonus = npcForm?.defence_magic ?? 0;
       }
 
       setParams(updateParams);
@@ -371,7 +371,7 @@ export function CombinedEquipmentDisplay({
     weaponStats,
     combatStyle,
     loadout,
-    bossForm,
+    npcForm,
     setParams,
     params
   ]);
@@ -458,7 +458,7 @@ export function CombinedEquipmentDisplay({
           <AttackStyleSelector
             loadout={loadout}
             combatStyle={combatStyle}
-            bossForm={bossForm}
+            npcForm={npcForm}
             attackStyles={getAttackStylesForDisplay()}
             availableAttackStyles={availableAttackStyles}
             selectedAttackStyle={selectedAttackStyle}

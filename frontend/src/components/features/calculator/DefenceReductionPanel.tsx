@@ -106,7 +106,7 @@ export function DefenceReductionPanel() {
           <Shield className="h-5 w-5 mr-2 text-rs-gold" />
           Defensive Reductions
         </CardTitle>
-        <CardDescription>Track special attack effects on boss defence</CardDescription>
+        <CardDescription>Track special attack effects on npc defence</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         {numericEffects.map(({ key, label }) => (

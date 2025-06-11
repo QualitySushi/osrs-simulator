@@ -186,7 +186,7 @@ export interface Preset {
   seed?: string;
 }
 
-export interface Boss {
+export interface Npc {
   id: number;
   name: string;
   raid_group?: string;
@@ -196,13 +196,13 @@ export interface Boss {
   hitpoints?: number;
   examine?: string;
   has_multiple_forms?: boolean;
-  forms?: BossForm[];
+  forms?: NpcForm[];
   weakness?: CombatStyle | null;
 }
 
-export interface BossForm {
+export interface NpcForm {
   id: number;
-  boss_id: number;
+  npc_id: number;
   form_name: string;
   form_order: number;
   combat_level?: number;
@@ -212,7 +212,7 @@ export interface BossForm {
   defence_level?: number;
   magic_level?: number;
   ranged_level?: number;
-  defence_stab?: number;   // <-- Ensure these exist in your boss form
+  defence_stab?: number;   // <-- Ensure these exist in your npc form
   defence_slash?: number;
   defence_crush?: number;
   defence_magic?: number;
@@ -228,7 +228,7 @@ export interface BossForm {
   size?: number;
 }
 
-export interface BossSummary {
+export interface NpcSummary {
   id: number;
   name: string;
   raid_group?: string;
@@ -308,7 +308,7 @@ export interface ComparisonResult {
   params: CalculatorParams;
   results: DpsResult;
   equipment?: EquipmentLoadout;
-  target?: BossForm;
+  target?: NpcForm;
 }
 
 export interface SearchParams {

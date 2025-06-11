@@ -28,11 +28,11 @@ Endpoints
         POST /calculate/dps - Calculate DPS based on provided parameters
         POST /calculate/item-effect - Calculate special effects for specific items
     Game Data
-        GET /bosses - Get a list of all bosses
-        GET /boss/{boss_id} - Get details for a specific boss
+        GET /npcs - Get a list of all npcs
+        GET /npc/{npc_id} - Get details for a specific npc
         GET /items - Get a list of all items with optional filters
         GET /item/{item_id} - Get details for a specific item
-        GET /search/bosses - Search for bosses by name
+        GET /search/npcs - Search for npcs by name
         GET /search/items - Search for items by name
 
 Key Components
@@ -42,17 +42,17 @@ Key Components
         RangedCalculator - Handles ranged DPS calculations with special effects like Twisted Bow
         MagicCalculator - Handles magic DPS calculations with special effects like Tumeken's Shadow
         DpsCalculator - Main calculator interface that delegates to the specific combat style calculators
-    Database Service - Handles database operations for retrieving boss and item data:
-        SQLite database for bosses with their forms and stats
+    Database Service - Handles database operations for retrieving npc and item data:
+        SQLite database for npcs with their forms and stats
         SQLite database for items with their combat bonuses
-        Search functionality for finding bosses and items
+        Search functionality for finding npcs and items
     Data Models - Pydantic models for type validation and serialization:
         DpsResult - Result of a DPS calculation
-        Boss - Boss data including forms
+        Npc - Npc data including forms
         Item - Item data including combat stats
         DpsParameters - Parameters for DPS calculation
     Data Collection - Scripts for collecting game data:
-        extract.py - Scrapes boss data from the OSRS Wiki
+        extract.py - Scrapes npc data from the OSRS Wiki
         osrs_item_scraper.py - Scrapes item data from the OSRS Wiki
 
 Frontend Overview
@@ -64,9 +64,9 @@ Key Features
         MeleeForm - Form for melee parameters
         RangedForm - Form for ranged parameters
         MagicForm - Form for magic parameters
-    Target Selection - Component for selecting bosses to calculate DPS against:
-        BossSelector - Allows selecting bosses and their forms
-        Automatically updates defense parameters based on the selected boss
+    Target Selection - Component for selecting npcs to calculate DPS against:
+        NpcSelector - Allows selecting npcs and their forms
+        Automatically updates defense parameters based on the selected npc
     Equipment Selection - Component for selecting items:
         ItemSelector - Allows selecting items with combat stats
         Automatically updates attack and strength bonuses based on the selected item
@@ -78,7 +78,7 @@ Key Features
         Comparison data
     API Integration - Services for communicating with the backend:
         calculatorApi - Service for DPS calculations
-        bossesApi - Service for retrieving boss data
+        npcsApi - Service for retrieving npc data
         itemsApi - Service for retrieving item data
 
 Key Algorithms

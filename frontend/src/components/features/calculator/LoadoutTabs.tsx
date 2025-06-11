@@ -6,9 +6,9 @@ import { Button } from '@/components/ui/button';
 import { CombinedEquipmentDisplay } from './CombinedEquipmentDisplay';
 import { useCalculatorStore } from '@/store/calculator-store';
 import { encodeSeed } from '@/utils/seed';
-import { BossForm, Item } from '@/types/calculator';
+import { NpcForm, Item } from '@/types/calculator';
 
-export function LoadoutTabs({ bossForm, onEquipmentUpdate }: { bossForm?: BossForm | null; onEquipmentUpdate?: (loadout: Record<string, Item | null>) => void }) {
+export function LoadoutTabs({ npcForm, onEquipmentUpdate }: { npcForm?: NpcForm | null; onEquipmentUpdate?: (loadout: Record<string, Item | null>) => void }) {
   const presets = useCalculatorStore((s) => s.presets);
   const addPreset = useCalculatorStore((s) => s.addPreset);
   const setLoadout = useCalculatorStore((s) => s.setLoadout);
@@ -65,7 +65,7 @@ export function LoadoutTabs({ bossForm, onEquipmentUpdate }: { bossForm?: BossFo
       </TabsList>
       <TabsContent value={activePreset} className="w-full">
         <CombinedEquipmentDisplay
-          bossForm={bossForm}
+          npcForm={npcForm}
           showSuggestButton={false}
           onEquipmentUpdate={onEquipmentUpdate}
         />

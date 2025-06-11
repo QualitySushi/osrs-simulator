@@ -31,7 +31,7 @@ export default function AboutPage() {
       <div className="prose dark:prose-invert max-w-3xl mx-auto bg-muted/50 p-6 rounded-lg shadow">
         <p className="lead text-center">
           ScapeLab is an open-source DPS calculator and gear optimizer for Old School RuneScape.
-          Use it to compare different loadouts and plan for maximum damage against any boss or monster.
+          Use it to compare different loadouts and plan for maximum damage against any npc or monster.
         </p>
         
         <h2>How It Works</h2>
@@ -51,7 +51,7 @@ export default function AboutPage() {
         <h2>Features</h2>
         <ul>
           <li>Calculate DPS for all three combat styles: Melee, Ranged, and Magic</li>
-          <li>Select from a database of bosses with accurate defense stats</li>
+          <li>Select from a database of npcs with accurate defense stats</li>
           <li>Choose from combat equipment with their respective bonuses</li>
           <li>Compare different setups side-by-side</li>
           <li>Accurate calculations for weapon special effects</li>
@@ -59,7 +59,7 @@ export default function AboutPage() {
         
         <h2>Data Sources</h2>
         <p>
-          The data for bosses, monsters, and items is sourced from the 
+          The data for npcs, monsters, and items is sourced from the 
           <a href="https://oldschool.runescape.wiki/" target="_blank" rel="noopener noreferrer" className="mx-1">
             Old School RuneScape Wiki
           </a>
