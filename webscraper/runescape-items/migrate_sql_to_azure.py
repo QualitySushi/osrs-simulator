@@ -251,12 +251,16 @@ def migrate_bosses():
         boss_count = 0
         for boss in bosses:
             boss_data = boss[1:]  # Skip the SQLite ID
-            
-            # Create parameterized query
+
+            azure_cursor.execute("SELECT 1 FROM bosses WHERE name = ?", (boss[1],))
+            if azure_cursor.fetchone():
+                print(f"• Boss {boss[1]} already exists, skipping")
+                continue
+
             placeholders = ', '.join(['?' for _ in range(len(columns))])
             insert_columns = ', '.join(columns)
             query = f"INSERT INTO bosses ({insert_columns}) VALUES ({placeholders})"
-            
+
             try:
                 azure_cursor.execute(query, boss_data)
                 boss_count += 1
@@ -264,13 +268,12 @@ def migrate_bosses():
                     print(f"  Migrated {boss_count} bosses...")
             except Exception as e:
                 print(f"✗ Failed to migrate boss {boss[1]}: {e}")
-        
-        azure_conn.commit()
+
         print(f"✓ Migrated {boss_count} bosses successfully!")
-        
-        # Now migrate boss forms
+
         migrate_boss_forms(sqlite_cursor, azure_cursor)
-        
+
+        azure_conn.commit()
         sqlite_conn.close()
         azure_conn.close()
         return True
@@ -314,8 +317,14 @@ def migrate_boss_forms(sqlite_cursor, azure_cursor):
                 continue
                 
             new_boss_id = azure_result[0]
-            
-            # Replace the boss_id in the form data
+
+            azure_cursor.execute(
+                "SELECT 1 FROM boss_forms WHERE boss_id = ? AND form_name = ?",
+                (new_boss_id, form[2]),
+            )
+            if azure_cursor.fetchone():
+                continue
+
             form_data = list(form[1:])  # Skip SQLite ID
             form_data[0] = new_boss_id  # Replace boss_id
             
@@ -419,6 +428,12 @@ def migrate_npcs():
         npc_count = 0
         for npc in npcs:
             npc_data = npc[1:]
+
+            azure_cursor.execute("SELECT 1 FROM npcs WHERE name = ?", (npc[1],))
+            if azure_cursor.fetchone():
+                print(f"• NPC {npc[1]} already exists, skipping")
+                continue
+
             placeholders = ', '.join(['?' for _ in range(len(columns))])
             insert_columns = ', '.join(columns)
             query = f"INSERT INTO npcs ({insert_columns}) VALUES ({placeholders})"
@@ -474,6 +489,14 @@ def migrate_npc_forms(sqlite_cursor, azure_cursor):
                 continue
 
             new_npc_id = azure_result[0]
+
+            azure_cursor.execute(
+                "SELECT 1 FROM npc_forms WHERE npc_id = ? AND form_name = ?",
+                (new_npc_id, form[2]),
+            )
+            if azure_cursor.fetchone():
+                continue
+
             form_data = list(form[1:])
             form_data[0] = new_npc_id
 
