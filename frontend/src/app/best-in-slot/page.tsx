@@ -1,6 +1,29 @@
 'use client';
 
 import { BestInSlotCalculator } from '@/components/features/calculator/BestInSlotCalculator';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Best in Slot Finder',
+  description: 'Determine the optimal gear setup for your stats and target.',
+  alternates: {
+    canonical: '/best-in-slot',
+  },
+  openGraph: {
+    title: 'Best in Slot Finder',
+    description: 'Determine the optimal gear setup for your stats and target.',
+    url: '/best-in-slot',
+    siteName: 'ScapeLab',
+    images: ['/favicon.ico'],
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Best in Slot Finder',
+    description: 'Determine the optimal gear setup for your stats and target.',
+  },
+};
 
 export default function BestInSlotPage() {
   return (

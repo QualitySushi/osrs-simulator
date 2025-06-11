@@ -1,4 +1,27 @@
 'use client';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Chat Assistant',
+  description: 'Interact with a bot to plan your setups and generate seeds.',
+  alternates: {
+    canonical: '/assistant',
+  },
+  openGraph: {
+    title: 'Chat Assistant',
+    description: 'Interact with a bot to plan your setups and generate seeds.',
+    url: '/assistant',
+    siteName: 'ScapeLab',
+    images: ['/favicon.ico'],
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Chat Assistant',
+    description: 'Interact with a bot to plan your setups and generate seeds.',
+  },
+};
 
 export default function AssistantPage() {
   return (
