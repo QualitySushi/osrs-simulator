@@ -1,4 +1,5 @@
 import HomeHero from '@/components/layout/HomeHero';
+import { InitReferenceData } from '@/components/layout/InitReferenceData';
 import Link from 'next/link';
 import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 
@@ -6,6 +7,7 @@ export default function Home() {
   return (
     <>
       <HomeHero />
+      <InitReferenceData />
       <main id="main" className="container mx-auto py-8 px-4 pb-16 text-center">
         <p className="text-lg">Choose a tool from the navigation above or the buttons below to get started.</p>
 

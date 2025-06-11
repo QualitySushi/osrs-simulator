@@ -38,6 +38,7 @@ describe('image alt text', () => {
       progress: 1,
       initialized: true,
       loading: false,
+      error: false,
       timestamp: 0,
       initData: jest.fn(),
       addBosses: jest.fn(),
