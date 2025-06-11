@@ -353,7 +353,7 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
                 {selectedBoss && (
                   <img
                     src={bossIcons[selectedBoss.id]}
-                    alt="icon"
+                    alt={`${selectedBoss.name} icon`}
                     className="w-4 h-4 mr-2 inline-block"
                   />
                 )}
@@ -388,7 +388,7 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
                         >
                           <img
                             src={bossIcons[boss.id]}
-                            alt="icon"
+                            alt={`${boss.name} icon`}
                             className="w-4 h-4 mr-2 inline-block"
                           />
                           {boss.name}
@@ -439,7 +439,7 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
                     <SelectItem key={form.id} value={form.id.toString()}>
                       <img
                         src={form.icons?.[0]}
-                        alt="icon"
+                        alt={`${form.form_name} icon`}
                         className="w-4 h-4 mr-2 inline-block"
                       />
                       {form.form_name} (Combat Lvl: {form.combat_level || 'Unknown'})
@@ -462,7 +462,7 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
             {(selectedForm.icons?.[0] || selectedForm.image_url) && (
               <img
                 src={selectedForm.icons?.[0] || selectedForm.image_url}
-                alt="icon"
+                alt={`${selectedForm.form_name} image`}
                 className="w-24 h-auto object-contain"
               />
             )}

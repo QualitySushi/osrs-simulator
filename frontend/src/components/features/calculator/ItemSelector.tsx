@@ -170,7 +170,7 @@ export function ItemSelector({ slot, specialOnly, onSelectItem }: ItemSelectorPr
                 {selectedItem && (
                   <img
                     src={selectedItem.icons?.[0] || (selectedItem as any)?.image_url}
-                    alt="icon"
+                    alt={`${selectedItem.name} icon`}
                     className="w-4 h-4 mr-2 inline-block"
                   />
                 )}
@@ -203,7 +203,7 @@ export function ItemSelector({ slot, specialOnly, onSelectItem }: ItemSelectorPr
                         >
                           <img
                             src={item.icons?.[0] || (item as any)?.image_url}
-                            alt="icon"
+                            alt={`${item.name} icon`}
                             className="w-4 h-4 mr-2 inline-block"
                           />
                           {item.name}

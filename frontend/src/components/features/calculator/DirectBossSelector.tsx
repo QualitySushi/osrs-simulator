@@ -256,7 +256,7 @@ export function DirectBossSelector({ onSelectBoss, onSelectForm, className }: Di
             {selectedBoss && (
               <img
                 src={bossIcons[selectedBoss.id]}
-                alt="icon"
+                alt={`${selectedBoss.name} icon`}
                 className="w-5 h-5 absolute top-2 left-2"
               />
             )}
@@ -290,7 +290,7 @@ export function DirectBossSelector({ onSelectBoss, onSelectForm, className }: Di
                         >
                           <img
                             src={bossIcons[boss.id]}
-                            alt="icon"
+                            alt={`${boss.name} icon`}
                             className="w-4 h-4 mr-2 inline-block"
                           />
                           <span>{boss.name}</span>
@@ -359,7 +359,7 @@ export function DirectBossSelector({ onSelectBoss, onSelectForm, className }: Di
             {(selectedForm.icons?.[0] || selectedForm.image_url) && (
               <img
                 src={selectedForm.icons?.[0] || selectedForm.image_url}
-                alt="icon"
+                alt={`${selectedForm.form_name} image`}
                 className="w-28 h-auto mb-2 object-contain"
               />
             )}
