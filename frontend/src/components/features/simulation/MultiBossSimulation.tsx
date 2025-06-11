@@ -34,6 +34,7 @@ import {
 } from '@/components/ui/table';
 import { bossesApi, calculatorApi } from '@/services/api';
 import { useCalculatorStore } from '@/store/calculator-store';
+import { safeFixed } from '@/utils/format';
 import { useReferenceDataStore } from '@/store/reference-data-store';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useToast } from '@/hooks/use-toast';
@@ -337,9 +338,9 @@ export function MultiBossSimulation() {
                     )}
                     {boss.name}
                   </TableCell>
-                  <TableCell className="text-right">{result.dps.toFixed(2)}</TableCell>
+                  <TableCell className="text-right">{safeFixed(result.dps, 2)}</TableCell>
                   <TableCell className="text-right">{result.max_hit}</TableCell>
-                  <TableCell className="text-right">{(result.hit_chance * 100).toFixed(1)}%</TableCell>
+                  <TableCell className="text-right">{safeFixed(result.hit_chance * 100, 1)}%</TableCell>
                 </TableRow>
               ))}
             </TableBody>

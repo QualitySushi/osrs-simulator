@@ -16,6 +16,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useCombatForm } from '@/hooks/useCombatForm';
 import { MagicCalculatorParams } from '@/types/calculator';
 import { useEffect } from 'react';
+import { safeFixed } from '@/utils/format';
 
 // Magic form schema for validation
 const magicFormSchema = z.object({
@@ -141,7 +142,7 @@ export function MagicForm() {
               name="magic_prayer"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Prayer Bonus: {((field.value * 100) - 100).toFixed(0)}%</FormLabel>
+                  <FormLabel>Prayer Bonus: {safeFixed(field.value * 100 - 100, 0)}%</FormLabel>
                   <FormControl>
                     <Slider
                       min={1}
@@ -390,7 +391,7 @@ export function MagicForm() {
               name="shadow_bonus"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Tumeken&apos;s Shadow Bonus: {(field.value * 100).toFixed(0)}%</FormLabel>
+                  <FormLabel>Tumeken&apos;s Shadow Bonus: {safeFixed(field.value * 100, 0)}%</FormLabel>
                   <FormControl>
                     <Slider
                       min={0}
@@ -415,7 +416,7 @@ export function MagicForm() {
               name="virtus_bonus"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Virtus Set Bonus: {(field.value * 100).toFixed(0)}%</FormLabel>
+                  <FormLabel>Virtus Set Bonus: {safeFixed(field.value * 100, 0)}%</FormLabel>
                   <FormControl>
                     <Slider
                       min={0}
@@ -440,7 +441,7 @@ export function MagicForm() {
               name="tome_bonus"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Tome of Fire Bonus: {(field.value * 100).toFixed(0)}%</FormLabel>
+                  <FormLabel>Tome of Fire Bonus: {safeFixed(field.value * 100, 0)}%</FormLabel>
                   <FormControl>
                     <Slider
                       min={0}

@@ -5,6 +5,7 @@ import { useCalculatorStore } from '@/store/calculator-store';
 import { CalculatorParams, Item, BossForm, CombatStyle } from '@/types/calculator';
 import calculatePassiveEffectBonuses from '@/components/features/calculator/PassiveEffectCalculator';
 import { useToast } from './use-toast';
+import { safeFixed } from '@/utils/format';
 
 export function useDpsCalculator() {
   const { toast } = useToast();
@@ -56,7 +57,7 @@ export function useDpsCalculator() {
     onSuccess: (data) => {
       setResults(data);
       toast.success(
-        `DPS Calculated: Max hit: ${data.max_hit}, DPS: ${data.dps.toFixed(2)}`
+        `DPS Calculated: Max hit: ${data.max_hit}, DPS: ${safeFixed(data.dps, 2)}`
       );
     },
     onError: (error: any) => {

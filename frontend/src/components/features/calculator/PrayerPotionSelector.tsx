@@ -7,6 +7,7 @@ import { ToggleBox } from '@/components/ui/toggle-box';
 import { Label } from '@/components/ui/label';
 import { useCalculatorStore } from '@/store/calculator-store';
 import { Info } from 'lucide-react';
+import { safeFixed } from '@/utils/format';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 // Define prayer and potion options for each combat style
@@ -337,11 +338,11 @@ export function PrayerPotionSelector({ className }: { className?: string }) {
               <>
                 <div className="flex justify-between">
                   <span>Attack Prayer:</span>
-                  <span className="font-medium">+{((params.attack_prayer * 100) - 100).toFixed(0)}%</span>
+                  <span className="font-medium">+{safeFixed(params.attack_prayer * 100 - 100, 0)}%</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Strength Prayer:</span>
-                  <span className="font-medium">+{((params.strength_prayer * 100) - 100).toFixed(0)}%</span>
+                  <span className="font-medium">+{safeFixed(params.strength_prayer * 100 - 100, 0)}%</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Attack Potion:</span>
@@ -358,7 +359,7 @@ export function PrayerPotionSelector({ className }: { className?: string }) {
               <>
                 <div className="flex justify-between">
                   <span>Ranged Prayer:</span>
-                  <span className="font-medium">+{((params.ranged_prayer * 100) - 100).toFixed(0)}%</span>
+                  <span className="font-medium">+{safeFixed(params.ranged_prayer * 100 - 100, 0)}%</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Ranged Potion:</span>
@@ -371,7 +372,7 @@ export function PrayerPotionSelector({ className }: { className?: string }) {
               <>
                 <div className="flex justify-between">
                   <span>Magic Prayer:</span>
-                  <span className="font-medium">+{((params.magic_prayer * 100) - 100).toFixed(0)}%</span>
+                  <span className="font-medium">+{safeFixed(params.magic_prayer * 100 - 100, 0)}%</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Magic Potion:</span>

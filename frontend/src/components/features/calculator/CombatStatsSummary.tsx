@@ -1,4 +1,5 @@
 import { CalculatorParams, Item } from '@/types/calculator';
+import { safeFixed } from '@/utils/format';
 
 interface CombatStatsSummaryProps {
   params: CalculatorParams;
@@ -55,7 +56,7 @@ export function CombatStatsSummary({
         <div>
           <span className="text-muted-foreground">Attack Speed:</span>{' '}
           <span className="font-medium">
-            {params.attack_speed.toFixed(1)}s
+            {safeFixed(params.attack_speed, 1)}s
             {selectedAttackStyle === 'rapid' && (
               <span className="text-green-600 dark:text-green-400 ml-1">(Faster)</span>
             )}

@@ -1,14 +1,15 @@
 'use client';
 
 import { z } from 'zod';
-import { 
-  Form, 
-  FormControl, 
-  FormDescription, 
-  FormField, 
-  FormItem, 
-  FormLabel 
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel
 } from '@/components/ui/form';
+import { safeFixed } from '@/utils/format';
 import { Input } from '@/components/ui/input';
 import { Slider } from '@/components/ui/slider';
 import { Switch } from '@/components/ui/switch';
@@ -106,7 +107,7 @@ export function RangedForm() {
               name="ranged_prayer"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Prayer Bonus: {(field.value * 100 - 100).toFixed(0)}%</FormLabel>
+                  <FormLabel>Prayer Bonus: {safeFixed(field.value * 100 - 100, 0)}%</FormLabel>
                   <FormControl>
                     <Slider
                       min={1}

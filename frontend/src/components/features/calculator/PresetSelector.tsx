@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Save, Trash2, ClipboardCopy, ArrowUp, ArrowDown } from 'lucide-react';
+import { safeFixed } from '@/utils/format';
 import {
   Dialog,
   DialogContent,
@@ -170,7 +171,7 @@ export function PresetSelector({ onPresetLoad, className }: PresetSelectorProps)
     } else if (params.combat_style === 'ranged') {
       return `RNG: ${params.ranged_level}, ATK Bonus: ${params.ranged_attack_bonus}, STR Bonus: ${params.ranged_strength_bonus}`;
     } else if (params.combat_style === 'magic') {
-      return `MAG: ${params.magic_level}, ATK Bonus: ${params.magic_attack_bonus}, DMG Bonus: ${(params.magic_damage_bonus * 100).toFixed(0)}%`;
+      return `MAG: ${params.magic_level}, ATK Bonus: ${params.magic_attack_bonus}, DMG Bonus: ${safeFixed(params.magic_damage_bonus * 100, 0)}%`;
     }
     return '';
   };
