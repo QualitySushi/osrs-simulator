@@ -36,6 +36,7 @@ import { bossesApi, calculatorApi } from '@/services/api';
 import { useCalculatorStore } from '@/store/calculator-store';
 import { useReferenceDataStore } from '@/store/reference-data-store';
 import { useDebounce } from '@/hooks/useDebounce';
+import { useToast } from '@/hooks/use-toast';
 import {
   Boss,
   BossForm,
@@ -55,6 +56,7 @@ interface SimulationEntry {
 export function MultiBossSimulation() {
   const params = useCalculatorStore((s) => s.params);
   const loadout = useCalculatorStore((s) => s.loadout);
+  const { toast } = useToast();
 
   const [selectedBosses, setSelectedBosses] = useState<Boss[]>([]);
   const [selectedRaid, setSelectedRaid] = useState<Raid | ''>('');
@@ -89,6 +91,7 @@ export function MultiBossSimulation() {
     enabled: debouncedSearch.length > 0,
     staleTime: Infinity,
     onSuccess: (d) => addBosses(d),
+    onError: (e: any) => toast.error(`Boss search failed: ${e.message}`),
   });
 
   useEffect(() => {
@@ -205,9 +208,9 @@ export function MultiBossSimulation() {
   const runSimulation = async () => {
     setIsRunning(true);
     const sims: SimulationEntry[] = [];
-    for (const boss of selectedBosses) {
-      try {
-        let forms = storeBossForms[boss.id];
+      for (const boss of selectedBosses) {
+        try {
+          let forms = storeBossForms[boss.id];
         if (!forms) {
           const details = await bossesApi.getBossById(boss.id);
           forms = details.forms || [];
@@ -217,11 +220,12 @@ export function MultiBossSimulation() {
         if (!form) continue;
         const simParams = buildParams(form);
         const result = await calculatorApi.calculateDps(simParams);
-        sims.push({ boss, result });
-      } catch (e) {
-        console.error('Simulation failed for', boss.name, e);
+          sims.push({ boss, result });
+        } catch (e: any) {
+          toast.error(`Simulation failed for ${boss.name}: ${e.message}`);
+          console.error('Simulation failed for', boss.name, e);
+        }
       }
-    }
     setResults(sims);
     setIsRunning(false);
   };

@@ -81,25 +81,30 @@ export function EquipmentGrid({ loadout, show2hOption, combatStyle, onUpdateLoad
       return;
     }
 
-    itemsApi.getItemById(item.id).then((fullItem) => {
-      if (slot !== 'spec' && (!fullItem || !fullItem.combat_stats)) {
-        toast.error(`Failed to load full stats for ${item.name}`);
-        return;
-      }
+    itemsApi
+      .getItemById(item.id)
+      .then((fullItem) => {
+        if (slot !== 'spec' && (!fullItem || !fullItem.combat_stats)) {
+          toast.error(`Failed to load full stats for ${item.name}`);
+          return;
+        }
 
-      if (slot === '2h') {
-        delete updated['mainhand'];
-        delete updated['offhand'];
-        updated['2h'] = fullItem;
-      } else {
-        if (slot === 'mainhand' || slot === 'offhand') delete updated['2h'];
-        updated[slot] = fullItem;
-      }
+        if (slot === '2h') {
+          delete updated['mainhand'];
+          delete updated['offhand'];
+          updated['2h'] = fullItem;
+        } else {
+          if (slot === 'mainhand' || slot === 'offhand') delete updated['2h'];
+          updated[slot] = fullItem;
+        }
 
-      onUpdateLoadout(updated);
-      toast.success(`Equipped ${fullItem.name}`);
-      setIsDialogOpen(false);
-    });
+        onUpdateLoadout(updated);
+        toast.success(`Equipped ${fullItem.name}`);
+        setIsDialogOpen(false);
+      })
+      .catch((e: any) => {
+        toast.error(`Failed to load item: ${e.message}`);
+      });
   };
 
   const renderItemTooltip = (slot: string, item: Item | null) => {

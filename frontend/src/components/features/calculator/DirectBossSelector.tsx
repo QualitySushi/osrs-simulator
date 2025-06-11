@@ -66,6 +66,7 @@ export function DirectBossSelector({ onSelectBoss, onSelectForm, className }: Di
     enabled: debouncedQuery.length > 0,
     staleTime: Infinity,
     onSuccess: (d) => addBosses(d),
+    onError: (e: any) => toast.error(`Boss search failed: ${e.message}`),
   });
 
   // Fetch specific boss details when a boss is selected
@@ -75,6 +76,7 @@ export function DirectBossSelector({ onSelectBoss, onSelectForm, className }: Di
     enabled: !!selectedBoss && !storeBossForms[selectedBoss!.id],
     staleTime: Infinity,
     onSuccess: (d) => addBossForms(d.id, d.forms || []),
+    onError: (e: any) => toast.error(`Failed to load boss: ${e.message}`),
   });
 
   const combinedBossDetails = selectedBoss

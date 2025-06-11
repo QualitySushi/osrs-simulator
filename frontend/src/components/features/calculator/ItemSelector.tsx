@@ -24,6 +24,7 @@ import { CombatStyle } from '@/types/calculator';
 import { ItemPassiveEffects } from './ItemPassiveEffects';
 import { useReferenceDataStore } from '@/store/reference-data-store';
 import { useDebounce } from '@/hooks/useDebounce';
+import { useToast } from '@/hooks/use-toast';
 
 interface ItemSelectorProps {
   /**
@@ -43,6 +44,7 @@ export function ItemSelector({ slot, specialOnly, onSelectItem }: ItemSelectorPr
   const [selectedItem, setSelectedItem] = useState<ItemSummary | null>(null);
   const { params, setParams } = useCalculatorStore();
   const combatStyle = params.combat_style;
+  const { toast } = useToast();
 
   const storeItems = useReferenceDataStore((s) => s.items);
   const initData = useReferenceDataStore((s) => s.initData);
@@ -64,6 +66,7 @@ export function ItemSelector({ slot, specialOnly, onSelectItem }: ItemSelectorPr
     enabled: debouncedSearch.length > 0,
     staleTime: Infinity,
     onSuccess: (d) => addItems(d),
+    onError: (e: any) => toast.error(`Item search failed: ${e.message}`),
   });
 
   // Fetch specific item details when an item is selected
@@ -72,6 +75,7 @@ export function ItemSelector({ slot, specialOnly, onSelectItem }: ItemSelectorPr
     queryFn: () => selectedItem ? itemsApi.getItemById(selectedItem.id) : null,
     enabled: !!selectedItem,
     staleTime: Infinity,
+    onError: (e: any) => toast.error(`Failed to load item details: ${e.message}`),
   });
 
   // Items from store filtered by slot
@@ -100,12 +104,17 @@ export function ItemSelector({ slot, specialOnly, onSelectItem }: ItemSelectorPr
     }
 
     // Fetch detailed item info
-    itemsApi.getItemById(item.id).then(itemData => {
-      if (!itemData.combat_stats) return;
-      
-      // Update calculator params based on combat style and item stats
-      updateStatsFromItem(itemData, combatStyle);
-    });
+    itemsApi
+      .getItemById(item.id)
+      .then((itemData) => {
+        if (!itemData.combat_stats) return;
+
+        // Update calculator params based on combat style and item stats
+        updateStatsFromItem(itemData, combatStyle);
+      })
+      .catch((e: any) => {
+        toast.error(`Failed to load item stats: ${e.message}`);
+      });
   };
 
   const updateStatsFromItem = (item: Item, combatStyle: CombatStyle) => {
