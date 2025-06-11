@@ -59,7 +59,7 @@ export function ItemSelector({ slot, specialOnly, onSelectItem }: ItemSelectorPr
     data: searchResults,
     isLoading,
   } = useQuery({
-    queryKey: ['item-search', debouncedSearch],
+    queryKey: ['item-search', debouncedSearch, slot],
     queryFn: () => itemsApi.searchItems(debouncedSearch),
     enabled: debouncedSearch.length > 0,
     staleTime: Infinity,
@@ -75,13 +75,17 @@ export function ItemSelector({ slot, specialOnly, onSelectItem }: ItemSelectorPr
   });
 
   // Items from store filtered by slot
-  const filteredItems = slot
-    ? storeItems.filter((item) =>
-        Array.isArray(slot) ? slot.includes(item.slot) : item.slot === slot
-      )
-    : storeItems;
+  const filterBySlot = (items: ItemSummary[]) =>
+    slot
+      ? items.filter((item) =>
+          Array.isArray(slot) ? slot.includes(item.slot) : item.slot === slot
+        )
+      : items;
 
-  const baseItems = searchTerm.length > 0 ? searchResults ?? [] : filteredItems;
+  const filteredItems = filterBySlot(storeItems);
+  const searchFiltered = searchResults ? filterBySlot(searchResults) : [];
+  const baseItems =
+    searchTerm.length > 0 ? searchFiltered : filteredItems;
   const itemsToDisplay = specialOnly
     ? baseItems.filter((item) => item.has_special_attack)
     : baseItems;
