@@ -388,16 +388,17 @@ select {
   }
 }
 
-.logo-fade-off {
-  animation: logo-cycle 4.5s linear infinite;
+.logo-fade-off,
+.logo-fade-mid,
+.logo-fade-on {
+  opacity: 0;
+  animation: logo-cycle 4.5s linear infinite both;
 }
 
 .logo-fade-mid {
-  animation: logo-cycle 4.5s linear infinite;
   animation-delay: 1.5s;
 }
 
 .logo-fade-on {
-  animation: logo-cycle 4.5s linear infinite;
   animation-delay: 3s;
 }
