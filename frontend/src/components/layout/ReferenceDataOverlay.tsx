@@ -34,7 +34,7 @@ export function ReferenceDataOverlay() {
       <div className="text-center">
         <div className="relative w-48 h-48 mx-auto">
           <LogoProgressCircle progress={progress} />
-          <div className="absolute inset-0 p-12">
+          <div className="absolute inset-0 p-12 z-10">
             <img
               src="/images/logo_transparent_off.png"
               alt="ScapeLab logo"

@@ -11,7 +11,7 @@ export function LogoProgressCircle({ progress }: { progress: number }) {
     <svg
       width={size}
       height={size}
-      className="absolute inset-0 text-primary"
+      className="absolute inset-0 text-primary z-0"
       style={{ transform: "rotate(-90deg)" }}
     >
       <circle
