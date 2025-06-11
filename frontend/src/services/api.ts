@@ -11,6 +11,16 @@ import {
   PassiveEffect
 } from '@/types/calculator';
 
+export interface ApiError {
+  message: string;
+  status?: number;
+}
+
+const handleError = (err: any): ApiError => ({
+  message: err.response?.data?.detail || err.message || 'Unknown error',
+  status: err.response?.status,
+});
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 // Log the resolved API URL only during development to help debug environment issues
 if (process.env.NODE_ENV !== 'production') {
@@ -28,20 +38,36 @@ const apiClient = axios.create({
 // Calculator API
 export const calculatorApi = {
   calculateDps: async (params: CalculatorParams): Promise<DpsResult> => {
-    const { data } = await apiClient.post('/calculate/dps', params);
-    return data;
+    try {
+      const { data } = await apiClient.post('/calculate/dps', params);
+      return data;
+    } catch (err: any) {
+      throw handleError(err);
+    }
   },
   importSeed: async (seed: string): Promise<CalculatorParams> => {
-    const { data } = await apiClient.post('/import-seed', { seed });
-    return data;
+    try {
+      const { data } = await apiClient.post('/import-seed', { seed });
+      return data;
+    } catch (err: any) {
+      throw handleError(err);
+    }
   },
   calculateSeed: async (seed: string): Promise<DpsResult> => {
-    const { data } = await apiClient.post('/calculate/seed', { seed });
-    return data;
+    try {
+      const { data } = await apiClient.post('/calculate/seed', { seed });
+      return data;
+    } catch (err: any) {
+      throw handleError(err);
+    }
   },
   getBis: async (params: CalculatorParams): Promise<Record<string, Item>> => {
-    const { data } = await apiClient.post('/bis', params);
-    return data;
+    try {
+      const { data } = await apiClient.post('/bis', params);
+      return data;
+    } catch (err: any) {
+      throw handleError(err);
+    }
   },
 };
 
@@ -51,16 +77,23 @@ export const bossesApi = {
   getAllBosses: async (
     params?: { page?: number; page_size?: number }
   ): Promise<BossSummary[]> => {
-
-    const { data } = await apiClient.get('/bosses', { params });
-    return data;
+    try {
+      const { data } = await apiClient.get('/bosses', { params });
+      return data;
+    } catch (err: any) {
+      throw handleError(err);
+    }
   },
 
   getBossesWithForms: async (
     params?: { page?: number; page_size?: number }
   ): Promise<Boss[]> => {
-    const { data } = await apiClient.get('/bosses/full', { params });
-    return data;
+    try {
+      const { data } = await apiClient.get('/bosses/full', { params });
+      return data;
+    } catch (err: any) {
+      throw handleError(err);
+    }
   },
 
   getBossById: async (id: number): Promise<Boss> => {
@@ -72,13 +105,17 @@ export const bossesApi = {
         const { data } = await apiClient.get(`/boss/form/${id}`);
         return data;
       }
-      throw err;
+      throw handleError(err);
     }
   },
 
   getBossByFormId: async (formId: number): Promise<Boss> => {
-    const { data } = await apiClient.get(`/boss/form/${formId}`);
-    return data;
+    try {
+      const { data } = await apiClient.get(`/boss/form/${formId}`);
+      return data;
+    } catch (err: any) {
+      throw handleError(err);
+    }
   },
 
   getBossForms: async (bossId: number): Promise<BossForm[]> => {
@@ -90,7 +127,7 @@ export const bossesApi = {
         const { data } = await apiClient.get(`/boss/form/${bossId}`);
         return data.forms || [];
       }
-      throw err;
+      throw handleError(err);
     }
   },
 
@@ -99,8 +136,12 @@ export const bossesApi = {
     if (limit !== undefined) {
       params.limit = limit;
     }
-    const { data } = await apiClient.get('/search/bosses', { params });
-    return data;
+    try {
+      const { data } = await apiClient.get('/search/bosses', { params });
+      return data;
+    } catch (err: any) {
+      throw handleError(err);
+    }
   },
 };
 
@@ -116,13 +157,21 @@ export const itemsApi = {
     }
 
   ): Promise<ItemSummary[]> => {
-    const { data } = await apiClient.get('/items', { params });
-    return data;
+    try {
+      const { data } = await apiClient.get('/items', { params });
+      return data;
+    } catch (err: any) {
+      throw handleError(err);
+    }
   },
 
   getItemById: async (id: number): Promise<Item> => {
-    const { data } = await apiClient.get(`/item/${id}`);
-    return data;
+    try {
+      const { data } = await apiClient.get(`/item/${id}`);
+      return data;
+    } catch (err: any) {
+      throw handleError(err);
+    }
   },
 
   searchItems: async (query: string, limit?: number): Promise<ItemSummary[]> => {
@@ -130,21 +179,33 @@ export const itemsApi = {
     if (limit !== undefined) {
       params.limit = limit;
     }
-    const { data } = await apiClient.get('/search/items', { params });
-    return data;
+    try {
+      const { data } = await apiClient.get('/search/items', { params });
+      return data;
+    } catch (err: any) {
+      throw handleError(err);
+    }
   },
 };
 
 export const specialAttacksApi = {
   getAll: async (): Promise<Record<string, SpecialAttack>> => {
-    const { data } = await apiClient.get('/special-attacks');
-    return data;
+    try {
+      const { data } = await apiClient.get('/special-attacks');
+      return data;
+    } catch (err: any) {
+      throw handleError(err);
+    }
   },
 };
 
 export const passiveEffectsApi = {
   getAll: async (): Promise<Record<string, PassiveEffect>> => {
-    const { data } = await apiClient.get('/passive-effects');
-    return data;
+    try {
+      const { data } = await apiClient.get('/passive-effects');
+      return data;
+    } catch (err: any) {
+      throw handleError(err);
+    }
   },
 };

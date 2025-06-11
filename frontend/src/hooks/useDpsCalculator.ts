@@ -59,8 +59,8 @@ export function useDpsCalculator() {
         `DPS Calculated: Max hit: ${data.max_hit}, DPS: ${data.dps.toFixed(2)}`
       );
     },
-    onError: (error) => {
-      toast.error('Calculation Failed: There was an error calculating DPS.');
+    onError: (error: any) => {
+      toast.error(`Calculation Failed: ${error.message}`);
       console.error('Calculation error:', error);
     },
   });

@@ -230,13 +230,15 @@ export function EquipmentLoadout({ onEquipmentUpdate }: EquipmentLoadoutProps) {
     }
 
     // Fetch full item details including combat_stats
-    itemsApi.getItemById(item.id).then((fullItem) => {
-      if (!fullItem) {
-        if (process.env.NODE_ENV !== 'production') {
-          console.warn('[DEBUG] Failed to fetch full item details for:', item.id);
+    itemsApi
+      .getItemById(item.id)
+      .then((fullItem) => {
+        if (!fullItem) {
+          if (process.env.NODE_ENV !== 'production') {
+            console.warn('[DEBUG] Failed to fetch full item details for:', item.id);
+          }
+          return;
         }
-        return;
-      }
 
       if (process.env.NODE_ENV !== 'production') {
         console.debug('[DEBUG] Full item details:', fullItem);
@@ -270,8 +272,11 @@ export function EquipmentLoadout({ onEquipmentUpdate }: EquipmentLoadoutProps) {
       setIsDialogOpen(false);
       
       // Show a success toast
-      toast.success(`Equipped ${fullItem.name}`);
-    });
+        toast.success(`Equipped ${fullItem.name}`);
+      })
+      .catch((e: any) => {
+        toast.error(`Failed to load item: ${e.message}`);
+      });
   };
 
   const getTotals = (gear: Record<string, Item | null>) => {
