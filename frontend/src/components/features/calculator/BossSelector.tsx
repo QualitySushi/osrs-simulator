@@ -28,6 +28,7 @@ import {
   SelectValue 
 } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
+import { useDebounce } from '@/hooks/useDebounce';
 import { bossesApi } from '@/services/api';
 import { Boss, BossSummary, BossForm, MeleeCalculatorParams, RangedCalculatorParams, MagicCalculatorParams } from '@/types/calculator';
 import { useCalculatorStore } from '@/store/calculator-store';
@@ -59,6 +60,7 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
   }, [initData]);
 
   const [searchTerm, setSearchTerm] = useState('');
+  const debouncedSearch = useDebounce(searchTerm, 300);
 
   const initialLoading = storeBosses.length === 0 && searchTerm.length === 0;
 
@@ -66,9 +68,9 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
     data: searchResults,
     isLoading,
   } = useQuery({
-    queryKey: ['boss-search', searchTerm],
-    queryFn: () => bossesApi.searchBosses(searchTerm),
-    enabled: searchTerm.length > 0,
+    queryKey: ['boss-search', debouncedSearch],
+    queryFn: () => bossesApi.searchBosses(debouncedSearch),
+    enabled: debouncedSearch.length > 0,
     staleTime: Infinity,
     onSuccess: (d) => addBosses(d),
   });

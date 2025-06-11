@@ -22,6 +22,7 @@ import {
   SelectValue 
 } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
+import { useDebounce } from '@/hooks/useDebounce';
 import { bossesApi } from '@/services/api';
 import { Boss, BossSummary, BossForm } from '@/types/calculator';
 import { useCalculatorStore } from '@/store/calculator-store';
@@ -38,6 +39,7 @@ interface DirectBossSelectorProps {
 export function DirectBossSelector({ onSelectBoss, onSelectForm, className }: DirectBossSelectorProps) {
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const debouncedQuery = useDebounce(searchQuery, 300);
   const [selectedBoss, setSelectedBoss] = useState<BossSummary | null>(null);
   const [selectedForm, setSelectedForm] = useState<BossForm | null>(null);
   const [bossIcons, setBossIcons] = useState<Record<number, string>>({});
@@ -59,9 +61,9 @@ export function DirectBossSelector({ onSelectBoss, onSelectForm, className }: Di
     data: searchResults,
     isLoading,
   } = useQuery({
-    queryKey: ['boss-search', searchQuery],
-    queryFn: () => bossesApi.searchBosses(searchQuery),
-    enabled: searchQuery.length > 0,
+    queryKey: ['boss-search', debouncedQuery],
+    queryFn: () => bossesApi.searchBosses(debouncedQuery),
+    enabled: debouncedQuery.length > 0,
     staleTime: Infinity,
     onSuccess: (d) => addBosses(d),
   });
