@@ -112,8 +112,6 @@ export function ImprovedDpsCalculator() {
           <CombinedEquipmentDisplay onEquipmentUpdate={handleEquipmentUpdate} bossForm={currentBossForm} />
           {/* Prayer/Potion selector */}
           <PrayerPotionSelector className="flex-grow" />
-          <SpecialAttackOptions />
-          <PassiveEffectOptions />
         </div>
 
         {/* Right column */}
@@ -142,6 +140,8 @@ export function ImprovedDpsCalculator() {
           className="flex-grow"
           onPresetLoad={() => toast.success("Preset loaded successfully!")}
         />
+        <SpecialAttackOptions />
+        <PassiveEffectOptions />
       </div>
       
     </div>
