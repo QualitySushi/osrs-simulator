@@ -13,6 +13,7 @@ export default function HomeHero() {
         </p>
         <div className="flex flex-wrap justify-center gap-4">
           <Link href="/calculator" className="btn-primary inline-block">Calculator</Link>
+          <Link href="/best-in-slot" className="btn-primary inline-block">Best in Slot</Link>
           <Link href="/simulate" className="btn-primary inline-block">Simulation</Link>
           <Link href="/import" className="btn-primary inline-block">Import</Link>
           <Link href="/about" className="btn-primary inline-block">About</Link>
