@@ -151,6 +151,13 @@ class TestApiRoutes(unittest.TestCase):
         self.assertIsInstance(data, dict)
         self.assertIn('dragon_dagger', data)
 
+    def test_search_special_attacks(self):
+        with self.client_ctx as client:
+            resp = client.get('/search/special-attacks', params={'query': 'dragon dag'})
+        self.assertEqual(resp.status_code, 200)
+        data = resp.json()
+        self.assertTrue(any(item['weapon_name'] == 'Dragon dagger' for item in data))
+
     def test_cache_headers(self):
         """Endpoints should include Cache-Control headers."""
         with self.client_ctx as client:
