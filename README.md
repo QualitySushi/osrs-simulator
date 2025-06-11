@@ -13,7 +13,7 @@ Key Features
     Boss Encyclopedia: Detailed information for all bosses including their defensive stats and weaknesses
     Special Effects: Support for passive effects, set effects, and monster-specific bonuses
     Defense Reduction: Calculate the impact of defense-lowering special attacks
-    DPS Comparison: Save and compare multiple equipment setups
+    Visualizations: Save loadouts and view DPS, max hit and hit chance graphs
     Passive Effects: Automatic detection of relevant passive effects for your setup
     Prayer & Potions: Account for all combat boosting prayers and potions
 

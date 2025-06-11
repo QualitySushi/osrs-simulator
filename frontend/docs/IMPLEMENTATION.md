@@ -70,9 +70,8 @@ Key Features
     Equipment Selection - Component for selecting items:
         ItemSelector - Allows selecting items with combat stats
         Automatically updates attack and strength bonuses based on the selected item
-    DPS Comparison - Component for comparing different setups:
-        DpsComparison - Allows saving and comparing multiple setups
-        Displays DPS, max hit, and hit chance for each setup
+    Visualizations - Graphical comparison of saved loadouts:
+        Visualizations - Shows DPS, max hit, and hit chance charts
     State Management - Zustand store for managing calculator state:
         Parameters for each combat style
         Calculation results

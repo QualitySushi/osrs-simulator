@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { useReferenceDataStore } from '@/store/reference-data-store';
 import { BossSelector } from './BossSelector';
 import { CombinedEquipmentDisplay } from './CombinedEquipmentDisplay';
-import { DpsComparison } from './DpsComparison';
+import { Visualizations } from './Visualizations';
 import { PrayerPotionSelector } from './PrayerPotionSelector';
 import PassiveEffectsDisplay from './PassiveEffectsDisplay';
 import { DefenceReductionPanel } from './DefenceReductionPanel';
@@ -135,7 +135,7 @@ export function ImprovedDpsCalculator() {
 
         </div>
         {/* Bottom row: DPS comparison and loadout presets */}
-        <DpsComparison />
+        <Visualizations />
         <PresetSelector
           className="flex-grow"
           onPresetLoad={() => toast.success("Preset loaded successfully!")}
