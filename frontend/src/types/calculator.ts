@@ -46,7 +46,6 @@ export interface BaseCalculatorParams {
   equipment?: EquipmentLoadout;
   weapon_name?: string;
   special_attack_cost?: number;
-  special_rotation?: number;
   special_attack_speed?: number;
   special_damage_multiplier?: number;
   special_accuracy_modifier?: number;

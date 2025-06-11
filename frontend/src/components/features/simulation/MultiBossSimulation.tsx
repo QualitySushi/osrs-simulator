@@ -145,7 +145,6 @@ export function MultiBossSimulation() {
       cleaned.attack_speed = Number(cleaned.attack_speed);
     }
     if (!cleaned.special_attack_cost) delete cleaned.special_attack_cost;
-    if (!cleaned.special_rotation) delete cleaned.special_rotation;
     if (cleaned.special_multiplier === 1.0) delete cleaned.special_multiplier;
     if (cleaned.special_accuracy_multiplier === 1.0)
       delete cleaned.special_accuracy_multiplier;
