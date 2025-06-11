@@ -95,8 +95,10 @@ export function EquipmentLoadout({ onEquipmentUpdate }: EquipmentLoadoutProps) {
 
   // Helper function to apply gear totals to the store
   const applyGearTotals = useCallback((totals: Record<string, number>) => {
-    // Only proceed if there are items in the loadout
-    const hasAnyItem = Object.values(loadout).some(item => item !== null);
+    // Only proceed if there are items in the loadout (ignore spec weapon)
+    const hasAnyItem = Object.entries(loadout).some(
+      ([slot, item]) => slot !== 'spec' && item !== null
+    );
     if (!hasAnyItem) {
       unlockGear();
       return;
@@ -189,8 +191,10 @@ export function EquipmentLoadout({ onEquipmentUpdate }: EquipmentLoadoutProps) {
     const newTotals = getTotals(loadout);
     setTotals(newTotals);
     
-    // CRITICAL FIX: Only call applyGearTotals if we have items AND we're not already gearLocked
-    const hasItems = Object.values(loadout).some(item => item !== null);
+    // CRITICAL FIX: Only call applyGearTotals if we have items (excluding spec weapon) AND we're not already gearLocked
+    const hasItems = Object.entries(loadout).some(
+      ([slot, item]) => slot !== 'spec' && item !== null
+    );
     if (hasItems && !gearLocked) {
       applyGearTotals(newTotals);
     }
@@ -213,8 +217,11 @@ export function EquipmentLoadout({ onEquipmentUpdate }: EquipmentLoadoutProps) {
       // Update the loadout (this will trigger the useEffect to recalculate totals)
       setLoadout(updatedLoadout);
       
-      // If no items remain, unlock gear
-      if (Object.keys(updatedLoadout).length === 0) {
+      // If no non-spec items remain, unlock gear
+      const hasNonSpecItems = Object.entries(updatedLoadout).some(
+        ([s, it]) => s !== 'spec' && it !== null
+      );
+      if (!hasNonSpecItems) {
         unlockGear();
       }
       
@@ -467,7 +474,7 @@ export function EquipmentLoadout({ onEquipmentUpdate }: EquipmentLoadoutProps) {
 
       {isExpanded && (
         <CardContent>
-          {Object.values(loadout).some(item => item !== null) && (
+          {Object.entries(loadout).some(([s, it]) => s !== 'spec' && it !== null) && (
             <div className="flex justify-end mb-2">
               <Button variant="outline" size="sm" onClick={handleResetEquipment}>
                 <RotateCcw className="h-4 w-4 mr-2" />
