@@ -132,6 +132,35 @@ class TestDpsCalculator(unittest.TestCase):
         result = DpsCalculator.calculate_dps(params)
         self.assertEqual(result["special_attacks"], 1)
 
+    def test_partial_final_attack(self):
+        """DPS should scale the final attack when it doesn't fully fit."""
+        params = {
+            "combat_style": "melee",
+            "strength_level": 99,
+            "strength_boost": 0,
+            "strength_prayer": 1.0,
+            "attack_level": 99,
+            "attack_boost": 0,
+            "attack_prayer": 1.0,
+            "melee_strength_bonus": 80,
+            "melee_attack_bonus": 80,
+            "attack_style_bonus_strength": 3,
+            "attack_style_bonus_attack": 0,
+            "attack_speed": 2.0,
+            "target_defence_level": 100,
+            "target_defence_bonus": 50,
+            "duration": 5.0,
+            "special_energy_cost": 1000,
+        }
+
+        avg_hit = MeleeCalculator.calculate_dps(params)["average_hit"]
+        expected_total = 2 * avg_hit + 0.5 * avg_hit
+        expected_dps = expected_total / 5.0
+
+        result = DpsCalculator.calculate_dps(params)
+
+        self.assertAlmostEqual(result["dps"], expected_dps, places=5)
+
 
 class TestMeleeCalculator(unittest.TestCase):
     """Test the Melee Calculator functionality."""
