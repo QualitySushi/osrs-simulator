@@ -31,6 +31,7 @@ describe('reference data store', () => {
         passiveEffects: {},
         initialized: false,
         loading: false,
+        progress: 0,
       });
     });
     mockedBossApi.getAllBosses.mockReset();

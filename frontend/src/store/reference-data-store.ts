@@ -25,6 +25,8 @@ interface ReferenceDataState {
   passiveEffects: Record<string, PassiveEffect>;
   initialized: boolean;
   loading: boolean;
+  /** Progress of initial data loading between 0 and 1 */
+  progress: number;
   timestamp: number;
   initData: () => Promise<void>;
   addBosses: (b: BossSummary[]) => void;
@@ -46,10 +48,11 @@ export const useReferenceDataStore = create<ReferenceDataState>()(
       passiveEffects: {},
       initialized: false,
       loading: false,
+      progress: 0,
       timestamp: 0,
       async initData() {
         if (get().initialized || get().loading) return;
-        set({ loading: true, timestamp: Date.now() });
+        set({ loading: true, progress: 0, timestamp: Date.now() });
         const pageSize = 50;
         let page = 1;
         const bosses: BossSummary[] = [];
@@ -64,6 +67,7 @@ export const useReferenceDataStore = create<ReferenceDataState>()(
             break;
           }
         }
+        set({ progress: 0.25 });
         page = 1;
         const items: ItemSummary[] = [];
         while (true) {
@@ -82,10 +86,13 @@ export const useReferenceDataStore = create<ReferenceDataState>()(
             break;
           }
         }
+        set({ progress: 0.5 });
         const [specialAttacks, passiveEffects] = await Promise.all([
           specialAttacksApi.getAll().catch(() => ({})),
           passiveEffectsApi.getAll().catch(() => ({})),
         ]);
+
+        set({ progress: 0.75 });
 
         set({
           bosses,
@@ -94,6 +101,7 @@ export const useReferenceDataStore = create<ReferenceDataState>()(
           passiveEffects,
           initialized: true,
           loading: false,
+          progress: 1,
         });
       },
       addBosses(b) {
@@ -127,7 +135,7 @@ export const useReferenceDataStore = create<ReferenceDataState>()(
         if (!stored) return;
         const expired = Date.now() - stored.timestamp > REFERENCE_TTL_MS;
         if (expired) {
-          state.setState({ bosses: [], bossForms: {}, items: [], specialAttacks: {}, passiveEffects: {}, initialized: false, loading: false, timestamp: Date.now() });
+          state.setState({ bosses: [], bossForms: {}, items: [], specialAttacks: {}, passiveEffects: {}, initialized: false, loading: false, progress: 0, timestamp: Date.now() });
         } else {
           state.setState({
             bosses: stored.bosses || [],
@@ -137,6 +145,7 @@ export const useReferenceDataStore = create<ReferenceDataState>()(
             passiveEffects: stored.passiveEffects || {},
             initialized: false,
             loading: false,
+            progress: 0,
           });
         }
       },

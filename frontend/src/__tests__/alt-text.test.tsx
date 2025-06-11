@@ -35,6 +35,7 @@ describe('image alt text', () => {
       bosses: [],
       bossForms: {},
       items: [],
+      progress: 1,
       initialized: true,
       loading: false,
       timestamp: 0,
