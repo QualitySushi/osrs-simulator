@@ -48,7 +48,7 @@ export function LoadoutTabs({ bossForm, onEquipmentUpdate }: { bossForm?: BossFo
 
   return (
     <Tabs value={activePreset} onValueChange={handlePresetChange} className="w-full">
-      <TabsList className="mb-4 flex gap-2 flex-wrap">
+      <TabsList className="mb-4 flex gap-2 flex-wrap justify-center w-full">
         <TabsTrigger value="current">Current</TabsTrigger>
         {presets.slice(0, 6).map((p) => (
           <TabsTrigger key={p.id} value={p.id}>{p.name}</TabsTrigger>
