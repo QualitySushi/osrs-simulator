@@ -7,7 +7,8 @@ import {
   Item,
   ItemSummary,
   BossForm,
-  SpecialAttack
+  SpecialAttack,
+  PassiveEffect
 } from '@/types/calculator';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
@@ -142,7 +143,7 @@ export const specialAttacksApi = {
 };
 
 export const passiveEffectsApi = {
-  getAll: async (): Promise<Record<string, unknown>> => {
+  getAll: async (): Promise<Record<string, PassiveEffect>> => {
     const { data } = await apiClient.get('/passive-effects');
     return data;
   },
