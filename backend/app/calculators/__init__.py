@@ -125,7 +125,7 @@ class DpsCalculator:
 
         duration = params.get("duration", 60.0)
 
-        energy = 100.0
+        energy = params.get("initial_special_energy", 100.0)
         time = 0.0
         special_count = 0
         regular_total = 0.0

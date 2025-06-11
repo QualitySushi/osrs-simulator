@@ -103,6 +103,35 @@ class TestDpsCalculator(unittest.TestCase):
             places=5,
         )
 
+    def test_initial_special_energy(self):
+        """Initial special energy should influence special attack count."""
+        params = {
+            "combat_style": "melee",
+            "strength_level": 99,
+            "strength_boost": 0,
+            "strength_prayer": 1.0,
+            "attack_level": 99,
+            "attack_boost": 0,
+            "attack_prayer": 1.0,
+            "melee_strength_bonus": 80,
+            "melee_attack_bonus": 80,
+            "attack_style_bonus_strength": 3,
+            "attack_style_bonus_attack": 0,
+            "attack_speed": 2.4,
+            "target_defence_level": 100,
+            "target_defence_bonus": 50,
+            "special_damage_multiplier": 1.2,
+            "special_accuracy_modifier": 1.0,
+            "special_energy_cost": 50,
+            "special_attack_speed": 3.0,
+            "special_regen_rate": 10 / 30,
+            "duration": 60,
+            "initial_special_energy": 50.0,
+        }
+
+        result = DpsCalculator.calculate_dps(params)
+        self.assertEqual(result["special_attacks"], 1)
+
 
 class TestMeleeCalculator(unittest.TestCase):
     """Test the Melee Calculator functionality."""

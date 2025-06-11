@@ -159,6 +159,7 @@ class DpsParameters(BaseModel):
     special_regen_rate: float = 10 / 30
     lightbearer: Optional[bool] = None
     surge_potion: Optional[bool] = None
+    initial_special_energy: Optional[float] = 100.0
     duration: Optional[float] = None
 
     # Melee parameters
