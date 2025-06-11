@@ -15,7 +15,7 @@ interface EquipmentPanelProps {
 export function EquipmentPanel({ onEquipmentUpdate, bossForm }: EquipmentPanelProps) {
   return (
     <Card className="w-full h-full">
-      <CardHeader className="items-center pb-2 text-center">
+      <CardHeader className="flex flex-col items-center pb-2 text-center">
         <CardTitle>Equipment</CardTitle>
         <CardDescription>Configure your gear and attack style</CardDescription>
       </CardHeader>
