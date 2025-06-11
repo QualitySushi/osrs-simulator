@@ -1,7 +1,7 @@
 'use client';
 import { Card, CardContent } from '@/components/ui/card';
 import { BossSelector } from '../BossSelector';
-import { CombinedEquipmentDisplay } from '../CombinedEquipmentDisplay';
+import { LoadoutTabs } from '../LoadoutTabs';
 import { PrayerPotionSelector } from '../PrayerPotionSelector';
 import RaidScalingPanel, { RaidScalingConfig } from '../../simulation/RaidScalingPanel';
 import { DefenceReductionPanel } from '../DefenceReductionPanel';
@@ -27,10 +27,9 @@ export function MiddleColumns({
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
       <div className="space-y-6 flex flex-col">
-        <CombinedEquipmentDisplay
+        <LoadoutTabs
           onEquipmentUpdate={onEquipmentUpdate}
           bossForm={currentBossForm}
-          showSuggestButton={false}
         />
         <PrayerPotionSelector className="flex-grow" />
       </div>

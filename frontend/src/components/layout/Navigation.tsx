@@ -57,6 +57,15 @@ export function Navigation() {
               Simulate
             </Link>
             <Link
+              href="/presets"
+              className={cn(
+                'text-sm transition-colors hover:text-primary',
+                pathname === '/presets' ? 'text-foreground font-medium' : 'text-muted-foreground'
+              )}
+            >
+              Presets
+            </Link>
+            <Link
               href="/import"
               className={cn(
                 'text-sm transition-colors hover:text-primary',
