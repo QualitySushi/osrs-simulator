@@ -64,6 +64,12 @@ The React frontend is found in `frontend/src` and relies on:
 
 A simple about page exists at `frontend/src/app/about/page.tsx` and describes the project, its data sources and technologies used. It links back to the home page.
 
+## News Page
+
+The news page located at `frontend/src/app/news/page.tsx` stores articles in
+`localStorage`. Users can submit a title and content through a simple form to
+create new posts that persist across reloads in the browser.
+
 ## API Pagination
 
 The `/items` and `/bosses` endpoints accept optional `page` and `page_size` query parameters. These correspond to SQL `OFFSET`/`FETCH` clauses in the database service.

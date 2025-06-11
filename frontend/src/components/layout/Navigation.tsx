@@ -66,6 +66,15 @@ export function Navigation() {
               Best in Slot
             </Link>
             <Link
+              href="/news"
+              className={cn(
+                'text-sm transition-colors hover:text-primary',
+                pathname === '/news' ? 'text-foreground font-medium' : 'text-muted-foreground'
+              )}
+            >
+              News
+            </Link>
+            <Link
               href="/about"
               className={cn(
                 'text-sm transition-colors hover:text-primary',
