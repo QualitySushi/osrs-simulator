@@ -378,8 +378,13 @@ select {
 }
 /* Logo fading animation for loading overlay */
 @keyframes logo-cycle {
-  0%,
-  20% {
+  0% {
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  30% {
     opacity: 1;
   }
   40%,
