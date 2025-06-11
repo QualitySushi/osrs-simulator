@@ -69,7 +69,7 @@ export function MeleeForm() {
     formSchema: meleeFormSchema,
     defaultValues,
     gearLockedFields: ['melee_strength_bonus', 'melee_attack_bonus'],
-    bossLockedFields: ['target_defence_level', 'target_defence_bonus'],
+    npcLockedFields: ['target_defence_level', 'target_defence_bonus'],
   });
 
   const meleeParams = params as MeleeCalculatorParams;
@@ -250,7 +250,7 @@ export function MeleeForm() {
                       value={meleeParams.target_defence_level} // Ensure we display the actual store value
                     />
                   </FormControl>
-                  {isFieldDisabled('target_defence_level') && <FormDescription className="text-amber-500">Using target stats from boss</FormDescription>}
+                  {isFieldDisabled('target_defence_level') && <FormDescription className="text-amber-500">Using target stats from npc</FormDescription>}
                 </FormItem>
               )}
             />
@@ -279,7 +279,7 @@ export function MeleeForm() {
                       value={meleeParams.target_defence_bonus} // Ensure we display the actual store value
                     />
                   </FormControl>
-                  {isFieldDisabled('target_defence_bonus') && <FormDescription className="text-amber-500">Using target stats from boss</FormDescription>}
+                  {isFieldDisabled('target_defence_bonus') && <FormDescription className="text-amber-500">Using target stats from npc</FormDescription>}
                 </FormItem>
               )}
             />

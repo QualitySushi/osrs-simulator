@@ -2,7 +2,7 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { BossSelector } from '../components/features/calculator/BossSelector';
+import { NpcSelector } from '../components/features/calculator/NpcSelector';
 import { ItemSelector } from '../components/features/calculator/ItemSelector';
 import { useCalculatorStore } from '../store/calculator-store';
 import { useReferenceDataStore } from '../store/reference-data-store';
@@ -28,12 +28,12 @@ beforeAll(() => {
 describe('image alt text', () => {
   beforeEach(() => {
     useCalculatorStore.setState({
-      selectedBoss: null,
-      selectedBossForm: null,
+      selectedNpc: null,
+      selectedNpcForm: null,
     } as any);
     useReferenceDataStore.setState({
-      bosses: [],
-      bossForms: {},
+      npcs: [],
+      npcForms: {},
       items: [],
       progress: 1,
       initialized: true,
@@ -41,18 +41,18 @@ describe('image alt text', () => {
       error: false,
       timestamp: 0,
       initData: jest.fn(),
-      addBosses: jest.fn(),
-      addBossForms: jest.fn(),
+      addNpces: jest.fn(),
+      addNpcForms: jest.fn(),
       addItems: jest.fn(),
     });
   });
 
-  it('does not render a boss icon', () => {
-    const boss = { id: 1, name: 'Zulrah', icon_url: '/zulrah.png' } as any;
-    useCalculatorStore.getState().setSelectedBoss(boss);
-    useReferenceDataStore.setState({ bosses: [boss], bossForms: { 1: [] } });
+  it('does not render a npc icon', () => {
+    const npc = { id: 1, name: 'Zulrah', icon_url: '/zulrah.png' } as any;
+    useCalculatorStore.getState().setSelectedNpc(npc);
+    useReferenceDataStore.setState({ npcs: [npc], npcForms: { 1: [] } });
 
-    render(<BossSelector />, { wrapper });
+    render(<NpcSelector />, { wrapper });
     expect(screen.queryByAltText('Zulrah icon')).not.toBeInTheDocument();
   });
 

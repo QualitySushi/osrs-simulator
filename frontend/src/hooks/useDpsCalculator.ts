@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { calculatorApi } from '@/services/api';
 import { useCalculatorStore } from '@/store/calculator-store';
-import { CalculatorParams, Item, BossForm, CombatStyle } from '@/types/calculator';
+import { CalculatorParams, Item, NpcForm, CombatStyle } from '@/types/calculator';
 import calculatePassiveEffectBonuses from '@/components/features/calculator/PassiveEffectCalculator';
 import { useToast } from './use-toast';
 import { safeFixed } from '@/utils/format';
@@ -20,14 +20,14 @@ export function useDpsCalculator() {
 
   const [activeTab, setActiveTab] = useState<CombatStyle>(params.combat_style);
   const [currentLoadout, setCurrentLoadout] = useState<Record<string, Item | null>>(storeLoadout);
-  const storeBossForm = useCalculatorStore((s) => s.selectedBossForm);
-  const setStoreBossForm = useCalculatorStore((s) => s.setSelectedBossForm);
-  const [currentBossForm, setCurrentBossForm] = useState<BossForm | null>(storeBossForm);
+  const storeNpcForm = useCalculatorStore((s) => s.selectedNpcForm);
+  const setStoreNpcForm = useCalculatorStore((s) => s.setSelectedNpcForm);
+  const [currentNpcForm, setCurrentNpcForm] = useState<NpcForm | null>(storeNpcForm);
   const [appliedPassiveEffects, setAppliedPassiveEffects] = useState<any>(null);
 
   useEffect(() => {
-    setCurrentBossForm(storeBossForm);
-  }, [storeBossForm]);
+    setCurrentNpcForm(storeNpcForm);
+  }, [storeNpcForm]);
 
   useEffect(() => {
     setCurrentLoadout(storeLoadout);
@@ -39,8 +39,8 @@ export function useDpsCalculator() {
   }, [params.combat_style]);
 
   const calculateEffects = useCallback(() => {
-    return calculatePassiveEffectBonuses(params, currentLoadout, currentBossForm);
-  }, [params, currentLoadout, currentBossForm]);
+    return calculatePassiveEffectBonuses(params, currentLoadout, currentNpcForm);
+  }, [params, currentLoadout, currentNpcForm]);
 
   useEffect(() => {
     const effects = calculateEffects();
@@ -137,8 +137,8 @@ export function useDpsCalculator() {
           currentLoadout['mainhand']!.name.toLowerCase().includes('twisted bow'));
       if (!specItem && twistedBowEquipped && params.combat_style === 'ranged') {
         (clean as any).weapon_name = 'twisted bow';
-        if (currentBossForm?.magic_level) {
-          (clean as any).target_magic_level = currentBossForm.magic_level;
+        if (currentNpcForm?.magic_level) {
+          (clean as any).target_magic_level = currentNpcForm.magic_level;
         }
         (clean as any).ranged_attack_bonus = (params as any).ranged_attack_bonus;
         (clean as any).ranged_strength_bonus = (params as any).ranged_strength_bonus;
@@ -157,7 +157,7 @@ export function useDpsCalculator() {
       }
     }
     calculateMutation.mutate(clean);
-  }, [params, currentLoadout, currentBossForm, calculateMutation, sanitizeParams]);
+  }, [params, currentLoadout, currentNpcForm, calculateMutation, sanitizeParams]);
 
   const handleReset = () => {
     resetParams();
@@ -166,7 +166,7 @@ export function useDpsCalculator() {
     setAppliedPassiveEffects(null);
     setCurrentLoadout({});
     setStoreLoadout({});
-    setCurrentBossForm(null);
+    setCurrentNpcForm(null);
     toast.success('Calculator reset to defaults');
   };
 
@@ -181,9 +181,9 @@ export function useDpsCalculator() {
     setStoreLoadout(loadout);
   };
 
-  const handleBossUpdate = (bossForm: BossForm | null) => {
-    setCurrentBossForm(bossForm);
-    setStoreBossForm(bossForm);
+  const handleNpcUpdate = (npcForm: NpcForm | null) => {
+    setCurrentNpcForm(npcForm);
+    setStoreNpcForm(npcForm);
   };
 
   return {
@@ -192,12 +192,12 @@ export function useDpsCalculator() {
     activeTab,
     appliedPassiveEffects,
     currentLoadout,
-    currentBossForm,
+    currentNpcForm,
     isCalculating: calculateMutation.isPending,
     handleCalculate,
     handleReset,
     handleTabChange,
     handleEquipmentUpdate,
-    handleBossUpdate,
+    handleNpcUpdate,
   };
 }

@@ -2,11 +2,11 @@ import axios from 'axios';
 import {
   CalculatorParams,
   DpsResult,
-  Boss,
-  BossSummary,
+  Npc,
+  NpcSummary,
   Item,
   ItemSummary,
-  BossForm,
+  NpcForm,
   SpecialAttack,
   PassiveEffect
 } from '@/types/calculator';
@@ -71,73 +71,73 @@ export const calculatorApi = {
   },
 };
 
-// Bosses API
-export const bossesApi = {
+// Npces API
+export const npcsApi = {
 
-  getAllBosses: async (
+  getAllNpces: async (
     params?: { page?: number; page_size?: number }
-  ): Promise<BossSummary[]> => {
+  ): Promise<NpcSummary[]> => {
     try {
-      const { data } = await apiClient.get('/bosses', { params });
+      const { data } = await apiClient.get('/npcs', { params });
       return data;
     } catch (err: any) {
       throw handleError(err);
     }
   },
 
-  getBossesWithForms: async (
+  getNpcesWithForms: async (
     params?: { page?: number; page_size?: number }
-  ): Promise<Boss[]> => {
+  ): Promise<Npc[]> => {
     try {
-      const { data } = await apiClient.get('/bosses/full', { params });
+      const { data } = await apiClient.get('/npcs/full', { params });
       return data;
     } catch (err: any) {
       throw handleError(err);
     }
   },
 
-  getBossById: async (id: number): Promise<Boss> => {
+  getNpcById: async (id: number): Promise<Npc> => {
     try {
-      const { data } = await apiClient.get(`/boss/${id}`);
+      const { data } = await apiClient.get(`/npc/${id}`);
       return data;
     } catch (err: any) {
       if (err.response?.status === 404) {
-        const { data } = await apiClient.get(`/boss/form/${id}`);
+        const { data } = await apiClient.get(`/npc/form/${id}`);
         return data;
       }
       throw handleError(err);
     }
   },
 
-  getBossByFormId: async (formId: number): Promise<Boss> => {
+  getNpcByFormId: async (formId: number): Promise<Npc> => {
     try {
-      const { data } = await apiClient.get(`/boss/form/${formId}`);
+      const { data } = await apiClient.get(`/npc/form/${formId}`);
       return data;
     } catch (err: any) {
       throw handleError(err);
     }
   },
 
-  getBossForms: async (bossId: number): Promise<BossForm[]> => {
+  getNpcForms: async (npcId: number): Promise<NpcForm[]> => {
     try {
-      const { data } = await apiClient.get(`/boss/${bossId}`);
+      const { data } = await apiClient.get(`/npc/${npcId}`);
       return data.forms || [];
     } catch (err: any) {
       if (err.response?.status === 404) {
-        const { data } = await apiClient.get(`/boss/form/${bossId}`);
+        const { data } = await apiClient.get(`/npc/form/${npcId}`);
         return data.forms || [];
       }
       throw handleError(err);
     }
   },
 
-  searchBosses: async (query: string, limit?: number): Promise<BossSummary[]> => {
+  searchNpces: async (query: string, limit?: number): Promise<NpcSummary[]> => {
     const params: Record<string, unknown> = { query };
     if (limit !== undefined) {
       params.limit = limit;
     }
     try {
-      const { data } = await apiClient.get('/search/bosses', { params });
+      const { data } = await apiClient.get('/search/npcs', { params });
       return data;
     } catch (err: any) {
       throw handleError(err);

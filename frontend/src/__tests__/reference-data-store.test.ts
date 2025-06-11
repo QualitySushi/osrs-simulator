@@ -1,7 +1,7 @@
 import { act } from '@testing-library/react';
 import { useReferenceDataStore } from '../store/reference-data-store';
 import {
-  bossesApi,
+  npcsApi,
   itemsApi,
   specialAttacksApi,
   passiveEffectsApi,
@@ -9,7 +9,7 @@ import {
 
 jest.mock('../services/api');
 
-const mockedBossApi = bossesApi as jest.Mocked<typeof bossesApi>;
+const mockedNpcApi = npcsApi as jest.Mocked<typeof npcsApi>;
 const mockedItemsApi = itemsApi as jest.Mocked<typeof itemsApi>;
 const mockedSpecialApi =
   specialAttacksApi as jest.Mocked<typeof specialAttacksApi>;
@@ -24,8 +24,8 @@ describe('reference data store', () => {
   beforeEach(() => {
     act(() => {
       useReferenceDataStore.setState({
-        bosses: [],
-        bossForms: {},
+        npcs: [],
+        npcForms: {},
         items: [],
         specialAttacks: {},
         passiveEffects: {},
@@ -35,15 +35,15 @@ describe('reference data store', () => {
         error: false,
       });
     });
-    mockedBossApi.getAllBosses.mockReset();
+    mockedNpcApi.getAllNpces.mockReset();
     mockedItemsApi.getAllItems.mockReset();
     mockedSpecialApi.getAll.mockReset();
     mockedPassiveApi.getAll.mockReset();
   });
 
   it('loads data from APIs', async () => {
-    mockedBossApi.getAllBosses
-      .mockResolvedValueOnce([{ id: 1, name: 'Boss' } as any])
+    mockedNpcApi.getAllNpces
+      .mockResolvedValueOnce([{ id: 1, name: 'Npc' } as any])
       .mockResolvedValueOnce([]);
 
     mockedItemsApi.getAllItems
@@ -58,18 +58,18 @@ describe('reference data store', () => {
     });
 
     const state = getStore();
-    expect(state.bosses).toHaveLength(1);
+    expect(state.npcs).toHaveLength(1);
     expect(state.items).toHaveLength(1);
     expect(Object.keys(state.specialAttacks)).toHaveLength(1);
     expect(Object.keys(state.passiveEffects)).toHaveLength(1);
-    expect(mockedBossApi.getAllBosses).toHaveBeenCalledTimes(1);
+    expect(mockedNpcApi.getAllNpces).toHaveBeenCalledTimes(1);
     expect(mockedItemsApi.getAllItems).toHaveBeenCalledTimes(1);
     expect(mockedSpecialApi.getAll).toHaveBeenCalledTimes(1);
     expect(mockedPassiveApi.getAll).toHaveBeenCalledTimes(1);
   });
 
   it('does not load again when initialized', async () => {
-    mockedBossApi.getAllBosses.mockResolvedValue([]);
+    mockedNpcApi.getAllNpces.mockResolvedValue([]);
     mockedItemsApi.getAllItems.mockResolvedValue([]);
     mockedSpecialApi.getAll.mockResolvedValue({});
     mockedPassiveApi.getAll.mockResolvedValue({});
@@ -82,7 +82,7 @@ describe('reference data store', () => {
       await getStore().initData();
     });
 
-    expect(mockedBossApi.getAllBosses).toHaveBeenCalledTimes(1);
+    expect(mockedNpcApi.getAllNpces).toHaveBeenCalledTimes(1);
     expect(mockedItemsApi.getAllItems).toHaveBeenCalledTimes(1);
     expect(mockedSpecialApi.getAll).toHaveBeenCalledTimes(1);
     expect(mockedPassiveApi.getAll).toHaveBeenCalledTimes(1);

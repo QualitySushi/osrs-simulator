@@ -30,29 +30,29 @@ import {
 } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { useDebounce } from '@/hooks/useDebounce';
-import { bossesApi } from '@/services/api';
-import { BossSummary, BossForm, MeleeCalculatorParams, RangedCalculatorParams, MagicCalculatorParams } from '@/types/calculator';
+import { npcsApi } from '@/services/api';
+import { NpcSummary, NpcForm, MeleeCalculatorParams, RangedCalculatorParams, MagicCalculatorParams } from '@/types/calculator';
 import { useCalculatorStore } from '@/store/calculator-store';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useReferenceDataStore } from '@/store/reference-data-store';
 
-interface BossSelectorProps {
-  onSelectBoss?: (boss: BossSummary) => void;
-  onSelectForm?: (form: BossForm | null) => void;
+interface NpcSelectorProps {
+  onSelectNpc?: (npc: NpcSummary) => void;
+  onSelectForm?: (form: NpcForm | null) => void;
 }
 
-export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) {
+export function NpcSelector({ onSelectNpc, onSelectForm }: NpcSelectorProps) {
   const [open, setOpen] = useState(false);
-  const selectedBoss = useCalculatorStore((s) => s.selectedBoss);
-  const setSelectedBoss = useCalculatorStore((s) => s.setSelectedBoss);
-  const selectedForm = useCalculatorStore((s) => s.selectedBossForm);
-  const setSelectedForm = useCalculatorStore((s) => s.setSelectedBossForm);
-  const storeBosses = useReferenceDataStore((s) => s.bosses);
-  const storeBossForms = useReferenceDataStore((s) => s.bossForms);
+  const selectedNpc = useCalculatorStore((s) => s.selectedNpc);
+  const setSelectedNpc = useCalculatorStore((s) => s.setSelectedNpc);
+  const selectedForm = useCalculatorStore((s) => s.selectedNpcForm);
+  const setSelectedForm = useCalculatorStore((s) => s.setSelectedNpcForm);
+  const storeNpcs = useReferenceDataStore((s) => s.npcs);
+  const storeNpcForms = useReferenceDataStore((s) => s.npcForms);
   const initData = useReferenceDataStore((s) => s.initData);
-  const addBosses = useReferenceDataStore((s) => s.addBosses);
-  const addBossForms = useReferenceDataStore((s) => s.addBossForms);
-  const { params, setParams, lockBoss, unlockBoss, bossLocked } = useCalculatorStore();
+  const addNpces = useReferenceDataStore((s) => s.addNpces);
+  const addNpcForms = useReferenceDataStore((s) => s.addNpcForms);
+  const { params, setParams, lockNpc, unlockNpc, npcLocked } = useCalculatorStore();
   const { toast } = useToast();
 
   useEffect(() => {
@@ -62,32 +62,32 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
   const [searchTerm, setSearchTerm] = useState('');
   const debouncedSearch = useDebounce(searchTerm, 300);
 
-  const initialLoading = storeBosses.length === 0 && searchTerm.length === 0;
+  const initialLoading = storeNpcs.length === 0 && searchTerm.length === 0;
 
   const {
     data: searchResults,
     isLoading,
   } = useQuery({
-    queryKey: ['boss-search', debouncedSearch],
-    queryFn: () => bossesApi.searchBosses(debouncedSearch),
+    queryKey: ['npc-search', debouncedSearch],
+    queryFn: () => npcsApi.searchNpces(debouncedSearch),
     enabled: debouncedSearch.length > 0,
     staleTime: Infinity,
-    onSuccess: (d) => addBosses(d),
-    onError: (e: any) => toast.error(`Boss search failed: ${e.message}`),
+    onSuccess: (d) => addNpces(d),
+    onError: (e: any) => toast.error(`Npc search failed: ${e.message}`),
   });
 
-  // Fetch specific boss details when a boss is selected
-  const { data: bossDetails, isLoading: isLoadingDetails } = useQuery({
-    queryKey: ['boss', selectedBoss?.id],
-    queryFn: () => selectedBoss ? bossesApi.getBossById(selectedBoss.id) : null,
-    enabled: !!selectedBoss && !storeBossForms[selectedBoss!.id],
+  // Fetch specific npc details when a npc is selected
+  const { data: npcDetails, isLoading: isLoadingDetails } = useQuery({
+    queryKey: ['npc', selectedNpc?.id],
+    queryFn: () => selectedNpc ? npcsApi.getNpcById(selectedNpc.id) : null,
+    enabled: !!selectedNpc && !storeNpcForms[selectedNpc!.id],
     staleTime: Infinity,
-    onSuccess: (d) => addBossForms(d.id, d.forms || []),
-    onError: (e: any) => toast.error(`Failed to load boss: ${e.message}`),
+    onSuccess: (d) => addNpcForms(d.id, d.forms || []),
+    onError: (e: any) => toast.error(`Failed to load npc: ${e.message}`),
   });
 
-  const combinedBossDetails = selectedBoss
-    ? { ...selectedBoss, forms: storeBossForms[selectedBoss.id] ?? bossDetails?.forms }
+  const combinedNpcDetails = selectedNpc
+    ? { ...selectedNpc, forms: storeNpcForms[selectedNpc.id] ?? npcDetails?.forms }
     : null;
 
   const rangedWeakness = selectedForm &&
@@ -104,26 +104,26 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
   // Effect to clean up when combat style changes or component unmounts
   useEffect(() => {
     return () => {
-      // Ensure we're not leaving stale boss locked state on unmount
+      // Ensure we're not leaving stale npc locked state on unmount
       if (!selectedForm) {
-        unlockBoss();
+        unlockNpc();
       }
     };
-  }, [unlockBoss, selectedForm]);
+  }, [unlockNpc, selectedForm]);
 
-  // Handle boss selection
-  const handleSelectBoss = (boss: BossSummary) => {
-    setSelectedBoss(boss);
+  // Handle npc selection
+  const handleSelectNpc = (npc: NpcSummary) => {
+    setSelectedNpc(npc);
     setSelectedForm(null);
     setOpen(false);
 
-    if (onSelectBoss) {
-      onSelectBoss(boss);
+    if (onSelectNpc) {
+      onSelectNpc(npc);
     }
   };
 
   // Handle form selection and update calculator params
-  const handleSelectForm = (form: BossForm) => {
+  const handleSelectForm = (form: NpcForm) => {
     setSelectedForm(form);
 
     // Log the values before update
@@ -155,7 +155,7 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
       }
     }
 
-    // Update the calculator params with the selected boss's defense stats
+    // Update the calculator params with the selected npc's defense stats
     const combatStyle = params.combat_style;
     
     if (combatStyle === 'melee') {
@@ -201,7 +201,7 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
         if (currentParams.combat_style === 'melee') {
           const meleeParams = currentParams as MeleeCalculatorParams;
           if (process.env.NODE_ENV !== 'production') {
-            console.log('[DEBUG] Verified melee boss stats after update:', {
+            console.log('[DEBUG] Verified melee npc stats after update:', {
               target_defence_level: meleeParams.target_defence_level,
               target_defence_bonus: meleeParams.target_defence_bonus,
               target_defence_type: meleeParams.target_defence_type
@@ -232,7 +232,7 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
         if (currentParams.combat_style === 'ranged') {
           const rangedParams = currentParams as RangedCalculatorParams;
           if (process.env.NODE_ENV !== 'production') {
-            console.log('[DEBUG] Verified ranged boss stats after update:', {
+            console.log('[DEBUG] Verified ranged npc stats after update:', {
               target_defence_level: rangedParams.target_defence_level,
               target_defence_bonus: rangedParams.target_defence_bonus,
               target_defence_type: rangedParams.target_defence_type
@@ -265,7 +265,7 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
         if (currentParams.combat_style === 'magic') {
           const magicParams = currentParams as MagicCalculatorParams;
           if (process.env.NODE_ENV !== 'production') {
-            console.log('[DEBUG] Verified magic boss stats after update:', {
+            console.log('[DEBUG] Verified magic npc stats after update:', {
               target_magic_level: magicParams.target_magic_level,
               target_magic_defence: magicParams.target_magic_defence,
               target_defence_type: magicParams.target_defence_type
@@ -275,20 +275,20 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
       }, 0);
     }
 
-    // Lock boss inputs
-    lockBoss();
+    // Lock npc inputs
+    lockNpc();
     
     // Show success notification
-    toast.success(`Target stats updated: ${form.form_name || form.boss_id}`);
+    toast.success(`Target stats updated: ${form.form_name || form.npc_id}`);
 
     if (onSelectForm) {
       onSelectForm(form);
     }
   };
 
-  // Reset boss selection
-  const handleResetBoss = () => {
-    setSelectedBoss(null);
+  // Reset npc selection
+  const handleResetNpc = () => {
+    setSelectedNpc(null);
     setSelectedForm(null);
     
     // Reset the defense parameters to default values based on combat style
@@ -314,7 +314,7 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
       });
     }
     
-    unlockBoss();
+    unlockNpc();
     
     // Show toast notification
     toast.info("Target selection reset");
@@ -329,20 +329,20 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
     <Card>
       <CardHeader>
         <CardTitle>Target Selection</CardTitle>
-        <CardDescription>Select a boss to calculate DPS against</CardDescription>
+        <CardDescription>Select a npc to calculate DPS against</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        {bossLocked && (
+        {npcLocked && (
           <Alert className="mb-4 border-blue-200 dark:border-blue-800 bg-blue-100 dark:bg-blue-900">
             <AlertDescription>
-              Target stats from boss are being used. Manual target stat inputs are disabled.
+              Target stats from npc are being used. Manual target stat inputs are disabled.
             </AlertDescription>
           </Alert>
         )}
         
-        {/* Boss selector */}
+        {/* Npc selector */}
         <div className="space-y-2">
-          <label className="text-sm font-medium">Select Boss</label>
+          <label className="text-sm font-medium">Select Npc</label>
           <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
               <Button
@@ -351,7 +351,7 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
                 aria-expanded={open}
                 className="w-full justify-between"
               >
-                {selectedBoss ? selectedBoss.name : "Select a boss..."}
+                {selectedNpc ? selectedNpc.name : "Select a npc..."}
                 <Search className="ml-2 h-4 w-4 shrink-0 opacity-50" />
               </Button>
             </PopoverTrigger>
@@ -359,13 +359,13 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
               <Command>
                 <div className="flex h-9 items-center gap-2 border-b px-3">
                   <CommandPrimitive.Input
-                    placeholder="Search bosses..."
+                    placeholder="Search npcs..."
                     value={searchTerm}
                     onValueChange={setSearchTerm}
                     className="placeholder:text-muted-foreground flex h-10 w-full rounded-md bg-transparent py-3 text-sm outline-hidden disabled:cursor-not-allowed disabled:opacity-50"
                   />
                 </div>
-                <CommandEmpty>No boss found.</CommandEmpty>
+                <CommandEmpty>No npc found.</CommandEmpty>
                 <CommandGroup>
                   <CommandList>
                     {isLoading && searchTerm ? (
@@ -374,16 +374,16 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
                         Loading...
                       </div>
                     ) : (
-                      (searchTerm.length > 0 ? searchResults ?? [] : storeBosses).map((boss) => (
+                      (searchTerm.length > 0 ? searchResults ?? [] : storeNpcs).map((npc) => (
                         <CommandItem
-                          key={boss.id}
-                          value={boss.name}
-                          onSelect={() => handleSelectBoss(boss)}
+                          key={npc.id}
+                          value={npc.name}
+                          onSelect={() => handleSelectNpc(npc)}
                         >
-                          {boss.name}
-                          {boss.raid_group && (
+                          {npc.name}
+                          {npc.raid_group && (
                             <Badge variant="outline" className="ml-2">
-                              {boss.raid_group}
+                              {npc.raid_group}
                             </Badge>
                           )}
                         </CommandItem>
@@ -402,19 +402,19 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
         </div>
 
         {/* Form selector */}
-        {selectedBoss && (
+        {selectedNpc && (
           <div className="space-y-2">
             <label className="text-sm font-medium">Select Form/Phase</label>
             {isLoadingDetails ? (
               <div className="flex items-center text-sm text-muted-foreground">
                 <LogoSpinner className="mr-2 h-4 w-4" />
-                Loading boss details...
+                Loading npc details...
               </div>
             ) : (<div className="flex items-center gap-2">
                 <Select
                   value={selectedForm?.id.toString() || ''}
                   onValueChange={(value: string) => {
-                      const form = combinedBossDetails?.forms?.find(f => f.id.toString() === value);
+                      const form = combinedNpcDetails?.forms?.find(f => f.id.toString() === value);
                       if (form) {
                           handleSelectForm(form);
                       }
@@ -424,14 +424,14 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
                   <SelectValue placeholder="Select a form/phase" />
                 </SelectTrigger>
                 <SelectContent>
-                  {(combinedBossDetails?.forms ?? []).map((form) => (
+                  {(combinedNpcDetails?.forms ?? []).map((form) => (
                     <SelectItem key={form.id} value={form.id.toString()}>
                       {form.form_name} (Combat Lvl: {form.combat_level || 'Unknown'})
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
-                <Button variant="outline" size="sm" onClick={handleResetBoss}>
+                <Button variant="outline" size="sm" onClick={handleResetNpc}>
                   <RotateCcw className="h-4 w-4 mr-2" />
                   Reset
                 </Button>
@@ -440,7 +440,7 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
           </div>
         )}
 
-        {/* Display the selected boss stats if a form is selected */}
+        {/* Display the selected npc stats if a form is selected */}
         {selectedForm && (
           <div className="pt-2 space-y-2 flex flex-col items-center">
             {(selectedForm.icons?.[0] || selectedForm.image_url) && (

@@ -38,7 +38,7 @@ describe('useCombatForm hook', () => {
         formSchema: schema,
         defaultValues,
         gearLockedFields: ['magic_attack_bonus'],
-        bossLockedFields: ['target_magic_level'],
+        npcLockedFields: ['target_magic_level'],
       })
     );
 
@@ -54,20 +54,20 @@ describe('useCombatForm hook', () => {
     expect(state.target_magic_level).toBe(75);
   });
 
-  it('respects gear and boss locks', () => {
+  it('respects gear and npc locks', () => {
     const { result } = renderHook(() =>
       useCombatForm<FormValues>({
         combatStyle: 'magic',
         formSchema: schema,
         defaultValues,
         gearLockedFields: ['magic_attack_bonus'],
-        bossLockedFields: ['target_magic_level'],
+        npcLockedFields: ['target_magic_level'],
       })
     );
 
     act(() => {
       useCalculatorStore.getState().lockGear();
-      useCalculatorStore.getState().lockBoss();
+      useCalculatorStore.getState().lockNpc();
     });
 
     act(() => {

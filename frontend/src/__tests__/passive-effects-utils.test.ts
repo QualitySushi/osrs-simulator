@@ -1,12 +1,12 @@
 import {
-  isTargetDraconic,
-  isTargetDemonic,
+  isNpcDraconic,
+  isNpcDemonic,
   hasVoidKnightSet,
   countInquisitorPieces,
 } from '../utils/passiveEffectsUtils';
 
-const dragonBoss = { boss_id: 50, form_name: 'King Black Dragon' } as any;
-const demonBoss = { form_name: "K'ril Tsutsaroth", weakness: 'demon' } as any;
+const dragonNpc = { npc_id: 50, form_name: 'King Black Dragon' } as any;
+const demonNpc = { form_name: "K'ril Tsutsaroth", weakness: 'demon' } as any;
 
 const equipment = {
   body: { name: 'Void knight top' },
@@ -24,8 +24,8 @@ const inquisitorEquip = {
 
 describe('passiveEffectsUtils', () => {
   it('detects target types', () => {
-    expect(isTargetDraconic(dragonBoss)).toBe(true);
-    expect(isTargetDemonic(demonBoss)).toBe(true);
+    expect(isNpcDraconic(dragonNpc)).toBe(true);
+    expect(isNpcDemonic(demonNpc)).toBe(true);
   });
 
   it('detects void set and inquisitor pieces', () => {

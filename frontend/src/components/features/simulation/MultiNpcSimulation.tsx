@@ -33,15 +33,15 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { bossesApi, calculatorApi } from '@/services/api';
+import { npcsApi, calculatorApi } from '@/services/api';
 import { useCalculatorStore } from '@/store/calculator-store';
 import { safeFixed } from '@/utils/format';
 import { useReferenceDataStore } from '@/store/reference-data-store';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useToast } from '@/hooks/use-toast';
 import {
-  Boss,
-  BossForm,
+  Npc,
+  NpcForm,
   CalculatorParams,
   DpsResult,
   MeleeCalculatorParams,
@@ -50,17 +50,17 @@ import {
 } from '@/types/calculator';
 
 interface SimulationEntry {
-  boss: Boss;
+  npc: Npc;
   result: DpsResult;
 }
 
 
-export function MultiBossSimulation() {
+export function MultiNpcSimulation() {
   const params = useCalculatorStore((s) => s.params);
   const loadout = useCalculatorStore((s) => s.loadout);
   const { toast } = useToast();
 
-  const [selectedBosses, setSelectedBosses] = useState<Boss[]>([]);
+  const [selectedNpces, setSelectedNpces] = useState<Npc[]>([]);
   const [selectedRaid, setSelectedRaid] = useState<Raid | ''>('');
   const [raidConfig, setRaidConfig] = useState<RaidScalingConfig>({ teamSize: 1 });
   const [results, setResults] = useState<SimulationEntry[]>([]);
@@ -68,12 +68,12 @@ export function MultiBossSimulation() {
   const debouncedSearch = useDebounce(searchTerm, 300);
   const [open, setOpen] = useState(false);
   const [isRunning, setIsRunning] = useState(false);
-  const storeBosses = useReferenceDataStore((s) => s.bosses);
-  const storeBossForms = useReferenceDataStore((s) => s.bossForms);
+  const storeNpcs = useReferenceDataStore((s) => s.npcs);
+  const storeNpcForms = useReferenceDataStore((s) => s.npcForms);
   const initData = useReferenceDataStore((s) => s.initData);
-  const addBosses = useReferenceDataStore((s) => s.addBosses);
-  const addBossForms = useReferenceDataStore((s) => s.addBossForms);
-  const [bossIcons, setBossIcons] = useState<Record<number, string>>({});
+  const addNpces = useReferenceDataStore((s) => s.addNpces);
+  const addNpcForms = useReferenceDataStore((s) => s.addNpcForms);
+  const [npcIcons, setNpcIcons] = useState<Record<number, string>>({});
 
   useEffect(() => {
     initData();
@@ -81,44 +81,44 @@ export function MultiBossSimulation() {
 
   useEffect(() => {
     const map: Record<number, string> = {};
-    storeBosses.forEach((b) => {
+    storeNpcs.forEach((b) => {
       if (b.icon_url) map[b.id] = b.icon_url;
     });
-    setBossIcons(map);
-  }, [storeBosses]);
+    setNpcIcons(map);
+  }, [storeNpcs]);
 
   const { data: searchResults, isLoading } = useQuery({
-    queryKey: ['sim-boss-search', debouncedSearch],
-    queryFn: () => bossesApi.searchBosses(debouncedSearch, 50),
+    queryKey: ['sim-npc-search', debouncedSearch],
+    queryFn: () => npcsApi.searchNpces(debouncedSearch, 50),
     enabled: debouncedSearch.length > 0,
     staleTime: Infinity,
-    onSuccess: (d) => addBosses(d),
-    onError: (e: any) => toast.error(`Boss search failed: ${e.message}`),
+    onSuccess: (d) => addNpces(d),
+    onError: (e: any) => toast.error(`Npc search failed: ${e.message}`),
   });
 
   useEffect(() => {
     if (!selectedRaid) {
-      setSelectedBosses([]);
+      setSelectedNpces([]);
       return;
     }
     const raidName = RAID_NAME_MAP[selectedRaid];
-    const bossesForRaid = storeBosses.filter((b) => b.raid_group === raidName);
-    setSelectedBosses(bossesForRaid);
-  }, [selectedRaid, storeBosses]);
+    const npcsForRaid = storeNpcs.filter((b) => b.raid_group === raidName);
+    setSelectedNpces(npcsForRaid);
+  }, [selectedRaid, storeNpcs]);
 
-  const filteredBosses = (searchTerm.length > 0 ? searchResults ?? [] : storeBosses).filter(
+  const filteredNpces = (searchTerm.length > 0 ? searchResults ?? [] : storeNpcs).filter(
     (b) => !selectedRaid || b.raid_group === RAID_NAME_MAP[selectedRaid]
   );
 
-  const addBoss = (boss: Boss) => {
-    if (selectedBosses.find((b) => b.id === boss.id)) return;
-    setSelectedBosses([...selectedBosses, boss]);
+  const addNpc = (npc: Npc) => {
+    if (selectedNpces.find((b) => b.id === npc.id)) return;
+    setSelectedNpces([...selectedNpces, npc]);
     setOpen(false);
     setSearchTerm('');
   };
 
-  const removeBoss = (id: number) => {
-    setSelectedBosses(selectedBosses.filter((b) => b.id !== id));
+  const removeNpc = (id: number) => {
+    setSelectedNpces(selectedNpces.filter((b) => b.id !== id));
   };
 
   const sanitizeParams = (p: CalculatorParams): CalculatorParams => {
@@ -161,7 +161,7 @@ export function MultiBossSimulation() {
     return cleaned;
   };
 
-  const applyFormStats = (form: BossForm, base: CalculatorParams): CalculatorParams => {
+  const applyFormStats = (form: NpcForm, base: CalculatorParams): CalculatorParams => {
     const updated = { ...base } as any;
     if (base.combat_style === 'melee') {
       let defenceBonus = 0;
@@ -197,7 +197,7 @@ export function MultiBossSimulation() {
     return updated as CalculatorParams;
   };
 
-  const buildParams = (form: BossForm): CalculatorParams => {
+  const buildParams = (form: NpcForm): CalculatorParams => {
     let p = applyFormStats(form, params);
     let clean = sanitizeParams(p);
     if (loadout) {
@@ -223,22 +223,22 @@ export function MultiBossSimulation() {
   const runSimulation = async () => {
     setIsRunning(true);
     const sims: SimulationEntry[] = [];
-      for (const boss of selectedBosses) {
+      for (const npc of selectedNpces) {
         try {
-          let forms = storeBossForms[boss.id];
+          let forms = storeNpcForms[npc.id];
         if (!forms) {
-          const details = await bossesApi.getBossById(boss.id);
+          const details = await npcsApi.getNpcById(npc.id);
           forms = details.forms || [];
-          addBossForms(boss.id, forms);
+          addNpcForms(npc.id, forms);
         }
         const form = forms[0];
         if (!form) continue;
         const simParams = buildParams(form);
         const result = await calculatorApi.calculateDps(simParams);
-          sims.push({ boss, result });
+          sims.push({ npc, result });
         } catch (e: any) {
-          toast.error(`Simulation failed for ${boss.name}: ${e.message}`);
-          console.error('Simulation failed for', boss.name, e);
+          toast.error(`Simulation failed for ${npc.name}: ${e.message}`);
+          console.error('Simulation failed for', npc.name, e);
         }
       }
     setResults(sims);
@@ -248,7 +248,7 @@ export function MultiBossSimulation() {
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle>Multi-Boss Simulation</CardTitle>
+        <CardTitle>Multi-Npc Simulation</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-2">
@@ -265,11 +265,11 @@ export function MultiBossSimulation() {
           </Select>
         </div>
         <div className="space-y-2">
-          <label className="text-sm font-medium">Add Bosses</label>
+          <label className="text-sm font-medium">Add Npces</label>
           <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
               <Button variant="outline" className="w-full justify-between">
-                Select bosses
+                Select npcs
                 <Search className="ml-2 h-4 w-4 shrink-0 opacity-50" />
               </Button>
             </PopoverTrigger>
@@ -277,13 +277,13 @@ export function MultiBossSimulation() {
               <Command>
                 <div className="flex h-9 items-center gap-2 border-b px-3">
                   <CommandInput
-                    placeholder="Search bosses..."
+                    placeholder="Search npcs..."
                     value={searchTerm}
                     onValueChange={setSearchTerm}
                     className="placeholder:text-muted-foreground flex h-10 w-full rounded-md bg-transparent py-3 text-sm outline-none disabled:cursor-not-allowed disabled:opacity-50"
                   />
                 </div>
-                <CommandEmpty>No boss found.</CommandEmpty>
+                <CommandEmpty>No npc found.</CommandEmpty>
                 <CommandGroup>
                   <CommandList>
                     {isLoading && searchTerm ? (
@@ -292,13 +292,13 @@ export function MultiBossSimulation() {
                         Loading...
                       </div>
                     ) : (
-                      filteredBosses.map((boss) => (
+                      filteredNpces.map((npc) => (
                         <CommandItem
-                          key={boss.id}
-                          value={boss.name}
-                          onSelect={() => addBoss(boss)}
+                          key={npc.id}
+                          value={npc.name}
+                          onSelect={() => addNpc(npc)}
                         >
-                          {boss.name}
+                          {npc.name}
                         </CommandItem>
                       ))
                     )}
@@ -311,43 +311,43 @@ export function MultiBossSimulation() {
         {selectedRaid && (
           <RaidScalingPanel raid={selectedRaid as Raid} config={raidConfig} onChange={setRaidConfig} />
         )}
-        {selectedBosses.length > 0 && (
+        {selectedNpces.length > 0 && (
           <div className="flex flex-wrap gap-2">
-            {selectedBosses.map((b) => (
+            {selectedNpces.map((b) => (
               <Badge key={b.id} variant="secondary" className="flex items-center gap-1">
                 {b.name}
-                <button onClick={() => removeBoss(b.id)} className="ml-1">
+                <button onClick={() => removeNpc(b.id)} className="ml-1">
                   <X className="w-3 h-3" />
                 </button>
               </Badge>
             ))}
           </div>
         )}
-        <Button onClick={runSimulation} disabled={selectedBosses.length === 0 || isRunning}>
+        <Button onClick={runSimulation} disabled={selectedNpces.length === 0 || isRunning}>
           {isRunning && <LogoSpinner className="mr-2 h-4 w-4" />}Run Simulation
         </Button>
         {results.length > 0 && (
           <Table className="mt-4">
             <TableHeader>
               <TableRow>
-                <TableHead>Boss</TableHead>
+                <TableHead>Npc</TableHead>
                 <TableHead className="text-right">DPS</TableHead>
                 <TableHead className="text-right">Max Hit</TableHead>
                 <TableHead className="text-right">Hit Chance</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {results.map(({ boss, result }) => (
-                <TableRow key={boss.id}>
+              {results.map(({ npc, result }) => (
+                <TableRow key={npc.id}>
                   <TableCell className="font-medium">
-                    {bossIcons[boss.id] && (
+                    {npcIcons[npc.id] && (
                       <img
-                        src={bossIcons[boss.id]}
-                        alt={`${boss.name} icon`}
+                        src={npcIcons[npc.id]}
+                        alt={`${npc.name} icon`}
                         className="w-4 h-4 mr-1 inline-block"
                       />
                     )}
-                    {boss.name}
+                    {npc.name}
                   </TableCell>
                   <TableCell className="text-right">{safeFixed(result.dps, 2)}</TableCell>
                   <TableCell className="text-right">{result.max_hit}</TableCell>
@@ -362,4 +362,4 @@ export function MultiBossSimulation() {
   );
 }
 
-export default MultiBossSimulation;
+export default MultiNpcSimulation;

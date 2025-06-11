@@ -26,17 +26,17 @@ export function ImprovedDpsCalculator() {
     handleReset,
     handleTabChange,
     handleEquipmentUpdate,
-    handleBossUpdate,
+    handleNpcUpdate,
     isCalculating,
     currentLoadout,
-    currentBossForm,
+    currentNpcForm,
   } = useDpsCalculator();
   const initData = useReferenceDataStore((s) => s.initData);
-  const selectedBoss = useCalculatorStore((s) => s.selectedBoss);
+  const selectedNpc = useCalculatorStore((s) => s.selectedNpc);
   const [raidConfig, setRaidConfig] = useState<RaidScalingConfig>({ teamSize: 1 });
 
-  const selectedRaid = selectedBoss?.raid_group
-    ? RAID_NAME_TO_ID[selectedBoss.raid_group]
+  const selectedRaid = selectedNpc?.raid_group
+    ? RAID_NAME_TO_ID[selectedNpc.raid_group]
     : undefined;
 
   useEffect(() => {
@@ -58,8 +58,8 @@ export function ImprovedDpsCalculator() {
 
       <MiddleColumns
         onEquipmentUpdate={handleEquipmentUpdate}
-        onSelectForm={handleBossUpdate}
-        currentBossForm={currentBossForm}
+        onSelectForm={handleNpcUpdate}
+        currentNpcForm={currentNpcForm}
         selectedRaid={selectedRaid}
         raidConfig={raidConfig}
         onRaidConfigChange={setRaidConfig}

@@ -55,7 +55,7 @@ interface EquipmentDisplayProps {
 }
 
 export function EquipmentDisplay({ loadout, totals }: EquipmentDisplayProps) {
-  const { params, setParams, bossLocked } = useCalculatorStore();
+  const { params, setParams, npcLocked } = useCalculatorStore();
   const [isExpanded, setIsExpanded] = useState(true);
   const [selectedAttackType, setSelectedAttackType] = useState<string>('slash');
   const [selectedAttackStyle, setSelectedAttackStyle] = useState<string>('aggressive');
@@ -356,9 +356,9 @@ export function EquipmentDisplay({ loadout, totals }: EquipmentDisplayProps) {
                   </TooltipTrigger>
                   <TooltipContent>
                     <p>Select your attack type and style to optimize your DPS.</p>
-                    {bossLocked && combatStyle === 'melee' && (
+                    {npcLocked && combatStyle === 'melee' && (
                       <p className="text-xs mt-1 text-green-500">
-                        Attack type will be used to determine boss defense.
+                        Attack type will be used to determine npc defense.
                       </p>
                     )}
                   </TooltipContent>
@@ -383,9 +383,9 @@ export function EquipmentDisplay({ loadout, totals }: EquipmentDisplayProps) {
                     ))}
                   </TabsList>
                 </Tabs>
-                {bossLocked && (
+                {npcLocked && (
                   <p className="text-xs text-amber-500 mt-1">
-                    Using {selectedAttackType} attack against boss&rsquo;s {selectedAttackType} defense
+                    Using {selectedAttackType} attack against npc&rsquo;s {selectedAttackType} defense
                   </p>
                 )}
               </div>
