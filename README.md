@@ -1,5 +1,7 @@
 ScapeLab DPS Calculator
 
+![ScapeLab Logo](frontend/public/images/logo_transparent_hd.png)
+
 A comprehensive damage-per-second calculator for Old School RuneScape with accurate combat formulas, equipment comparison, and boss statistics.
 
 
