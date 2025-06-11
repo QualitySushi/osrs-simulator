@@ -106,6 +106,21 @@ export function useDpsCalculator() {
       if (cleaned.special_hit_count === 1) {
         delete cleaned.special_hit_count;
       }
+      if (cleaned.special_attack_speed === undefined) {
+        delete cleaned.special_attack_speed;
+      }
+      if (cleaned.special_damage_multiplier === undefined) {
+        delete cleaned.special_damage_multiplier;
+      }
+      if (cleaned.special_accuracy_modifier === undefined) {
+        delete cleaned.special_accuracy_modifier;
+      }
+      if (cleaned.special_energy_cost === undefined) {
+        delete cleaned.special_energy_cost;
+      }
+      if (cleaned.special_regen_rate === 10 / 30) {
+        delete cleaned.special_regen_rate;
+      }
       return cleaned;
     },
     []
@@ -137,12 +152,8 @@ export function useDpsCalculator() {
         (clean as any).shadow_bonus = 0.5;
       }
       if (specItem) {
-        (clean as any).weapon_name = specItem.name.toLowerCase();
-        delete (clean as any).special_attack_cost;
-        delete (clean as any).special_multiplier;
-        delete (clean as any).special_accuracy_multiplier;
-        delete (clean as any).special_hit_count;
-        delete (clean as any).guaranteed_hit;
+        (clean as any).special_attack_speed =
+          specItem.combat_stats?.attack_speed ?? clean.attack_speed;
       }
     }
     calculateMutation.mutate(clean);

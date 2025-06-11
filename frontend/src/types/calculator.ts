@@ -47,6 +47,11 @@ export interface BaseCalculatorParams {
   weapon_name?: string;
   special_attack_cost?: number;
   special_rotation?: number;
+  special_attack_speed?: number;
+  special_damage_multiplier?: number;
+  special_accuracy_modifier?: number;
+  special_energy_cost?: number;
+  special_regen_rate?: number;
   lightbearer?: boolean;
   surge_potion?: boolean;
   duration?: number;
@@ -158,6 +163,7 @@ export interface DpsResult {
   special_attacks?: number;
   duration?: number;
   special_attack_dps?: number;
+  mainhand_dps?: number;
 }
 
 // Expanded DPS result with additional information

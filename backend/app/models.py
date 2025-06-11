@@ -14,6 +14,7 @@ class DpsResult(BaseModel):
     effective_str: Optional[int] = None
     effective_atk: Optional[int] = None
     damage_multiplier: Optional[float] = None
+    mainhand_dps: Optional[float] = None
     special_attacks: Optional[int] = None
     duration: Optional[float] = None
     special_attack_dps: Optional[float] = None
@@ -151,6 +152,11 @@ class DpsParameters(BaseModel):
     attack_style_bonus: Optional[int] = Field(default=0)
     special_attack_cost: Optional[int] = None
     special_rotation: Optional[float] = None
+    special_attack_speed: Optional[float] = None
+    special_damage_multiplier: Optional[float] = None
+    special_accuracy_modifier: Optional[float] = None
+    special_energy_cost: Optional[int] = None
+    special_regen_rate: float = 10 / 30
     lightbearer: Optional[bool] = None
     surge_potion: Optional[bool] = None
     duration: Optional[float] = None

@@ -8,6 +8,7 @@ import { MeleeForm } from './MeleeForm';
 import { RangedForm } from './RangedForm';
 import { MagicForm } from './MagicForm';
 import { PlayerLevel } from './PlayerLevel';
+import SpecialAttackForm from './SpecialAttackForm';
 import { CombatStyle } from '@/types/calculator';
 
 interface CalculatorFormsProps {
@@ -53,6 +54,9 @@ export function CalculatorForms({
             <MagicForm />
           </TabsContent>
         </Tabs>
+        <div className="mt-6">
+          <SpecialAttackForm />
+        </div>
       )}
       <div className="mt-6 flex justify-center">
         <Button
