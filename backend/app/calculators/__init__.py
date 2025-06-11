@@ -91,11 +91,11 @@ class DpsCalculator:
         if "special_accuracy_modifier" in params:
             params["special_accuracy_multiplier"] = params["special_accuracy_modifier"]
         cost = params.get("special_energy_cost")
-        if cost is None:
+        if cost is None or cost <= 0:
             cost = params.get("special_attack_cost")
 
-        # If no special attack cost provided, just return normal DPS
-        if cost is None:
+        # If no special attack cost provided or it is non-positive, just return normal DPS
+        if cost is None or cost <= 0:
             return calculator.calculate_dps(params)
 
         # Calculate regular and special attack damage per hit

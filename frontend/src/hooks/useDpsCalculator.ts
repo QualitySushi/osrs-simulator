@@ -112,7 +112,7 @@ export function useDpsCalculator() {
       if (cleaned.special_accuracy_modifier === undefined) {
         delete cleaned.special_accuracy_modifier;
       }
-      if (cleaned.special_energy_cost === undefined) {
+      if (!cleaned.special_energy_cost) {
         delete cleaned.special_energy_cost;
       }
       if (cleaned.special_regen_rate === 10 / 30) {
