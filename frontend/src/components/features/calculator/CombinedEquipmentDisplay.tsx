@@ -103,6 +103,7 @@ export function CombinedEquipmentDisplay({ onEquipmentUpdate, bossForm, loadoutP
     if (cleaned.special_accuracy_modifier === undefined) delete cleaned.special_accuracy_modifier;
     if (cleaned.special_energy_cost === undefined) delete cleaned.special_energy_cost;
     if (cleaned.special_regen_rate === 10 / 30) delete cleaned.special_regen_rate;
+    if (cleaned.initial_special_energy === 100) delete cleaned.initial_special_energy;
     return cleaned;
   }, []);
 
