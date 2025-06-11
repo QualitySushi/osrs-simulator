@@ -444,7 +444,7 @@ export function CombinedEquipmentDisplay({ onEquipmentUpdate, bossForm, loadoutP
               className="mr-2 data-[state=unchecked]:bg-primary"
             />
             <Label htmlFor="use-2h" className="text-sm">
-              {show2hOption ? 'Using 1H' : 'Using 2H'}
+              {show2hOption ? 'Using 2H' : 'Using 1H'}
             </Label>
           </div>
           
