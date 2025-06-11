@@ -21,7 +21,7 @@ shadcn/ui - UI components
 Getting Started
 Prerequisites
 
-Node.js 20.x or later
+Node.js 18.x LTS
 npm or yarn or pnpm
 
 Installation
