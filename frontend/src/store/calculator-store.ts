@@ -73,6 +73,7 @@ const defaultMeleeParams: MeleeCalculatorParams = {
   special_regen_rate: 10 / 30,
   lightbearer: false,
   surge_potion: false,
+  initial_special_energy: 100,
   duration: 60,
   target_defence_level: 200,
   target_defence_bonus: 30,
@@ -100,6 +101,7 @@ const defaultRangedParams: RangedCalculatorParams = {
   special_regen_rate: 10 / 30,
   lightbearer: false,
   surge_potion: false,
+  initial_special_energy: 100,
   duration: 60,
   target_defence_level: 200,
   target_defence_bonus: 150,
@@ -143,6 +145,7 @@ const defaultMagicParams: MagicCalculatorParams = {
   special_regen_rate: 10 / 30,
   lightbearer: false,
   surge_potion: false,
+  initial_special_energy: 100,
   duration: 60
 };
 

@@ -352,7 +352,7 @@ class AzureSQLDatabaseService:
             
         except Exception as e:
             print(f"Error getting items: {e}")
-            return []
+            raise
 
     def get_item(self, item_id: int) -> Optional[Dict[str, Any]]:
         """Get a specific item."""
@@ -405,7 +405,7 @@ class AzureSQLDatabaseService:
             
         except Exception as e:
             print(f"Error getting item {item_id}: {e}")
-            return None
+            raise
 
     def search_bosses(self, query: str, limit: int | None = None) -> List[Dict[str, Any]]:
         """Search bosses by name."""
@@ -500,7 +500,7 @@ class AzureSQLDatabaseService:
 
         except Exception as e:
             print(f"Error searching items: {e}")
-            return []
+            raise
 
     # Async implementations -----------------------------------------------------
 
@@ -718,7 +718,7 @@ class AzureSQLDatabaseService:
                     return items
         except Exception as e:
             print(f"Error getting items: {e}")
-            return []
+            raise
 
     async def get_item_async(self, item_id: int) -> Optional[Dict[str, Any]]:
         try:
@@ -770,7 +770,7 @@ class AzureSQLDatabaseService:
                     return item_data
         except Exception as e:
             print(f"Error getting item {item_id}: {e}")
-            return None
+            raise
 
     async def search_bosses_async(
         self, query: str, limit: int | None = None
@@ -862,7 +862,7 @@ class AzureSQLDatabaseService:
                     return items
         except Exception as e:
             print(f"Error searching items: {e}")
-            return []
+            raise
 
 # Provide legacy name for unit tests
 DatabaseService = AzureSQLDatabaseService

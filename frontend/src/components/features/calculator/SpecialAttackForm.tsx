@@ -71,6 +71,17 @@ export default function SpecialAttackForm() {
             }
           />
         </div>
+        <div>
+          <Label>Initial Energy</Label>
+          <Input
+            type="number"
+            step="1"
+            value={params.initial_special_energy ?? 100}
+            onChange={(e) =>
+              setParams({ initial_special_energy: parseFloat(e.target.value) })
+            }
+          />
+        </div>
       </CardContent>
     </Card>
   );

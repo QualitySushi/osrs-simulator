@@ -54,6 +54,7 @@ export interface BaseCalculatorParams {
   special_regen_rate?: number;
   lightbearer?: boolean;
   surge_potion?: boolean;
+  initial_special_energy?: number;
   duration?: number;
 }
 

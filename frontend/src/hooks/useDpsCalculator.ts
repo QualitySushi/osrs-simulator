@@ -121,6 +121,9 @@ export function useDpsCalculator() {
       if (cleaned.special_regen_rate === 10 / 30) {
         delete cleaned.special_regen_rate;
       }
+      if (cleaned.initial_special_energy === 100) {
+        delete cleaned.initial_special_energy;
+      }
       return cleaned;
     },
     []
