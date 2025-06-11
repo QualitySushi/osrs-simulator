@@ -4,8 +4,8 @@ export default function AboutPage() {
   return (
     <main id="main" className="container mx-auto py-8 px-4">
       <h1 className="text-4xl font-bold mb-8 text-center">About ScapeLab</h1>
-      
-      <div className="prose dark:prose-invert max-w-3xl">
+
+      <div className="prose dark:prose-invert max-w-3xl mx-auto bg-muted/50 p-6 rounded-lg shadow">
         <p className="lead text-center">
           ScapeLab is an open-source DPS calculator and gear optimizer for Old School RuneScape.
           Use it to compare different loadouts and plan for maximum damage against any boss or monster.
