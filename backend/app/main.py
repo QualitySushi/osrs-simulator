@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 # Load environment variables from a .env file if present
 load_dotenv()
 
-from .repositories import item_repository, boss_repository
+from .repositories import item_repository, boss_repository, special_attack_repository
 from .config.settings import CACHE_TTL_SECONDS
 from .models import (
     DpsResult, 
@@ -518,6 +518,15 @@ async def calculate_item_effect(params: Dict[str, Any]):
         return result
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
+
+
+@app.get("/special-attacks", tags=["Items"])
+async def get_special_attacks():
+    """Return the special attack reference data."""
+    try:
+        return special_attack_repository.get_all_special_attacks()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to retrieve special attacks: {str(e)}")
 
 # For direct execution during development
 if __name__ == "__main__":
