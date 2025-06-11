@@ -213,6 +213,8 @@ export interface BossForm {
   defence_ranged_light?: number;
   defence_ranged_standard?: number;
   defence_ranged_heavy?: number;
+  elemental_weakness_type?: string;
+  elemental_weakness_percent?: number;
   weakness?: CombatStyle | null;
   attack_styles?: string[];
   immunities?: string[];
