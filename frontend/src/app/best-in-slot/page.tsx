@@ -1,6 +1,6 @@
 'use client';
 
-import { BasicDpsCalculator } from '@/components/features/calculator/BasicDpsCalculator';
+import { BestInSlotCalculator } from '@/components/features/calculator/BestInSlotCalculator';
 
 export default function BestInSlotPage() {
   return (
@@ -11,7 +11,7 @@ export default function BestInSlotPage() {
       <p className="text-center text-muted-foreground mb-8 max-w-2xl mx-auto">
         Quickly determine the optimal gear for your stats and target.
       </p>
-      <BasicDpsCalculator />
+      <BestInSlotCalculator />
     </main>
   );
 }

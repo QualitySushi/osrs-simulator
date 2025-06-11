@@ -14,7 +14,8 @@ import { CombatStyle } from '@/types/calculator';
 interface CalculatorFormsProps {
   activeTab: CombatStyle;
   onTabChange: (style: CombatStyle) => void;
-  onCalculate: () => void;
+  onCalculate?: () => void;
+  onSuggestBis?: () => void;
   isCalculating: boolean;
 }
 
@@ -22,6 +23,7 @@ export function CalculatorForms({
   activeTab,
   onTabChange,
   onCalculate,
+  onSuggestBis,
   isCalculating,
 }: CalculatorFormsProps) {
   const [showManual, setShowManual] = useState(false);
@@ -62,11 +64,17 @@ export function CalculatorForms({
       )}
       <div className="mt-6 flex justify-center">
         <Button
-          onClick={onCalculate}
+          onClick={onSuggestBis ?? onCalculate}
           disabled={isCalculating}
           className="w-full max-w-md text-base py-2"
         >
-          {isCalculating ? 'Calculating...' : 'Calculate DPS'}
+          {isCalculating
+            ? onSuggestBis
+              ? 'Fetching...'
+              : 'Calculating...'
+            : onSuggestBis
+            ? 'Suggest BIS'
+            : 'Calculate DPS'}
         </Button>
       </div>
     </div>

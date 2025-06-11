@@ -126,6 +126,7 @@ export function EquipmentPanel({ onEquipmentUpdate, bossForm }: EquipmentPanelPr
             <CombinedEquipmentDisplay
               onEquipmentUpdate={handleEquipmentUpdate}
               bossForm={bossForm}
+              showSuggestButton={false}
             />
           </TabsContent>
         </Tabs>

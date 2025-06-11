@@ -27,7 +27,11 @@ export function MiddleColumns({
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
       <div className="space-y-6 flex flex-col">
-        <CombinedEquipmentDisplay onEquipmentUpdate={onEquipmentUpdate} bossForm={currentBossForm} />
+        <CombinedEquipmentDisplay
+          onEquipmentUpdate={onEquipmentUpdate}
+          bossForm={currentBossForm}
+          showSuggestButton={false}
+        />
         <PrayerPotionSelector className="flex-grow" />
       </div>
       <div className="space-y-6 flex flex-col flex-grow">
