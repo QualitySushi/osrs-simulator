@@ -276,7 +276,11 @@ export function MultiBossSimulation() {
                       filteredBosses.map((boss) => (
                         <CommandItem key={boss.id} value={boss.name} onSelect={() => addBoss(boss)}>
                           {bossIcons[boss.id] && (
-                            <img src={bossIcons[boss.id]} alt="icon" className="w-4 h-4 mr-2 inline-block" />
+                            <img
+                              src={bossIcons[boss.id]}
+                              alt={`${boss.name} icon`}
+                              className="w-4 h-4 mr-2 inline-block"
+                            />
                           )}
                           {boss.name}
                         </CommandItem>
@@ -321,7 +325,11 @@ export function MultiBossSimulation() {
                 <TableRow key={boss.id}>
                   <TableCell className="font-medium">
                     {bossIcons[boss.id] && (
-                      <img src={bossIcons[boss.id]} alt="icon" className="w-4 h-4 mr-1 inline-block" />
+                      <img
+                        src={bossIcons[boss.id]}
+                        alt={`${boss.name} icon`}
+                        className="w-4 h-4 mr-1 inline-block"
+                      />
                     )}
                     {boss.name}
                   </TableCell>
