@@ -1,5 +1,11 @@
 // page.tsx - Updated version with proper bottom padding on main content
-import { ImprovedDpsCalculator } from '@/components/features/calculator/ImprovedDpsCalculator';
+"use client";
+export const dynamic = 'force-dynamic';
+import dynamic from 'next/dynamic';
+const ImprovedDpsCalculator = dynamic(
+  () => import('@/components/features/calculator/ImprovedDpsCalculator'),
+  { ssr: false }
+);
 
 export default function Home() {
   return (
