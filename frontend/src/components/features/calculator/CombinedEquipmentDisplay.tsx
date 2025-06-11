@@ -7,6 +7,10 @@ import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useCalculatorStore } from '@/store/calculator-store';
+import {
+  useEquipmentBonusesStore,
+} from '@/store/equipment-bonuses-store';
+import { useSpecialAttackStore } from '@/store/special-attack-store';
 import { Item, CalculatorParams, NpcForm } from '@/types/calculator';
 import { useToast } from '@/hooks/use-toast';
 import { calculatorApi } from '@/services/api';
@@ -135,6 +139,8 @@ export function CombinedEquipmentDisplay({
   
   // Update bonuses when loadout changes
   const lastBonusRef = useRef<Partial<CalculatorParams>>({});
+  const setBonuses = useEquipmentBonusesStore((s) => s.setBonuses);
+  const setSpecWeapon = useSpecialAttackStore((s) => s.setWeapon);
   useEffect(() => {
     const current = useCalculatorStore.getState().params;
     const updates: Partial<CalculatorParams> = {};
@@ -188,6 +194,15 @@ export function CombinedEquipmentDisplay({
       if (prev.magic_damage_bonus !== magicDmg) updates.magic_damage_bonus = magicDmg;
     }
 
+    setBonuses({
+      melee_attack_bonus: meleeAtk,
+      melee_strength_bonus: meleeStr,
+      ranged_attack_bonus: rangedAtk,
+      ranged_strength_bonus: rangedStr,
+      magic_attack_bonus: magicAtk,
+      magic_damage_bonus: magicDmg,
+    });
+
     if (Object.keys(updates).length > 0) {
       if (process.env.NODE_ENV !== 'production') {
         console.log('[DEBUG] Updating combat totals:', updates);
@@ -223,6 +238,11 @@ export function CombinedEquipmentDisplay({
       console.log('[DEBUG] Processing weapon:', weapon.name);
     }
   }, [loadout]);
+
+  // Update special attack weapon when spec slot changes
+  useEffect(() => {
+    setSpecWeapon(loadout['spec'] || null);
+  }, [loadout, setSpecWeapon]);
 
   // Automatically switch combat style based on weapon attack types
   useEffect(() => {

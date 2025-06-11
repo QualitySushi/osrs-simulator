@@ -12,19 +12,31 @@ interface DpsResultDisplayProps {
 export function DpsResultDisplay({ params, results, appliedPassiveEffects }: DpsResultDisplayProps) {
   return (
     <div className="mt-8 space-y-4">
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+        <Card className="bg-muted/30 border">
+          <CardContent className="pt-6">
+            <div className="text-sm font-medium text-muted-foreground">Gear DPS</div>
+            <div className="text-3xl font-bold text-primary">
+              {safeFixed(results.mainhand_dps ?? results.dps, 2)}
+            </div>
+          </CardContent>
+        </Card>
+        {results.special_attack_dps !== undefined && (
+          <Card className="bg-muted/30 border">
+            <CardContent className="pt-6">
+              <div className="text-sm font-medium text-muted-foreground">Special DPS</div>
+              <div className="text-3xl font-bold text-primary">
+                {safeFixed(results.special_attack_dps, 2)}
+              </div>
+            </CardContent>
+          </Card>
+        )}
         <Card className="bg-muted/30 border">
           <CardContent className="pt-6">
             <div className="text-sm font-medium text-muted-foreground">Total DPS</div>
             <div className="text-3xl font-bold text-primary">
               {safeFixed(results.dps, 2)}
             </div>
-            {results.special_attack_dps !== undefined && (
-              <div className="text-xs text-muted-foreground">
-                Base {safeFixed(results.mainhand_dps ?? 0, 2)} + Special{' '}
-                {safeFixed(results.special_attack_dps, 2)}
-              </div>
-            )}
           </CardContent>
         </Card>
         <Card className="bg-muted/30 border">
