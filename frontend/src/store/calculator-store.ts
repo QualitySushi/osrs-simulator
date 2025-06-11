@@ -9,7 +9,8 @@ import {
   MagicCalculatorParams,
   Item,
   Boss,
-  BossForm
+  BossForm,
+  Preset,
 } from '@/types/calculator';
 
 interface CalculatorState {
@@ -25,6 +26,7 @@ interface CalculatorState {
   loadout: Record<string, Item | null>;
   selectedBoss: Boss | null;
   selectedBossForm: BossForm | null;
+  loadoutPresets: Preset[];
 
   setParams: (params: Partial<CalculatorParams>) => void;
   switchCombatStyle: (style: 'melee' | 'ranged' | 'magic') => void;
@@ -41,6 +43,9 @@ interface CalculatorState {
   setLoadout: (loadout: Record<string, Item | null>) => void;
   setSelectedBoss: (boss: Boss | null) => void;
   setSelectedBossForm: (form: BossForm | null) => void;
+  setLoadoutPresets: (presets: Preset[]) => void;
+  addLoadoutPreset: (preset: Preset) => void;
+  removeLoadoutPreset: (id: string) => void;
 }
 
 const defaultMeleeParams: MeleeCalculatorParams = {
@@ -137,6 +142,7 @@ export const useCalculatorStore = create<CalculatorState>()(
       loadout: {},
       selectedBoss: null,
       selectedBossForm: null,
+      loadoutPresets: [],
 
       setParams: (newParams: Partial<CalculatorParams>) => set((state): Partial<CalculatorState> => {
         const currentStyle = state.params.combat_style;
@@ -226,7 +232,12 @@ export const useCalculatorStore = create<CalculatorState>()(
       resetLocks: () => set({ gearLocked: false, bossLocked: false }),
       setLoadout: (loadout) => set({ loadout }),
       setSelectedBoss: (boss) => set({ selectedBoss: boss }),
-      setSelectedBossForm: (form) => set({ selectedBossForm: form })
+      setSelectedBossForm: (form) => set({ selectedBossForm: form }),
+      setLoadoutPresets: (presets) => set({ loadoutPresets: presets }),
+      addLoadoutPreset: (preset) =>
+        set((state) => ({ loadoutPresets: [...state.loadoutPresets, preset] })),
+      removeLoadoutPreset: (id) =>
+        set((state) => ({ loadoutPresets: state.loadoutPresets.filter((p) => p.id !== id) }))
     }),
     {
       name: 'osrs-calculator-storage',
@@ -237,7 +248,8 @@ export const useCalculatorStore = create<CalculatorState>()(
         bossLocked: state.bossLocked,
         loadout: state.loadout,
         selectedBoss: state.selectedBoss,
-        selectedBossForm: state.selectedBossForm
+        selectedBossForm: state.selectedBossForm,
+        loadoutPresets: state.loadoutPresets,
       })
     }
   )

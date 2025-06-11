@@ -47,9 +47,10 @@ function isMagicParams(params: CalculatorParams): params is CalculatorParams & {
 interface CombinedEquipmentDisplayProps {
   onEquipmentUpdate?: (loadout: Record<string, Item | null>) => void;
   bossForm?: BossForm | null;
+  loadoutPreset?: Record<string, Item | null>;
 }
 
-export function CombinedEquipmentDisplay({ onEquipmentUpdate, bossForm }: CombinedEquipmentDisplayProps) {
+export function CombinedEquipmentDisplay({ onEquipmentUpdate, bossForm, loadoutPreset }: CombinedEquipmentDisplayProps) {
   const { params, setParams, gearLocked, loadout, setLoadout, resetParams, resetLocks, switchCombatStyle } = useCalculatorStore();
   // Start with 1H + Shield by default
   const [show2hOption, setShow2hOption] = useState(false);
@@ -62,6 +63,12 @@ export function CombinedEquipmentDisplay({ onEquipmentUpdate, bossForm }: Combin
     attackStyles: {},
     baseAttackSpeed: 2.4 // Default 4 ticks
   });
+
+  useEffect(() => {
+    if (loadoutPreset) {
+      setLoadout(loadoutPreset);
+    }
+  }, [loadoutPreset, setLoadout]);
 
   const handleResetEquipment = () => {
     setLoadout({});
