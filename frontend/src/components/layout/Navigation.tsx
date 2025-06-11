@@ -48,6 +48,15 @@ export function Navigation() {
               Import
             </Link>
             <Link
+              href="/best-in-slot"
+              className={cn(
+                'text-sm transition-colors hover:text-primary',
+                pathname === '/best-in-slot' ? 'text-foreground font-medium' : 'text-muted-foreground'
+              )}
+            >
+              Best in Slot
+            </Link>
+            <Link
               href="/about"
               className={cn(
                 'text-sm transition-colors hover:text-primary',
