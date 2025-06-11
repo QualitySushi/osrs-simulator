@@ -5,7 +5,7 @@ import { Info } from 'lucide-react';
 import { useEffect, useState, useCallback } from 'react';
 import { useReferenceDataStore } from '@/store/reference-data-store';
 import { BossSelector } from './BossSelector';
-import { CombinedEquipmentDisplay } from './CombinedEquipmentDisplay';
+import { LoadoutTabs } from './LoadoutTabs';
 import { PrayerPotionSelector } from './PrayerPotionSelector';
 import { CalculatorForms } from './CalculatorForms';
 import { CombatStyleTabs } from './CombatStyleTabs';
@@ -142,10 +142,9 @@ export function BestInSlotCalculator() {
         {/* Left column */}
         <div className="space-y-6 flex flex-col">
           {/* Character equipment section */}
-          <CombinedEquipmentDisplay
+          <LoadoutTabs
             onEquipmentUpdate={handleEquipmentUpdate}
             bossForm={currentBossForm}
-            showSuggestButton={false}
           />
           {/* Prayer/Potion selector */}
           <PrayerPotionSelector className="flex-grow" />

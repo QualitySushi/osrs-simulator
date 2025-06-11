@@ -1,0 +1,71 @@
+'use client';
+
+import { useState } from 'react';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { Button } from '@/components/ui/button';
+import { CombinedEquipmentDisplay } from './CombinedEquipmentDisplay';
+import { useCalculatorStore } from '@/store/calculator-store';
+import { encodeSeed } from '@/utils/seed';
+import { BossForm, Item } from '@/types/calculator';
+
+export function LoadoutTabs({ bossForm, onEquipmentUpdate }: { bossForm?: BossForm | null; onEquipmentUpdate?: (loadout: Record<string, Item | null>) => void }) {
+  const presets = useCalculatorStore((s) => s.presets);
+  const addPreset = useCalculatorStore((s) => s.addPreset);
+  const setLoadout = useCalculatorStore((s) => s.setLoadout);
+  const setParams = useCalculatorStore((s) => s.setParams);
+  const switchCombatStyle = useCalculatorStore((s) => s.switchCombatStyle);
+  const params = useCalculatorStore((s) => s.params);
+  const loadout = useCalculatorStore((s) => s.loadout);
+
+  const [activePreset, setActivePreset] = useState('current');
+
+  const handlePresetChange = (id: string) => {
+    setActivePreset(id);
+    if (id === 'current') return;
+    const preset = presets.find((p) => p.id === id);
+    if (preset) {
+      switchCombatStyle(preset.params.combat_style as any);
+      setParams(preset.params);
+      setLoadout(preset.equipment || {});
+    }
+  };
+
+  const handleAddPreset = () => {
+    const name = prompt('Preset name?');
+    if (!name) return;
+    const newPreset = {
+      id: Date.now().toString(),
+      name,
+      combatStyle: params.combat_style,
+      timestamp: Date.now(),
+      params: { ...params },
+      equipment: { ...loadout },
+      seed: encodeSeed(params, loadout as any),
+    };
+    addPreset(newPreset as any);
+    setActivePreset(newPreset.id);
+  };
+
+  return (
+    <Tabs value={activePreset} onValueChange={handlePresetChange} className="w-full">
+      <TabsList className="mb-4 flex gap-2 flex-wrap">
+        <TabsTrigger value="current">Current</TabsTrigger>
+        {presets.slice(0, 6).map((p) => (
+          <TabsTrigger key={p.id} value={p.id}>{p.name}</TabsTrigger>
+        ))}
+        {presets.length < 6 && (
+          <Button variant="outline" size="sm" onClick={handleAddPreset}>+</Button>
+        )}
+      </TabsList>
+      <TabsContent value={activePreset} className="w-full">
+        <CombinedEquipmentDisplay
+          bossForm={bossForm}
+          showSuggestButton={false}
+          onEquipmentUpdate={onEquipmentUpdate}
+        />
+      </TabsContent>
+    </Tabs>
+  );
+}
+
+export default LoadoutTabs;
