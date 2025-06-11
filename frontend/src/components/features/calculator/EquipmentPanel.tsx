@@ -6,8 +6,10 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { useCalculatorStore } from '@/store/calculator-store';
-import { BossForm, Item } from '@/types/calculator';
+import { BossForm, Item, Preset } from '@/types/calculator';
 import { useState } from 'react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { encodeSeed } from '@/utils/seed';
 
 interface EquipmentPanelProps {
   onEquipmentUpdate?: (loadout: Record<string, Item | null>) => void;
@@ -21,7 +23,18 @@ interface EquipmentPanelProps {
 export function EquipmentPanel({ onEquipmentUpdate, bossForm }: EquipmentPanelProps) {
   const { toast } = useToast();
   const [currentLoadout, setCurrentLoadout] = useState<Record<string, Item | null>>({});
-  const { resetParams, resetLocks } = useCalculatorStore();
+  const [activePreset, setActivePreset] = useState('current');
+  const {
+    resetParams,
+    resetLocks,
+    loadoutPresets,
+    addLoadoutPreset,
+    setLoadout,
+    setParams,
+    switchCombatStyle,
+    params,
+    loadout,
+  } = useCalculatorStore();
 
   const handleResetEquipment = () => {
     // Reset the local loadout state
@@ -41,10 +54,39 @@ export function EquipmentPanel({ onEquipmentUpdate, bossForm }: EquipmentPanelPr
 
   const handleEquipmentUpdate = (loadout: Record<string, Item | null>) => {
     setCurrentLoadout(loadout);
-    
+
     if (onEquipmentUpdate) {
       onEquipmentUpdate(loadout);
     }
+  };
+
+  const handlePresetChange = (id: string) => {
+    setActivePreset(id);
+    if (id === 'current') return;
+    const preset = loadoutPresets.find((p) => p.id === id);
+    if (preset) {
+      switchCombatStyle(preset.params.combat_style as any);
+      setParams(preset.params);
+      setLoadout(preset.equipment || {});
+      setCurrentLoadout(preset.equipment || {});
+    }
+  };
+
+  const handleAddPreset = () => {
+    const name = prompt('Preset name?');
+    if (!name) return;
+    const newPreset: Preset = {
+      id: Date.now().toString(),
+      name,
+      combatStyle: params.combat_style,
+      timestamp: Date.now(),
+      params: { ...params },
+      equipment: { ...loadout },
+      seed: encodeSeed(params, loadout as any),
+    };
+    addLoadoutPreset(newPreset);
+    setActivePreset(newPreset.id);
+    toast.success('Preset saved');
   };
 
   return (
@@ -57,29 +99,36 @@ export function EquipmentPanel({ onEquipmentUpdate, bossForm }: EquipmentPanelPr
       </CardHeader>
 
       <CardContent>
-        {Object.keys(currentLoadout).length > 0 && (
-          <div className="flex justify-center mb-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleResetEquipment}
-            >
-              Reset Equipment
-            </Button>
-          </div>
-        )}
-        {Object.keys(currentLoadout).length === 0 && (
-          <Alert className="mb-4">
-            <AlertDescription>
-              Select equipment to calculate DPS with specific gear bonuses.
-            </AlertDescription>
-          </Alert>
-        )}
-        
-        <CombinedEquipmentDisplay 
-          onEquipmentUpdate={handleEquipmentUpdate}
-          bossForm={bossForm}
-        />
+        <Tabs value={activePreset} onValueChange={handlePresetChange} className="w-full">
+          <TabsList className="mb-4 flex gap-2">
+            <TabsTrigger value="current">Current</TabsTrigger>
+            {loadoutPresets.map((p) => (
+              <TabsTrigger key={p.id} value={p.id}>{p.name}</TabsTrigger>
+            ))}
+            <Button variant="outline" size="sm" onClick={handleAddPreset}">Add preset</Button>
+          </TabsList>
+          <TabsContent value={activePreset} className="w-full">
+            {Object.keys(currentLoadout).length > 0 && (
+              <div className="flex justify-center mb-2">
+                <Button variant="outline" size="sm" onClick={handleResetEquipment}">
+                  Reset Equipment
+                </Button>
+              </div>
+            )}
+            {Object.keys(currentLoadout).length === 0 && (
+              <Alert className="mb-4">
+                <AlertDescription>
+                  Select equipment to calculate DPS with specific gear bonuses.
+                </AlertDescription>
+              </Alert>
+            )}
+
+            <CombinedEquipmentDisplay
+              onEquipmentUpdate={handleEquipmentUpdate}
+              bossForm={bossForm}
+            />
+          </TabsContent>
+        </Tabs>
       </CardContent>
     </Card>
   );
