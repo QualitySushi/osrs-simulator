@@ -90,6 +90,16 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
     ? { ...selectedBoss, forms: storeBossForms[selectedBoss.id] ?? bossDetails?.forms }
     : null;
 
+  const rangedWeakness = selectedForm &&
+    typeof selectedForm.defence_ranged_light === 'number' &&
+    typeof selectedForm.defence_ranged_heavy === 'number'
+      ? selectedForm.defence_ranged_light < selectedForm.defence_ranged_heavy
+        ? 'Light'
+        : selectedForm.defence_ranged_heavy < selectedForm.defence_ranged_light
+          ? 'Heavy'
+          : undefined
+      : undefined;
+
   // Fetch icons for all bosses when list loads
   useEffect(() => {
     if (!storeBosses) return;
@@ -486,6 +496,21 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
                 <span className="text-muted-foreground">Magic Level:</span>{' '}
                 <span className="font-medium">{selectedForm.magic_level || 'Unknown'}</span>
               </div>
+              {selectedForm.elemental_weakness_type && (
+                <div>
+                  <span className="text-muted-foreground">Magic Weakness:</span>{' '}
+                  <span className="font-medium">
+                    {selectedForm.elemental_weakness_type}
+                    {selectedForm.elemental_weakness_percent ? ` (${selectedForm.elemental_weakness_percent}%)` : ''}
+                  </span>
+                </div>
+              )}
+              {rangedWeakness && (
+                <div>
+                  <span className="text-muted-foreground">Ranged Weakness:</span>{' '}
+                  <span className="font-medium">{rangedWeakness}</span>
+                </div>
+              )}
               
               <div className="col-span-2 mt-1">
                 <h5 className="text-xs font-semibold mb-1">Defence Bonuses</h5>
