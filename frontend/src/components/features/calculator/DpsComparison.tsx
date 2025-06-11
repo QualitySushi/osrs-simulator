@@ -1,32 +1,39 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { X } from 'lucide-react';
-import { 
-  Table, 
-  TableBody, 
-  TableCell, 
-  TableHead, 
-  TableHeader, 
-  TableRow 
-} from '@/components/ui/table';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
-import { useCalculatorStore } from '@/store/calculator-store';
-import { CalculatorParams} from '@/types/calculator';
+import { useState } from "react";
+import { X } from "lucide-react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { useCalculatorStore } from "@/store/calculator-store";
+import { CalculatorParams } from "@/types/calculator";
 // import { CalculatorParams, DpsResult } from '@/types/calculator';
 
 export function DpsComparison() {
-  const { params, results, comparisonResults, addComparisonResult, removeComparisonResult, clearComparisonResults } = useCalculatorStore();
-  const [label, setLabel] = useState('Setup 1');
+  const {
+    params,
+    results,
+    comparisonResults,
+    addComparisonResult,
+    removeComparisonResult,
+    clearComparisonResults,
+  } = useCalculatorStore();
+  const [label, setLabel] = useState("Setup 1");
 
   const handleAddComparison = () => {
     if (!results) return;
-    
+
     addComparisonResult(label, { ...params }, { ...results });
-    setLabel('');
+    setLabel("");
   };
 
   const handleRemoveComparison = (index: number) => {
@@ -35,10 +42,14 @@ export function DpsComparison() {
 
   const getCombatStyleLabel = (style: string) => {
     switch (style) {
-      case 'melee': return 'Melee';
-      case 'ranged': return 'Ranged';
-      case 'magic': return 'Magic';
-      default: return style;
+      case "melee":
+        return "Melee";
+      case "ranged":
+        return "Ranged";
+      case "magic":
+        return "Magic";
+      default:
+        return style;
     }
   };
 
@@ -46,37 +57,37 @@ export function DpsComparison() {
   const getReadableParams = (params: CalculatorParams) => {
     const combatStyle = params.combat_style;
     const commonParams = {
-      'Attack Speed': `${params.attack_speed}s`,
+      "Attack Speed": `${params.attack_speed}s`,
     };
 
-    if (combatStyle === 'melee') {
+    if (combatStyle === "melee") {
       return {
         ...commonParams,
-        'Strength': params.strength_level,
-        'Attack': params.attack_level,
-        'Strength Bonus': params.melee_strength_bonus,
-        'Attack Bonus': params.melee_attack_bonus,
-        'Void': params.void_melee ? 'Yes' : 'No',
-        'Target Def': params.target_defence_level,
+        Strength: params.strength_level,
+        Attack: params.attack_level,
+        "Strength Bonus": params.melee_strength_bonus,
+        "Attack Bonus": params.melee_attack_bonus,
+        Void: params.void_melee ? "Yes" : "No",
+        "Target Def": params.target_defence_level,
       };
-    } else if (combatStyle === 'ranged') {
+    } else if (combatStyle === "ranged") {
       return {
         ...commonParams,
-        'Ranged': params.ranged_level,
-        'Ranged Str Bonus': params.ranged_strength_bonus,
-        'Ranged Atk Bonus': params.ranged_attack_bonus,
-        'Void': params.void_ranged ? 'Yes' : 'No',
-        'Target Def': params.target_defence_level,
+        Ranged: params.ranged_level,
+        "Ranged Str Bonus": params.ranged_strength_bonus,
+        "Ranged Atk Bonus": params.ranged_attack_bonus,
+        Void: params.void_ranged ? "Yes" : "No",
+        "Target Def": params.target_defence_level,
       };
-    } else if (combatStyle === 'magic') {
+    } else if (combatStyle === "magic") {
       return {
         ...commonParams,
-        'Magic': params.magic_level,
-        'Base Max Hit': params.base_spell_max_hit,
-        'Magic Atk Bonus': params.magic_attack_bonus,
-        'Magic Dmg Bonus': `${(params.magic_damage_bonus * 100).toFixed(0)}%`,
-        'Void': params.void_magic ? 'Yes' : 'No',
-        'Target Magic': params.target_magic_level,
+        Magic: params.magic_level,
+        "Base Max Hit": params.base_spell_max_hit,
+        "Magic Atk Bonus": params.magic_attack_bonus,
+        "Magic Dmg Bonus": `${(params.magic_damage_bonus * 100).toFixed(0)}%`,
+        Void: params.void_magic ? "Yes" : "No",
+        "Target Magic": params.target_magic_level,
       };
     }
 
@@ -88,13 +99,16 @@ export function DpsComparison() {
     return (
       <Card>
         <CardHeader>
-          <div className="flex gap-2 justify-center items-center"><CardTitle>DPS Comparison</CardTitle></div>
+          <div className="flex gap-2 justify-center items-center">
+            <CardTitle>DPS Comparison</CardTitle>
+          </div>
         </CardHeader>
         <CardContent>
           <p className="text-muted-foreground text-sm mb-4 justify-center items-center">
-            Save your current setup to compare different equipment, stats, and combat styles.
+            Save your current setup to compare different equipment, stats, and
+            combat styles.
           </p>
-          
+
           <div className="flex gap-2 justify-center items-center">
             <Input
               value={label}
@@ -103,10 +117,7 @@ export function DpsComparison() {
               className="max-w-xs"
               disabled={!results}
             />
-            <Button 
-              onClick={handleAddComparison} 
-              disabled={!results}
-            >
+            <Button onClick={handleAddComparison} disabled={!results}>
               Save Current Setup
             </Button>
           </div>
@@ -134,14 +145,11 @@ export function DpsComparison() {
             className="max-w-xs"
             disabled={!results}
           />
-          <Button 
-            onClick={handleAddComparison} 
-            disabled={!results}
-          >
+          <Button onClick={handleAddComparison} disabled={!results}>
             Add Current Setup
           </Button>
         </div>
-        
+
         <div className="overflow-x-auto justify-center items-center">
           <Table>
             <TableHeader>
@@ -158,7 +166,7 @@ export function DpsComparison() {
             <TableBody>
               {comparisonResults.map((item, index) => {
                 const readableParams = getReadableParams(item.params);
-                
+
                 return (
                   <TableRow key={index}>
                     <TableCell className="font-medium">{item.label}</TableCell>
@@ -168,7 +176,16 @@ export function DpsComparison() {
                       </Badge>
                     </TableCell>
                     <TableCell className="text-right font-bold">
-                      {item.results.dps.toFixed(2)}
+                      {(
+                        item.results.dps +
+                        (item.results.special_attack_dps ?? 0)
+                      ).toFixed(2)}
+                      {item.results.special_attack_dps !== undefined && (
+                        <div className="text-xs text-muted-foreground">
+                          Base {item.results.dps.toFixed(2)} + Special{" "}
+                          {item.results.special_attack_dps.toFixed(2)}
+                        </div>
+                      )}
                     </TableCell>
                     <TableCell className="text-right">
                       {item.results.max_hit}
@@ -179,7 +196,11 @@ export function DpsComparison() {
                     <TableCell>
                       <div className="flex flex-wrap gap-1">
                         {Object.entries(readableParams).map(([key, value]) => (
-                          <Badge key={key} variant="secondary" className="text-xs">
+                          <Badge
+                            key={key}
+                            variant="secondary"
+                            className="text-xs"
+                          >
                             {key}: {value}
                           </Badge>
                         ))}
