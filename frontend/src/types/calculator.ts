@@ -177,6 +177,7 @@ export interface Preset {
   timestamp: number;
   params: CalculatorParams;
   equipment?: EquipmentLoadout;
+  seed?: string;
 }
 
 export interface Boss {

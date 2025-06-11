@@ -296,8 +296,9 @@ export function EquipmentLoadout({ onEquipmentUpdate }: EquipmentLoadoutProps) {
       prayer: 0,
     };
 
-    // Loop through all equipped items
-    for (const item of Object.values(gear)) {
+    // Loop through all equipped items, ignoring the special attack weapon slot
+    for (const [slot, item] of Object.entries(gear)) {
+      if (slot === 'spec') continue;
       if (!item?.combat_stats) continue;
       if (process.env.NODE_ENV !== 'production') {
         console.debug(`[DEBUG] Adding stats from item: ${item.name}`);

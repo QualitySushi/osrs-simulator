@@ -22,7 +22,8 @@ export function CombatStatsSummary({
     magic: 0,
     ranged: 0,
   };
-  Object.values(loadout).forEach((item) => {
+  Object.entries(loadout).forEach(([slot, item]) => {
+    if (slot === 'spec') return;
     const def = item?.combat_stats?.defence_bonuses;
     if (!def) return;
     totalDefence.stab += def.stab || 0;

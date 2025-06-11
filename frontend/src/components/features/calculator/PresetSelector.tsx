@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Save, Trash2 } from 'lucide-react';
+import { Save, Trash2, ClipboardCopy } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -25,6 +25,8 @@ import { CombatStyle, CalculatorParams } from '@/types/calculator';
 import { Badge } from '@/components/ui/badge';
 
 import { cn } from '@/lib/utils';
+import { encodeSeed, decodeSeed } from '@/utils/seedUtils';
+import { useToast } from '@/hooks/use-toast';
 
 interface PresetSelectorProps {
   onPresetLoad?: () => void;
@@ -40,11 +42,15 @@ interface Preset {
 }
 
 export function PresetSelector({ onPresetLoad, className }: PresetSelectorProps) {
-  const { params, setParams, switchCombatStyle } = useCalculatorStore();
+  const { params, loadout, setParams, setLoadout, switchCombatStyle } = useCalculatorStore();
+  const { toast } = useToast();
   const [hasMounted, setHasMounted] = useState(false);
   const [saveDialogOpen, setSaveDialogOpen] = useState(false);
+  const [seedDialogOpen, setSeedDialogOpen] = useState(false);
   const [presetName, setPresetName] = useState('');
   const [presets, setPresets] = useState<Preset[]>([]);
+  const [generatedSeed, setGeneratedSeed] = useState('');
+  const [importSeedValue, setImportSeedValue] = useState('');
 
   useEffect(() => {
     setHasMounted(true);
@@ -53,6 +59,14 @@ export function PresetSelector({ onPresetLoad, className }: PresetSelectorProps)
       setPresets(savedPresets ? JSON.parse(savedPresets) : []);
     }
   }, []);
+
+  useEffect(() => {
+    if (seedDialogOpen) {
+      const seed = encodeSeed(params, loadout);
+      setGeneratedSeed(seed);
+      setImportSeedValue(seed);
+    }
+  }, [seedDialogOpen, params, loadout]);
 
   const savePreset = () => {
     if (!presetName.trim()) return;
@@ -78,6 +92,28 @@ export function PresetSelector({ onPresetLoad, className }: PresetSelectorProps)
     switchCombatStyle(preset.params.combat_style);
     setParams(preset.params);
     onPresetLoad?.();
+  };
+
+  const handleLoadSeed = async () => {
+    try {
+      const { params: newParams, loadout: newLoadout } = await decodeSeed(importSeedValue);
+      switchCombatStyle(newParams.combat_style);
+      setParams(newParams);
+      setLoadout(newLoadout);
+      toast.success('Seed loaded');
+      setSeedDialogOpen(false);
+    } catch {
+      toast.error('Invalid seed');
+    }
+  };
+
+  const handleCopySeed = async () => {
+    try {
+      await navigator.clipboard.writeText(generatedSeed);
+      toast.success('Seed copied');
+    } catch {
+      toast.error('Failed to copy');
+    }
   };
 
   const deletePreset = (presetId: string) => {
@@ -124,7 +160,7 @@ export function PresetSelector({ onPresetLoad, className }: PresetSelectorProps)
           <div className="text-center py-8 text-muted-foreground">
             <p>You haven&apos;t saved any presets yet.</p>
             <p className="text-sm">Save your current setup to create a preset.</p>
-            <div className="mt-4 flex justify-center">
+            <div className="mt-4 flex justify-center gap-2">
               <Dialog open={saveDialogOpen} onOpenChange={setSaveDialogOpen}>
                 <DialogTrigger asChild>
                   <Button size="sm">
@@ -159,11 +195,50 @@ export function PresetSelector({ onPresetLoad, className }: PresetSelectorProps)
                   </div>
                 </DialogContent>
               </Dialog>
+              <Dialog open={seedDialogOpen} onOpenChange={setSeedDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button variant="outline" size="sm">
+                    <ClipboardCopy className="h-4 w-4 mr-2" />
+                    Seed
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Setup Seed</DialogTitle>
+                    <DialogDescription>
+                      Copy or paste a seed representing this setup
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="space-y-2 py-2">
+                    <textarea
+                      readOnly
+                      className="w-full border p-2 rounded"
+                      rows={4}
+                      value={generatedSeed}
+                    />
+                    <div className="flex justify-end">
+                      <Button size="sm" onClick={handleCopySeed}>Copy</Button>
+                    </div>
+                  </div>
+                  <div className="space-y-2 py-2">
+                    <textarea
+                      className="w-full border p-2 rounded"
+                      rows={4}
+                      value={importSeedValue}
+                      onChange={(e) => setImportSeedValue(e.target.value)}
+                    />
+                    <div className="flex justify-end gap-2">
+                      <Button variant="outline" size="sm" onClick={() => setSeedDialogOpen(false)}>Cancel</Button>
+                      <Button size="sm" onClick={handleLoadSeed}>Load</Button>
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
             </div>
           </div>
           ) : (
           <>
-            <div className="flex justify-end mb-4">
+            <div className="flex justify-end mb-4 gap-2">
               <Dialog open={saveDialogOpen} onOpenChange={setSaveDialogOpen}>
                 <DialogTrigger asChild>
                   <Button size="sm">
@@ -195,6 +270,45 @@ export function PresetSelector({ onPresetLoad, className }: PresetSelectorProps)
                     <Button onClick={savePreset} disabled={!presetName.trim()}>
                       Save Preset
                     </Button>
+                  </div>
+                </DialogContent>
+              </Dialog>
+              <Dialog open={seedDialogOpen} onOpenChange={setSeedDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button variant="outline" size="sm">
+                    <ClipboardCopy className="h-4 w-4 mr-2" />
+                    Seed
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Setup Seed</DialogTitle>
+                    <DialogDescription>
+                      Copy or paste a seed representing this setup
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="space-y-2 py-2">
+                    <textarea
+                      readOnly
+                      className="w-full border p-2 rounded"
+                      rows={4}
+                      value={generatedSeed}
+                    />
+                    <div className="flex justify-end">
+                      <Button size="sm" onClick={handleCopySeed}>Copy</Button>
+                    </div>
+                  </div>
+                  <div className="space-y-2 py-2">
+                    <textarea
+                      className="w-full border p-2 rounded"
+                      rows={4}
+                      value={importSeedValue}
+                      onChange={(e) => setImportSeedValue(e.target.value)}
+                    />
+                    <div className="flex justify-end gap-2">
+                      <Button variant="outline" size="sm" onClick={() => setSeedDialogOpen(false)}>Cancel</Button>
+                      <Button size="sm" onClick={handleLoadSeed}>Load</Button>
+                    </div>
                   </div>
                 </DialogContent>
               </Dialog>
