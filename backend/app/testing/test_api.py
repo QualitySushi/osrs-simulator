@@ -55,9 +55,9 @@ class TestApiRoutes(unittest.TestCase):
         self.assertIn('accuracy_multiplier', data)
         self.assertIn('damage_multiplier', data)
 
-    def test_bosses(self):
+    def test_npcs(self):
         with self.client_ctx as client:
-            resp = client.get('/bosses')
+            resp = client.get('/npcs')
         self.assertEqual(resp.status_code, 404)
 
     def test_items(self):
@@ -71,10 +71,10 @@ class TestApiRoutes(unittest.TestCase):
             resp = client.get('/item/1')
         self.assertEqual(resp.status_code, 404)
 
-    def test_get_boss(self):
-        """Ensure /boss/1 returns 404 when the DB is absent."""
+    def test_get_npc(self):
+        """Ensure /npc/1 returns 404 when the DB is absent."""
         with self.client_ctx as client:
-            resp = client.get('/boss/1')
+            resp = client.get('/npc/1')
         self.assertEqual(resp.status_code, 404)
 
     def test_import_seed(self):

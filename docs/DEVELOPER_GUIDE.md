@@ -72,7 +72,7 @@ create new posts that persist across reloads in the browser.
 
 ## API Pagination
 
-The `/items` and `/bosses` endpoints accept optional `page` and `page_size` query parameters. These correspond to SQL `OFFSET`/`FETCH` clauses in the database service.
+The `/items` and `/npcs` endpoints accept optional `page` and `page_size` query parameters. These correspond to SQL `OFFSET`/`FETCH` clauses in the database service.
 
 - `page` defaults to `1`.
 - `page_size` defaults to `50`.
