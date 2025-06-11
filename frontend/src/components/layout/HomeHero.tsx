@@ -6,14 +6,17 @@ export default function HomeHero() {
       <div className="absolute inset-0 bg-black/60" aria-hidden="true" />
       <div className="relative container mx-auto px-4">
         <h1 className="text-5xl md:text-6xl font-title text-primary drop-shadow-md mb-6">
-          OSRS DPS Calculator
+          ScapeLab Tools
         </h1>
         <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
-          Optimize your damage output with accurate Old School RuneScape combat calculations.
+          Optimize your Old School RuneScape experience with our calculators and simulations.
         </p>
-        <Link href="#main" className="btn-primary inline-block">
-          Launch Calculator
-        </Link>
+        <div className="flex flex-wrap justify-center gap-4">
+          <Link href="/calculator" className="btn-primary inline-block">Calculator</Link>
+          <Link href="/simulate" className="btn-primary inline-block">Simulation</Link>
+          <Link href="/import" className="btn-primary inline-block">Import</Link>
+          <Link href="/about" className="btn-primary inline-block">About</Link>
+        </div>
       </div>
     </section>
   );
