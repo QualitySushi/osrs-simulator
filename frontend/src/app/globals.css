@@ -376,3 +376,18 @@ select {
   border-radius: var(--radius);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
+/* Logo fading animation for loading overlay */
+@keyframes logo-fade-1 {
+  0%, 50% { opacity: 1; }
+  25% { opacity: 0; }
+}
+@keyframes logo-fade-2 {
+  0%, 50% { opacity: 0; }
+  25% { opacity: 1; }
+}
+.logo-fade-1 {
+  animation: logo-fade-1 4s linear infinite;
+}
+.logo-fade-2 {
+  animation: logo-fade-2 4s linear infinite;
+}
