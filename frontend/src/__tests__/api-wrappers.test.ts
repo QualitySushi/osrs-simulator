@@ -6,9 +6,7 @@ jest.mock('axios', () => {
   const get = jest.fn();
   return {
     __esModule: true,
-    default: { create: jest.fn(() => ({ post, get })) },
-    post,
-    get,
+    default: { post, get, create: jest.fn(() => ({ post, get })) },
   };
 });
 
