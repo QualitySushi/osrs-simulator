@@ -30,7 +30,7 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { useDebounce } from '@/hooks/useDebounce';
 import { bossesApi } from '@/services/api';
-import { Boss, BossSummary, BossForm, MeleeCalculatorParams, RangedCalculatorParams, MagicCalculatorParams } from '@/types/calculator';
+import { BossSummary, BossForm, MeleeCalculatorParams, RangedCalculatorParams, MagicCalculatorParams } from '@/types/calculator';
 import { useCalculatorStore } from '@/store/calculator-store';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useReferenceDataStore } from '@/store/reference-data-store';
@@ -46,7 +46,6 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
   const setSelectedBoss = useCalculatorStore((s) => s.setSelectedBoss);
   const selectedForm = useCalculatorStore((s) => s.selectedBossForm);
   const setSelectedForm = useCalculatorStore((s) => s.setSelectedBossForm);
-  const [bossIcons, setBossIcons] = useState<Record<number, string>>({});
   const storeBosses = useReferenceDataStore((s) => s.bosses);
   const storeBossForms = useReferenceDataStore((s) => s.bossForms);
   const initData = useReferenceDataStore((s) => s.initData);
@@ -100,17 +99,6 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
           : undefined
       : undefined;
 
-  // Fetch icons for all bosses when list loads
-  useEffect(() => {
-    if (!storeBosses) return;
-    const map: Record<number, string> = {};
-    storeBosses.forEach((b) => {
-      if (b.icon_url) {
-        map[b.id] = b.icon_url;
-      }
-    });
-    setBossIcons(map);
-  }, [storeBosses]);
 
   // Effect to clean up when combat style changes or component unmounts
   useEffect(() => {
@@ -362,13 +350,6 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
                 aria-expanded={open}
                 className="w-full justify-between"
               >
-                {selectedBoss && (
-                  <img
-                    src={bossIcons[selectedBoss.id]}
-                    alt={`${selectedBoss.name} icon`}
-                    className="w-4 h-4 mr-2 inline-block"
-                  />
-                )}
                 {selectedBoss ? selectedBoss.name : "Select a boss..."}
                 <Search className="ml-2 h-4 w-4 shrink-0 opacity-50" />
               </Button>
@@ -398,11 +379,6 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
                           value={boss.name}
                           onSelect={() => handleSelectBoss(boss)}
                         >
-                          <img
-                            src={bossIcons[boss.id]}
-                            alt={`${boss.name} icon`}
-                            className="w-4 h-4 mr-2 inline-block"
-                          />
                           {boss.name}
                           {boss.raid_group && (
                             <Badge variant="outline" className="ml-2">
@@ -449,11 +425,6 @@ export function BossSelector({ onSelectBoss, onSelectForm }: BossSelectorProps) 
                 <SelectContent>
                   {(combinedBossDetails?.forms ?? []).map((form) => (
                     <SelectItem key={form.id} value={form.id.toString()}>
-                      <img
-                        src={form.icons?.[0]}
-                        alt={`${form.form_name} icon`}
-                        className="w-4 h-4 mr-2 inline-block"
-                      />
                       {form.form_name} (Combat Lvl: {form.combat_level || 'Unknown'})
                     </SelectItem>
                   ))}
