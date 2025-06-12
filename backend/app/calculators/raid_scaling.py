@@ -7,7 +7,8 @@ def apply_raid_scaling(params: Dict[str, Any]) -> Dict[str, Any]:
     """Adjust defensive stats based on raid type and raid level."""
 
     raid = params.get("raid")
-    if not raid:
+    raid_group = params.get("raid_group")
+    if not raid or not raid_group:
         return params
 
     raid = str(raid).lower()

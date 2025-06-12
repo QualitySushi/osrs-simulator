@@ -200,6 +200,7 @@ class DpsParameters(BaseModel):
     salve_bonus: Optional[float] = None
 
     # Raid parameters
+    raid_group: Optional[str] = None
     raid: Optional[str] = None
     raid_level: Optional[int] = None
     party_size: Optional[int] = None
