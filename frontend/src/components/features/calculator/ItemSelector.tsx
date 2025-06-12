@@ -27,6 +27,7 @@ import { useReferenceDataStore } from '@/store/reference-data-store';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useToast } from '@/hooks/use-toast';
 
+
 // Helper to normalize item names and remove variants
 // Many duplicates include parenthetical notes or trailing tags such as
 // "#Minigame" or "(bh)". We strip these to dedupe results in the dropdown.
@@ -42,6 +43,7 @@ const canonicalName = (name: string) =>
     // Remove explicit hash tags like "#broken" or "#minigame" if present
     .replace(/\s*#(?:broken|minigame|trailblazer)\s*/gi, '')
     // Remove a trailing parenthetical group like "(4)" or "(i)"
+
     .replace(/\s*\([^)]*\)\s*$/, '')
     .trim()
     .toLowerCase();
