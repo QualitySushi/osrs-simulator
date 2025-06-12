@@ -121,10 +121,14 @@ export const useReferenceDataStore = create<ReferenceDataState>()(
         set((state) => ({ npcs: [...state.npcs, ...b] }));
       },
       addNpcForms(id, forms) {
-        set((state) => ({ npcForms: { ...state.npcForms, [id]: forms } }));
+        const hasStats = (f: NpcForm) =>
+          f.defence_level !== undefined && f.defence_level !== null;
+        set((state) => ({
+          npcForms: { ...state.npcForms, [id]: forms.filter(hasStats) }
+        }));
       },
       addItems(i) {
-        set((state) => ({ items: [...state.items, ...i] }));
+        set((state) => ({ items: [...state.items, ...i.filter(it => it.has_combat_stats)] }));
       },
       setSpecialAttacks(a) {
         set({ specialAttacks: a });

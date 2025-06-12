@@ -102,6 +102,9 @@ export function DirectNpcSelector({ onSelectNpc, onSelectForm, className }: Dire
     ? { ...selectedNpc, forms: storeNpcForms[selectedNpc.id] ?? npcDetails?.forms }
     : null;
 
+  const formHasStats = (form: NpcForm) =>
+    form.defence_level !== undefined && form.defence_level !== null;
+
   const rangedWeakness = selectedForm &&
     typeof selectedForm.defence_ranged_light === 'number' &&
     typeof selectedForm.defence_ranged_heavy === 'number'
@@ -296,7 +299,12 @@ export function DirectNpcSelector({ onSelectNpc, onSelectForm, className }: Dire
                     ) : (
                       dedupeNpcs(
                         searchQuery.length > 0 ? searchResults ?? [] : storeNpcs
-                      ).map((npc) => (
+                      )
+                        .filter(npc => {
+                          const forms = storeNpcForms[npc.id];
+                          return !forms || forms.some(formHasStats);
+                        })
+                        .map((npc) => (
                         <CommandItem
                           key={npc.id}
                           value={npc.name}
@@ -347,11 +355,13 @@ export function DirectNpcSelector({ onSelectNpc, onSelectForm, className }: Dire
                   <SelectValue placeholder="Select a form/phase" />
                 </SelectTrigger>
                 <SelectContent>
-                  {(combinedNpcDetails?.forms ?? []).map((form) => (
-                    <SelectItem key={form.id} value={form.id.toString()}>
-                      {form.form_name || `${combinedNpcDetails?.name} (${form.combat_level || 'Unknown'})`}
-                    </SelectItem>
-                  ))}
+                  {(combinedNpcDetails?.forms ?? [])
+                    .filter(formHasStats)
+                    .map((form) => (
+                      <SelectItem key={form.id} value={form.id.toString()}>
+                        {form.form_name || `${combinedNpcDetails?.name} (${form.combat_level || 'Unknown'})`}
+                      </SelectItem>
+                    ))}
                 </SelectContent>
               </Select>
                 <Button variant="outline" size="sm" onClick={handleResetNpc}>
