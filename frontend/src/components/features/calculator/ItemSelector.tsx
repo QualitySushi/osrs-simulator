@@ -27,6 +27,25 @@ import { useReferenceDataStore } from '@/store/reference-data-store';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useToast } from '@/hooks/use-toast';
 
+// Helper to remove redundant suffixes like "#(4)" or "(Last Man Standing)"
+const canonicalName = (name: string) =>
+  name
+    .split('#')[0]
+    .replace(/\s*\([^)]*\)\s*$/, '')
+    .trim()
+    .toLowerCase();
+
+const dedupeItems = (items: ItemSummary[]): ItemSummary[] => {
+  const seen = new Map<string, ItemSummary>();
+  for (const item of items) {
+    const key = canonicalName(item.name);
+    if (!seen.has(key)) {
+      seen.set(key, item);
+    }
+  }
+  return Array.from(seen.values());
+};
+
 interface ItemSelectorProps {
   /**
    * Limit results to specific equipment slot(s). When an array is provided the
@@ -91,9 +110,11 @@ export function ItemSelector({ slot, specialOnly, onSelectItem }: ItemSelectorPr
   const searchFiltered = searchResults ? filterBySlot(searchResults) : [];
   const baseItems =
     searchTerm.length > 0 ? searchFiltered : filteredItems;
-  const itemsToDisplay = specialOnly
-    ? baseItems.filter((item) => item.has_special_attack)
-    : baseItems;
+  const itemsToDisplay = dedupeItems(
+    specialOnly
+      ? baseItems.filter((item) => item.has_special_attack)
+      : baseItems
+  );
 
   // Handle item selection and update calculator params based on its stats
   const handleSelectItem = (item: ItemSummary) => {
