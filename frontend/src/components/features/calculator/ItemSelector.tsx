@@ -27,10 +27,23 @@ import { useReferenceDataStore } from '@/store/reference-data-store';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useToast } from '@/hooks/use-toast';
 
-// Helper to remove redundant suffixes like "#(4)" or "(Last Man Standing)"
+
+// Helper to normalize item names and remove variants
+// Many duplicates include parenthetical notes or trailing tags such as
+// "#Minigame" or "(bh)". We strip these to dedupe results in the dropdown.
 const canonicalName = (name: string) =>
   name
+    // Drop anything after the first '#'
     .split('#')[0]
+    // Remove parentheses containing known variant markers
+    .replace(
+      /\s*\((?:bh|trasure trails|treasure trails|item|p|kp|last man standing|trailblazer)\)\s*/gi,
+      ''
+    )
+    // Remove explicit hash tags like "#broken" or "#minigame" if present
+    .replace(/\s*#(?:broken|minigame|trailblazer)\s*/gi, '')
+    // Remove a trailing parenthetical group like "(4)" or "(i)"
+
     .replace(/\s*\([^)]*\)\s*$/, '')
     .trim()
     .toLowerCase();
