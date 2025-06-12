@@ -64,6 +64,7 @@ describe('image alt text', () => {
       slot: 'weapon',
       has_special_attack: false,
       has_passive_effect: false,
+      has_combat_stats: true,
     } as any;
     useReferenceDataStore.setState({ items: [item] });
 

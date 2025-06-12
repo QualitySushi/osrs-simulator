@@ -121,12 +121,12 @@ export function ItemSelector({ slot, specialOnly, onSelectItem }: ItemSelectorPr
 
   const filteredItems = filterBySlot(storeItems);
   const searchFiltered = searchResults ? filterBySlot(searchResults) : [];
-  const baseItems =
-    searchTerm.length > 0 ? searchFiltered : filteredItems;
+  const baseItems = searchTerm.length > 0 ? searchFiltered : filteredItems;
+  const combatItems = baseItems.filter((item) => item.has_combat_stats);
   const itemsToDisplay = dedupeItems(
     specialOnly
-      ? baseItems.filter((item) => item.has_special_attack)
-      : baseItems
+      ? combatItems.filter((item) => item.has_special_attack)
+      : combatItems
   );
 
   // Handle item selection and update calculator params based on its stats
