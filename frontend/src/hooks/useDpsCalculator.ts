@@ -155,6 +155,7 @@ export function useDpsCalculator() {
       if (specItem) {
         (clean as any).special_attack_speed =
           specItem.combat_stats?.attack_speed ?? clean.attack_speed;
+        (clean as any).weapon_name = specItem.name;
       }
     }
     calculateMutation.mutate(clean);

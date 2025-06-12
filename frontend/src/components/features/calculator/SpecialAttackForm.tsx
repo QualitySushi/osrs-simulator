@@ -3,11 +3,14 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useCalculatorStore } from '@/store/calculator-store';
+import { useSpecialAttackStore } from '@/store/special-attack-store';
 import { Swords } from 'lucide-react';
 
 export default function SpecialAttackForm() {
   const params = useCalculatorStore((s) => s.params);
   const setParams = useCalculatorStore((s) => s.setParams);
+  const weapon = useSpecialAttackStore((s) => s.weapon);
+  const specialData = useSpecialAttackStore((s) => s.data);
 
   return (
     <Card className="w-full border">
@@ -16,6 +19,16 @@ export default function SpecialAttackForm() {
         <CardTitle>Special Attack</CardTitle>
       </CardHeader>
       <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {weapon && (
+          <div className="md:col-span-2 space-y-1">
+            <div className="text-sm font-semibold">{weapon.name}</div>
+            {specialData?.effect && (
+              <div className="text-sm text-muted-foreground">
+                {specialData.effect}
+              </div>
+            )}
+          </div>
+        )}
         <div>
           <Label>Damage Multiplier</Label>
           <Input
