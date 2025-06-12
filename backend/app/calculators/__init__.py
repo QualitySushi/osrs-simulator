@@ -160,72 +160,29 @@ class DpsCalculator:
             regen_mult *= 1.5
         regen_rate *= regen_mult
 
-        duration = params.get("duration", 60.0)
+        special_hits_per_sec = regen_rate / cost
+        special_speed = params.get("special_attack_speed", attack_speed)
+        time_fraction_special = special_hits_per_sec * special_speed
+        if time_fraction_special >= 1.0:
+            # Special attacks occupy the entire time budget
+            special_hits_per_sec = 1.0 / special_speed
+            main_hits_per_sec = 0.0
+        else:
+            main_hits_per_sec = (1.0 - time_fraction_special) / attack_speed
 
-        energy = params.get("initial_special_energy", 100.0)
-        time = 0.0
-        special_count = 0
-        regular_total = 0.0
-        special_total = 0.0
-        logger.info(
-            "Simulation start: duration=%.2fs, attack_speed=%.2fs, special_speed=%.2fs",
-            duration,
-            attack_speed,
-            special_speed,
-        )
+        mainhand_dps = main_hits_per_sec * regular_damage
+        special_dps = special_hits_per_sec * special_damage
 
-        while time < duration - 1e-9:
-            if energy >= cost:
-                damage = special_damage
-                step = special_speed
-                energy = max(0.0, energy - cost)
-                special = True
-                special_count += 1
-            else:
-                damage = regular_damage
-                step = attack_speed
-                special = False
-
-            if time + step > duration:
-                frac = (duration - time) / step
-                damage *= frac
-                energy = min(100.0, energy + regen_rate * step * frac)
-                if special:
-                    special_total += damage
-                else:
-                    regular_total += damage
-                time = duration
-                logger.info(
-                    "t=%.2fs -> %.2f damage (%s, partial %.2f), energy=%.2f",
-                    time,
-                    damage,
-                    "special" if special else "regular",
-                    frac,
-                    energy,
-                )
-                break
-
-            if special:
-                special_total += damage
-            else:
-                regular_total += damage
-
-            time += step
-            energy = min(100.0, energy + regen_rate * step)
-            logger.info(
-                "t=%.2fs -> %.2f damage (%s), energy=%.2f",
-                time,
-                damage,
-                "special" if special else "regular",
-                energy,
-            )
+        duration = params.get("duration")
+        special_attacks = special_hits_per_sec * duration if duration else None
 
         result = regular_result.copy()
-        result["mainhand_dps"] = regular_total / duration
-        result["special_attack_dps"] = special_total / duration
-        result["dps"] = (regular_total + special_total) / duration
-        result["special_attacks"] = special_count
-        result["duration"] = duration
+        result["mainhand_dps"] = mainhand_dps
+        result["special_attack_dps"] = special_dps
+        result["dps"] = mainhand_dps + special_dps
+        if special_attacks is not None:
+            result["special_attacks"] = special_attacks
+            result["duration"] = duration
         result["mainhand_max_hit"] = regular_result.get("max_hit")
         result["special_attack_max_hit"] = special_result.get("max_hit")
         result["mainhand_hit_chance"] = regular_result.get("hit_chance")

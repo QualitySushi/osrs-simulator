@@ -237,12 +237,12 @@ Include these optional fields to simulate special attacks:
 
 Special energy regenerates at **10% every 30 seconds** by default. This rate is
 doubled when wearing the Lightbearer ring and increased by **50%** while a surge
-potion is active. During a fight the simulator spends special energy whenever it
-reaches or exceeds `special_energy_cost`. Each special uses
-`special_attack_speed` as its swing timer in place of your normal
-`attack_speed`. Combined with the encounter `duration`, these values determine
-how many specials occur. A planned `initial_special_energy` parameter will allow
-starting a simulation with less than 100% energy.
+potion is active. Instead of simulating a fixed duration, the calculator now
+computes the average damage of a single hit and factors in special attack
+regeneration mathematically. For example, a weapon that costs 25% special energy
+can fire four specials every five minutes. Each special uses
+`special_attack_speed` for its swing timer and the remaining time is filled with
+regular attacks using `attack_speed`.
 
 Response:
 
