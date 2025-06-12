@@ -11,6 +11,7 @@ import {
   useEquipmentBonusesStore,
 } from '@/store/equipment-bonuses-store';
 import { useSpecialAttackStore } from '@/store/special-attack-store';
+import { useReferenceDataStore } from '@/store/reference-data-store';
 import { Item, CalculatorParams, NpcForm } from '@/types/calculator';
 import { useToast } from '@/hooks/use-toast';
 import { calculatorApi } from '@/services/api';
@@ -142,6 +143,8 @@ export function CombinedEquipmentDisplay({
   const lastBonusRef = useRef<Partial<CalculatorParams>>({});
   const setBonuses = useEquipmentBonusesStore((s) => s.setBonuses);
   const setSpecWeapon = useSpecialAttackStore((s) => s.setWeapon);
+  const setSpecData = useSpecialAttackStore((s) => s.setData);
+  const specialAttacks = useReferenceDataStore((s) => s.specialAttacks);
   useEffect(() => {
     const current = useCalculatorStore.getState().params;
     const totals = calculateEquipmentBonuses(loadout, (current as any).attack_type);
@@ -205,10 +208,25 @@ export function CombinedEquipmentDisplay({
     }
   }, [loadout]);
 
-  // Update special attack weapon when spec slot changes
+  // Update special attack weapon and data when spec slot changes
   useEffect(() => {
-    setSpecWeapon(loadout['spec'] || null);
-  }, [loadout, setSpecWeapon]);
+    const specItem = loadout['spec'] || null;
+    setSpecWeapon(specItem);
+    if (specItem) {
+      const key = specItem.name.toLowerCase().replace(/ /g, '_');
+      const data = specialAttacks[key];
+      setSpecData(data || null);
+      const updates: Partial<CalculatorParams> = { weapon_name: specItem.name };
+      if (data) {
+        updates.special_energy_cost = data.special_cost;
+        updates.special_damage_multiplier = data.damage_multiplier;
+        updates.special_accuracy_modifier = data.accuracy_multiplier;
+      }
+      setParams(updates);
+    } else {
+      setSpecData(null);
+    }
+  }, [loadout.spec, specialAttacks, setSpecWeapon, setSpecData, setParams]);
 
   // Automatically switch combat style based on weapon attack types
   useEffect(() => {
