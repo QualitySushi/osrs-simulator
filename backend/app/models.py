@@ -15,7 +15,7 @@ class DpsResult(BaseModel):
     effective_atk: Optional[int] = None
     damage_multiplier: Optional[float] = None
     mainhand_dps: Optional[float] = None
-    special_attacks: Optional[int] = None
+    special_attacks: Optional[float] = None
     duration: Optional[float] = None
     special_attack_dps: Optional[float] = None
     mainhand_max_hit: Optional[int] = None
