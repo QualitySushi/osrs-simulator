@@ -45,15 +45,17 @@ const canonicalName = (name: string) =>
     // Remove a trailing parenthetical group like "(4)" or "(i)"
 
     .replace(/\s*\([^)]*\)\s*$/, '')
-    .trim()
-    .toLowerCase();
+    .trim();
+
+const canonicalKey = (name: string) => canonicalName(name).toLowerCase();
 
 const dedupeItems = (items: ItemSummary[]): ItemSummary[] => {
   const seen = new Map<string, ItemSummary>();
   for (const item of items) {
-    const key = canonicalName(item.name);
+    const clean = canonicalName(item.name);
+    const key = clean.toLowerCase();
     if (!seen.has(key)) {
-      seen.set(key, item);
+      seen.set(key, { ...item, name: clean });
     }
   }
   return Array.from(seen.values());

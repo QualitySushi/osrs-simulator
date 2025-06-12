@@ -41,15 +41,17 @@ const canonicalName = (name: string) =>
   name
     .split('#')[0]
     .replace(/\([^)]*\)/g, '')
-    .trim()
-    .toLowerCase();
+    .trim();
+
+const canonicalKey = (name: string) => canonicalName(name).toLowerCase();
 
 const dedupeNpcs = (npcs: NpcSummary[]): NpcSummary[] => {
   const seen = new Map<string, NpcSummary>();
   for (const npc of npcs) {
-    const key = canonicalName(npc.name);
+    const clean = canonicalName(npc.name);
+    const key = clean.toLowerCase();
     if (!seen.has(key)) {
-      seen.set(key, npc);
+      seen.set(key, { ...npc, name: clean });
     }
   }
   return Array.from(seen.values());
