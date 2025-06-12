@@ -93,7 +93,7 @@ class TestDpsCalculator(unittest.TestCase):
 
         result = DpsCalculator.calculate_dps(params)
         self.assertIn("special_attacks", result)
-        self.assertEqual(result["special_attacks"], 2)
+        self.assertAlmostEqual(result["special_attacks"], 0.4, places=2)
         self.assertIn("special_attack_dps", result)
         self.assertGreater(result["special_attack_dps"], 0)
         self.assertIn("mainhand_dps", result)
@@ -104,7 +104,7 @@ class TestDpsCalculator(unittest.TestCase):
         )
 
     def test_initial_special_energy(self):
-        """Initial special energy should influence special attack count."""
+        """Initial special energy should not affect attack count anymore."""
         params = {
             "combat_style": "melee",
             "strength_level": 99,
@@ -130,7 +130,7 @@ class TestDpsCalculator(unittest.TestCase):
         }
 
         result = DpsCalculator.calculate_dps(params)
-        self.assertEqual(result["special_attacks"], 1)
+        self.assertAlmostEqual(result["special_attacks"], 0.4, places=2)
 
     def test_partial_final_attack(self):
         """DPS should scale the final attack when it doesn't fully fit."""
