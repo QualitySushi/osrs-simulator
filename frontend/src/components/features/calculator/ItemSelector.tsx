@@ -224,8 +224,8 @@ export function ItemSelector({ slot, specialOnly, onSelectItem }: ItemSelectorPr
                   onValueChange={setSearchTerm}
                 />
                 <CommandEmpty>No item found.</CommandEmpty>
-                <CommandGroup>
-                  <CommandList className="max-h-[300px]">
+                <CommandList className="max-h-[300px]">
+                  <CommandGroup>
                     {isLoading && searchTerm ? (
                       <div className="flex items-center justify-center p-4">
                         <LogoSpinner className="mr-2 h-4 w-4" />
@@ -252,13 +252,13 @@ export function ItemSelector({ slot, specialOnly, onSelectItem }: ItemSelectorPr
                         </CommandItem>
                       ))
                     )}
-                  </CommandList>
+                  </CommandGroup>
                   {isLoading && !searchTerm && (
                     <div className="flex items-center justify-center p-2">
                       <LogoSpinner className="mr-2 h-4 w-4" />
                     </div>
                   )}
-                </CommandGroup>
+                </CommandList>
               </Command>
             </PopoverContent>
           </Popover>
