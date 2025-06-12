@@ -157,6 +157,8 @@ async def get_npcs(
         if not bosses:
             raise HTTPException(status_code=404, detail="No NPCs found")
         return bosses
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to retrieve NPCs: {str(e)}")
 
@@ -238,6 +240,8 @@ async def get_items(
         if not items:
             raise HTTPException(status_code=404, detail="No items found")
         return items
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to retrieve items: {str(e)}")
 
