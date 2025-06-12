@@ -1,7 +1,8 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { calculatorApi } from '@/services/api';
 import { useCalculatorStore } from '@/store/calculator-store';
+import { calculateEquipmentBonuses } from '@/utils/equipmentBonuses';
 import { CalculatorParams, Item, NpcForm, CombatStyle } from '@/types/calculator';
 import calculatePassiveEffectBonuses from '@/components/features/calculator/PassiveEffectCalculator';
 import { useToast } from './use-toast';
@@ -15,28 +16,12 @@ export function useDpsCalculator() {
   const switchCombatStyle = useCalculatorStore((s) => s.switchCombatStyle);
   const resetParams = useCalculatorStore((s) => s.resetParams);
   const resetLocks = useCalculatorStore((s) => s.resetLocks);
-  const storeLoadout = useCalculatorStore((s) => s.loadout);
+  const currentLoadout = useCalculatorStore((s) => s.loadout);
   const setStoreLoadout = useCalculatorStore((s) => s.setLoadout);
-
-  const [activeTab, setActiveTab] = useState<CombatStyle>(params.combat_style);
-  const [currentLoadout, setCurrentLoadout] = useState<Record<string, Item | null>>(storeLoadout);
-  const storeNpcForm = useCalculatorStore((s) => s.selectedNpcForm);
+  const currentNpcForm = useCalculatorStore((s) => s.selectedNpcForm);
   const setStoreNpcForm = useCalculatorStore((s) => s.setSelectedNpcForm);
-  const [currentNpcForm, setCurrentNpcForm] = useState<NpcForm | null>(storeNpcForm);
+  const activeTab = params.combat_style;
   const [appliedPassiveEffects, setAppliedPassiveEffects] = useState<any>(null);
-
-  useEffect(() => {
-    setCurrentNpcForm(storeNpcForm);
-  }, [storeNpcForm]);
-
-  useEffect(() => {
-    setCurrentLoadout(storeLoadout);
-  }, [storeLoadout]);
-
-  // keep local tab state in sync with store combat style
-  useEffect(() => {
-    setActiveTab(params.combat_style);
-  }, [params.combat_style]);
 
   const calculateEffects = useCallback(() => {
     return calculatePassiveEffectBonuses(params, currentLoadout, currentNpcForm);
@@ -129,6 +114,22 @@ export function useDpsCalculator() {
   const handleCalculate = useCallback(() => {
     const clean = sanitizeParams(params);
     if (currentLoadout) {
+      const bonuses = calculateEquipmentBonuses(
+        currentLoadout,
+        (params as any).attack_type
+      );
+      if (params.combat_style === 'melee') {
+        (clean as any).melee_attack_bonus = bonuses.melee_attack_bonus;
+        (clean as any).melee_strength_bonus = bonuses.melee_strength_bonus;
+      }
+      if (params.combat_style === 'ranged') {
+        (clean as any).ranged_attack_bonus = bonuses.ranged_attack_bonus;
+        (clean as any).ranged_strength_bonus = bonuses.ranged_strength_bonus;
+      }
+      if (params.combat_style === 'magic') {
+        (clean as any).magic_attack_bonus = bonuses.magic_attack_bonus;
+        (clean as any).magic_damage_bonus = bonuses.magic_damage_bonus;
+      }
       const specItem = currentLoadout['spec'];
       const twistedBowEquipped =
         (currentLoadout['2h'] &&
@@ -164,25 +165,21 @@ export function useDpsCalculator() {
     resetLocks();
     setResults(null);
     setAppliedPassiveEffects(null);
-    setCurrentLoadout({});
     setStoreLoadout({});
-    setCurrentNpcForm(null);
+    setStoreNpcForm(null);
     toast.success('Calculator reset to defaults');
   };
 
   const handleTabChange = (style: CombatStyle) => {
-    setActiveTab(style);
     switchCombatStyle(style);
     toast.info(`Switched to ${style} combat style`);
   };
 
   const handleEquipmentUpdate = (loadout: Record<string, Item | null>) => {
-    setCurrentLoadout(loadout);
     setStoreLoadout(loadout);
   };
 
   const handleNpcUpdate = (npcForm: NpcForm | null) => {
-    setCurrentNpcForm(npcForm);
     setStoreNpcForm(npcForm);
   };
 
