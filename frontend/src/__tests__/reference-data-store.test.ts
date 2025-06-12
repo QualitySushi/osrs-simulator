@@ -87,4 +87,17 @@ describe('reference data store', () => {
     expect(mockedSpecialApi.getAll).toHaveBeenCalledTimes(1);
     expect(mockedPassiveApi.getAll).toHaveBeenCalledTimes(1);
   });
+
+  it('filters forms with placeholder names', () => {
+    act(() => {
+      getStore().addNpcForms(1, [
+        { id: 10, npc_id: 1, form_name: 'Form 1', defence_level: 10 } as any,
+        { id: 11, npc_id: 1, form_name: 'Normal', defence_level: 20 } as any,
+      ]);
+    });
+
+    const forms = getStore().npcForms[1];
+    expect(forms).toHaveLength(1);
+    expect(forms[0].form_name).toBe('Normal');
+  });
 });

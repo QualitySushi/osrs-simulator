@@ -123,8 +123,13 @@ export const useReferenceDataStore = create<ReferenceDataState>()(
       addNpcForms(id, forms) {
         const hasStats = (f: NpcForm) =>
           f.defence_level !== undefined && f.defence_level !== null;
+        const validName = (f: NpcForm) =>
+          f.form_name && !/^form\s*\d+$/i.test(f.form_name.trim());
         set((state) => ({
-          npcForms: { ...state.npcForms, [id]: forms.filter(hasStats) }
+          npcForms: {
+            ...state.npcForms,
+            [id]: forms.filter((f) => hasStats(f) && validName(f))
+          }
         }));
       },
       addItems(i) {
