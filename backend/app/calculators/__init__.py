@@ -117,12 +117,31 @@ class DpsCalculator:
         regular_params["special_accuracy_multiplier"] = 1.0
         regular_result = calculator.calculate_dps(regular_params)
 
+        logger.info("--- Gear DPS Calculation ---")
+        logger.info("Inputs: %s", regular_params)
+        logger.info("Outputs: %s", regular_result)
+        logger.info("----------------------------")
+
         special_params = params.copy()
         special_speed = params.get(
             "special_attack_speed", params.get("attack_speed", 2.4)
         )
         special_params["attack_speed"] = special_speed
         special_result = calculator.calculate_dps(special_params)
+
+        logger.info("--- Special DPS Calculation ---")
+        logger.info("Inputs: %s", special_params)
+        logger.info("Outputs: %s", special_result)
+        logger.info("------------------------------")
+
+        print("--- Gear DPS Calculation ---")
+        print("Inputs:", regular_params)
+        print("Outputs:", regular_result)
+        print("----------------------------")
+        print("--- Special DPS Calculation ---")
+        print("Inputs:", special_params)
+        print("Outputs:", special_result)
+        print("------------------------------")
 
         regular_damage = regular_result["average_hit"]
         special_damage = special_result["average_hit"]
