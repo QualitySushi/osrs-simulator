@@ -36,6 +36,25 @@ import { useCalculatorStore } from '@/store/calculator-store';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useReferenceDataStore } from '@/store/reference-data-store';
 
+// Helper to normalize npc names and remove variant markers
+const canonicalName = (name: string) =>
+  name
+    .split('#')[0]
+    .replace(/\([^)]*\)/g, '')
+    .trim()
+    .toLowerCase();
+
+const dedupeNpcs = (npcs: NpcSummary[]): NpcSummary[] => {
+  const seen = new Map<string, NpcSummary>();
+  for (const npc of npcs) {
+    const key = canonicalName(npc.name);
+    if (!seen.has(key)) {
+      seen.set(key, npc);
+    }
+  }
+  return Array.from(seen.values());
+};
+
 interface NpcSelectorProps {
   onSelectNpc?: (npc: NpcSummary) => void;
   onSelectForm?: (form: NpcForm | null) => void;
@@ -374,7 +393,9 @@ export function NpcSelector({ onSelectNpc, onSelectForm }: NpcSelectorProps) {
                         Loading...
                       </div>
                     ) : (
-                      (searchTerm.length > 0 ? searchResults ?? [] : storeNpcs).map((npc) => (
+                      dedupeNpcs(
+                        searchTerm.length > 0 ? searchResults ?? [] : storeNpcs
+                      ).map((npc) => (
                         <CommandItem
                           key={npc.id}
                           value={npc.name}
