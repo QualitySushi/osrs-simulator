@@ -14,6 +14,7 @@ import { useSpecialAttackStore } from '@/store/special-attack-store';
 import { Item, CalculatorParams, NpcForm } from '@/types/calculator';
 import { useToast } from '@/hooks/use-toast';
 import { calculatorApi } from '@/services/api';
+import { calculateEquipmentBonuses } from '@/utils/equipmentBonuses';
 import { LogoSpinner } from '@/components/ui/LogoSpinner';
 
 // Import our new components
@@ -143,75 +144,40 @@ export function CombinedEquipmentDisplay({
   const setSpecWeapon = useSpecialAttackStore((s) => s.setWeapon);
   useEffect(() => {
     const current = useCalculatorStore.getState().params;
+    const totals = calculateEquipmentBonuses(loadout, (current as any).attack_type);
     const updates: Partial<CalculatorParams> = {};
-
-    // Totals to accumulate
-    let meleeAtk = 0, meleeStr = 0;
-    let rangedAtk = 0, rangedStr = 0;
-    let magicAtk = 0, magicDmg = 0;
-
-    Object.entries(loadout).forEach(([slot, item]) => {
-      if (slot === 'spec') return;
-      if (!item?.combat_stats) return;
-
-      const { attack_bonuses = {}, other_bonuses = {} } = item.combat_stats;
-
-      if (isMeleeParams(current)) {
-        const type = current.attack_type as keyof typeof attack_bonuses;
-        meleeAtk += attack_bonuses[type] || 0;
-        meleeStr += other_bonuses.strength || 0;
-      }
-
-      if (isRangedParams(current)) {
-        rangedAtk += attack_bonuses.ranged || 0;
-        rangedStr += other_bonuses['ranged strength'] || 0;
-      }
-
-      if (isMagicParams(current)) {
-        magicAtk += attack_bonuses.magic || 0;
-        const dmgStr = other_bonuses['magic damage'];
-        if (typeof dmgStr === 'string') {
-          const match = dmgStr.match(/\+(\d+)%/);
-          if (match) magicDmg += parseInt(match[1], 10) / 100;
-        }
-      }
-    });
 
     const prev = lastBonusRef.current;
 
     if (isMeleeParams(current)) {
-      if (prev.melee_attack_bonus !== meleeAtk) updates.melee_attack_bonus = meleeAtk;
-      if (prev.melee_strength_bonus !== meleeStr) updates.melee_strength_bonus = meleeStr;
+      if (prev.melee_attack_bonus !== totals.melee_attack_bonus)
+        updates.melee_attack_bonus = totals.melee_attack_bonus;
+      if (prev.melee_strength_bonus !== totals.melee_strength_bonus)
+        updates.melee_strength_bonus = totals.melee_strength_bonus;
     }
 
     if (isRangedParams(current)) {
-      if (prev.ranged_attack_bonus !== rangedAtk) updates.ranged_attack_bonus = rangedAtk;
-      if (prev.ranged_strength_bonus !== rangedStr) updates.ranged_strength_bonus = rangedStr;
+      if (prev.ranged_attack_bonus !== totals.ranged_attack_bonus)
+        updates.ranged_attack_bonus = totals.ranged_attack_bonus;
+      if (prev.ranged_strength_bonus !== totals.ranged_strength_bonus)
+        updates.ranged_strength_bonus = totals.ranged_strength_bonus;
     }
 
     if (isMagicParams(current)) {
-      if (prev.magic_attack_bonus !== magicAtk) updates.magic_attack_bonus = magicAtk;
-      if (prev.magic_damage_bonus !== magicDmg) updates.magic_damage_bonus = magicDmg;
+      if (prev.magic_attack_bonus !== totals.magic_attack_bonus)
+        updates.magic_attack_bonus = totals.magic_attack_bonus;
+      if (prev.magic_damage_bonus !== totals.magic_damage_bonus)
+        updates.magic_damage_bonus = totals.magic_damage_bonus;
     }
 
-    setBonuses({
-      melee_attack_bonus: meleeAtk,
-      melee_strength_bonus: meleeStr,
-      ranged_attack_bonus: rangedAtk,
-      ranged_strength_bonus: rangedStr,
-      magic_attack_bonus: magicAtk,
-      magic_damage_bonus: magicDmg,
-    });
+    setBonuses(totals);
 
     if (Object.keys(updates).length > 0) {
       if (process.env.NODE_ENV !== 'production') {
         console.log('[DEBUG] Updating combat totals:', updates);
       }
       setParams(updates);
-      lastBonusRef.current = {
-        ...lastBonusRef.current,
-        ...updates
-      };
+      lastBonusRef.current = { ...lastBonusRef.current, ...updates };
     }
   }, [loadout, setParams]);
 

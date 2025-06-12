@@ -2,6 +2,7 @@ import { useEffect, useCallback, useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { calculatorApi } from '@/services/api';
 import { useCalculatorStore } from '@/store/calculator-store';
+import { calculateEquipmentBonuses } from '@/utils/equipmentBonuses';
 import { CalculatorParams, Item, NpcForm, CombatStyle } from '@/types/calculator';
 import calculatePassiveEffectBonuses from '@/components/features/calculator/PassiveEffectCalculator';
 import { useToast } from './use-toast';
@@ -113,6 +114,22 @@ export function useDpsCalculator() {
   const handleCalculate = useCallback(() => {
     const clean = sanitizeParams(params);
     if (currentLoadout) {
+      const bonuses = calculateEquipmentBonuses(
+        currentLoadout,
+        (params as any).attack_type
+      );
+      if (params.combat_style === 'melee') {
+        (clean as any).melee_attack_bonus = bonuses.melee_attack_bonus;
+        (clean as any).melee_strength_bonus = bonuses.melee_strength_bonus;
+      }
+      if (params.combat_style === 'ranged') {
+        (clean as any).ranged_attack_bonus = bonuses.ranged_attack_bonus;
+        (clean as any).ranged_strength_bonus = bonuses.ranged_strength_bonus;
+      }
+      if (params.combat_style === 'magic') {
+        (clean as any).magic_attack_bonus = bonuses.magic_attack_bonus;
+        (clean as any).magic_damage_bonus = bonuses.magic_damage_bonus;
+      }
       const specItem = currentLoadout['spec'];
       const twistedBowEquipped =
         (currentLoadout['2h'] &&
