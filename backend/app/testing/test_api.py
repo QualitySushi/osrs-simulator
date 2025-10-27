@@ -75,16 +75,22 @@ class TestApiRoutes(unittest.TestCase):
         self.assertIn(resp.status_code, (200, 404))
 
     def test_get_item(self):
-        """Ensure /item/1 returns 404 when the DB is absent."""
+        """In stub mode, single lookups return None -> 404. In real DB, item 1 may exist -> 200."""
         with self.client_ctx as client:
-            resp = client.get('/item/1')
-        self.assertEqual(resp.status_code, 404)
+            resp = client.get("/item/1")
+        if USE_STUBS:
+            self.assertEqual(resp.status_code, 404)
+        else:
+            self.assertIn(resp.status_code, (200, 404))
 
     def test_get_npc(self):
-        """Ensure /npc/1 returns 404 when the DB is absent."""
+        """In stub mode, single lookups return None -> 404. In real DB, npc 1 may exist -> 200."""
         with self.client_ctx as client:
-            resp = client.get('/npc/1')
-        self.assertEqual(resp.status_code, 404)
+            resp = client.get("/npc/1")
+        if USE_STUBS:
+            self.assertEqual(resp.status_code, 404)
+        else:
+            self.assertIn(resp.status_code, (200, 404))
 
     def test_import_seed(self):
         sample = {
