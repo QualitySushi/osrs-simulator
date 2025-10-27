@@ -11,11 +11,12 @@ jobs:
       fail-fast: false
       matrix:
         mode: [stubbed, realdb]
+
     env:
       PYTHONUNBUFFERED: "1"
-      # If the secret is provided, UnitTest.py won't override it (uses setdefault)
       SQLAZURECONNSTR_DefaultConnection: ${{ secrets.SQLAZURECONNSTR_DefaultConnection }}
-      OSRS_USE_STUBS: "0"  # run against the real DB
+      # Toggle stubs per matrix:
+      OSRS_USE_STUBS: ${{ matrix.mode == 'realdb' && '0' || '1' }}
 
     steps:
       - uses: actions/checkout@v4
@@ -24,37 +25,24 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+          cache: pip
+          cache-dependency-path: backend/requirements.txt
 
       - name: Install ODBC Driver 18 (works on noble via jammy repo)
-        if: env.OSRS_USE_STUBS == '0'
+        if: matrix.mode == 'realdb'
         run: |
           set -e
-          # 0) Remove any prior Microsoft lists/keys to avoid "Conflicting values set for option Signed-By"
+          # Clean previous conflicting entries/keys
           sudo rm -f /etc/apt/sources.list.d/microsoft-prod.list /etc/apt/sources.list.d/mssql-release.list
           sudo rm -f /etc/apt/trusted.gpg.d/microsoft.gpg /etc/apt/trusted.gpg.d/microsoft.asc /etc/apt/keyrings/microsoft.gpg
-      
-          # 1) Add keyring (new-style)
+          # Add keyring
           sudo mkdir -p /etc/apt/keyrings
           curl -fsSL https://packages.microsoft.com/keys/microsoft.asc \
             | gpg --dearmor \
             | sudo tee /etc/apt/keyrings/microsoft.gpg > /dev/null
-      
-          # 2) Use jammy repo on noble runners
+          # Use jammy repo on noble runners
           echo "deb [arch=amd64,arm64 signed-by=/etc/apt/keyrings/microsoft.gpg] https://packages.microsoft.com/ubuntu/22.04/prod jammy main" \
             | sudo tee /etc/apt/sources.list.d/microsoft-prod.list > /dev/null
-      
-          # 3) Install
-          sudo apt-get update
-          sudo ACCEPT_EULA=Y apt-get install -y msodbcsql18 unixodbc-dev
-
-
-      # Only needed for real DB (pyodbc + ODBC Driver 18)
-      - name: Install msodbcsql18 (Ubuntu)
-        if: matrix.mode == 'realdb'
-        run: |
-          set -e
-          sudo su -c 'curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -'
-          sudo su -c 'curl https://packages.microsoft.com/config/ubuntu/22.04/prod.list > /etc/apt/sources.list.d/mssql-release.list'
           sudo apt-get update
           sudo ACCEPT_EULA=Y apt-get install -y msodbcsql18 unixodbc-dev
 
@@ -62,7 +50,6 @@ jobs:
         run: |
           python -m pip install -U pip
           pip install -r backend/requirements.txt
-          # tests may import pytest/httpx/dotenv
           pip install pytest httpx python-dotenv
 
       - name: Show mode
