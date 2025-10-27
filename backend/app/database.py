@@ -99,27 +99,42 @@ class AzureSQLDatabaseService:
                     conn.close()
                 break
 
+    from contextlib import asynccontextmanager
+    import asyncio
+    
+    # inside AzureSQLDatabaseService
     @asynccontextmanager
     async def connection_async(self):
-        """Async context manager with retry logic for DB connections."""
+        """
+        Robust async connection context with retries and guaranteed close.
+        Avoids 'Unclosed connection' warnings by always closing in finally.
+        """
+        conn = None
+        last_exc = None
+    
         for attempt in range(MAX_RETRIES):
-            conn = None
             try:
-                conn = await self._get_connection_async()
-                yield conn
-            except Exception:
-                if conn:
-                    try:
-                        await conn.close()
-                    except Exception:
-                        pass
+                # If you prefer, pass loop=asyncio.get_running_loop()
+                conn = await aioodbc.connect(
+                    dsn=self.connection_string,
+                    timeout=CONNECTION_TIMEOUT,
+                )
+                break
+            except Exception as e:
+                last_exc = e
                 if attempt == MAX_RETRIES - 1:
                     raise
-                await asyncio.sleep(2**attempt)
-            else:
-                if conn:
+                await asyncio.sleep(2 ** attempt)
+    
+        try:
+            yield conn
+        finally:
+            if conn is not None:
+                try:
                     await conn.close()
-                break
+                except Exception:
+                    # swallow close errors; connection object is going away anyway
+                    pass
 
     def get_all_bosses(
         self,
