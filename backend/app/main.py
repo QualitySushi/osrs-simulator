@@ -8,7 +8,7 @@ import logging
 from dotenv import load_dotenv
 
 # Load environment variables from a .env file if present
-load_dotenv(dotenv_path="backend/.env", override=True)
+load_dotenv()
 
 logging.basicConfig(level=logging.INFO, format="[%(levelname)s] %(message)s")
 
