@@ -7,17 +7,47 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        mode: [stubbed, realdb]
+    env:
+      PYTHONUNBUFFERED: "1"
+      # If the secret is provided, UnitTest.py won't override it (uses setdefault)
+      SQLAZURECONNSTR_DefaultConnection: ${{ secrets.AZURE_SQL_CONNSTR }}
+      # turn stubs on/off per matrix
+      OSRS_USE_STUBS: ${{ matrix.mode == 'realdb' && '0' || '1' }}
+
     steps:
       - uses: actions/checkout@v4
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: "3.12"
+
+      # Only needed for real DB (pyodbc + ODBC Driver 18)
+      - name: Install msodbcsql18 (Ubuntu)
+        if: matrix.mode == 'realdb'
+        run: |
+          set -e
+          sudo su -c 'curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -'
+          sudo su -c 'curl https://packages.microsoft.com/config/ubuntu/22.04/prod.list > /etc/apt/sources.list.d/mssql-release.list'
+          sudo apt-get update
+          sudo ACCEPT_EULA=Y apt-get install -y msodbcsql18 unixodbc-dev
+
       - name: Install dependencies
         run: |
           python -m pip install -U pip
           pip install -r backend/requirements.txt
-          pip install pytest fastapi httpx python-dotenv
+          # tests may import pytest/httpx/dotenv
+          pip install pytest httpx python-dotenv
+
+      - name: Show mode
+        run: |
+          echo "Mode: ${{ matrix.mode }}"
+          echo "OSRS_USE_STUBS=${OSRS_USE_STUBS}"
+
       - name: Run tests
         run: |
           python backend/app/testing/UnitTest.py
