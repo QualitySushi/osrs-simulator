@@ -20,12 +20,19 @@ jobs:
         with:
           python-version: '3.11'
           cache: 'pip'
-          cache-dependency-path: 'webscraper/requirements.txt'
+          # Use a file guaranteed to exist; avoids cache path errors
+          cache-dependency-path: 'backend/requirements.txt'
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r webscraper/requirements.txt
+          if [ -f webscraper/requirements.txt ]; then
+            pip install -r webscraper/requirements.txt
+          elif [ -f webscraper/runescape-bosses/requirements.txt ]; then
+            pip install -r webscraper/runescape-bosses/requirements.txt
+          else
+            pip install -r backend/requirements.txt
+          fi
 
       - name: Run boss scraper
         working-directory: webscraper/runescape-bosses
