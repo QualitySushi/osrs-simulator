@@ -8,7 +8,7 @@ import logging
 from dotenv import load_dotenv
 
 # Load environment variables from a .env file if present
-load_dotenv()
+load_dotenv(dotenv_path="backend/.env", override=True)
 
 logging.basicConfig(level=logging.INFO, format="[%(levelname)s] %(message)s")
 
@@ -31,6 +31,13 @@ app = FastAPI(
     title="ScapeLab DPS Calculator API",
     description="API for calculating DPS in Old School RuneScape",
     version="1.0.0"
+)
+
+import os, pyodbc, logging
+logging.getLogger("uvicorn.error").info(
+    "ConnStr present: %s; Drivers: %s",
+    bool(os.getenv("SQLAZURECONNSTR_DefaultConnection")),
+    pyodbc.drivers()
 )
 
 # Add CORS middleware to allow cross-origin requests
