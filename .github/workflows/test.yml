@@ -29,14 +29,24 @@ jobs:
         if: env.OSRS_USE_STUBS == '0'
         run: |
           set -e
+          # 0) Remove any prior Microsoft lists/keys to avoid "Conflicting values set for option Signed-By"
+          sudo rm -f /etc/apt/sources.list.d/microsoft-prod.list /etc/apt/sources.list.d/mssql-release.list
+          sudo rm -f /etc/apt/trusted.gpg.d/microsoft.gpg /etc/apt/trusted.gpg.d/microsoft.asc /etc/apt/keyrings/microsoft.gpg
+      
+          # 1) Add keyring (new-style)
           sudo mkdir -p /etc/apt/keyrings
-          curl -sSL https://packages.microsoft.com/keys/microsoft.asc \
+          curl -fsSL https://packages.microsoft.com/keys/microsoft.asc \
             | gpg --dearmor \
             | sudo tee /etc/apt/keyrings/microsoft.gpg > /dev/null
+      
+          # 2) Use jammy repo on noble runners
           echo "deb [arch=amd64,arm64 signed-by=/etc/apt/keyrings/microsoft.gpg] https://packages.microsoft.com/ubuntu/22.04/prod jammy main" \
-            | sudo tee /etc/apt/sources.list.d/microsoft-prod.list
+            | sudo tee /etc/apt/sources.list.d/microsoft-prod.list > /dev/null
+      
+          # 3) Install
           sudo apt-get update
           sudo ACCEPT_EULA=Y apt-get install -y msodbcsql18 unixodbc-dev
+
 
       # Only needed for real DB (pyodbc + ODBC Driver 18)
       - name: Install msodbcsql18 (Ubuntu)
