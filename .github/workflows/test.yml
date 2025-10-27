@@ -25,21 +25,16 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install ODBC Driver 18 (GitHub Ubuntu runner)
+      - name: Install ODBC Driver 18 (works on noble via jammy repo)
         if: env.OSRS_USE_STUBS == '0'
         run: |
           set -e
-          # Detect Ubuntu codename
-          . /etc/os-release
-          case "$VERSION_CODENAME" in
-            noble|jammy|focal) CODENAME="$VERSION_CODENAME" ;;
-            *) CODENAME="jammy" ;;  # fallback
-          esac
-
-          curl https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
-          echo "deb [arch=amd64,arm64] https://packages.microsoft.com/ubuntu/$CODENAME/prod $CODENAME main" | \
-            sudo tee /etc/apt/sources.list.d/mssql-release.list
-
+          sudo mkdir -p /etc/apt/keyrings
+          curl -sSL https://packages.microsoft.com/keys/microsoft.asc \
+            | gpg --dearmor \
+            | sudo tee /etc/apt/keyrings/microsoft.gpg > /dev/null
+          echo "deb [arch=amd64,arm64 signed-by=/etc/apt/keyrings/microsoft.gpg] https://packages.microsoft.com/ubuntu/22.04/prod jammy main" \
+            | sudo tee /etc/apt/sources.list.d/microsoft-prod.list
           sudo apt-get update
           sudo ACCEPT_EULA=Y apt-get install -y msodbcsql18 unixodbc-dev
 
