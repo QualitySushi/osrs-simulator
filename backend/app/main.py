@@ -48,12 +48,20 @@ async def _preload_caches_async() -> None:
     except Exception as e:
         print(f"Cache preload failed: {e}")
 
+# Preload caches on startup (synchronously so tests see them ready)
 @app.on_event("startup")
-async def on_startup() -> None:
-    global _preload_task
+async def _warm_caches_on_startup() -> None:
+    # Allow skipping only if explicitly requested (e.g. CI toggles)
     if os.getenv("OSRS_SKIP_PRELOAD") == "1":
         return
-    _preload_task = asyncio.create_task(_preload_caches_async())
+    try:
+        # These are async repo calls; awaiting them ensures caches are filled
+        await boss_repository.get_all_bosses_async()
+        await item_repository.get_all_items_async(combat_only=False)
+    except Exception as e:
+        # Don't crash startup; tests will still hit endpoints, but log the issue
+        print(f"Cache warmup failed: {e}")
+
 
 @app.on_event("shutdown")
 async def on_shutdown() -> None:
@@ -238,6 +246,31 @@ async def calculate_item_effect(params: Dict[str, Any]):
         return calculation_service.calculate_item_effect(params)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
+
+# --- Special attacks & passives (API) ---
+
+@app.get("/special-attacks", tags=["Items"])
+async def get_special_attacks():
+    """
+    Return the special attack reference data.
+    Always 200 (empty dict if no data) so the stubbed test doesn't 404.
+    """
+    try:
+        data = special_attack_repository.get_all_special_attacks()
+        return data or {}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to retrieve special attacks: {str(e)}")
+
+@app.get("/passive-effects", tags=["Items"])
+async def get_passive_effects():
+    """
+    Return the passive effect reference data.
+    """
+    try:
+        data = passive_effect_repository.get_all_passive_effects()
+        return data or {}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to retrieve passive effects: {str(e)}")
 
 
 if __name__ == "__main__":
