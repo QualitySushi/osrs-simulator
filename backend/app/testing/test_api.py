@@ -5,6 +5,8 @@ import json
 import base64
 from fastapi.testclient import TestClient
 
+USE_STUBS = os.getenv("OSRS_USE_STUBS", "1") not in ("0", "false", "False")
+
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 from app.main import app
 
@@ -76,7 +78,7 @@ class TestApiRoutes(unittest.TestCase):
 
     def test_get_item(self):
         """In stub mode, single lookups return None -> 404. In real DB, item 1 may exist -> 200."""
-        with self.client_ctx as client:
+        with TestClient(app) as client:
             resp = client.get("/item/1")
         if USE_STUBS:
             self.assertEqual(resp.status_code, 404)
@@ -85,7 +87,7 @@ class TestApiRoutes(unittest.TestCase):
 
     def test_get_npc(self):
         """In stub mode, single lookups return None -> 404. In real DB, npc 1 may exist -> 200."""
-        with self.client_ctx as client:
+        with TestClient(app) as client:
             resp = client.get("/npc/1")
         if USE_STUBS:
             self.assertEqual(resp.status_code, 404)
