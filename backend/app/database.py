@@ -42,7 +42,7 @@ class AzureSQLDatabaseService:
             # Use Entra ID authentication (for production)
             if not self.username or not self.password:
                 self.connection_string = (
-                    f"DRIVER={{ODBC Driver 17 for SQL Server}};"
+                    f"DRIVER={{ODBC Driver 18 for SQL Server}};"
                     f"SERVER={self.server};"
                     f"DATABASE={self.database};"
                     f"Authentication=ActiveDirectoryMsi;"  # For App Service Managed Identity
@@ -359,145 +359,124 @@ class AzureSQLDatabaseService:
         try:
             with self.connection() as conn:
                 cursor = conn.cursor()
-            
-            cursor.execute("""
-                SELECT id, name, has_special_attack, special_attack_text,
-                       has_passive_effect, passive_effect_text, has_combat_stats,
-                       is_tradeable, slot, combat_stats, icons
-                FROM items
-                WHERE id = ?
-            """, (item_id,))
-            
-            row = cursor.fetchone()
-            if not row:
-                return None
-            
-            # Parse JSON fields
-            combat_stats = {}
-            if row[9]:
-                try:
-                    combat_stats = json.loads(row[9])
-                except:
-                    pass
-            
-            icons = []
-            if row[10]:
-                try:
-                    icons = json.loads(row[10])
-                except:
-                    pass
-            
-            item_data = {
-                "id": row[0],
-                "name": row[1],
-                "has_special_attack": bool(row[2]),
-                "special_attack_text": row[3],
-                "has_passive_effect": bool(row[4]),
-                "passive_effect_text": row[5],
-                "has_combat_stats": bool(row[6]),
-                "is_tradeable": bool(row[7]),
-                "slot": row[8],
-                "combat_stats": combat_stats,
-                "icons": icons,
-            }
-
-            return item_data
-            
+                cursor.execute(
+                    """
+                    SELECT id, name, has_special_attack, special_attack_text,
+                           has_passive_effect, passive_effect_text, has_combat_stats,
+                           is_tradeable, slot, combat_stats, icons
+                    FROM items
+                    WHERE id = ?
+                    """,
+                    (item_id,),
+                )
+                row = cursor.fetchone()
+                if not row:
+                    return None
+    
+                combat_stats = {}
+                if row[9]:
+                    try:
+                        combat_stats = json.loads(row[9])
+                    except Exception:
+                        pass
+    
+                icons = []
+                if row[10]:
+                    try:
+                        icons = json.loads(row[10])
+                    except Exception:
+                        pass
+    
+                return {
+                    "id": row[0],
+                    "name": row[1],
+                    "has_special_attack": bool(row[2]),
+                    "special_attack_text": row[3],
+                    "has_passive_effect": bool(row[4]),
+                    "passive_effect_text": row[5],
+                    "has_combat_stats": bool(row[6]),
+                    "is_tradeable": bool(row[7]),
+                    "slot": row[8],
+                    "combat_stats": combat_stats,
+                    "icons": icons,
+                }
         except Exception as e:
             print(f"Error getting item {item_id}: {e}")
             raise
+
 
     def search_bosses(self, query: str, limit: int | None = None) -> List[Dict[str, Any]]:
         """Search bosses by name."""
         try:
             with self.connection() as conn:
                 cursor = conn.cursor()
-
-            sql = (
-                "SELECT id, name, raid_group, location\n"
-                "FROM npcs\n"
-                "WHERE name LIKE ?\n"
-                "ORDER BY name"
-            )
-            params: list[Any] = [f"%{query}%"]
-            if limit is not None:
-                sql = (
-                    "SELECT TOP (?) id, name, raid_group, location\n"
-                    "FROM npcs\n"
-                    "WHERE name LIKE ?\n"
-                    "ORDER BY name"
-                )
-                params.insert(0, limit)
-
-            cursor.execute(sql, params)
-            
-            bosses = []
-            for row in cursor.fetchall():
-                bosses.append(
-                    {
-                        "id": row[0],
-                        "name": row[1],
-                        "raid_group": row[2],
-                        "location": row[3],
-                    }
-                )
-
-            return bosses
-            
+                if limit is not None:
+                    sql = (
+                        "SELECT TOP (?) id, name, raid_group, location "
+                        "FROM npcs WHERE name LIKE ? ORDER BY name"
+                    )
+                    params = [limit, f"%{query}%"]
+                else:
+                    sql = (
+                        "SELECT id, name, raid_group, location "
+                        "FROM npcs WHERE name LIKE ? ORDER BY name"
+                    )
+                    params = [f"%{query}%"]
+    
+                cursor.execute(sql, params)
+                rows = cursor.fetchall()
+                return [
+                    {"id": r[0], "name": r[1], "raid_group": r[2], "location": r[3]}
+                    for r in rows
+                ]
         except Exception as e:
             print(f"Error searching bosses: {e}")
             return []
+
 
     def search_items(self, query: str, limit: int | None = None) -> List[Dict[str, Any]]:
         """Search items by name."""
         try:
             with self.connection() as conn:
                 cursor = conn.cursor()
-
-            sql = (
-                "SELECT id, name, has_special_attack, has_passive_effect,\n"
-                "       has_combat_stats, is_tradeable, slot, icons\n"
-                "FROM items\n"
-                "WHERE name LIKE ?\n"
-                "ORDER BY name"
-            )
-            params: list[Any] = [f"%{query}%"]
-            if limit is not None:
-                sql = (
-                    "SELECT TOP (?) id, name, has_special_attack, has_passive_effect,\n"
-                    "       has_combat_stats, is_tradeable, slot, icons\n"
-                    "FROM items\n"
-                    "WHERE name LIKE ?\n"
-                    "ORDER BY name"
-                )
-                params.insert(0, limit)
-
-            cursor.execute(sql, params)
-            
-            items = []
-            for row in cursor.fetchall():
-                icons = []
-                if row[7]:
-                    try:
-                        icons = json.loads(row[7])
-                    except Exception:
-                        pass
-
-                items.append(
-                    {
-                        "id": row[0],
-                        "name": row[1],
-                        "has_special_attack": bool(row[2]),
-                        "has_passive_effect": bool(row[3]),
-                        "has_combat_stats": bool(row[4]),
-                        "is_tradeable": bool(row[5]),
-                        "slot": row[6],
-                        "icons": icons,
-                    }
-                )
-
-            return items
-
+                if limit is not None:
+                    sql = (
+                        "SELECT TOP (?) id, name, has_special_attack, has_passive_effect, "
+                        "has_combat_stats, is_tradeable, slot, icons "
+                        "FROM items WHERE name LIKE ? ORDER BY name"
+                    )
+                    params = [limit, f"%{query}%"]
+                else:
+                    sql = (
+                        "SELECT id, name, has_special_attack, has_passive_effect, "
+                        "has_combat_stats, is_tradeable, slot, icons "
+                        "FROM items WHERE name LIKE ? ORDER BY name"
+                    )
+                    params = [f"%{query}%"]
+    
+                cursor.execute(sql, params)
+                rows = cursor.fetchall()
+                out: list[dict[str, Any]] = []
+                for r in rows:
+                    icons = []
+                    if r[7]:
+                        try:
+                            icons = json.loads(r[7])
+                        except Exception:
+                            pass
+                    out.append(
+                        {
+                            "id": r[0],
+                            "name": r[1],
+                            "has_special_attack": bool(r[2]),
+                            "has_passive_effect": bool(r[3]),
+                            "has_combat_stats": bool(r[4]),
+                            "is_tradeable": bool(r[5]),
+                            "slot": r[6],
+                            "icons": icons,
+                        }
+                    )
+                return out
         except Exception as e:
             print(f"Error searching items: {e}")
             raise
