@@ -1,399 +1,446 @@
-ScapeLab DPS Calculator
+# ScapeLab DPS Calculator
+
+<img src="frontend/public/images/logo_transparent_hd.png" alt="ScapeLab Logo" width="180"/>
 
-![ScapeLab Logo](frontend/public/images/logo_transparent_hd.png)
+A comprehensive **damage-per-second (DPS)** calculator for **Old School RuneScape** with accurate combat formulas, equipment comparison, boss statistics, and modern web UX.
+
+---
+
+<p align="center">
+  <a href="#-features">Features</a> •
+  <a href="#-quickstart">Quickstart</a> •
+  <a href="#-project-structure">Project Structure</a> •
+  <a href="#-frontend">Frontend</a> •
+  <a href="#-backend--database">Backend & Database</a> •
+  <a href="#-data-pipeline--sources">Data Pipeline</a> •
+  <a href="#-usage-guide">Usage Guide</a> •
+  <a href="#-api-reference">API Reference</a> •
+  <a href="#-testing--quality">Testing</a> •
+  <a href="#-performance--seo">Performance & SEO</a> •
+  <a href="#-deployment--devops">Deployment</a> •
+  <a href="#-contributing">Contributing</a> •
+  <a href="#-license--acknowledgements">License & Acknowledgements</a>
+</p>
+
+---
+
+## ✨ Features
+
+- **All Combat Styles**: Melee, Ranged, and Magic (hit chance, max hit, DPS).
+- **Equipment Database**: Comprehensive item stats, effects, forms/variants.
+- **NPC Encyclopedia**: Defensive stats, weaknesses, immunities, forms.
+- **Special Effects**: Passive, set, and monster-specific bonuses.
+- **Defense Reduction**: Model the impact of defense-lowering special attacks.
+- **Visualizations**: Save loadouts and view DPS / max hit / hit chance graphs.
+- **Prayers & Potions**: Full support for common boosts.
+- **State Persistence**: Calculator state survives reloads (Zustand `persist`).
+- **Search & Caching**: Fast local caching of item/NPC lists with invalidation.
+- **Bug Reports → GitHub**: In-app **Report Bug** creates GitHub issues automatically.
+
+> Coming soon / planned:
+> - **Boss-only toggle** in NPC selector  
+> - **Curated mid/end-game gear presets** (user-deletable)  
+> - **Effects page grouping & sorting** (by style, requirements, energy cost)  
+> - **SEO & hydration** improvements, sitemaps, OG images  
+> - **Optional tick-accurate mode** and spec timeline visualizations
+
+---
+
+## 🚀 Quickstart
+
+### Prerequisites
+- **Node.js** 18.x LTS
+- **Python** 3.8+
+- **npm** or **yarn**
+- **pip**
+- **Microsoft ODBC Driver for SQL Server** (for backend via `aioodbc`)
+
+### 1) Clone
+
+    git clone https://github.com/QualitySushi/osrs-simulator.git
+    cd osrs-simulator
+
+### 2) Frontend
+
+    # Install deps
+    npm install
+
+    # Configure environment
+    cd frontend
+    echo "NEXT_PUBLIC_API_URL=http://localhost:8000" > .env.local
+    # Optional, to wipe persisted state on load:
+    # echo "NEXT_PUBLIC_FORCE_CLEAR_CACHE=true" >> .env.local
+    cd ..
+
+    # Run dev server
+    npm run dev
+    # http://localhost:3000
+
+### 3) Backend
+
+    cd backend
+
+    # Create venv
+    python -m venv venv
+    # Windows: venv\Scripts\activate
+    # macOS/Linux:
+    source venv/bin/activate
 
-A comprehensive damage-per-second calculator for Old School RuneScape with accurate combat formulas, equipment comparison, and boss statistics.
+    # Install deps
+    pip install -r requirements.txt
 
+    # Set environment (see details below)
+    # export SQLAZURECONNSTR_DefaultConnection="Driver=...;Server=...;Database=...;Uid=...;Pwd=...;Encrypt=yes;"
 
-Overview
+    # Run API
+    uvicorn app.main:app --reload
+    # http://localhost:8000
 
-    If you encounter a bug or have a suggestion, submit it from the [Report Bug](/report-bug) page. Reports are automatically converted into GitHub issues via a workflow.
-The ScapeLab DPS Calculator is a powerful tool for Old School RuneScape players to optimize their combat gear and strategies. By accurately implementing the game's combat formulas, this calculator helps players compare different equipment setups, account for special effects, and calculate expected damage against various npcs.
-Key Features
+---
 
-    All Combat Styles: Full support for Melee, Ranged, and Magic calculations
-    Equipment Database: Comprehensive database of in-game items with their stats and effects
-    Npc Encyclopedia: Detailed information for all npcs including their defensive stats and weaknesses
-    Special Effects: Support for passive effects, set effects, and monster-specific bonuses
-    Defense Reduction: Calculate the impact of defense-lowering special attacks
-    Visualizations: Save loadouts and view DPS, max hit and hit chance graphs
-    Passive Effects: Automatic detection of relevant passive effects for your setup
-    Prayer & Potions: Account for all combat boosting prayers and potions
+## 🧭 Project Structure
 
-🚀 Getting Started
-Prerequisites
+    osrs-simulator/
+    ├─ frontend/                    # Next.js (App Router), Tailwind, shadcn, TS
+    │  ├─ public/images/logo_transparent_hd.png
+    │  ├─ ...                       # Pages, components, state, queries
+    ├─ backend/                     # FastAPI application
+    │  ├─ app/
+    │  │  ├─ main.py                # App entrypoint, CORS, routes, caching
+    │  │  ├─ models/                # Pydantic models
+    │  │  ├─ services/              # Calculations, BIS, seeds
+    │  │  ├─ repositories/          # Items/NPCs/effects data access
+    │  │  └─ config/                # Settings (e.g., CACHE_TTL_SECONDS)
+    │  ├─ requirements.txt
+    ├─ webscraper/                  # Scrapers & migration tools
+    │  └─ runescape-items/
+    │     ├─ osrs_item_scraper.py
+    │     ├─ extract.py
+    │     └─ migrate_sql_to_azure.py
+    ├─ docs/                        # Project docs
+    │  ├─ ARCHITECTURE.md
+    │  ├─ WIREFRAME.md
+    │  └─ BEST_IN_SLOT_FINDER.md
+    └─ ...
 
-    Node.js 18.x LTS
-    Python 3.8+
-    npm or yarn
-    pip
+---
 
-Installation
-Frontend Setup
+## 🖥️ Frontend
 
-bash
+- **Framework**: Next.js (App Router)
+- **State**: Zustand (+ persist for local storage)
+- **Data**: TanStack Query (cache + revalidation)
+- **Styling**: Tailwind CSS + shadcn/ui
+- **Language**: TypeScript
 
-# Clone the repository
-git clone https://github.com/QualitySushi/osrs-simulator.git
-cd osrs-simulator
+### Environment
 
-# Install dependencies
-npm install
+Create `frontend/.env.local`:
 
-# Run development server
-npm run dev
+    NEXT_PUBLIC_API_URL=http://localhost:8000
+    # Optional kill switch for persisted state during testing:
+    # NEXT_PUBLIC_FORCE_CLEAR_CACHE=true
 
-The frontend will be available at http://localhost:3000
-Backend Setup
+### Scripts
 
-bash
+    npm run dev        # start dev server
+    npm run build      # production build
+    npm run start      # run production
 
-# Navigate to backend directory
-cd backend
+---
 
-# Create virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+## 🧰 Backend & Database
 
-# Install dependencies
-pip install -r requirements.txt
+- **Framework**: FastAPI
+- **DB**: Azure SQL Database (via `aioodbc`)
+- **Validation**: Pydantic
+- **Caching**: In-memory caches for item/NPC dictionaries
+- **Config**: Environment-driven (12-factor)
 
-The backend relies on `aioodbc` for asynchronous SQL Server access. Ensure the
-system has the Microsoft ODBC driver installed.
+### Key Environment Variables
 
-# Run development server
-uvicorn app.main:app --reload
+- `SQLAZURECONNSTR_DefaultConnection` — Primary connection string  
+  **or**:
+  - `AZURE_SQL_SERVER`
+  - `AZURE_SQL_DATABASE`
+  - `AZURE_SQL_USERNAME`
+  - `AZURE_SQL_PASSWORD`
+- `CACHE_TTL_SECONDS` — Cache TTL for lookups (default 3600)
+- `DB_CONNECTION_TIMEOUT` — Seconds (default 30)
+- `DB_MAX_RETRIES` — Transient retry attempts (default 3)
 
-The API will be available at http://localhost:8000
-📚 Documentation
-Usage Guide
+### Run
 
-    Select Combat Style: Choose between Melee, Ranged, or Magic
-    Set Your Stats: Enter your combat levels and boosts
-    Choose Equipment: Select gear for each slot
-    Select Target: Pick a npc or enter custom defense stats
-    Apply Modifiers: Select prayers, potions, and special attacks
-    Calculate: View your expected DPS and other stats
-    Compare: Save setups to compare different loadouts
-    Special Attack DPS: Specify a special weapon, energy cost, and regeneration rate to see how much extra damage specials add alongside your mainhand. Specials fire automatically whenever your energy is at least the listed cost. Energy regenerates by default at **10% every 30 seconds**, doubled if a Lightbearer ring is equipped and multiplied by **1.5** while under a surge potion. `special_attack_speed` controls how quickly special hits occur compared to your normal `attack_speed`. Together with `special_energy_cost` and the fight `duration`, these values determine how many specials are used. A future `initial_special_energy` field may allow starting below 100% energy.
+    uvicorn app.main:app --reload
+    # API docs: http://localhost:8000/docs
 
-Additional documentation can be found in the `docs/` folder:
+> **Note**: Ensure the Microsoft ODBC driver is installed on the host machine.
 
-    docs/ARCHITECTURE.md - High level component diagram
-    docs/WIREFRAME.md    - Basic UI wireframe
-    docs/BEST_IN_SLOT_FINDER.md - How the BIS algorithm works
+---
 
-Technical Documentation
-Frontend Architecture
+## 📊 Data Pipeline & Sources
 
-The frontend is built with Next.js and uses:
+All game data is sourced from the **Old School RuneScape Wiki** using custom scrapers.
 
-    Zustand for state management
-    TanStack Query for data fetching
-    shadcn/ui and Tailwind CSS for styling
-    TypeScript for type safety
+### Tools (subset)
 
-State Persistence
+- `webscraper/runescape-items/osrs_item_scraper.py` — equipment data
+- `webscraper/runescape-items/extract.py` — NPC data
+- `webscraper/runescape-items/migrate_sql_to_azure.py` — imports scraped SQLite data into Azure SQL
 
-The calculator remembers your last selected npc, locked gear, and loadout across
-page reloads using Zustand's `persist` middleware. Npc and item lists are cached
-locally for 12 hours so returning to the app doesn't require refetching all
-reference data.
+### Artifacts
 
-Backend Architecture
+- `osrs_all_items.db` — items (SQLite)
+- `osrs_npcs.db` — NPCs + npc_forms (SQLite)
 
-The backend is built with FastAPI and uses:
+### Migration Notes
 
-    Azure SQL Database for persistent storage
-    Pydantic for data validation
-    Custom calculators for combat style-specific logic
-    Data scrapers for maintaining up-to-date game information
+- The migration script drops/recreates target tables (idempotent).
+- Preserves original numeric IDs from SQLite for stable ordering.
+- Items table enforces `UNIQUE(name)` to protect against duplicates.
 
-Combat Formulas
+---
 
-The calculator implements the following OSRS combat formulas:
+## 📘 Usage Guide
 
-Melee:
+1. **Select Combat Style**: Melee / Ranged / Magic.
+2. **Set Your Stats**: Enter combat levels and boosts.
+3. **Choose Equipment**: Select gear per slot.
+4. **Select Target**: Pick an NPC or set custom defense stats.
+5. **Apply Modifiers**: Prayers, potions, passive effects.
+6. **Special Attacks** (configurable): Energy cost, regen rate, spec speed.
+7. **Calculate**: View DPS, max hit, hit chance.
+8. **Compare**: Save loadouts and compare side-by-side.
 
-Effective Strength = floor((Strength Level × Prayer Bonus) + Style Bonus + 8)
-Max Hit = floor(0.5 + Effective Strength × (Strength Bonus + 64) / 640)
+If you encounter a bug or have a suggestion, submit it from the **Report Bug** page. Reports are automatically converted into GitHub issues via a workflow.
 
-Ranged:
+---
 
-Effective Ranged = floor((Ranged Level × Prayer Bonus) + Style Bonus + 8)
-Max Hit = floor(0.5 + Effective Ranged × (Ranged Strength + 64) / 640)
+## 🧮 Combat Formulas (Summary)
 
-Magic:
+### Melee
 
-Effective Magic = floor((Magic Level × Prayer Bonus) + Style Bonus + 8)
-Max Hit = floor(Base Spell Hit × (1 + Magic Damage Bonus))
+    Effective Strength = floor((Strength Level × Prayer Bonus) + Style Bonus + 8)
+    Max Hit = floor(0.5 + Effective Strength × (Strength Bonus + 64) / 640)
 
-Hit Chance:
+### Ranged
 
-If Attack Roll > Defence Roll:
-  Hit Chance = 1 - (Defence Roll + 2) / (2 × (Attack Roll + 1))
-Else:
-  Hit Chance = Attack Roll / (2 × (Defence Roll + 1))
+    Effective Ranged = floor((Ranged Level × Prayer Bonus) + Style Bonus + 8)
+    Max Hit = floor(0.5 + Effective Ranged × (Ranged Strength + 64) / 640)
 
-DPS:
+### Magic
 
-DPS = Hit Chance × ((Max Hit + 1) / 2) / Attack Speed
+    Effective Magic = floor((Magic Level × Prayer Bonus) + Style Bonus + 8)
+    Max Hit = floor(Base Spell Hit × (1 + Magic Damage Bonus))
 
-⚙️ Configuration
-Environment Variables
+### Hit Chance
 
-Create a `.env.local` file inside the `frontend` directory:
-
-```bash
-cd frontend
-echo "NEXT_PUBLIC_API_URL=http://localhost:8000" > .env.local
-```
+    If Attack Roll > Defence Roll:
+      Hit Chance = 1 - (Defence Roll + 2) / (2 × (Attack Roll + 1))
+    Else:
+      Hit Chance = Attack Roll / (2 × (Defence Roll + 1))
 
-For production, set this to your deployed API URL. The deployment workflows
-expect a repository secret named `BACKEND_URL` which will be exposed as
-`NEXT_PUBLIC_API_URL` during the frontend build.
-GitHub Actions injects this value in `.github/workflows/azure-static-web-apps-yellow-stone-0daf36a0f.yml`.
-Ensure this secret contains the URL of your deployed FastAPI service, for example
-`https://scapelab-api-dvawaebtdze3brf0.canadacentral-01.azurewebsites.net`.
-
-Set `NEXT_PUBLIC_FORCE_CLEAR_CACHE=true` in the same `.env.local` file if you
-need to force users' browsers to clear all cached state on load. This is handy
-when testers have visited a broken build and you want to wipe any persisted
-data such as local storage.
-
-When deploying the frontend, the workflow also requires a secret named
-`AZURE_STATIC_WEB_APPS_API_TOKEN_YELLOW_STONE_0DAF36A0F` containing the
-deployment token for your Azure Static Web App.
-Database Setup
+### DPS
 
-The backend now connects directly to an Azure SQL Database. Configure the
-connection string using the `SQLAZURECONNSTR_DefaultConnection` environment
-variable or provide the individual parameters:
+    DPS = Hit Chance × ((Max Hit + 1) / 2) / Attack Speed
 
-    AZURE_SQL_SERVER
-    AZURE_SQL_DATABASE
-    AZURE_SQL_USERNAME
-    AZURE_SQL_PASSWORD
+### Special Attack Energy
 
-When running in Azure App Service you can omit the username and password and
-authenticate via Managed Identity.
+- **Base regen**: 10% every 30s
+- **Lightbearer**: doubles regen
+- **Surge potion**: × 1.5 regen
 
-The scraper utilities produce two SQLite databases: `osrs_all_items.db` and
-`osrs_npcs.db`. The latter also includes an `npc_forms` table for multi-form
-NPCs. Use `webscraper/runescape-items/migrate_sql_to_azure.py` to import this
-data into the Azure SQL instance. The migration script now drops any existing
-tables before recreating them, so it can be rerun safely. Item and NPC IDs are
-copied from the SQLite sources to keep their ordering consistent across runs,
-and the items table enforces `UNIQUE(name)` to guard against accidental
-duplicates.
+Special attacks can be blended mathematically using `special_attack_speed`, `special_energy_cost`, and regen rate to determine expected special uses over time.
 
-The API also caches npc and item lookups in memory. Set the
-`CACHE_TTL_SECONDS` environment variable to control how long (in seconds)
-these results remain cached. The default is `3600` seconds. On the first
-request the server loads and caches the full npc and item lists, and all
-subsequent search requests are served from this in-memory cache so the
-database is only queried when a specific record is requested.
+---
 
-Database connections are created on demand. Control connection behaviour with
-the following environment variables:
+## 🔌 API Reference (Selected)
 
-- `DB_CONNECTION_TIMEOUT` – Connection timeout in seconds (default `30`).
-- `DB_MAX_RETRIES` – Number of connection retries for transient failures
-  (default `3`).
+### Calculate DPS
 
-The async database layer uses `aioodbc`, so the appropriate ODBC driver must be
-installed on the host system. Ensure these environment variables are set before
-starting the API so the database connection can be established successfully.
+**POST** `/calculate/dps`
 
-🔄 API Reference
-Calculate DPS
+**Request:**
 
-POST /calculate/dps
+    {
+      "combat_style": "melee",
+      "strength_level": 99,
+      "attack_level": 99,
+      "attack_style_bonus_strength": 3,
+      "melee_strength_bonus": 100,
+      "melee_attack_bonus": 100,
+      "attack_speed": 2.4,
+      "target_defence_level": 100,
+      "target_defence_bonus": 50,
 
-Request Body:
+      "special_damage_multiplier": 1.2,
+      "special_accuracy_modifier": 1.0,
+      "special_attack_speed": 3.0,
+      "special_energy_cost": 50,
+      "special_regen_rate": 0.33
+    }
 
-json
+**Response:**
 
-{
-  "combat_style": "melee",
-  "strength_level": 99,
-  "attack_level": 99,
-  "attack_style_bonus_strength": 3,
-  "melee_strength_bonus": 100,
-  "melee_attack_bonus": 100,
-  "attack_speed": 2.4,
-  "target_defence_level": 100,
-  "target_defence_bonus": 50
-}
+    {
+      "dps": 8.25,
+      "max_hit": 47,
+      "hit_chance": 0.84,
+      "attack_roll": 16728,
+      "defence_roll": 10920,
+      "average_hit": 19.8,
+      "effective_str": 110,
+      "effective_atk": 107
+    }
 
-Include these optional fields to simulate special attacks:
-```
-"special_damage_multiplier": 1.2,
-"special_accuracy_modifier": 1.0,
-"special_attack_speed": 3.0,
-"special_energy_cost": 50,
-"special_regen_rate": 0.33
-```
+### Calculate Item Effect
 
-Special energy regenerates at **10% every 30 seconds** by default. This rate is
-doubled when wearing the Lightbearer ring and increased by **50%** while a surge
-potion is active. Instead of simulating a fixed duration, the calculator now
-computes the average damage of a single hit and factors in special attack
-regeneration mathematically. For example, a weapon that costs 25% special energy
-can fire four specials every five minutes. Each special uses
-`special_attack_speed` for its swing timer and the remaining time is filled with
-regular attacks using `attack_speed`.
+**POST** `/calculate/item-effect`
 
-Response:
+**Request:**
 
-json
+    {
+      "weapon_name": "Twisted bow",
+      "target_magic_level": 200
+    }
 
-{
-  "dps": 8.25,
-  "max_hit": 47,
-  "hit_chance": 0.84,
-  "attack_roll": 16728,
-  "defence_roll": 10920,
-  "average_hit": 19.8,
-  "effective_str": 110,
-  "effective_atk": 107
-}
+**Response:**
 
-Calculate Item Effect
+    {
+      "accuracy_multiplier": 1.299,
+      "damage_multiplier": 1.919,
+      "effect_description": "Twisted Bow vs 200 magic: +29.9% accuracy, +91.9% damage"
+    }
 
-POST /calculate/item-effect
+### Import Seed
 
-Request Body:
+**POST** `/import-seed`
 
-```json
-{
-  "weapon_name": "Twisted bow",
-  "target_magic_level": 200
-}
-```
+**Body:**
 
-Response:
+    { "seed": "base64encodedstring" }
 
-```json
-{
-  "accuracy_multiplier": 1.299,
-  "damage_multiplier": 1.919,
-  "effect_description": "Twisted Bow vs 200 magic: +29.9% accuracy, +91.9% damage"
-}
-```
+### Calculate From Seed
 
-Import Seed
-------------
+**POST** `/calculate/seed`
 
-POST `/import-seed`
+**Body:**
 
-Request Body:
+    { "seed": "base64encodedstring" }
 
-```json
-{
-  "seed": "base64encodedstring"
-}
-```
+### Best In Slot
 
-Calculate DPS from Seed
------------------------
+**POST** `/bis`
 
-POST `/calculate/seed`
+**Body**: DpsParameters  
+**Response**: Mapping of gear slot → item details.
 
-Request Body:
+### Lists & Search
 
-```json
-{
-  "seed": "base64encodedstring"
-}
-```
+- **GET** `/npcs` — list NPCs (pagination)
+- **GET** `/npc/form/{form_id}` — NPC details by form
+- **GET** `/items` — list items (filters + pagination)
+- **GET** `/search/npcs?query=...` — search NPCs
+- **GET** `/search/items?query=...` — search items
 
-Best In Slot
-------------
+### Performance Tips
 
-POST `/bis`
+- Use `page` and `page_size` for pagination.
+- Dictionary endpoints send `Cache-Control: max-age=<CACHE_TTL_SECONDS>`.
+- Adjust cache via `CACHE_TTL_SECONDS`.
+- Explore interactive docs at `/docs`.
 
-Request Body: `DpsParameters`
+---
 
-Response: A mapping of gear slot to item details.
+## ✅ Testing & Quality
 
-List Npcs
------------
+- **Unit tests**: backend calculation modules & selectors.
+- **Property tests**: data invariants (e.g., valid rolls, non-negative ranges).
+- **E2E tests**: Playwright for core flows (load → pick boss → set gear → compute → share).
+- **Data diff CI**: When scrapers update, CI posts an artifact (added/changed/removed entities).
 
-GET `/npcs`
+---
 
-GET `/npc/form/{form_id}` - Retrieve npc details by form identifier
+## ⚡ Performance & SEO
 
-Query Parameters:
+### Frontend
 
-- `page` – Page number (default `1`)
-- `page_size` – Results per page (default `50`)
+- Code-splitting heavy selectors; virtualized lists
+- TanStack Query caching (long staleTime for static dictionaries)
+- Route-level Suspense (where safe)
 
-Search Endpoints
-----------------
+### SEO
 
-GET `/search/npcs` - Search for npcs by name
-GET `/search/items` - Search for items by name
+- Next.js `generateMetadata()` per route
+- OpenGraph/Twitter meta and image previews (OG image endpoint recommended)
+- `sitemap.xml` + `robots.txt` (allow GPTBot & ChatGPT-User)
+- JSON-LD (SoftwareApplication, item/NPC detail types as needed)
+- Accessibility: keyboard navigation, ARIA, alt text from infobox
 
-Query Parameters:
+### Example robots.txt
 
-- `query` – Search term (required)
-- `limit` – Maximum results to return. If omitted, all matches are returned.
+    User-agent: *
+    Allow: /
 
-List Items
-----------
+    User-agent: GPTBot
+    Allow: /
 
-GET `/items`
+    User-agent: ChatGPT-User
+    Allow: /
 
-Query Parameters:
+    Sitemap: https://your-domain/sitemap.xml
 
-- `combat_only` – Only items with combat stats (default `true`)
-- `tradeable_only` – Only tradeable items (default `false`)
-- `page` – Page number (default `1`)
-- `page_size` – Results per page (default `50`)
+---
 
-Performance & API Best Practices
--------------------------------
+## 🚢 Deployment & DevOps
 
-- Use `page` and `page_size` on `/items` and `/npcs` to paginate responses and minimize payload size.
-- Item and npc detail endpoints utilise server-side in-memory caches. Responses include a `Cache-Control` header with a `max-age` matching the `CACHE_TTL_SECONDS` setting.
-- Adjust cache duration via the `CACHE_TTL_SECONDS` environment variable when launching the backend.
+- **Frontend**: Next.js → (Azure Static Web Apps / Vercel)
+- **Backend**: FastAPI → Azure App Service (or container)
+- **DB**: Azure SQL (managed identity supported)
 
-See the API documentation at /docs for more endpoints.
-📊 Data Sources
+### GitHub Actions
 
-All game data is sourced from the Old School RuneScape Wiki using custom data scrapers. The scraping tools are included in the repository:
+- Frontend workflow injects `NEXT_PUBLIC_API_URL` from `BACKEND_URL` secret  
+  (see `.github/workflows/azure-static-web-apps-*.yml`)
+- Requires `AZURE_STATIC_WEB_APPS_API_TOKEN_...` to deploy the static app
+- Optional job for data diff and Playwright on preview deployments
+- Sentry/OTel hooks recommended for tracing and error reporting
 
-    osrs_item_scraper.py: Scrapes equipment data
-    extract.py: Scrapes npc data
+---
 
-🛠️ Contributing
+## 🤝 Contributing
 
-Contributions are welcome! Please follow these steps:
+Contributions are welcome!
 
-    Fork the repository
-    Create a feature branch: git checkout -b feature/amazing-feature
-    Commit your changes: git commit -m 'Add amazing feature'
-    Push to the branch: git push origin feature/amazing-feature
-    Open a Pull Request
-    If you encounter a bug or have a suggestion, submit it from the [Report Bug](/report-bug) page. Reports are automatically converted into GitHub issues via a workflow.
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feat/amazing-thing`
+3. Commit: `git commit -m "feat: add amazing thing"`
+4. Push: `git push origin feat/amazing-thing`
+5. Open a Pull Request
 
-For major changes, please open an issue first to discuss what you would like to change.
-Development Guidelines
+If you hit a bug or have a suggestion, use **Report Bug** inside the app—submissions are automatically converted into GitHub issues.
 
-    Follow the existing code style and architecture
-    Add appropriate TypeScript types for new features
-    Write tests for backend calculations
-    Document any complex logic or formulas
-    Update the README for significant changes
+### Guidelines
 
-🔒 License
+- Follow existing code style and architecture
+- Add TypeScript types for new features
+- Write tests for backend calculations / critical flows
+- Document non-trivial formulas and logic
+- Update this README and `docs/*` for notable changes
 
-This project is licensed under the MIT License - see the LICENSE file for details.
-👏 Acknowledgements
+---
 
-    Old School RuneScape Wiki for game data
-    Jagex for creating Old School RuneScape
-    The OSRS community for verifying formulas and mechanics
+## 🔒 License & Acknowledgements
 
-ScapeLab is not affiliated with Jagex Ltd. Old School RuneScape and Jagex are trademarks of Jagex Ltd.
+**License**: MIT (see LICENSE)
+
+### Data & Trademarks
+
+- **Wiki content**: © contributors, CC BY-SA — please preserve attribution
+- **Old School RuneScape** and **Jagex** are trademarks of Jagex Ltd.
+- **ScapeLab** is not affiliated with Jagex Ltd.
+
+### Thanks
+
+- Old School RuneScape Wiki contributors
+- The OSRS community for testing & verification
