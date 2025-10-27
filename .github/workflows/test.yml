@@ -14,9 +14,8 @@ jobs:
     env:
       PYTHONUNBUFFERED: "1"
       # If the secret is provided, UnitTest.py won't override it (uses setdefault)
-      SQLAZURECONNSTR_DefaultConnection: ${{ secrets.AZURE_SQL_CONNSTR }}
-      # turn stubs on/off per matrix
-      OSRS_USE_STUBS: ${{ matrix.mode == 'realdb' && '0' || '1' }}
+      SQLAZURECONNSTR_DefaultConnection: ${{ secrets.SQLAZURECONNSTR_DefaultConnection }}
+      OSRS_USE_STUBS: "0"  # run against the real DB
 
     steps:
       - uses: actions/checkout@v4
