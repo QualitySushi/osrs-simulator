@@ -5,6 +5,9 @@ on:
     - cron: '0 0 * * 0'  # Runs weekly on Sunday at midnight
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -13,28 +16,33 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Setup Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.11'
           cache: 'pip'
-          cache-dependency-path: 'backend/requirements.txt'
+          cache-dependency-path: 'webscraper/requirements.txt'
 
       - name: Install dependencies
         run: |
-          pip install -r backend/requirements.txt
+          python -m pip install --upgrade pip
+          pip install -r webscraper/requirements.txt
 
       - name: Generate valid item list
+        working-directory: webscraper/runescape-items
         run: |
-          cd backend/webscraper/runescape-items/
           python generate_valid_items.py
 
       - name: Run item scraper
+        working-directory: webscraper/runescape-items
+        env:
+          # Optional: helps reduce 429s from wiki sources
+          SCRAPER_USER_AGENT: "ScapeLabBot/1.0 (+github.com/QualitySushi/osrs-simulator)"
         run: |
-          cd backend/webscraper/runescape-items/
           python osrs_item_scraper.py
 
       - name: Upload item database
         uses: actions/upload-artifact@v4
         with:
           name: osrs-item-database
-          path: backend/webscraper/runescape-items/*.db
+          path: webscraper/runescape-items/*.db
+          if-no-files-found: error
