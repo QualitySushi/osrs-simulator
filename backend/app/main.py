@@ -49,13 +49,42 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Preload caches on startup in the background
+# Preload caches on startup in the background (and cancel on shutdown)
+_preload_task: asyncio.Task | None = None
+
 async def _preload_caches_async() -> None:
     try:
         await boss_repository.get_all_bosses_async()
         await item_repository.get_all_items_async(combat_only=False)
     except Exception as e:
         print(f"Cache preload failed: {e}")
+
+    @app.on_event("startup")
+    async def preload_cache_event() -> None:
+        """
+        Start background cache warmup unless explicitly skipped.
+        Skipping can be handy in CI: set OSRS_SKIP_PRELOAD=1
+        """
+        global _preload_task
+        if os.getenv("OSRS_SKIP_PRELOAD") == "1":
+            return
+        _preload_task = asyncio.create_task(_preload_caches_async())
+    
+    @app.on_event("shutdown")
+    async def cancel_preload_task() -> None:
+        """
+        Ensure background task is cancelled to avoid lingering aioodbc connections.
+        """
+        global _preload_task
+        if _preload_task and not _preload_task.done():
+            _preload_task.cancel()
+            try:
+                await _preload_task
+            except asyncio.CancelledError:
+                pass
+            finally:
+                _preload_task = None
+
 
 
 @app.on_event("startup")
