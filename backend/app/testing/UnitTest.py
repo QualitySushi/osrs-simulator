@@ -9,6 +9,8 @@ import unittest
 import sys, os
 from pathlib import Path
 
+USE_STUBS = os.getenv("OSRS_USE_STUBS", "1") not in ("0", "false", "False")
+
 # --- Paths ---
 HERE = Path(__file__).resolve()
 REPO = next((p for p in [HERE, *HERE.parents] if (p / "backend").exists()), HERE.parent)
@@ -98,8 +100,11 @@ if __name__ == "__main__":
 
     runner = unittest.TextTestRunner(verbosity=2)
 
-    print("== Phase 1: API tests (stubbed repos) ==")
-    with apply_repo_stubs():
+    print("== Phase 1: API tests (stubbed repos) ==" if USE_STUBS else "== Phase 1: API tests (REAL DB) ==")
+    if USE_STUBS:
+        with apply_repo_stubs():
+            r1 = runner.run(_suite_for_modules(API_MODULES))
+    else:
         r1 = runner.run(_suite_for_modules(API_MODULES))
 
     print("\n== Phase 2: Repository & service tests ==")
