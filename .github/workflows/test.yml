@@ -25,6 +25,24 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Install ODBC Driver 18 (GitHub Ubuntu runner)
+        if: env.OSRS_USE_STUBS == '0'
+        run: |
+          set -e
+          # Detect Ubuntu codename
+          . /etc/os-release
+          case "$VERSION_CODENAME" in
+            noble|jammy|focal) CODENAME="$VERSION_CODENAME" ;;
+            *) CODENAME="jammy" ;;  # fallback
+          esac
+
+          curl https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
+          echo "deb [arch=amd64,arm64] https://packages.microsoft.com/ubuntu/$CODENAME/prod $CODENAME main" | \
+            sudo tee /etc/apt/sources.list.d/mssql-release.list
+
+          sudo apt-get update
+          sudo ACCEPT_EULA=Y apt-get install -y msodbcsql18 unixodbc-dev
+
       # Only needed for real DB (pyodbc + ODBC Driver 18)
       - name: Install msodbcsql18 (Ubuntu)
         if: matrix.mode == 'realdb'
