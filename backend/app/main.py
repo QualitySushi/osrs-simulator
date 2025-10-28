@@ -1,20 +1,32 @@
+# backend/app/main.py
 import os
 import asyncio
 import logging
 from typing import Dict, Any, List
+from pathlib import Path
 
+# 1) Load .env BEFORE importing anything that might touch the DB
 from dotenv import load_dotenv
+
+# load backend/.env explicitly
+ROOT = Path(__file__).resolve().parents[2]   # .../osrs-simulator
+ENV_PATH = ROOT / "backend" / ".env"
+load_dotenv(ENV_PATH.as_posix(), override=True)
+
 from fastapi import FastAPI, HTTPException, Query, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from pydantic import BaseModel
 
+# 2) Now import your app modules (safe: env is loaded)
 from .repositories import item_repository, boss_repository, special_attack_repository, passive_effect_repository
 from .config.settings import CACHE_TTL_SECONDS
 from .models import DpsResult, Boss, BossSummary, Item, ItemSummary, DpsParameters
 from .services import calculation_service, seed_service, bis_service
+from .agent import run_agent_chat
 
-load_dotenv()
 logging.basicConfig(level=logging.INFO, format="[%(levelname)s] %(message)s")
+log = logging.getLogger("uvicorn.error")
 
 app = FastAPI(
     title="ScapeLab DPS Calculator API",
@@ -37,31 +49,51 @@ IMAGES_DIR = os.path.join(BASE_DIR, "frontend", "public", "images")
 if os.path.isdir(IMAGES_DIR):
     app.mount("/images", StaticFiles(directory=IMAGES_DIR), name="images")
 
-# ---------- background cache warmup (with proper shutdown) ----------
+# -------- Agent chat endpoint --------
+class ChatTurn(BaseModel):
+    messages: list[dict]  # [{"role":"user","content":"..."}]; keep thread on FE
 
+@app.post("/chat")
+def chat(turn: ChatTurn):
+    result = run_agent_chat(turn.messages)
+    return result
+
+# ---------- Startup: optional DB probe + cache warmup ----------
 _preload_task: asyncio.Task | None = None
 
-async def _preload_caches_async() -> None:
-    try:
-        await boss_repository.get_all_bosses_async()
-        await item_repository.get_all_items_async(combat_only=False)
-    except Exception as e:
-        print(f"Cache preload failed: {e}")
-
-# Preload caches on startup (synchronously so tests see them ready)
 @app.on_event("startup")
-async def _warm_caches_on_startup() -> None:
-    # Allow skipping only if explicitly requested (e.g. CI toggles)
+async def _startup() -> None:
+    # (Optional but recommended) prove DB is reachable with a quick query.
+    # Comment this block out if your repos handle connection pooling internally.
+    try:
+        import pyodbc
+        cs = (os.getenv("SQLAZURECONNSTR_DefaultConnection")
+              or os.getenv("DB_CONNECTION_STRING")
+              or os.getenv("AZURE_SQL_CONNECTION_STRING"))
+        if not cs:
+            raise RuntimeError("No DB connection string set in environment.")
+        # One-shot probe (fast): connect, SELECT 1, close.
+        cn = pyodbc.connect(cs, timeout=10)
+        cur = cn.cursor()
+        cur.execute("SELECT 1")
+        cur.fetchone()
+        cn.close()
+        log.info("Azure SQL: connection OK.")
+    except Exception as e:
+        # Fail fast with a clear reason; comment out 'raise' if you want app to boot w/o DB
+        log.exception("Azure SQL: configuration/connection failed: %s", e)
+        raise
+
+    # After DB is confirmed, warm caches (don’t crash app if warmup fails)
     if os.getenv("OSRS_SKIP_PRELOAD") == "1":
+        log.info("Skipping cache warmup (OSRS_SKIP_PRELOAD=1).")
         return
     try:
-        # These are async repo calls; awaiting them ensures caches are filled
         await boss_repository.get_all_bosses_async()
         await item_repository.get_all_items_async(combat_only=False)
+        log.info("Cache warmup complete.")
     except Exception as e:
-        # Don't crash startup; tests will still hit endpoints, but log the issue
-        print(f"Cache warmup failed: {e}")
-
+        log.warning("Cache warmup failed (continuing): %s", e)
 
 @app.on_event("shutdown")
 async def on_shutdown() -> None:
@@ -76,7 +108,6 @@ async def on_shutdown() -> None:
             _preload_task = None
 
 # ---------- routes ----------
-
 @app.get("/", tags=["General"])
 def read_root():
     return {
@@ -247,14 +278,8 @@ async def calculate_item_effect(params: Dict[str, Any]):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-# --- Special attacks & passives (API) ---
-
 @app.get("/special-attacks", tags=["Items"])
 async def get_special_attacks():
-    """
-    Return the special attack reference data.
-    Always 200 (empty dict if no data) so the stubbed test doesn't 404.
-    """
     try:
         data = special_attack_repository.get_all_special_attacks()
         return data or {}
@@ -263,15 +288,11 @@ async def get_special_attacks():
 
 @app.get("/passive-effects", tags=["Items"])
 async def get_passive_effects():
-    """
-    Return the passive effect reference data.
-    """
     try:
         data = passive_effect_repository.get_all_passive_effects()
         return data or {}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to retrieve passive effects: {str(e)}")
-
 
 if __name__ == "__main__":
     import uvicorn
