@@ -1,6 +1,5 @@
 import os
 import logging
-from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -20,9 +19,8 @@ from .services import calculation_service, seed_service, bis_service
 from .middleware.cache_headers import CacheHeadersMiddleware
 from .middleware.rate_limit import RateLimitMiddleware
 
-load_dotenv()
+from .config.settings import SETTINGS  # this module calls load_dotenv() once and sets defaults
 logging.basicConfig(level=logging.INFO, format="[%(levelname)s] %(message)s")
-
 
 def create_app() -> FastAPI:
     app = FastAPI(
