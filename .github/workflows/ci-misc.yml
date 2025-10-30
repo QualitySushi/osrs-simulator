@@ -39,14 +39,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # helps some hooks and diffs
+          fetch-depth: 0
 
-      - name: Set up Python (for Python hooks)
+      - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
-      - name: Set up Node (for JS/TS hooks)
+      - name: Set up Node
         uses: actions/setup-node@v4
         with:
           node-version: "18"
@@ -59,7 +59,16 @@ jobs:
           restore-keys: |
             precommit-${{ runner.os }}-
 
+      - name: Install gitleaks
+        run: |
+          set -euxo pipefail
+          ver="8.18.2"
+          curl -sSL "https://github.com/gitleaks/gitleaks/releases/download/v${ver}/gitleaks_${ver}_linux_x64.tar.gz" \
+            | tar -xz
+          sudo mv gitleaks /usr/local/bin/gitleaks
+          gitleaks version
+
       - name: Run pre-commit
         uses: pre-commit/action@v3.0.1
         with:
-          extra_args: --all-files
+          extra_args: --show-diff-on-failure --color=always --all-files
