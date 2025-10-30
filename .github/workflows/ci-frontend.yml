@@ -1,0 +1,106 @@
+name: Backend CI
+
+on:
+  push:
+    branches: [ main, testing-branch ]
+    paths:
+      - "backend/**"
+      - ".github/workflows/ci-backend.yml"
+  pull_request:
+    branches: [ main, testing-branch ]
+    paths:
+      - "backend/**"
+      - ".github/workflows/ci-backend.yml"
+  workflow_dispatch:
+    inputs:
+      extra_args:
+        description: "Extra pytest/unittest args (optional)"
+        required: false
+        default: ""
+  workflow_call:
+    inputs:
+      extra_args:
+        required: false
+        type: string
+        default: ""
+
+permissions:
+  contents: read
+
+concurrency:
+  group: backend-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    env:
+      PYTHONUNBUFFERED: "1"
+      SCAPELAB_TESTING: "1"
+      DISABLE_STARTUP_DB_CONNECT: "1"
+      SQLAZURECONNSTR_DefaultConnection: "Driver={ODBC Driver 18 for SQL Server};Server=localhost;Database=fake;Uid=fake;Pwd=fake;"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Prime .env to avoid accidental prod loads
+        run: |
+          touch .env
+          echo "SCAPELAB_TESTING=1" >> .env
+          echo "DISABLE_STARTUP_DB_CONNECT=1" >> .env
+
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: pip-${{ runner.os }}-${{ hashFiles('backend/requirements*.txt', 'backend/pyproject.toml') }}
+          restore-keys: |
+            pip-${{ runner.os }}-
+
+      - name: Install system deps if pyodbc is required
+        shell: bash
+        run: |
+          if grep -Eqi '^\s*pyodbc([<>=].*)?$' requirements*.txt 2>/dev/null; then
+            sudo apt-get update
+            sudo apt-get install -y unixodbc-dev
+          fi
+
+      - name: Install backend deps
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          if [ -f requirements-dev.txt ]; then pip install -r requirements-dev.txt || true; fi
+
+      - name: Show test tools
+        run: |
+          python - <<'PY'
+import pkgutil
+print("pytest installed? ", bool(pkgutil.find_loader("pytest")))
+PY
+
+      - name: Run tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          EXTRA_ARGS="${{ inputs.extra_args || github.event.inputs.extra_args || '' }}"
+
+          have_pytest=0
+          python - <<'PY' || true
+import pkgutil, sys
+sys.exit(0 if pkgutil.find_loader("pytest") else 1)
+PY
+          if [ $? -eq 0 ]; then have_pytest=1; fi
+
+          has_pytest_tests=$(find . -path ./venv -prune -o -name "test_*.py" -print -quit | wc -l)
+
+          if [ "$have_pytest" -eq 1 ] && [ "$has_pytest_tests" -gt 0 ]; then
+            echo "Running

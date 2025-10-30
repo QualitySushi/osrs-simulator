@@ -2,8 +2,19 @@ name: Generate Boss Database
 
 on:
   schedule:
-    - cron: '0 0 * * 0'  # Runs weekly on Sunday at midnight
+    - cron: '0 0 * * 0'  # Sundays 00:00 UTC
   workflow_dispatch:
+    inputs:
+      channel:
+        description: "Scrape channel/tag (optional)"
+        required: false
+        default: "weekly"
+  workflow_call:
+    inputs:
+      channel:
+        required: false
+        type: string
+        default: "weekly"
 
 permissions:
   contents: read
@@ -11,6 +22,9 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      SCRAPER_USER_AGENT: "ScapeLabBot/1.0 (+github.com/QualitySushi/osrs-simulator)"
+      SCRAPE_CHANNEL: "${{ inputs.channel || github.event.inputs.channel || 'weekly' }}"
 
     steps:
       - uses: actions/checkout@v4
@@ -20,31 +34,48 @@ jobs:
         with:
           python-version: '3.11'
           cache: 'pip'
-          # Use a file guaranteed to exist; avoids cache path errors
-          cache-dependency-path: 'backend/requirements.txt'
+          cache-dependency-path: |
+            tools/scraper_v2/requirements.txt
+            tools/scrapers/requirements.txt
+            backend/requirements.txt
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          if [ -f webscraper/requirements.txt ]; then
-            pip install -r webscraper/requirements.txt
-          elif [ -f webscraper/runescape-bosses/requirements.txt ]; then
-            pip install -r webscraper/runescape-bosses/requirements.txt
+          if [ -f tools/scraper_v2/requirements.txt ]; then
+            pip install -r tools/scraper_v2/requirements.txt
+          elif [ -f tools/scrapers/requirements.txt ]; then
+            pip install -r tools/scrapers/requirements.txt
           else
             pip install -r backend/requirements.txt
           fi
 
-      - name: Run boss scraper
-        working-directory: webscraper/runescape-bosses
+      - name: Run boss scraper (auto-detect entrypoint)
         env:
-          # Optional: helps reduce 429s from wiki sources
-          SCRAPER_USER_AGENT: "ScapeLabBot/1.0 (+github.com/QualitySushi/osrs-simulator)"
+          SCRAPER_USER_AGENT: ${{ env.SCRAPER_USER_AGENT }}
+          SCRAPE_CHANNEL: ${{ env.SCRAPE_CHANNEL }}
         run: |
-          python extract.py
+          set -euo pipefail
+          if [ -f tools/scraper_v2/jobs/bosses.py ]; then
+            python -m tools.scraper_v2.jobs.bosses
+          elif [ -f tools/scraper_v2/run_boss_scrape.py ]; then
+            python tools/scraper_v2/run_boss_scrape.py
+          elif [ -f tools/scrapers/runescape-bosses/extract.py ]; then
+            (cd tools/scrapers/runescape-bosses && python extract.py)
+          else
+            echo "No boss scraper entrypoint found." && exit 1
+          fi
+
+      - name: Locate generated DB(s)
+        run: |
+          set -euo pipefail
+          mapfile -t files < <(find tools -maxdepth 6 -type f \( -iname "*boss*.db" -o -iname "*bosses*.db" -o -iname "*osrs_boss*.db" \))
+          [ "${#files[@]}" -gt 0 ] || { echo "No boss DB files found"; exit 1; }
+          { echo "DB_PATHS<<EOF"; for f in "${files[@]}"; do echo "$f"; done; echo "EOF"; } >> "$GITHUB_ENV"
 
       - name: Upload boss database
         uses: actions/upload-artifact@v4
         with:
           name: osrs-boss-database
-          path: webscraper/runescape-bosses/osrs_bosses.db
+          path: ${{ env.DB_PATHS }}
           if-no-files-found: error

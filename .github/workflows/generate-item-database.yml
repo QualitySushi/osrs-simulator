@@ -2,8 +2,19 @@ name: Generate Item Database
 
 on:
   schedule:
-    - cron: '0 0 * * 0'  # Runs weekly on Sunday at midnight
+    - cron: '0 0 * * 0'  # Sundays 00:00 UTC
   workflow_dispatch:
+    inputs:
+      channel:
+        description: "Scrape channel/tag (optional)"
+        required: false
+        default: "weekly"
+  workflow_call:
+    inputs:
+      channel:
+        required: false
+        type: string
+        default: "weekly"
 
 permissions:
   contents: read
@@ -11,6 +22,9 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      SCRAPER_USER_AGENT: "ScapeLabBot/1.0 (+github.com/QualitySushi/osrs-simulator)"
+      SCRAPE_CHANNEL: "${{ inputs.channel || github.event.inputs.channel || 'weekly' }}"
 
     steps:
       - uses: actions/checkout@v4
@@ -20,36 +34,61 @@ jobs:
         with:
           python-version: '3.11'
           cache: 'pip'
-          # Use a file that is guaranteed to exist to avoid the error
-          cache-dependency-path: 'backend/requirements.txt'
+          cache-dependency-path: |
+            tools/scraper_v2/requirements.txt
+            tools/scrapers/requirements.txt
+            backend/requirements.txt
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          # Prefer scraper-specific requirements if present; otherwise fall back
-          if [ -f webscraper/requirements.txt ]; then
-            pip install -r webscraper/requirements.txt
-          elif [ -f webscraper/runescape-items/requirements.txt ]; then
-            pip install -r webscraper/runescape-items/requirements.txt
+          if [ -f tools/scraper_v2/requirements.txt ]; then
+            pip install -r tools/scraper_v2/requirements.txt
+          elif [ -f tools/scrapers/requirements.txt ]; then
+            pip install -r tools/scrapers/requirements.txt
           else
             pip install -r backend/requirements.txt
           fi
 
-      - name: Generate valid item list
-        working-directory: webscraper/runescape-items
+      - name: Pre-step: generate valid item list (if script exists)
         run: |
-          python generate_valid_items.py
+          set -e
+          if [ -f tools/scraper_v2/jobs/items_prepare.py ]; then
+            python -m tools.scraper_v2.jobs.items_prepare
+          elif [ -f tools/scraper_v2/generate_valid_items.py ]; then
+            python tools/scraper_v2/generate_valid_items.py
+          elif [ -f tools/scrapers/runescape-items/generate_valid_items.py ]; then
+            (cd tools/scrapers/runescape-items && python generate_valid_items.py)
+          else
+            echo "No explicit 'generate valid items' step found; continuing."
+          fi
 
-      - name: Run item scraper
-        working-directory: webscraper/runescape-items
+      - name: Run item scraper (auto-detect entrypoint)
         env:
-          SCRAPER_USER_AGENT: "ScapeLabBot/1.0 (+github.com/QualitySushi/osrs-simulator)"
+          SCRAPER_USER_AGENT: ${{ env.SCRAPER_USER_AGENT }}
+          SCRAPE_CHANNEL: ${{ env.SCRAPE_CHANNEL }}
         run: |
-          python osrs_item_scraper.py
+          set -euo pipefail
+          if [ -f tools/scraper_v2/jobs/items.py ]; then
+            python -m tools.scraper_v2.jobs.items
+          elif [ -f tools/scraper_v2/run_item_scrape.py ]; then
+            python tools/scraper_v2/run_item_scrape.py
+          elif [ -f tools/scrapers/runescape-items/osrs_item_scraper.py ]; then
+            (cd tools/scrapers/runescape-items && python osrs_item_scraper.py)
+          else
+            echo "No item scraper entrypoint found." && exit 1
+          fi
+
+      - name: Locate generated DB(s)
+        run: |
+          set -euo pipefail
+          mapfile -t files < <(find tools -maxdepth 6 -type f \( -iname "*item*.db" -o -iname "*items*.db" -o -iname "*.db" \))
+          [ "${#files[@]}" -gt 0 ] || { echo "No item DB files found"; exit 1; }
+          { echo "DB_PATHS<<EOF"; for f in "${files[@]}"; do echo "$f"; done; echo "EOF"; } >> "$GITHUB_ENV"
 
       - name: Upload item database
         uses: actions/upload-artifact@v4
         with:
           name: osrs-item-database
-          path: webscraper/runescape-items/*.db
+          path: ${{ env.DB_PATHS }}
           if-no-files-found: error
