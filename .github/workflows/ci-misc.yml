@@ -19,6 +19,18 @@ on:
       - "**/*.tsx"
       - "**/*.md"
       - ".github/workflows/ci-misc.yml"
+  workflow_dispatch:
+    inputs:
+      hook:
+        description: "Run a specific pre-commit hook id (optional)"
+        required: false
+        default: ""
+  workflow_call:
+    inputs:
+      hook:
+        required: false
+        type: string
+        default: ""
 
 permissions:
   contents: read
@@ -33,12 +45,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Python (for pre-commit hooks using Python)
+      - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
-      - name: Set up Node (for any JS/TS hooks)
+      - name: Set up Node
         uses: actions/setup-node@v4
         with:
           node-version: "18"
@@ -56,6 +68,10 @@ jobs:
           python -m pip install --upgrade pip
           pip install pre-commit
 
-      - name: Run pre-commit on all files
+      - name: Run pre-commit
         run: |
-          pre-commit run --all-files
+          if [ -n "${{ inputs.hook || github.event.inputs.hook || '' }}" ]; then
+            pre-commit run --all-files ${{ inputs.hook || github.event.inputs.hook }}
+          else
+            pre-commit run --all-files
+          fi
