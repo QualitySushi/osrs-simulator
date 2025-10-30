@@ -6,12 +6,7 @@ from typing import Any, Dict, List, Optional, Tuple, TypedDict
 from fastapi import APIRouter, HTTPException, Query
 from pydantic import BaseModel, Field
 
-try:
-    # Preferred when backend/ is on sys.path (your tests do this)
-    from db.sqlite_doc import _connect, get_doc, get_docs, json_search, count_table, all_keys
-except ImportError:
-    # Fallback if imported as a package under app/
-    from ..db.sqlite_doc import _connect, get_doc, get_docs, json_search, count_table, all_keys
+from db.sqlite_doc import _connect, get_doc, get_docs, json_search, count_table, all_keys
 
 
 DATA_DIR = os.getenv("SCRAPER_DATA_DIR", "data/db")
