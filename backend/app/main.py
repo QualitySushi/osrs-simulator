@@ -269,29 +269,55 @@ def create_app() -> FastAPI:
     # Startup (DB connect) guarded for tests/CI
     @app.on_event("startup")
     async def _startup():
-        # 1) Always warm caches first – this uses the current repo services/mocks.
+        # --- Cache warmup: prefer async service methods if available ---
         try:
             from .repositories import item_repository, boss_repository
-            if hasattr(item_repository, "_warm_cache"):
-                item_repository._warm_cache()
-            if hasattr(boss_repository, "_warm_cache"):
-                boss_repository._warm_cache()
+    
+            # Items
+            try:
+                svc = getattr(item_repository, "db_service", None)
+                if svc is not None:
+                    if hasattr(svc, "get_all_items_async"):
+                        items = await svc.get_all_items_async()
+                    elif hasattr(svc, "get_all_items"):
+                        items = svc.get_all_items()
+                    else:
+                        items = []
+                    # store the concrete list, not a MagicMock
+                    item_repository._all_items_cache["all"] = items
+            except Exception as e:  # pragma: no cover
+                logging.warning("[startup] Item cache warmup skipped: %s", e)
+    
+            # Bosses
+            try:
+                bsvc = getattr(boss_repository, "db_service", None)
+                if bsvc is not None:
+                    if hasattr(bsvc, "get_all_bosses_async"):
+                        bosses = await bsvc.get_all_bosses_async()
+                    elif hasattr(bsvc, "get_all_bosses"):
+                        bosses = bsvc.get_all_bosses()
+                    else:
+                        bosses = []
+                    boss_repository._all_bosses_cache["all"] = bosses
+            except Exception as e:  # pragma: no cover
+                logging.warning("[startup] Boss cache warmup skipped: %s", e)
+    
             logging.info("[startup] Repository caches warmed")
         except Exception as e:  # pragma: no cover
             logging.warning("[startup] Cache warmup skipped: %s", e)
-
-        # 2) Optional DB connectivity check – still guarded for CI/tests.
+    
+        # --- Optional DB connectivity check (guarded in CI/tests) ---
         if os.getenv("DISABLE_STARTUP_DB_CONNECT") == "1" or os.getenv("SCAPELAB_TESTING") == "1":
-            logging.info("[startup] Skipping DB init (guarded by DISABLE_STARTUP_DB_CONNECT/SCAPELAB_TESTING)")
+            logging.info("[startup] Skipping DB init (DISABLE_STARTUP_DB_CONNECT/SCAPELAB_TESTING)")
             return
-
+    
         cs = os.getenv("SQLAZURECONNSTR_DefaultConnection")
         if not cs:
             logging.warning("[startup] No SQLAZURECONNSTR_DefaultConnection set.")
             return
-
+    
         try:
-            import pyodbc  # defer import so tests don't need driver/install
+            import pyodbc  # defer import so tests don't require driver
             logging.info("[startup] Connecting to Azure SQL…")
             cn = pyodbc.connect(cs, timeout=10)
             cn.close()
