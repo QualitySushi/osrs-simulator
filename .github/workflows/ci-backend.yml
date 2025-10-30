@@ -11,6 +11,18 @@ on:
     paths:
       - "backend/**"
       - ".github/workflows/ci-backend.yml"
+  workflow_dispatch:
+    inputs:
+      extra_args:
+        description: "Extra pytest/unittest args (optional)"
+        required: false
+        default: ""
+  workflow_call:
+    inputs:
+      extra_args:
+        required: false
+        type: string
+        default: ""
 
 permissions:
   contents: read
@@ -29,7 +41,6 @@ jobs:
       PYTHONUNBUFFERED: "1"
       SCAPELAB_TESTING: "1"
       DISABLE_STARTUP_DB_CONNECT: "1"
-      # Dummy connection string; we never actually connect in CI
       SQLAZURECONNSTR_DefaultConnection: "Driver={ODBC Driver 18 for SQL Server};Server=localhost;Database=fake;Uid=fake;Pwd=fake;"
 
     steps:
@@ -72,7 +83,7 @@ jobs:
       - name: Show test tools
         run: |
           python - <<'PY'
-import pkgutil, sys
+import pkgutil
 print("pytest installed? ", bool(pkgutil.find_loader("pytest")))
 PY
 
@@ -80,6 +91,7 @@ PY
         shell: bash
         run: |
           set -euo pipefail
+          EXTRA_ARGS="${{ inputs.extra_args || github.event.inputs.extra_args || '' }}"
 
           have_pytest=0
           python - <<'PY' || true
@@ -88,28 +100,25 @@ sys.exit(0 if pkgutil.find_loader("pytest") else 1)
 PY
           if [ $? -eq 0 ]; then have_pytest=1; fi
 
-          # Detect pytest-style tests
           has_pytest_tests=$(find . -path ./venv -prune -o -name "test_*.py" -print -quit | wc -l)
 
           if [ "$have_pytest" -eq 1 ] && [ "$has_pytest_tests" -gt 0 ]; then
             echo "Running pytest"
-            pytest -q || pytest -vv
+            if ! pytest -q $EXTRA_ARGS; then pytest -vv $EXTRA_ARGS; fi
             exit 0
           fi
 
-          # Fallback: unittest discovery
           if [ -d "app/testing" ]; then
             echo "Running unittest discovery"
-            python -m unittest discover -s app/testing -p "test_*.py"
+            python -m unittest discover -s app/testing -p "test_*.py" $EXTRA_ARGS
             exit 0
           fi
 
-          # Legacy single test runner
           if [ -f "app/testing/UnitTest.py" ]; then
             echo "Running legacy UnitTest.py"
-            python app/testing/UnitTest.py
+            python app/testing/UnitTest.py $EXTRA_ARGS
             exit 0
           fi
 
-          echo "No backend tests found (pytest/unittest/legacy). Failing the job to avoid false green."
+          echo "No backend tests found. Failing to avoid false green."
           exit 1
