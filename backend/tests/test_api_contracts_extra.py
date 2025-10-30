@@ -1,7 +1,10 @@
 import pytest
 from fastapi.testclient import TestClient
-from app.main import app
-
+try:
+    from app.main import create_app
+    app = create_app()
+except Exception:
+    from app.main import app
 client = TestClient(app)
 
 def test_openapi_and_docs_available():

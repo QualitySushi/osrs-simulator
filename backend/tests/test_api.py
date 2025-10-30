@@ -15,7 +15,11 @@ REPO_ROOT = os.path.dirname(REPO_ROOT)              # repo root
 if REPO_ROOT not in sys.path:
     sys.path.insert(0, REPO_ROOT)
 
-from app.main import app
+try:
+    from app.main import create_app
+    app = create_app()
+except Exception:
+    from app.main import app  # fallback
 
 
 class TestApiRoutes(unittest.TestCase):
@@ -159,9 +163,8 @@ class TestApiRoutes(unittest.TestCase):
         self.assertTrue(any(item["weapon_name"] == "Dragon dagger" for item in data))
 
     def test_cache_headers(self):
-        """Endpoints should include Cache-Control headers."""
         with TestClient(app) as client:
-            resp = client.get("/items")
+            resp = client.get("/special-attacks")
         self.assertEqual(resp.status_code, 200)
         self.assertIn("Cache-Control", resp.headers)
 

@@ -80,9 +80,18 @@ class TestCalculationService(unittest.TestCase):
 class TestSettings(unittest.TestCase):
     def test_cache_ttl_env_override(self):
         import importlib, os
-        os.environ['CACHE_TTL_SECONDS'] = '123'
-        settings = importlib.reload(importlib.import_module('app.config.settings'))
-        self.assertEqual(settings.CACHE_TTL_SECONDS, 123)
+        old = os.environ.get('CACHE_TTL_SECONDS')
+        try:
+            os.environ['CACHE_TTL_SECONDS'] = '123'
+            settings = importlib.reload(importlib.import_module('app.config.settings'))
+            self.assertEqual(settings.CACHE_TTL_SECONDS, 123)
+        finally:
+            if old is None:
+                os.environ.pop('CACHE_TTL_SECONDS', None)
+            else:
+                os.environ['CACHE_TTL_SECONDS'] = old
+            importlib.reload(importlib.import_module('app.config.settings'))
+
 
 
 if __name__ == '__main__':
