@@ -1,35 +1,30 @@
-name: Tools • scraper_v2 tests
+name: Scraper v2 Tests
 
 on:
   push:
+    branches: [ main, testing-branch ]
     paths:
       - "tools/scraper_v2/**"
-      - ".github/workflows/tools-scraper-v2-tests.yml"
+      - ".github/workflows/ci-scraper.yml"
   pull_request:
+    branches: [ main, testing-branch ]
     paths:
       - "tools/scraper_v2/**"
-      - ".github/workflows/tools-scraper-v2-tests.yml"
-  workflow_dispatch:
+      - ".github/workflows/ci-scraper.yml"
 
 permissions:
   contents: read
 
+concurrency:
+  group: scraper-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  pytest-scraper-v2:
+  test-scraper:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
-
-    env:
-      PYTHONUNBUFFERED: "1"
-      # Make sure nothing tries to hit DB or startup hooks
-      SCAPELAB_TESTING: "1"
-      DISABLE_STARTUP_DB_CONNECT: "1"
-      # Some scrapers/tests may look for these:
-      PYTHONPATH: "${{ github.workspace }}:${{ github.workspace }}/tools/scraper_v2"
-      # Force offline-safe defaults if your tests respect these (harmless if unused)
-      SCRAPER_OFFLINE: "1"
-      OSRS_WIKI_USER_AGENT: "ScapeLab CI test"
-
+    defaults:
+      run:
+        shell: bash
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -38,42 +33,38 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-          cache: "pip"
 
-      - name: Install dependencies
-        shell: bash
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: pip-${{ runner.os }}-${{ steps.pydeps-key.outputs.key }}
+          restore-keys: |
+            pip-${{ runner.os }}-
+
+      - name: Compute deps cache key
+        id: pydeps-key
+        run: |
+          if [[ -f tools/scraper_v2/requirements.txt ]]; then
+            echo "key=$(sha256sum tools/scraper_v2/requirements.txt | cut -d' ' -f1)" >> $GITHUB_OUTPUT
+          else
+            # fallback key when no requirements file exists
+            echo "key=fallback-requests-only" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Install deps
         run: |
           set -euo pipefail
           python -m pip install --upgrade pip
-          # If scraper_v2 has its own requirements, use that; otherwise fall back.
-          if [ -f tools/scraper_v2/requirements.txt ]; then
+          if [[ -f tools/scraper_v2/requirements.txt ]]; then
             pip install -r tools/scraper_v2/requirements.txt
+          else
+            # Minimal set used by tests (adjust if your tests need more)
+            pip install pytest requests beautifulsoup4 lxml
           fi
-          # Core test deps (idempotent if already present)
-          pip install pytest pytest-asyncio httpx
-          # Optional HTML parsing / fast JSON utils commonly used by scrapers
-          pip install beautifulsoup4 lxml orjson
 
-      - name: Run tests (scraper_v2 only)
-        shell: bash
-        working-directory: tools/scraper_v2
+      - name: Run pytest (scraper_v2)
         run: |
           set -euo pipefail
           echo "Running pytest in tools/scraper_v2/tests ..."
-          pytest -q tests
-
-      # Optional: upload junit XML if you want PR annotations. Uncomment if needed.
-      # - name: Run tests with JUnit output
-      #   if: always()
-      #   shell: bash
-      #   working-directory: tools/scraper_v2
-      #   run: |
-      #     pytest -q tests --junitxml=../scraper_v2-junit.xml
-      #
-      # - name: Upload test report
-      #   if: always()
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: scraper_v2-junit
-      #     path: tools/scraper_v2-junit.xml
-      #     if-no-files-found: ignore
+          pytest -q tools/scraper_v2/tests
