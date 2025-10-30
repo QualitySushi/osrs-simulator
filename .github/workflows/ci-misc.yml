@@ -63,9 +63,10 @@ jobs:
         run: |
           set -euxo pipefail
           ver="8.18.2"
+          mkdir -p /tmp/gitleaks
           curl -sSL "https://github.com/gitleaks/gitleaks/releases/download/v${ver}/gitleaks_${ver}_linux_x64.tar.gz" \
-            | tar -xz
-          sudo mv gitleaks /usr/local/bin/gitleaks
+            | tar -xz -C /tmp/gitleaks
+          sudo mv /tmp/gitleaks/gitleaks /usr/local/bin/gitleaks
           gitleaks version
 
       - name: Run pre-commit
