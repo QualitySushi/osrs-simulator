@@ -21,7 +21,7 @@ from .services import calculation_service, seed_service, bis_service
 # Middleware
 from .middleware.cache_headers import CacheHeadersMiddleware
 from .middleware.rate_limit import RateLimitMiddleware
-from .config.settings import SETTINGS  # loads .env once and sets defaults
+# 🚫 Removed: from .config.settings import SETTINGS
 
 logging.basicConfig(level=logging.INFO, format="[%(levelname)s] %(message)s")
 
