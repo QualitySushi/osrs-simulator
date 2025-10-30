@@ -69,7 +69,7 @@ jobs:
       - name: Install system deps if pyodbc is required
         shell: bash
         run: |
-          if grep -Eqi '^\s*pyodbc([<>=].*)?$' requirements*.txt 2>/dev/null; then
+          if ls requirements*.txt >/dev/null 2>&1 && grep -Eqi '^\s*pyodbc([<>=].*)?$' requirements*.txt; then
             sudo apt-get update
             sudo apt-get install -y unixodbc-dev
           fi
@@ -82,10 +82,7 @@ jobs:
 
       - name: Show test tools
         run: |
-          python - <<'PY'
-import pkgutil
-print("pytest installed? ", bool(pkgutil.find_loader("pytest")))
-PY
+          python -c "import importlib.util as u; print('pytest installed?', u.find_spec('pytest') is not None)"
 
       - name: Run tests
         shell: bash
@@ -93,13 +90,14 @@ PY
           set -euo pipefail
           EXTRA_ARGS="${{ inputs.extra_args || github.event.inputs.extra_args || '' }}"
 
-          have_pytest=0
-          python - <<'PY' || true
-import pkgutil, sys
-sys.exit(0 if pkgutil.find_loader("pytest") else 1)
-PY
-          if [ $? -eq 0 ]; then have_pytest=1; fi
+          # Is pytest installed?
+          if python -c "import importlib.util as u, sys; sys.exit(0 if u.find_spec('pytest') else 1)"; then
+            have_pytest=1
+          else
+            have_pytest=0
+          fi
 
+          # Any pytest-style tests present?
           has_pytest_tests=$(find . -path ./venv -prune -o -name "test_*.py" -print -quit | wc -l)
 
           if [ "$have_pytest" -eq 1 ] && [ "$has_pytest_tests" -gt 0 ]; then
