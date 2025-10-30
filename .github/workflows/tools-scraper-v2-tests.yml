@@ -1,0 +1,70 @@
+name: Scraper v2 Tests
+
+on:
+  push:
+    branches: [ main, testing-branch ]
+    paths:
+      - "tools/scraper_v2/**"
+      - ".github/workflows/ci-scraper.yml"
+  pull_request:
+    branches: [ main, testing-branch ]
+    paths:
+      - "tools/scraper_v2/**"
+      - ".github/workflows/ci-scraper.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: scraper-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test-scraper:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: pip-${{ runner.os }}-${{ steps.pydeps-key.outputs.key }}
+          restore-keys: |
+            pip-${{ runner.os }}-
+
+      - name: Compute deps cache key
+        id: pydeps-key
+        run: |
+          if [[ -f tools/scraper_v2/requirements.txt ]]; then
+            echo "key=$(sha256sum tools/scraper_v2/requirements.txt | cut -d' ' -f1)" >> $GITHUB_OUTPUT
+          else
+            # fallback key when no requirements file exists
+            echo "key=fallback-requests-only" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Install deps
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          if [[ -f tools/scraper_v2/requirements.txt ]]; then
+            pip install -r tools/scraper_v2/requirements.txt
+          else
+            # Minimal set used by tests (adjust if your tests need more)
+            pip install pytest requests beautifulsoup4 lxml
+          fi
+
+      - name: Run pytest (scraper_v2)
+        run: |
+          set -euo pipefail
+          echo "Running pytest in tools/scraper_v2/tests ..."
+          pytest -q tools/scraper_v2/tests

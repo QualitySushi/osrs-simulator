@@ -4,6 +4,17 @@ on:
   schedule:
     - cron: '0 0 * * 0'  # Sundays 00:00 UTC
   workflow_dispatch:
+    inputs:
+      channel:
+        description: "Scrape channel/tag (optional)"
+        required: false
+        default: "weekly"
+  workflow_call:
+    inputs:
+      channel:
+        required: false
+        type: string
+        default: "weekly"
 
 permissions:
   contents: read
@@ -13,6 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       SCRAPER_USER_AGENT: "ScapeLabBot/1.0 (+github.com/QualitySushi/osrs-simulator)"
+      SCRAPE_CHANNEL: "${{ inputs.channel || github.event.inputs.channel || 'weekly' }}"
 
     steps:
       - uses: actions/checkout@v4
@@ -22,7 +34,6 @@ jobs:
         with:
           python-version: '3.11'
           cache: 'pip'
-          # Try the most likely requirements; fallback to backend if none exist
           cache-dependency-path: |
             tools/scraper_v2/requirements.txt
             tools/scrapers/requirements.txt
@@ -42,6 +53,7 @@ jobs:
       - name: Run boss scraper (auto-detect entrypoint)
         env:
           SCRAPER_USER_AGENT: ${{ env.SCRAPER_USER_AGENT }}
+          SCRAPE_CHANNEL: ${{ env.SCRAPE_CHANNEL }}
         run: |
           set -euo pipefail
           if [ -f tools/scraper_v2/jobs/bosses.py ]; then
@@ -51,28 +63,15 @@ jobs:
           elif [ -f tools/scrapers/runescape-bosses/extract.py ]; then
             (cd tools/scrapers/runescape-bosses && python extract.py)
           else
-            echo "No boss scraper entrypoint found. Expected one of:"
-            echo "  tools/scraper_v2/jobs/bosses.py"
-            echo "  tools/scraper_v2/run_boss_scrape.py"
-            echo "  tools/scrapers/runescape-bosses/extract.py (legacy)"
-            exit 1
+            echo "No boss scraper entrypoint found." && exit 1
           fi
 
       - name: Locate generated DB(s)
-        id: locate
         run: |
           set -euo pipefail
-          # Common naming patterns; add more if needed
-          mapfile -t files < <(find tools -maxdepth 5 -type f \( -iname "*boss*.db" -o -iname "*bosses*.db" -o -iname "*osrs_boss*.db" \))
-          if [ "${#files[@]}" -eq 0 ]; then
-            echo "No boss DB files found under tools/**. Did the scraper write output?" >&2
-            exit 1
-          fi
-          {
-            echo "DB_PATHS<<EOF"
-            for f in "${files[@]}"; do echo "$f"; done
-            echo "EOF"
-          } >> "$GITHUB_ENV"
+          mapfile -t files < <(find tools -maxdepth 6 -type f \( -iname "*boss*.db" -o -iname "*bosses*.db" -o -iname "*osrs_boss*.db" \))
+          [ "${#files[@]}" -gt 0 ] || { echo "No boss DB files found"; exit 1; }
+          { echo "DB_PATHS<<EOF"; for f in "${files[@]}"; do echo "$f"; done; echo "EOF"; } >> "$GITHUB_ENV"
 
       - name: Upload boss database
         uses: actions/upload-artifact@v4

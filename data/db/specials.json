@@ -1,0 +1,1752 @@
+{
+  "'perfect' gold bar": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "'perfect' ring": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "1/3rds full jug": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "'perfect' necklace": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "'perfect' gold ore": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "'24-carat' sword": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "10th birthday balloons": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "1/5ths full bucket": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "10th birthday cape": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "10th squad sigil": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "2/3rds full jug": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "18lb shot": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "2/5ths full bucket": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "20th anniversary boots": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "20th anniversary bottom": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "20th anniversary cape": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "20th anniversary gloves": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "20th anniversary hat": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "20th anniversary top": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "22lb shot": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "20th anniversary necklace": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "3rd age amulet": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "3/5ths full bucket": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "3rd age axe": {
+    "name": "Lumber Up",
+    "energy_cost": 100,
+    "description": "The 3rd age axe has a special attack , Lumber Up , that it shares with the dragon , infernal , and crystal axes and their variants. It temporarily boosts the player's Woodcutting level by 3, consuming 100% of the player's special attack energy. The boost degrades every 60 seconds, with the player's Woodcutting level returning to normal after 3 minutes. Using Preserve can increase the duration by 50%.",
+    "modifiers": {},
+    "lineage": null
+  },
+  "3rd age bow": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "3rd age druidic cloak": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "3rd age cloak": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "3rd age druidic staff": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "3rd age druidic robe top": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "3rd age druidic robe bottoms": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "3rd age felling axe": {
+    "name": "Lumber Up",
+    "energy_cost": 100,
+    "description": "The 3rd age felling axe has a special attack , Lumber Up , that it shares with the dragon , infernal , 3rd age , and crystal axes and their variants. It temporarily boosts the player's Woodcutting level by 3, consuming 100% of the player's special attack energy. The boost degrades every 60 seconds, with the player's Woodcutting level returning to normal after 3 minutes. Using Preserve can increase the duration by 50%.",
+    "modifiers": {},
+    "lineage": null
+  },
+  "3rd age full helmet": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "3rd age kiteshield": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "3rd age mage hat (Last Man Standing)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "3rd age pickaxe": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "3rd age mage hat": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "3rd age longsword": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "3rd age platelegs": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "3rd age platebody": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "3rd age plateskirt": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "3rd age range coif (Last Man Standing)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "3rd age range coif": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "3rd age range legs": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "3rd age range legs (Last Man Standing)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "3rd age range top (Last Man Standing)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "3rd age range top": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "3rd age robe": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "3rd age robe top (Last Man Standing)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "3rd age robe (Last Man Standing)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "3rd age robe top": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "4-poster": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "3rd age vambraces": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "3rd age wand": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "4th birthday hat": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "4-poster (interface item)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "5-gallon jug": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "4/5ths full bucket": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "8-gallon jug": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "9mm revolver": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "??? mixture": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "A big present": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "A chair": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "A container": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "A dark disposition": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "A dear friend": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "A eyeglo null": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "A handwritten book": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "A magic scroll": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "A jester stick": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "A nice key": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "A pattern": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "A powdered wig": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "A scribbled note": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "A scruffy note": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "A special tiara": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "A small key": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "A stone bowl (RuneScape 2 Beta)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "A stone bowl": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "A taste of hope (book)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "A used spell": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Ablenkian's escape": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Absorption": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Abyssal book": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Abyssal blue dye": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Abyssal ashes": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Abyssal bludgeon": {
+    "name": "Penance",
+    "energy_cost": null,
+    "description": "The abyssal bludgeon has a special attack , Penance , which increases damage dealt by 0.5% for every prayer point that the wielder is missing, consuming 50% of the wielder's special attack energy.",
+    "modifiers": {},
+    "lineage": null
+  },
+  "Abyssal bracelet": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Abyssal dagger imbue scroll": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Abyssal head": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Abyssal green dye": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Abyssal incantation": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Abyssal dagger": {
+    "name": "Abyssal Puncture",
+    "energy_cost": 25,
+    "description": "The abyssal dagger has a special attack , Abyssal Puncture , which hits twice in quick succession with a 25% increase in accuracy and 15% reduced damage, consuming 25% of the player's special attack energy. A single attack roll is performed, meaning that either both hits are successful, or both hits miss. The damage calculation rolls against the opponent's slash defence.",
+    "modifiers": {},
+    "lineage": null
+  },
+  "Abyssal dagger (bh)": {
+    "name": "Abyssal Puncture",
+    "energy_cost": 35,
+    "description": "The abyssal dagger (bh) has a special attack , Abyssal Puncture , which hits twice in quick succession with a 25% increase in accuracy and 5% reduced damage, consuming 35% of the player's special attack energy. A single attack roll is performed, meaning that either both hits are successful, or both hits miss. The damage calculation rolls against the opponent's slash defence.",
+    "modifiers": {},
+    "lineage": null
+  },
+  "Abyssal lantern": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Abyssal needle": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Abyssal pearls": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Abyssal protector": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Abyssal orphan": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Abyssal observations": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Abyssal red dye": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Abyssal tentacle": {
+    "name": "Binding Tentacle",
+    "energy_cost": 50,
+    "description": "The abyssal tentacle has a special attack , Binding Tentacle , which consumes 50% of the player's special attack energy. Regardless of whether the hit is successful , the target will be bound for 5 seconds, and there will be approximately a 50% chance of applying poison, starting at 4 damage.",
+    "modifiers": {},
+    "lineage": null
+  },
+  "Abyssal tentacle (or)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Abyssal whip": {
+    "name": "Energy Drain",
+    "energy_cost": 50,
+    "description": "The abyssal whip has a special attack , Energy Drain , which consumes 50% of the player's special attack energy, increases accuracy by 25%, and in PvP , transfers 10% of the target's run energy to the wielder. The target player will receive the message, \"You feel drained!\" in their chat window. The accuracy roll for Energy Drain is made against an opponent's slash defence. [ 1 ]",
+    "modifiers": {},
+    "lineage": null
+  },
+  "Abyssal whip (My Arm's Big Adventure)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Abyssal whip (Last Man Standing)": {
+    "name": "Energy Drain",
+    "energy_cost": 50,
+    "description": "The abyssal whip has a special attack , Energy Drain , which consumes 50% of the player's special attack energy, increases accuracy by 25%, and in PVP , transfers 10% of the target's run energy to the wielder. The target player will receive the message, \"You feel drained!\" in their chat window.",
+    "modifiers": {},
+    "lineage": null
+  },
+  "Abyssal whip (or)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Acatzin's axe": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Abyssal-tainted essence": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Accordion": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Accumulator max hood": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Accumulation charm": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Accumulator max cape": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Accursed sceptre (beta)": {
+    "name": "Condemn",
+    "energy_cost": 50,
+    "description": "The accursed sceptre has a special attack , Condemn , which consumes 50% of the player's special attack energy. The special attack hits an enemy with 50% increased accuracy, and upon a successful hit , also drains the target's Defence and Magic by up to 15%.",
+    "modifiers": {},
+    "lineage": null
+  },
+  "Accursed sceptre (a)": {
+    "name": "Condemn",
+    "energy_cost": 50,
+    "description": "The accursed sceptre (a) has a special attack , Condemn , which consumes 50% of the player's special attack energy and 1 revenant ether (whether it hits or not). The special attack hits an enemy by using the accursed sceptre 's built-in spell with a 50% increase to max hit and accuracy, and upon a successful hit , also drains the target's Defence and Magic by 15%, regardless of the damage inflicted. [ 1 ]",
+    "modifiers": {},
+    "lineage": null
+  },
+  "Accursed sceptre": {
+    "name": "Condemn",
+    "energy_cost": 50,
+    "description": "The accursed sceptre has a special attack , Condemn , which consumes 50% of the player's special attack energy and 1 revenant ether (whether it hits or not). The special attack hits an enemy with a 50% increase to max hit and accuracy, and upon a successful hit , also drains the target's Defence and Magic by 15%, regardless of the damage inflicted. [ 1 ]",
+    "modifiers": {},
+    "lineage": null
+  },
+  "Acetic acid": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Achey tree logs": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Achievement diary hood": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Achievement diary cape": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Acorn": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Ad coupon": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant arrow pack": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant 2h sword": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant arrow": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant arrowtips": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant axe": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant axe head": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant battleaxe": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant bolts": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant bolts(unf)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant boots": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant brutal": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant cane": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant cannonball": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant chainbody": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant chainshot cannonball": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant crossbow (u)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant claws": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant crossbow": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant dart tip": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant dagger": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant dart": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant defender": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant dragon mask": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant felling axe": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant full helm": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant fire arrow": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant gloves": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant full helm (g)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant full helm (t)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant gloves (Last Man Standing)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant gold-trimmed set (sk)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant gold-trimmed set (lg)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant halberd": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant hasta": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant helm (h1)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant helm (h2)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant helm (h4)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant helm (h3)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant helm (h5)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant heraldic helm (Arrav)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant heraldic helm (Asgarnia)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant heraldic helm (Dorgeshuun)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant heraldic helm (Guthix)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant heraldic helm (Dragon)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant heraldic helm (HAM)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant heraldic helm (Fairy)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant heraldic helm (Jogre)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant heraldic helm (Horse)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant heraldic helm (Kandarin)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant heraldic helm (Misthalin)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant heraldic helm (Money)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant heraldic helm (Skull)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant heraldic helm (Varrock)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant heraldic helm (Saradomin)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant heraldic helm (Zamorak)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant incendiary cannonball": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant javelin heads": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant keel parts (interface item)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant keel parts": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant javelin": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant kiteshield": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant kiteshield (Arrav)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant kiteshield (Asgarnia)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant kiteshield (Dorgeshuun)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant kiteshield (Dragon)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant kiteshield (Fairy)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant kiteshield (HAM)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant kiteshield (Guthix)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant kiteshield (g)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant kiteshield (Jogre)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant kiteshield (Kandarin)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant kiteshield (Horse)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant kiteshield (Mage Training Arena)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant kiteshield (Misthalin)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant kiteshield (Money)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant kiteshield (Saradomin)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant kiteshield (Skull)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant kiteshield (t)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant kiteshield (Varrock)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant knife": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant kiteshield (Zamorak)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant mace": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant med helm": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant longsword": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant med helm (Mage Training Arena)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant pick head": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant pickaxe": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant platebody (g)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant platebody (h1)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant platebody (h2)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant platebody": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant platebody (h4)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant platebody (h3)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant platebody (h5)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant platebody (t)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant platelegs": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant platelegs (g)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant plateskirt": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant platelegs (t)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant plateskirt (g)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant seeds": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant plateskirt (t)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant scimitar": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant set (lg)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant set (sk)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant shield (h1)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant shield (h2)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant shield (h3)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant shield (h4)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant shield (h5)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant spear": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant staff of collection": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant sq shield": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant sword": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant thrownaxe": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant trimmed set (lg)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamantite armour (Construction)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant trimmed set (sk)": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamant warhammer": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamantite bar": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamantite limbs": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamantite nails": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Address form": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamantite ore fragment": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adamantite ore": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Address label": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Adept potion pack": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Admiral pie": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  },
+  "Advanced arena": {
+    "name": null,
+    "energy_cost": null,
+    "description": null,
+    "modifiers": {},
+    "lineage": null
+  }
+}

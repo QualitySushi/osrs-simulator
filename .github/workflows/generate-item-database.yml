@@ -4,6 +4,17 @@ on:
   schedule:
     - cron: '0 0 * * 0'  # Sundays 00:00 UTC
   workflow_dispatch:
+    inputs:
+      channel:
+        description: "Scrape channel/tag (optional)"
+        required: false
+        default: "weekly"
+  workflow_call:
+    inputs:
+      channel:
+        required: false
+        type: string
+        default: "weekly"
 
 permissions:
   contents: read
@@ -13,6 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       SCRAPER_USER_AGENT: "ScapeLabBot/1.0 (+github.com/QualitySushi/osrs-simulator)"
+      SCRAPE_CHANNEL: "${{ inputs.channel || github.event.inputs.channel || 'weekly' }}"
 
     steps:
       - uses: actions/checkout@v4
@@ -48,12 +60,13 @@ jobs:
           elif [ -f tools/scrapers/runescape-items/generate_valid_items.py ]; then
             (cd tools/scrapers/runescape-items && python generate_valid_items.py)
           else
-            echo "No explicit 'generate valid items' step found; continuing." 
+            echo "No explicit 'generate valid items' step found; continuing."
           fi
 
       - name: Run item scraper (auto-detect entrypoint)
         env:
           SCRAPER_USER_AGENT: ${{ env.SCRAPER_USER_AGENT }}
+          SCRAPE_CHANNEL: ${{ env.SCRAPE_CHANNEL }}
         run: |
           set -euo pipefail
           if [ -f tools/scraper_v2/jobs/items.py ]; then
@@ -63,27 +76,15 @@ jobs:
           elif [ -f tools/scrapers/runescape-items/osrs_item_scraper.py ]; then
             (cd tools/scrapers/runescape-items && python osrs_item_scraper.py)
           else
-            echo "No item scraper entrypoint found. Expected one of:"
-            echo "  tools/scraper_v2/jobs/items.py"
-            echo "  tools/scraper_v2/run_item_scrape.py"
-            echo "  tools/scrapers/runescape-items/osrs_item_scraper.py (legacy)"
-            exit 1
+            echo "No item scraper entrypoint found." && exit 1
           fi
 
       - name: Locate generated DB(s)
-        id: locate
         run: |
           set -euo pipefail
           mapfile -t files < <(find tools -maxdepth 6 -type f \( -iname "*item*.db" -o -iname "*items*.db" -o -iname "*.db" \))
-          if [ "${#files[@]}" -eq 0 ]; then
-            echo "No item DB files found under tools/**. Did the scraper write output?" >&2
-            exit 1
-          fi
-          {
-            echo "DB_PATHS<<EOF"
-            for f in "${files[@]}"; do echo "$f"; done
-            echo "EOF"
-          } >> "$GITHUB_ENV"
+          [ "${#files[@]}" -gt 0 ] || { echo "No item DB files found"; exit 1; }
+          { echo "DB_PATHS<<EOF"; for f in "${files[@]}"; do echo "$f"; done; echo "EOF"; } >> "$GITHUB_ENV"
 
       - name: Upload item database
         uses: actions/upload-artifact@v4

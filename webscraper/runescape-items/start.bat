@@ -1,1 +1,0 @@
-python osrs_item_scraper.py

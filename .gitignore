@@ -3,7 +3,6 @@ node_modules/
 .pnp/
 .pnp.js
 
-/backend/db/
 /backend/app/venv
 
 # Build output
@@ -95,4 +94,3 @@ Thumbs.db
 
 # Database files (these will be downloaded from Azure)
 *.db
-db/
