@@ -4,13 +4,17 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
-# Routers
-# Prefer absolute 'app.routers' when tests add backend/ to PYTHONPATH; fall back to relative.
+# Catalog router: try both names ('routers' and 'routes'), absolute then relative
 try:
-    from app.routers import catalog
-except Exception:  # pragma: no cover
-    from .routers import catalog  # type: ignore
-
+    from app.routers import catalog as _catalog
+except ImportError:
+    try:
+        from app.routes import catalog as _catalog
+    except ImportError:
+        try:
+            from .routers import catalog as _catalog  # type: ignore
+        except ImportError:
+            from .routes import catalog as _catalog  # type: ignore
 # Project imports
 from .repositories import (
     item_repository,
@@ -84,7 +88,7 @@ def create_app() -> FastAPI:
             pass
 
     # Catalog/API routes
-    app.include_router(catalog.router)
+    app.include_router(_catalog.router)
 
     # Startup (DB connect) guarded for tests
     @app.on_event("startup")
