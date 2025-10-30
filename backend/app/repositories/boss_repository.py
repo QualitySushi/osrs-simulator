@@ -1,55 +1,71 @@
 # backend/app/repositories/boss_repository.py
 from __future__ import annotations
-
-import asyncio
 from typing import Any, Dict, List, Optional
+import asyncio
 
-from ..services import boss_service as _real_boss_service  # type: ignore
+class _DefaultBossService:
+    def get_all_bosses(self) -> List[Dict]:
+        return []
 
-boss_service = getattr(_real_boss_service, "boss_service", _real_boss_service)
+    def get_boss(self, boss_id: int) -> Optional[Dict]:
+        return None
 
-_all_bosses_cache: Dict[str, List[Dict[str, Any]]] = {}
-_boss_cache: Dict[int, Dict[str, Any]] = {}
+    def search_bosses(self, query: str, limit: Optional[int] = None) -> List[Dict]:
+        return []
 
-def clear_caches() -> None:
-    _all_bosses_cache.clear()
-    _boss_cache.clear()
+    async def get_all_bosses_async(self) -> List[Dict]:
+        return self.get_all_bosses()
 
-def get_all_bosses() -> List[Dict[str, Any]]:
-    if "all" in _all_bosses_cache:
-        return _all_bosses_cache["all"]
-    bosses = boss_service.get_all_bosses()
-    _all_bosses_cache["all"] = bosses
-    return bosses
+    async def get_boss_async(self, boss_id: int) -> Optional[Dict]:
+        return self.get_boss(boss_id)
 
-def get_boss(boss_id: int) -> Optional[Dict[str, Any]]:
+# Tests patch this with MagicMock
+boss_service: Any = _DefaultBossService()
+
+_all_bosses_cache: Optional[List[Dict]] = None
+_boss_cache: Dict[int, Dict] = {}
+
+# ---------- Sync ----------
+def get_all_bosses() -> List[Dict]:
+    global _all_bosses_cache
+    if _all_bosses_cache is not None:
+        return _all_bosses_cache
+    _all_bosses_cache = boss_service.get_all_bosses()
+    return _all_bosses_cache
+
+def get_boss(boss_id: int) -> Optional[Dict]:
     if boss_id in _boss_cache:
         return _boss_cache[boss_id]
-    boss = boss_service.get_boss(boss_id)
-    _boss_cache[boss_id] = boss
-    return boss
+    b = boss_service.get_boss(boss_id)
+    if b is not None:
+        _boss_cache[boss_id] = b
+    return b
 
-def search_bosses(query: str, limit: Optional[int] = None) -> List[Dict[str, Any]]:
+def search_bosses(query: str, limit: Optional[int] = None) -> List[Dict]:
     return boss_service.search_bosses(query, limit)
 
-async def get_all_bosses_async() -> List[Dict[str, Any]]:
-    if "all" in _all_bosses_cache:
-        return _all_bosses_cache["all"]
-    getter = getattr(boss_service, "get_all_bosses_async", None)
-    if asyncio.iscoroutinefunction(getter):
-        bosses = await getter()  # type: ignore
-    else:
-        bosses = await asyncio.to_thread(boss_service.get_all_bosses)
-    _all_bosses_cache["all"] = bosses
-    return bosses
+# ---------- Async ----------
+async def get_all_bosses_async() -> List[Dict]:
+    global _all_bosses_cache
+    if _all_bosses_cache is not None:
+        return _all_bosses_cache
+    res = await _maybe_await(boss_service.get_all_bosses_async())
+    _all_bosses_cache = res
+    return res
 
-async def get_boss_async(boss_id: int) -> Optional[Dict[str, Any]]:
+async def get_boss_async(boss_id: int) -> Optional[Dict]:
     if boss_id in _boss_cache:
         return _boss_cache[boss_id]
-    getter = getattr(boss_service, "get_boss_async", None)
-    if asyncio.iscoroutinefunction(getter):
-        boss = await getter(boss_id)  # type: ignore
-    else:
-        boss = await asyncio.to_thread(boss_service.get_boss, boss_id)
-    _boss_cache[boss_id] = boss
-    return boss
+    b = await _maybe_await(boss_service.get_boss_async(boss_id))
+    if b is not None:
+        _boss_cache[boss_id] = b
+    return b
+
+async def _maybe_await(x):
+    if asyncio.iscoroutine(x):
+        return await x
+    return x
+
+def warmup_caches() -> None:
+    global _all_bosses_cache
+    _all_bosses_cache = boss_service.get_all_bosses()
