@@ -1,0 +1,81 @@
+name: Backend CI
+
+on:
+  push:
+    branches: [ main, testing-branch ]
+    paths:
+      - "backend/**"
+      - ".github/workflows/ci-backend.yml"
+  pull_request:
+    branches: [ main, testing-branch ]
+    paths:
+      - "backend/**"
+      - ".github/workflows/ci-backend.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: backend-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    env:
+      # Make sure no real DB connections happen during imports/startup.
+      PYTHONUNBUFFERED: "1"
+      SCAPELAB_TESTING: "1"
+      SQLAZURECONNSTR_DefaultConnection: "Driver={ODBC Driver 18 for SQL Server};Server=localhost;Database=fake;Uid=fake;Pwd=fake;"
+      # If your code checks for this to skip startup connect, keep it:
+      DISABLE_STARTUP_DB_CONNECT: "1"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: pip-${{ runner.os }}-${{ hashFiles('backend/requirements*.txt') }}
+          restore-keys: |
+            pip-${{ runner.os }}-
+
+      - name: Install backend deps
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          if [ -f requirements-dev.txt ]; then pip install -r requirements-dev.txt || true; fi
+
+      - name: Show test tools
+        run: |
+          python -c "import sys, pkgutil; print('pytest?' , bool(pkgutil.find_loader('pytest')))"
+
+      - name: Run tests
+        run: |
+          set -e
+          if python - <<'PY'
+import pkgutil,sys,os
+sys.exit(0 if pkgutil.find_loader("pytest") else 1)
+PY
+          then
+            echo "Running pytest"
+            pytest -q || pytest  # quiet first, verbose fallback for logs
+          elif [ -d "app/testing" ]; then
+            echo "Running unittest discovery"
+            python -m unittest discover -s app/testing -p "test_*.py"
+          elif [ -f "app/testing/UnitTest.py" ]; then
+            echo "Running legacy UnitTest.py"
+            python app/testing/UnitTest.py
+          else
+            echo "No backend tests found." && exit 1
+          fi
