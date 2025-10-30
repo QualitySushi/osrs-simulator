@@ -1,9 +1,11 @@
 import os
 import logging
-import importlib
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+
+# Import your top-level routers package: backend/routers/catalog.py
+from routers import catalog as catalog_router
 
 # Project imports
 from .repositories import (
@@ -24,51 +26,18 @@ from .config.settings import SETTINGS  # loads .env once and sets defaults
 logging.basicConfig(level=logging.INFO, format="[%(levelname)s] %(message)s")
 
 
-def _try_load_router() -> object | None:
-    """
-    Try to import a 'catalog' module that exposes a FastAPI `router`.
-    We try multiple locations (absolute and relative). If none are found,
-    return None and continue—tests can still run.
-    """
-    candidates_abs = [
-        "app.routers.catalog",
-        "app.routes.catalog",
-        "app.api.catalog",
-        "app.catalog",
-    ]
-    for modname in candidates_abs:
-        try:
-            mod = importlib.import_module(modname)
-            router = getattr(mod, "router", None)
-            if router is not None:
-                return router
-        except Exception:
-            pass
-
-    # Relative to the current package (backend/app)
-    candidates_rel = [
-        ".routers.catalog",
-        ".routes.catalog",
-    ]
-    for modname in candidates_rel:
-        try:
-            mod = importlib.import_module(modname, package=__package__)
-            router = getattr(mod, "router", None)
-            if router is not None:
-                return router
-        except Exception:
-            pass
-
-    logging.warning("No catalog router module found; API will start without it.")
-    return None
-
-
 def _try_load_health_router():
-    # Prefer routes.health, then routers.health, else skip silently
+    """
+    Load an optional health router if present. We check both
+    app/routes/health.py and app/routers/health.py (relative to this package).
+    """
+    import importlib
     for modname in (".routes.health", ".routers.health"):
         try:
             mod = importlib.import_module(modname, package=__package__)
-            return getattr(mod, "router", None)
+            router = getattr(mod, "router", None)
+            if router:
+                return router
         except Exception:
             continue
     return None
@@ -119,10 +88,8 @@ def create_app() -> FastAPI:
     if health_router:
         app.include_router(health_router, prefix="")
 
-    # Catalog/API router (optional, resilient)
-    catalog_router = _try_load_router()
-    if catalog_router:
-        app.include_router(catalog_router)
+    # Catalog/API router (direct include from backend/routers/catalog.py)
+    app.include_router(catalog_router.router)
 
     # Startup (DB connect) guarded for tests/CI
     @app.on_event("startup")
