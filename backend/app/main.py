@@ -1,20 +1,10 @@
 import os
 import logging
+import importlib
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
-# Catalog router: try both names ('routers' and 'routes'), absolute then relative
-try:
-    from app.routers import catalog as _catalog
-except ImportError:
-    try:
-        from app.routes import catalog as _catalog
-    except ImportError:
-        try:
-            from .routers import catalog as _catalog  # type: ignore
-        except ImportError:
-            from .routes import catalog as _catalog  # type: ignore
 # Project imports
 from .repositories import (
     item_repository,
@@ -29,10 +19,59 @@ from .services import calculation_service, seed_service, bis_service
 # Middleware
 from .middleware.cache_headers import CacheHeadersMiddleware
 from .middleware.rate_limit import RateLimitMiddleware
-
-from .config.settings import SETTINGS  # this module calls load_dotenv() once and sets defaults
+from .config.settings import SETTINGS  # loads .env once and sets defaults
 
 logging.basicConfig(level=logging.INFO, format="[%(levelname)s] %(message)s")
+
+
+def _try_load_router() -> object | None:
+    """
+    Try to import a 'catalog' module that exposes a FastAPI `router`.
+    We try multiple locations (absolute and relative). If none are found,
+    return None and continue—tests can still run.
+    """
+    candidates_abs = [
+        "app.routers.catalog",
+        "app.routes.catalog",
+        "app.api.catalog",
+        "app.catalog",
+    ]
+    for modname in candidates_abs:
+        try:
+            mod = importlib.import_module(modname)
+            router = getattr(mod, "router", None)
+            if router is not None:
+                return router
+        except Exception:
+            pass
+
+    # Relative to the current package (backend/app)
+    candidates_rel = [
+        ".routers.catalog",
+        ".routes.catalog",
+    ]
+    for modname in candidates_rel:
+        try:
+            mod = importlib.import_module(modname, package=__package__)
+            router = getattr(mod, "router", None)
+            if router is not None:
+                return router
+        except Exception:
+            pass
+
+    logging.warning("No catalog router module found; API will start without it.")
+    return None
+
+
+def _try_load_health_router():
+    # Prefer routes.health, then routers.health, else skip silently
+    for modname in (".routes.health", ".routers.health"):
+        try:
+            mod = importlib.import_module(modname, package=__package__)
+            return getattr(mod, "router", None)
+        except Exception:
+            continue
+    return None
 
 
 def create_app() -> FastAPI:
@@ -54,7 +93,7 @@ def create_app() -> FastAPI:
     # Rate limiting (simple token bucket per-IP)
     app.add_middleware(RateLimitMiddleware, rate=10, per_seconds=1, burst=30)
 
-    # Default cache headers (applies only to whitelisted routes)
+    # Default cache headers (only for whitelisted routes)
     app.add_middleware(
         CacheHeadersMiddleware,
         path_ttls={
@@ -64,7 +103,7 @@ def create_app() -> FastAPI:
             "/search/items": 600,
             "/search/npcs": 600,
         },
-        default_ttl=None,  # don’t auto-cache everything
+        default_ttl=None,
     )
 
     # Optional: serve /static if present
@@ -75,25 +114,19 @@ def create_app() -> FastAPI:
     if os.path.isdir(static_dir):
         app.mount("/static", StaticFiles(directory=static_dir), name="static")
 
-    # Health routes
-    try:
-        from .routes.health import router as health_router  # keep existing layout
+    # Health router (optional)
+    health_router = _try_load_health_router()
+    if health_router:
         app.include_router(health_router, prefix="")
-    except Exception:
-        # If your health route actually lives under routers/, fall back cleanly
-        try:
-            from .routers.health import router as health_router  # type: ignore
-            app.include_router(health_router, prefix="")
-        except Exception:
-            pass
 
-    # Catalog/API routes
-    app.include_router(_catalog.router)
+    # Catalog/API router (optional, resilient)
+    catalog_router = _try_load_router()
+    if catalog_router:
+        app.include_router(catalog_router)
 
-    # Startup (DB connect) guarded for tests
+    # Startup (DB connect) guarded for tests/CI
     @app.on_event("startup")
     async def _startup():
-        # Respect CI/test guard rails
         if os.getenv("DISABLE_STARTUP_DB_CONNECT") == "1" or os.getenv("SCAPELAB_TESTING") == "1":
             logging.info("[startup] Skipping DB init (guarded by DISABLE_STARTUP_DB_CONNECT/SCAPELAB_TESTING)")
             return
@@ -103,19 +136,17 @@ def create_app() -> FastAPI:
             logging.warning("[startup] No SQLAZURECONNSTR_DefaultConnection set.")
             return
 
-        # Import pyodbc only when needed (avoids import cost/errors in tests)
         try:
-            import pyodbc  # local import
+            import pyodbc  # local import so tests don't need it
             logging.info("[startup] Connecting to Azure SQL…")
             cn = pyodbc.connect(cs, timeout=10)
             cn.close()
             logging.info("[startup] DB connection OK")
         except Exception as e:  # pragma: no cover
             logging.exception("[startup] DB connection failed: %s", e)
-            # Consider raising in prod if DB is mandatory
 
     return app
 
 
-# Default app for ASGI servers
+# Default ASGI app
 app = create_app()
