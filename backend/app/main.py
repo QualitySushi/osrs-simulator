@@ -269,6 +269,18 @@ def create_app() -> FastAPI:
     # Startup (DB connect) guarded for tests/CI
     @app.on_event("startup")
     async def _startup():
+        # 1) Always warm caches first – this uses the current repo services/mocks.
+        try:
+            from .repositories import item_repository, boss_repository
+            if hasattr(item_repository, "_warm_cache"):
+                item_repository._warm_cache()
+            if hasattr(boss_repository, "_warm_cache"):
+                boss_repository._warm_cache()
+            logging.info("[startup] Repository caches warmed")
+        except Exception as e:  # pragma: no cover
+            logging.warning("[startup] Cache warmup skipped: %s", e)
+
+        # 2) Optional DB connectivity check – still guarded for CI/tests.
         if os.getenv("DISABLE_STARTUP_DB_CONNECT") == "1" or os.getenv("SCAPELAB_TESTING") == "1":
             logging.info("[startup] Skipping DB init (guarded by DISABLE_STARTUP_DB_CONNECT/SCAPELAB_TESTING)")
             return
@@ -277,17 +289,9 @@ def create_app() -> FastAPI:
         if not cs:
             logging.warning("[startup] No SQLAZURECONNSTR_DefaultConnection set.")
             return
-        
-        try:
-            # Populate caches so tests can assert they’re set
-            from app.repositories import item_repository, boss_repository
-            item_repository._warm_cache()
-            boss_repository._warm_cache()
-        except Exception:
-            pass
 
         try:
-            import pyodbc  # local import so tests don't need it
+            import pyodbc  # defer import so tests don't need driver/install
             logging.info("[startup] Connecting to Azure SQL…")
             cn = pyodbc.connect(cs, timeout=10)
             cn.close()

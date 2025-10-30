@@ -17,14 +17,26 @@ for p in (str(ROOT), str(BACKEND), str(TOOLS)):
 os.environ.setdefault("SCAPELAB_TESTING", "1")
 os.environ.setdefault("DISABLE_STARTUP_DB_CONNECT", "1")
 
-# ---- Optional repo stubs (applied around every test) ----
+import pytest
+
 try:
     from backend.tests._db_stubs import apply_repo_stubs
 except Exception:
     apply_repo_stubs = None
 
 @pytest.fixture(autouse=True)
-def _repos_stubbed():
+def _repos_stubbed(request):
+    """
+    Auto-apply safe repo stubs for most tests, but opt-out for the repository
+    caching/behavior tests so they can patch `db_service` and count calls.
+    """
+    # Any test module path containing "test_repositories" should NOT stub.
+    nodeid = getattr(request.node, "nodeid", "")
+    if "test_repositories" in nodeid:
+        # No stubs; let tests patch item_repository/boss_repository directly.
+        yield
+        return
+
     if apply_repo_stubs is None:
         yield
     else:
