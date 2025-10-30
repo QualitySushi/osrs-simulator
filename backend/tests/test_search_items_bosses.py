@@ -1,12 +1,12 @@
-from fastapi.testclient import TestClient
 from app.repositories import item_repository, boss_repository
-
+from fastapi.testclient import TestClient
 try:
     from app.main import create_app
-    client = TestClient(create_app())
+    app = create_app()
 except Exception:
     from app.main import app
-    client = TestClient(app)
+client = TestClient(app)
+
 
 def test_search_items_uses_repo(monkeypatch):
     monkeypatch.setattr(item_repository, "search_items",

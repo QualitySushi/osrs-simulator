@@ -1,13 +1,17 @@
-import importlib, pytest
+import importlib
+import pytest
 
 mod = None
 for path in ("app.combat.defence_reduction", "app.calculators.defence_reduction"):
     try:
-        mod = importlib.import_module(path); break
-    except Exception: pass
+        mod = importlib.import_module(path)
+        break
+    except Exception:
+        pass
 
 if not mod:
-    pytest.skip("defence reduction module not found; adjust path")
+    pytest.skip("defence reduction module not found; adjust path", allow_module_level=True)
+
 
 def test_order_and_caps_nonincreasing():
     if not hasattr(mod, "apply_reductions"):

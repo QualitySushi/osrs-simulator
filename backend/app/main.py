@@ -3,9 +3,15 @@ import logging
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from backend.app.routers import catalog
 
-# Existing project imports (keep these)
+# Routers
+# Prefer absolute 'app.routers' when tests add backend/ to PYTHONPATH; fall back to relative.
+try:
+    from app.routers import catalog
+except Exception:  # pragma: no cover
+    from .routers import catalog  # type: ignore
+
+# Project imports
 from .repositories import (
     item_repository,
     boss_repository,
@@ -16,12 +22,14 @@ from .config.settings import CACHE_TTL_SECONDS  # if unused, you can remove
 from .models import DpsResult, Boss, BossSummary, Item, ItemSummary, DpsParameters
 from .services import calculation_service, seed_service, bis_service
 
-# New middleware
+# Middleware
 from .middleware.cache_headers import CacheHeadersMiddleware
 from .middleware.rate_limit import RateLimitMiddleware
 
 from .config.settings import SETTINGS  # this module calls load_dotenv() once and sets defaults
+
 logging.basicConfig(level=logging.INFO, format="[%(levelname)s] %(message)s")
+
 
 def create_app() -> FastAPI:
     app = FastAPI(
@@ -56,27 +64,34 @@ def create_app() -> FastAPI:
     )
 
     # Optional: serve /static if present
-    BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    BASE_DIR = os.path.dirname(
+        os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    )
     static_dir = os.path.join(BASE_DIR, "static")
     if os.path.isdir(static_dir):
         app.mount("/static", StaticFiles(directory=static_dir), name="static")
 
     # Health routes
-    from .routes.health import router as health_router
-    app.include_router(health_router, prefix="")
-    
+    try:
+        from .routes.health import router as health_router  # keep existing layout
+        app.include_router(health_router, prefix="")
+    except Exception:
+        # If your health route actually lives under routers/, fall back cleanly
+        try:
+            from .routers.health import router as health_router  # type: ignore
+            app.include_router(health_router, prefix="")
+        except Exception:
+            pass
+
+    # Catalog/API routes
     app.include_router(catalog.router)
 
     # Startup (DB connect) guarded for tests
     @app.on_event("startup")
     async def _startup():
-        import pyodbc
-
-        disable = os.getenv("DISABLE_DB_ON_STARTUP", "0") == "1"
-        is_test = os.getenv("APP_ENV", "").lower() == "test"
-
-        if disable or is_test:
-            logging.info("[startup] Skipping DB init (DISABLE_DB_ON_STARTUP or APP_ENV=test)")
+        # Respect CI/test guard rails
+        if os.getenv("DISABLE_STARTUP_DB_CONNECT") == "1" or os.getenv("SCAPELAB_TESTING") == "1":
+            logging.info("[startup] Skipping DB init (guarded by DISABLE_STARTUP_DB_CONNECT/SCAPELAB_TESTING)")
             return
 
         cs = os.getenv("SQLAZURECONNSTR_DefaultConnection")
@@ -84,12 +99,14 @@ def create_app() -> FastAPI:
             logging.warning("[startup] No SQLAZURECONNSTR_DefaultConnection set.")
             return
 
+        # Import pyodbc only when needed (avoids import cost/errors in tests)
         try:
+            import pyodbc  # local import
             logging.info("[startup] Connecting to Azure SQL…")
             cn = pyodbc.connect(cs, timeout=10)
             cn.close()
             logging.info("[startup] DB connection OK")
-        except Exception as e:
+        except Exception as e:  # pragma: no cover
             logging.exception("[startup] DB connection failed: %s", e)
             # Consider raising in prod if DB is mandatory
 

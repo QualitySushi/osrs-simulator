@@ -4,6 +4,12 @@ import json
 import base64
 import unittest
 from fastapi.testclient import TestClient
+try:
+    from app.main import create_app
+    app = create_app()
+except Exception:
+    from app.main import app
+client = TestClient(app)
 
 # Toggle: stubs ON by default; set OSRS_USE_STUBS=0 in CI for real DB
 USE_STUBS = os.getenv("OSRS_USE_STUBS", "1") not in ("0", "false", "False")
