@@ -3,6 +3,7 @@ import logging
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from backend.app.routers import catalog
 
 # Existing project imports (keep these)
 from .repositories import (
@@ -63,6 +64,8 @@ def create_app() -> FastAPI:
     # Health routes
     from .routes.health import router as health_router
     app.include_router(health_router, prefix="")
+    
+    app.include_router(catalog.router)
 
     # Startup (DB connect) guarded for tests
     @app.on_event("startup")
