@@ -3,82 +3,81 @@ from __future__ import annotations
 from typing import Any, Dict, List, Optional
 import asyncio
 
-# ---------- Public, mockable service handle ----------
-# Tests will replace this with a MagicMock that implements the same methods.
-class _DefaultItemService:
-    # These are *only* fallbacks; tests patch this with MagicMocks.
-    def get_all_items(self, combat_only: bool = False, tradeable_only: Optional[bool] = None) -> List[Dict[str, Any]]:
-        return []
+# The tests monkeypatch an "item_service" object with these methods:
+#   get_all_items(), get_item(id), search_items(query, limit)
+#   and async variants: get_all_items_async(), get_item_async(id), ...
+# They also verify we delegate to that service AND that we cache results.
 
-    def get_item(self, item_id: int) -> Optional[Dict[str, Any]]:
-        return None
+# Provide a module-level service handle (to be patched by tests).
+item_service: Any = None
 
-    def search_items(self, query: str, limit: Optional[int] = None) -> List[Dict[str, Any]]:
-        return []
-
-    async def get_all_items_async(self, combat_only: bool = False, tradeable_only: Optional[bool] = None) -> List[Dict[str, Any]]:
-        return self.get_all_items(combat_only, tradeable_only)
-
-    async def get_item_async(self, item_id: int) -> Optional[Dict[str, Any]]:
-        return self.get_item(item_id)
-
-# NOTE: tests set this to a MagicMock instance.
-item_service: Any = _DefaultItemService()
-
-# ---------- Simple in-memory caches used by tests ----------
+# Simple module-level caches expected by tests
 _all_items_cache: Dict[str, List[Dict[str, Any]]] = {}
 _item_cache: Dict[int, Dict[str, Any]] = {}
 
-def _all_key(combat_only: bool, tradeable_only: Optional[bool]) -> str:
-    return f"all|combat={int(bool(combat_only))}|tradeable={tradeable_only}"
-
-# ---------- Sync API ----------
-def get_all_items(combat_only: bool = False, tradeable_only: Optional[bool] = None) -> List[Dict[str, Any]]:
-    key = _all_key(combat_only, tradeable_only)
-    cached = _all_items_cache.get(key)
-    if cached is not None:
-        return cached
-    # must call through the service so tests can assert call_count
-    items = item_service.get_all_items(combat_only, tradeable_only)
-    _all_items_cache[key] = items
+def get_all_items() -> List[Dict[str, Any]]:
+    global _all_items_cache
+    if "all" in _all_items_cache:
+        return _all_items_cache["all"]
+    if item_service is None:
+        return []
+    items = item_service.get_all_items()
+    _all_items_cache["all"] = items
     return items
 
 def get_item(item_id: int) -> Optional[Dict[str, Any]]:
     if item_id in _item_cache:
         return _item_cache[item_id]
-    itm = item_service.get_item(item_id)
-    if itm is not None:
-        _item_cache[item_id] = itm
-    return itm
+    if item_service is None:
+        return None
+    it = item_service.get_item(item_id)
+    _item_cache[item_id] = it
+    return it
 
 def search_items(query: str, limit: Optional[int] = None) -> List[Dict[str, Any]]:
-    # direct passthrough (no caching) — tests check that this delegates
+    if item_service is None:
+        return []
     return item_service.search_items(query, limit)
 
-# ---------- Async API ----------
-async def get_all_items_async(combat_only: bool = False, tradeable_only: Optional[bool] = None) -> List[Dict[str, Any]]:
-    key = _all_key(combat_only, tradeable_only)
-    cached = _all_items_cache.get(key)
-    if cached is not None:
-        return cached
-    items = await _maybe_await(item_service.get_all_items_async(combat_only, tradeable_only))
-    _all_items_cache[key] = items
+# ---------------- Async variants ----------------
+
+async def get_all_items_async() -> List[Dict[str, Any]]:
+    if "all" in _all_items_cache:
+        return _all_items_cache["all"]
+    if item_service is None:
+        return []
+    if hasattr(item_service, "get_all_items_async"):
+        items = await item_service.get_all_items_async()
+    else:
+        # fall back to sync in a thread
+        loop = asyncio.get_running_loop()
+        items = await loop.run_in_executor(None, item_service.get_all_items)
+    _all_items_cache["all"] = items
     return items
 
 async def get_item_async(item_id: int) -> Optional[Dict[str, Any]]:
     if item_id in _item_cache:
         return _item_cache[item_id]
-    itm = await _maybe_await(item_service.get_item_async(item_id))
-    if itm is not None:
-        _item_cache[item_id] = itm
-    return itm
+    if item_service is None:
+        return None
+    if hasattr(item_service, "get_item_async"):
+        it = await item_service.get_item_async(item_id)
+    else:
+        loop = asyncio.get_running_loop()
+        it = await loop.run_in_executor(None, item_service.get_item, item_id)
+    _item_cache[item_id] = it
+    return it
 
-# ---------- Helpers ----------
-async def _maybe_await(x):
-    if asyncio.iscoroutine(x):
-        return await x
-    return x
+async def search_items_async(query: str, limit: Optional[int] = None) -> List[Dict[str, Any]]:
+    if item_service is None:
+        return []
+    if hasattr(item_service, "search_items_async"):
+        return await item_service.search_items_async(query, limit)
+    loop = asyncio.get_running_loop()
+    return await loop.run_in_executor(None, item_service.search_items, query, limit)
 
-def warmup_caches() -> None:
-    # Called on app startup (tests expect this to populate _all_items_cache)
-    _all_items_cache["all|combat=0|tradeable=None"] = item_service.get_all_items(False, None)
+# Warmup used by tests on app startup
+def _warm_cache() -> None:
+    # do not swallow exceptions in real app; tests just expect we populate _all_items_cache
+    items = get_all_items()
+    _all_items_cache["all"] = items

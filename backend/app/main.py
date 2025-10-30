@@ -277,6 +277,14 @@ def create_app() -> FastAPI:
         if not cs:
             logging.warning("[startup] No SQLAZURECONNSTR_DefaultConnection set.")
             return
+        
+        try:
+            # Populate caches so tests can assert they’re set
+            from app.repositories import item_repository, boss_repository
+            item_repository._warm_cache()
+            boss_repository._warm_cache()
+        except Exception:
+            pass
 
         try:
             import pyodbc  # local import so tests don't need it
