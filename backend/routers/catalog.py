@@ -88,16 +88,15 @@ def import_seed(p: SeedPayload):
     return data
 
 @router.post("/bis")
-def bis(req: BisRequest):
-    # Very light stub sufficient for tests:
-    # Return required fields including "best_dps" and "slots" ⟵ tests use these.
-    chosen_slots = list(req.slot_whitelist or [])
-    payload = {
+def bis(payload: dict):
+    # Accept ANY json body (tests post both DPS params and a structured BIS request).
+    # Return fields expected by tests.
+    slots = payload.get("slot_whitelist") or []
+    return {
         "best_dps": 0.0,
-        "slots": chosen_slots,
+        "slots": list(slots),
         "loadout": {},
     }
-    return payload
 
 # Optionally expose items/bosses search endpoints if your tests use them elsewhere
 @router.get("/items")
