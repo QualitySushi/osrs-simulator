@@ -1,0 +1,79 @@
+name: Tools • scraper_v2 tests
+
+on:
+  push:
+    paths:
+      - "tools/scraper_v2/**"
+      - ".github/workflows/tools-scraper-v2-tests.yml"
+  pull_request:
+    paths:
+      - "tools/scraper_v2/**"
+      - ".github/workflows/tools-scraper-v2-tests.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pytest-scraper-v2:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    env:
+      PYTHONUNBUFFERED: "1"
+      # Make sure nothing tries to hit DB or startup hooks
+      SCAPELAB_TESTING: "1"
+      DISABLE_STARTUP_DB_CONNECT: "1"
+      # Some scrapers/tests may look for these:
+      PYTHONPATH: "${{ github.workspace }}:${{ github.workspace }}/tools/scraper_v2"
+      # Force offline-safe defaults if your tests respect these (harmless if unused)
+      SCRAPER_OFFLINE: "1"
+      OSRS_WIKI_USER_AGENT: "ScapeLab CI test"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          # If scraper_v2 has its own requirements, use that; otherwise fall back.
+          if [ -f tools/scraper_v2/requirements.txt ]; then
+            pip install -r tools/scraper_v2/requirements.txt
+          fi
+          # Core test deps (idempotent if already present)
+          pip install pytest pytest-asyncio httpx
+          # Optional HTML parsing / fast JSON utils commonly used by scrapers
+          pip install beautifulsoup4 lxml orjson
+
+      - name: Run tests (scraper_v2 only)
+        shell: bash
+        working-directory: tools/scraper_v2
+        run: |
+          set -euo pipefail
+          echo "Running pytest in tools/scraper_v2/tests ..."
+          pytest -q tests
+
+      # Optional: upload junit XML if you want PR annotations. Uncomment if needed.
+      # - name: Run tests with JUnit output
+      #   if: always()
+      #   shell: bash
+      #   working-directory: tools/scraper_v2
+      #   run: |
+      #     pytest -q tests --junitxml=../scraper_v2-junit.xml
+      #
+      # - name: Upload test report
+      #   if: always()
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: scraper_v2-junit
+      #     path: tools/scraper_v2-junit.xml
+      #     if-no-files-found: ignore
