@@ -1,22 +1,34 @@
-name: Frontend CI
+name: Backend CI
 
 on:
   push:
     branches: [ main, testing-branch ]
     paths:
-      - "frontend/**"
-      - ".github/workflows/ci-frontend.yml"
+      - "backend/**"
+      - ".github/workflows/ci-backend.yml"
   pull_request:
     branches: [ main, testing-branch ]
     paths:
-      - "frontend/**"
-      - ".github/workflows/ci-frontend.yml"
+      - "backend/**"
+      - ".github/workflows/ci-backend.yml"
+  workflow_dispatch:
+    inputs:
+      extra_args:
+        description: "Extra pytest/unittest args (optional)"
+        required: false
+        default: ""
+  workflow_call:
+    inputs:
+      extra_args:
+        required: false
+        type: string
+        default: ""
 
 permissions:
   contents: read
 
 concurrency:
-  group: frontend-${{ github.ref }}
+  group: backend-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -24,43 +36,71 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: frontend
+        working-directory: backend
     env:
-      NEXT_PUBLIC_API_URL: "http://localhost:8000" # safe default for build/test
-      CI: "true"
+      PYTHONUNBUFFERED: "1"
+      SCAPELAB_TESTING: "1"
+      DISABLE_STARTUP_DB_CONNECT: "1"
+      SQLAZURECONNSTR_DefaultConnection: "Driver={ODBC Driver 18 for SQL Server};Server=localhost;Database=fake;Uid=fake;Pwd=fake;"
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Use Node 18 LTS
-        uses: actions/setup-node@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          node-version: "18"
-          cache: "npm"
-          cache-dependency-path: "frontend/package-lock.json"
+          python-version: "3.11"
 
-      - name: Install deps
-        run: npm ci
-
-      - name: Run unit tests (if present)
-        run: npm run test --if-present
-
-      - name: Install Playwright (if E2E present)
+      - name: Prime .env to avoid accidental prod loads
         run: |
-          if [ -f "playwright.config.ts" ] || [ -f "playwright.config.js" ]; then
-            npx playwright install --with-deps
+          touch .env
+          echo "SCAPELAB_TESTING=1" >> .env
+          echo "DISABLE_STARTUP_DB_CONNECT=1" >> .env
+
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: pip-${{ runner.os }}-${{ hashFiles('backend/requirements*.txt', 'backend/pyproject.toml') }}
+          restore-keys: |
+            pip-${{ runner.os }}-
+
+      - name: Install system deps if pyodbc is required
+        shell: bash
+        run: |
+          if grep -Eqi '^\s*pyodbc([<>=].*)?$' requirements*.txt 2>/dev/null; then
+            sudo apt-get update
+            sudo apt-get install -y unixodbc-dev
           fi
 
-      - name: Run E2E tests (if present)
+      - name: Install backend deps
         run: |
-          npm run test:e2e --if-present
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          if [ -f requirements-dev.txt ]; then pip install -r requirements-dev.txt || true; fi
 
-      - name: Lint (if present)
-        run: npm run lint --if-present
+      - name: Show test tools
+        run: |
+          python - <<'PY'
+import pkgutil
+print("pytest installed? ", bool(pkgutil.find_loader("pytest")))
+PY
 
-      - name: Typecheck (if present)
-        run: npm run typecheck --if-present
+      - name: Run tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          EXTRA_ARGS="${{ inputs.extra_args || github.event.inputs.extra_args || '' }}"
 
-      - name: Build (ensure prod build stays green)
-        run: npm run build --if-present
+          have_pytest=0
+          python - <<'PY' || true
+import pkgutil, sys
+sys.exit(0 if pkgutil.find_loader("pytest") else 1)
+PY
+          if [ $? -eq 0 ]; then have_pytest=1; fi
+
+          has_pytest_tests=$(find . -path ./venv -prune -o -name "test_*.py" -print -quit | wc -l)
+
+          if [ "$have_pytest" -eq 1 ] && [ "$has_pytest_tests" -gt 0 ]; then
+            echo "Running
